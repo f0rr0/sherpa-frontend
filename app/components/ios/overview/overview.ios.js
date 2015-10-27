@@ -5,21 +5,18 @@
 /* @flow */
 'use strict';
 'use babel';
-import { Provider,connect } from 'react-redux/native';
 import Feed from './feed/feed.ios';
 import React from 'react-native';
-import {updateUserData,signupUser,loadUser} from '../../../actions/user.actions';
 
 var {
     AppRegistry,
     StyleSheet,
-    NavigatorIOS,
     TabBarIOS,
     View,
     Text,
     StatusBarIOS,
     Image
-    } = React;
+} = React;
 
 const EXPLORE="exploreTab";
 const FEED="feedTab";
@@ -61,19 +58,6 @@ class Overview extends React.Component {
             notifCount: 0,
             presses: 0
         };
-
-        this.statics = {
-            title: 'Sherpa',
-            description: 'Sherpa Prototype'
-        };
-
-        this.displayName = 'TabBarExample';
-    }
-
-    componentDidMount(){
-        this.props.dispatch(loadUser());
-        this.props.dispatch(updateUserData({email:"rag@wild.as",inviteCode:"12345"}));
-        this.props.dispatch(signupUser());
     }
 
     _renderContent(color:string, pageText:string) {
@@ -81,7 +65,7 @@ class Overview extends React.Component {
         switch (this.state.selectedTab) {
             case FEED:
                 return (<Feed />)
-                break;
+            break;
             case EXPLORE:
             case PROFILE:
             case SUITECASE:
@@ -153,10 +137,4 @@ class Overview extends React.Component {
     }
 }
 
-function select(state) {
-    return {
-        user: state.userReducer
-    };
-}
-
-export default connect(select)(Overview);
+export default Overview;

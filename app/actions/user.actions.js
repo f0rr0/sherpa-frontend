@@ -26,7 +26,7 @@ export function updateUserSignup(signupState){
         signupState
     };
 }
-export function updateUserDB(userDBState){
+export function updateUserDBState(userDBState){
     return {
         type:types.USER_DB_UPDATE,
         userDBState
@@ -35,21 +35,25 @@ export function updateUserDB(userDBState){
 
 export function loadUser() {
     return function (dispatch, getState) {
-        dispatch(updateUserDB("load_user_request"));
-
+        dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-            dispatch(updateUserDB("load_user_complete"));
-            dispatch(updateUserData(user))
+            if(user){
+                dispatch(updateUserData(user));
+                dispatch(updateUserDBState("available"));
+            }else{
+                console.log('user empty');
+                dispatch(updateUserDBState("empty"));
+            }
         });
     }
 }
 
 export function storeUser() {
     return function (dispatch, getState) {
-        dispatch(updateUserDB("store_user_request"));
+        dispatch(updateUserDBState("process"));
         const { userReducer } = getState();
         store.save('user', userReducer).then(()=>{
-            dispatch(updateUserDB("store_user_complete"));
+            dispatch(updateUserDBState("available"));
         })
     }
 }
@@ -123,10 +127,10 @@ export function signupUser(){
             dispatch(updateUserData({
                 serviceToken:serviceResponse["access_token"]
             }));
+
             dispatch(updateUserSignup("sherpa_token_request"));
-
-
             const {endpoint,version,login_uri} = sherpa;
+
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -134,6 +138,7 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
+                console.log(rawSherpaResponse);
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
                 dispatch(updateUserSignup("sherpa_token_complete"));

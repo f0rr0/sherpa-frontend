@@ -11,7 +11,8 @@ const initialState={
     inviteCode:"",
     username:"",
     service:"instagram",
-    signupState:""
+    signupState:"",
+    userDBState:"none" //none, empty, available
 };
 
 export default function userReducer(state=initialState,action){
@@ -32,6 +33,11 @@ export default function userReducer(state=initialState,action){
         case types.USER_SIGNUP_UPDATE:
             return Object.assign({}, state, {
                 signupState:action.signupState || state.signupState
+            });
+        break;
+        case types.USER_DB_UPDATE:
+            return Object.assign({}, state, {
+                userDBState:action.userDBState || state.userDBState
             });
         break;
     }

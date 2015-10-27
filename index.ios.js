@@ -6,7 +6,7 @@
 
 import React, { Component, AppRegistry } from 'react-native';
 import { Provider } from 'react-redux/native';
-import Overview from './app/components/ios/overview/overview.ios';
+import Root from './app/components/ios/root.ios';
 import configureStore from './app/utils/configure.store';
 const store = configureStore();
 
@@ -16,7 +16,7 @@ class Sherpa extends Component {
     render() {
         return (
             <Provider store={store}>
-                {() => <Overview />}
+                {() => <Root />}
             </Provider>
         );
     }
