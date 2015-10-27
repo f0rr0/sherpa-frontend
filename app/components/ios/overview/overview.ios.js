@@ -5,9 +5,10 @@
 /* @flow */
 'use strict';
 'use babel';
-import { Provider } from 'react-redux/native';
+import { Provider,connect } from 'react-redux/native';
 import Feed from './feed/feed.ios';
 import React from 'react-native';
+import {updateUserData,signupUser,loadUser} from '../../../actions/user.actions';
 
 var {
     AppRegistry,
@@ -67,6 +68,12 @@ class Overview extends React.Component {
         };
 
         this.displayName = 'TabBarExample';
+    }
+
+    componentDidMount(){
+        this.props.dispatch(loadUser());
+        this.props.dispatch(updateUserData({email:"rag@wild.as",inviteCode:"12345"}));
+        this.props.dispatch(signupUser());
     }
 
     _renderContent(color:string, pageText:string) {
@@ -146,4 +153,10 @@ class Overview extends React.Component {
     }
 }
 
-export default Overview;
+function select(state) {
+    return {
+        user: state.userReducer
+    };
+}
+
+export default connect(select)(Overview);

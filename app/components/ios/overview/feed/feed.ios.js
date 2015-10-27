@@ -15,9 +15,10 @@ class Feed extends Component {
             <NavigatorIOS
                 style={styles.container}
                 initialRoute={{
-            title: 'Feed',
-            component: FeedList
-          }}/>
+                    title: 'Feed',
+                    component: FeedList
+                }}
+            />
         );
     }
 }

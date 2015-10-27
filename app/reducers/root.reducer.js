@@ -1,11 +1,9 @@
 import { combineReducers } from 'redux';
-import onBoardingReducer from './onboarding.reducer';
-import appReducer from './app.reducer';
+import userReducer from './user.reducer';
 
 
 const rootReducer = combineReducers({
-    onBoardingReducer,
-    appReducer
+    userReducer
 });
 
 export default rootReducer;
