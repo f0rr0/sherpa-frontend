@@ -1,5 +1,6 @@
-React = require('react-native');
-var FeedTrip = require('./feed.trip.ios');
+import React from 'react-native';
+import { connect } from 'react-redux/native';
+import FeedTrip from './feed.trip.ios'
 
 var {
     View,
@@ -39,13 +40,18 @@ class FeedList extends React.Component{
         super();
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state= {
-            dataSource: ds.cloneWithRows([{image:"01",city:"GRAZ"},{image:"02","city":"FARADIBAD"},{image:"03",city:"NEW YORK"},{image:"04",city:"GRAZ"},{image:"05","city":"FARADIBAD"},{image:"06",city:"NEW YORK"}]),
+            dataSource: ds.cloneWithRows([]),
         };
+    }
+
+    componentDidMount(){
+        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({dataSource:ds.cloneWithRows(this.props.feed.trips)})
     }
 
     showTripDetail(trip) {
         this.props.navigator.push({
-            title: trip.city,
+            title: trip.name,
             component: FeedTrip,
             passProps: {trip}
         });
@@ -79,14 +85,23 @@ class FeedList extends React.Component{
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
                         resizeMode="cover"
-                        source={{uri:"http://sherpa.madebywild.com/assets/"+tripData.image+".jpg"}}
+                        source={{uri:tripData.moments[0].mediaUrl}}
                     />
-                    <Text style={{color:"#FFFFFF",fontSize:14,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>VERENSCHKAS TRIP TO</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.city}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:14,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{tripData.owner.serviceUsername}'s</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name}</Text>
                 </View>
             </TouchableHighlight>
         );
     }
 }
 
-export default FeedList;
+
+function select(state) {
+    return {
+        user: state.userReducer,
+        feed: state.feedReducer
+    };
+}
+
+
+export default connect(select)(FeedList);

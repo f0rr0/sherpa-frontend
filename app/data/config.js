@@ -1,4 +1,5 @@
 module.exports = {
+    debug:true,
     auth:{
         instagram: {
             endpoint:"https://api.instagram.com/",
@@ -13,7 +14,10 @@ module.exports = {
         sherpa:{
             endpoint:"http://sherpa.wild.as/api/",
             version:"v1",
-            login_uri:"/login"
+            login_uri:"/login",
+            job_uri:"/job",
+            feed_uri:"/feed",
+            user_uri:"/user"
         }
     }
 }

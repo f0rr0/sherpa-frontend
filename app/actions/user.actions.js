@@ -20,9 +20,9 @@ export function updateUserData(userData){
     }
 }
 
-export function updateUserSignup(signupState){
+export function updateUserSignupState(signupState){
     return {
-        type:types.USER_SIGNUP_UPDATE,
+        type:types.USER_SIGNUP_UPDATE_STATE,
         signupState
     };
 }
@@ -37,11 +37,10 @@ export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-            if(user){
+            if(user&&!config.debug){
                 dispatch(updateUserData(user));
                 dispatch(updateUserDBState("available"));
             }else{
-                console.log('user empty');
                 dispatch(updateUserDBState("empty"));
             }
         });
@@ -63,13 +62,13 @@ export function signupUser(){
         const { userReducer } = getState();
 
         instagramAuthRequest();
-        dispatch(updateUserSignup("start"));
+        dispatch(updateUserSignupState("start"));
 
         function instagramAuthRequest(){
             const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
             const queryData = encodeQueryData({response_type, client_id, redirect_uri});
 
-            dispatch(updateUserSignup("service_code_request"));
+            dispatch(updateUserSignupState("service_code_request"));
 
             LinkingIOS.openURL(endpoint+code_uri + "/?" +queryData);
             LinkingIOS.addEventListener('url', instagramAuthCallback);
@@ -78,7 +77,7 @@ export function signupUser(){
 
         function instagramAuthCallback(event) {
 
-            dispatch(updateUserSignup("service_code_complete"));
+            dispatch(updateUserSignupState("service_code_complete"));
 
 
             const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
@@ -87,7 +86,7 @@ export function signupUser(){
             let code = getQueryString("code", event.url);
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
 
-            dispatch(updateUserSignup("service_token_request"));
+            dispatch(updateUserSignupState("service_token_request"));
 
             fetch(endpoint+token_uri, {
                 method: 'post',
@@ -99,7 +98,7 @@ export function signupUser(){
         }
 
         function signupWithSherpa(serviceResponse){
-            dispatch(updateUserSignup("service_token_complete"));
+            dispatch(updateUserSignupState("service_token_complete"));
 
             let deviceData={
                 deviceUniqueId:     DeviceInfo.getUniqueID(),
@@ -128,7 +127,7 @@ export function signupUser(){
                 serviceToken:serviceResponse["access_token"]
             }));
 
-            dispatch(updateUserSignup("sherpa_token_request"));
+            dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
 
             fetch(endpoint+version+login_uri,{
@@ -138,10 +137,10 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
-                console.log(rawSherpaResponse);
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+                console.log('sherpa response',sherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
-                dispatch(updateUserSignup("sherpa_token_complete"));
+                dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,

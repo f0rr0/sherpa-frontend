@@ -1,6 +1,6 @@
 'use strict';
 
-var React = require('react-native');
+import React from 'react-native';
 import {updateUserData,signupUser,loadUser} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 import Overview from '../overview/overview.ios';

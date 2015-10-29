@@ -10,6 +10,7 @@ const initialState={
     sherpaToken:"",
     inviteCode:"",
     username:"",
+    jobId:"",
     service:"instagram",
     signupState:"",
     userDBState:"none" //none, empty, available
@@ -27,10 +28,11 @@ export default function userReducer(state=initialState,action){
                 serviceToken:       action.userData.serviceToken || state.serviceToken,
                 sherpaToken:        action.userData.sherpaToken || state.sherpaToken,
                 inviteCode:         action.userData.inviteCode || state.inviteCode,
-                username:           action.userData.username || state.username
+                username:           action.userData.username || state.username,
+                jobId:              action.userData.jobId || state.jobId
             });
         break;
-        case types.USER_SIGNUP_UPDATE:
+        case types.USER_SIGNUP_UPDATE_STATE:
             return Object.assign({}, state, {
                 signupState:action.signupState || state.signupState
             });

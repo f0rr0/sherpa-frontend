@@ -48,7 +48,6 @@ class Root extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        left: 0, // https://github.com/facebook/react-native/issues/1332
         flex: 1,
         backgroundColor: 'white'
     }
