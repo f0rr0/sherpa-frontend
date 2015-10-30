@@ -34,18 +34,18 @@ class Feed extends Component {
                     />
             break;
             case "request":
-                displayComponent=<Text>request</Text>;
+                displayComponent=<View style={styles.centeredContainer}><Text>requesting trips, please hold</Text></View>;
             break;
             case "complete":
-                displayComponent=<Text>complete</Text>;
+                displayComponent=<View style={styles.centeredContainer}><Text>requesting trips complete</Text></View>;
             break;
             case "none":
-                displayComponent=<Text>none</Text>;
+                displayComponent=<View style={styles.centeredContainer}><Text>nothing to request</Text></View>;
             break;
         }
 
         return (
-            <View style={{flex:1}}>
+            <View style={styles.container}>
                 {displayComponent}
             </View>
         );
@@ -55,6 +55,11 @@ class Feed extends Component {
 var styles = StyleSheet.create({
     container: {
         flex: 1
+    },
+    centeredContainer:{
+        flex: 1,
+        justifyContent:'center',
+        alignItems:'center'
     }
 });
 

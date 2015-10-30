@@ -1,5 +1,5 @@
 module.exports = {
-    debug:true,
+    debug:false,
     auth:{
         instagram: {
             endpoint:"https://api.instagram.com/",

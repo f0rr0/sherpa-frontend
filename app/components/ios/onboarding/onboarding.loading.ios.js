@@ -45,9 +45,15 @@ class Loading extends Component {
 
 
     render() {
+        var loadingInfo;
+        if(this.state.showProgress){
+            loadingInfo= <Text>Scraping Trips... {Math.round(this.props.feed.jobProgress*100)}%</Text>
+        }else{
+            loadingInfo=<Text>Loading</Text>
+        }
         return (
             <View style={styles.container}>
-                <Text>Loading... {Math.round(this.props.feed.jobProgress*100)}%</Text>
+                {loadingInfo}
             </View>
         );
     }
