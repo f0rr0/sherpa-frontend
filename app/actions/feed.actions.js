@@ -10,8 +10,9 @@ export function watchJob(jobID){
             fetch(endpoint + version + job_uri + "/" + jobID, {
                 method: 'get'
             }).then((rawSherpaResponse)=> {
+                console.log(rawSherpaResponse)
                 var sherpaResponse = JSON.parse(rawSherpaResponse._bodyText);
-                dispatch(udpateJobState('response_ready'));
+                dispatch(udpateJobState('response_ready'),sherpaResponse[0].state);
 
                 if (sherpaResponse[0].state !== 'completed') {
                     dispatch(udpateJobState('progress'));

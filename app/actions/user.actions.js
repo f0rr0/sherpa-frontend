@@ -40,8 +40,23 @@ export function loadUser() {
         return store.get('user').then((user) => {
             if(user&&!config.debug){
                 dispatch(updateUserData(user));
-                dispatch(updateUserDBState("available"));
-                dispatch(watchJob(user.jobID));
+
+                const {endpoint,version,user_uri} = sherpa;
+                console.log(user);
+                fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
+                    method:'get'
+                }).then((rawSherpaResponse)=>{
+                    switch(rawSherpaResponse.status){
+                        case 200:
+                            dispatch(updateUserDBState("available"));
+                            dispatch(watchJob(user.jobID));
+                        break;
+                        case 400:
+                            dispatch(updateUserDBState("empty"));
+                        break;
+                    }
+
+                });
             }else{
                 dispatch(updateUserDBState("empty"));
             }
@@ -141,6 +156,7 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
+                console.log(rawSherpaResponse)
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                 console.log('sherpa response',sherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
