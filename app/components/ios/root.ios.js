@@ -1,9 +1,11 @@
 'use strict';
 
 import React from 'react-native';
+import {loadUser} from '../../actions/user.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
+import { connect } from 'react-redux/native';
 
 var {
     StyleSheet,
@@ -13,6 +15,11 @@ var {
     } = React;
 
 class Root extends Component {
+
+    constructor(props){
+        super(props);
+        this.props.dispatch(loadUser());
+    }
 
     renderScene(route, navigator) {
         switch (route.id) {
@@ -53,4 +60,11 @@ var styles = StyleSheet.create({
     }
 });
 
-export default Root;
+
+function select(state) {
+    return {
+        user: state.userReducer,
+        feed: state.feedReducer
+    };
+}
+export default connect(select)(Root);

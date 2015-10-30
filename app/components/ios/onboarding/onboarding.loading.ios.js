@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react-native';
-import {updateUserData,signupUser,loadUser} from '../../../actions/user.actions';
 import {watchJob} from '../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
 import Overview from '../overview/overview.ios';
@@ -17,43 +16,38 @@ var {
 class Loading extends Component {
     constructor(props){
         super(props);
-        this.props.dispatch(loadUser());
-        this.state={showProgress:false};
+        this.state={showProgress:false,currentView:"loading"};
     }
 
 
-
-    componentDidUpdate(prevProps){
-        console.log(':: DID UPDATE ::')
-        if(prevProps.user.userDBState!==this.props.user.userDBState){
-            switch(this.props.user.userDBState){
-                case "process":
-                break;
-                case "available":
-                    if(this.props.feed.jobState==='complete'){
-                        this.setState({showProgress:false})
-                        this.props.navigator.push({
-                            id: "overview"
-                        });
-                    }else{
-                        this.setState({showProgress:true})
-                    }
-                break;
-                case "empty":
-                    this.props.navigator.push({
-                        id: "login"
-                    });
-                break;
-            }
+    componentWillReceiveProps(nextProps){
+        switch(nextProps.user.userDBState){
+            case "available":
+                if(nextProps.feed.jobState==='completed'){
+                    this.setState({showProgress:false,currentView:"overview"});
+                }else{
+                    this.setState({showProgress:true,currentView:"loading"});
+                }
+            break;
+            case "empty":
+                this.setState({showProgress:true,currentView:"login"});
+            break;
         }
+    }
 
+    componentDidUpdate(prevProps,prevState){
+        if(prevState.currentView!==this.state.currentView){
+            this.props.navigator.push({
+                id: this.state.currentView
+            });
+        }
     }
 
 
     render() {
         return (
             <View style={styles.container}>
-                <Text>Loading... {this.state.percentLoaded}%</Text>
+                <Text>Loading... {Math.round(this.props.feed.jobProgress*100)}%</Text>
             </View>
         );
     }
@@ -73,5 +67,4 @@ function select(state) {
         feed: state.feedReducer
     };
 }
-
 export default connect(select)(Loading);
