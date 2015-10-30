@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-import {updateUserData,signupUser,loadUser} from '../../../actions/user.actions';
+import {updateUserData,signupUser} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 
 var {

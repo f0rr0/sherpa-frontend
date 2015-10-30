@@ -1,4 +1,5 @@
 import {getQueryString,encodeQueryData} from '../utils/query.utils';
+import {watchJob} from './feed.actions';
 import config from '../data/config';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
 import * as types from '../constants/user.actiontypes'
@@ -40,6 +41,7 @@ export function loadUser() {
             if(user&&!config.debug){
                 dispatch(updateUserData(user));
                 dispatch(updateUserDBState("available"));
+                dispatch(watchJob(user.jobID));
             }else{
                 dispatch(updateUserDBState("empty"));
             }
@@ -53,6 +55,7 @@ export function storeUser() {
         const { userReducer } = getState();
         store.save('user', userReducer).then(()=>{
             dispatch(updateUserDBState("available"));
+            dispatch(watchJob(userReducer.jobID));
         })
     }
 }
@@ -63,6 +66,7 @@ export function signupUser(){
 
         instagramAuthRequest();
         dispatch(updateUserSignupState("start"));
+
 
         function instagramAuthRequest(){
             const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
@@ -145,6 +149,7 @@ export function signupUser(){
                     sherpaID:id,
                     serviceID:profile,
                     sherpaToken:sherpaResponse.token,
+                    jobID:sherpaResponse.jobId,
                     email,
                     fullName,
                     username,
