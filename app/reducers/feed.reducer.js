@@ -10,8 +10,16 @@ const initialState={
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.UPDATE_FEED:
+            //TODO: Quick fix, move into actions later
+            var cleanTrips=[];
+            for(var index in action.feedData.trips){
+                if(action.feedData.trips[index].moments.length>0){
+                    cleanTrips.push(action.feedData.trips[index]);
+                }
+            }
+            console.log(cleanTrips);
             return Object.assign({}, state, {
-                trips:action.feedData.trips || state.trips
+                trips:cleanTrips || state.trips
             });
         break;
         case types.UPDATE_FEED_STATE:

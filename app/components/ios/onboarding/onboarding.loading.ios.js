@@ -13,6 +13,19 @@ var {
     Text
     } = React;
 
+var styles = StyleSheet.create({
+    copy: {
+        color:'#4836f9',
+        fontFamily:"TSTAR-bold",
+        fontSize:14
+    },
+    container: {
+        flex: 1,
+        justifyContent:'center',
+        alignItems:'center'
+    }
+})
+
 class Loading extends Component {
     constructor(props){
         super(props);
@@ -23,6 +36,7 @@ class Loading extends Component {
     componentWillReceiveProps(nextProps){
         switch(nextProps.user.userDBState){
             case "available":
+                console.log(nextProps.feed.feedState,'feed state');
                 if(nextProps.feed.jobState==='completed'){
                     this.setState({showProgress:false,currentView:"overview"});
                 }else{
@@ -47,9 +61,9 @@ class Loading extends Component {
     render() {
         var loadingInfo;
         if(this.state.showProgress){
-            loadingInfo= <Text>Scraping Trips... {Math.round(this.props.feed.jobProgress*100)}%</Text>
+            loadingInfo=<Text style={styles.copy}>ANALYZING TRIPS {Math.round(this.props.feed.jobProgress*100)}%</Text>
         }else{
-            loadingInfo=<Text>Loading</Text>
+            loadingInfo=<Text style={styles.copy}>LOADING</Text>
         }
         return (
             <View style={styles.container}>
@@ -58,14 +72,6 @@ class Loading extends Component {
         );
     }
 }
-
-var styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent:'center',
-        alignItems:'center'
-    }
-});
 
 function select(state) {
     return {

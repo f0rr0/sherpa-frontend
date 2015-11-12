@@ -46,12 +46,20 @@ export function loadUser() {
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
                 }).then((rawSherpaResponse)=>{
+                    console.log(rawSherpaResponse.status,'response status');
+                    console.log('switch');
                     switch(rawSherpaResponse.status){
                         case 200:
-                            dispatch(updateUserDBState("available"));
-                            dispatch(watchJob(user.jobID));
+                            var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+                            if(user.username===sherpaResponse.username){
+                                dispatch(updateUserDBState("available"));
+                                dispatch(watchJob(user.jobID));
+                            }else{
+                                dispatch(updateUserDBState("empty"));
+                            }
                         break;
                         case 400:
+                            console.log('dispatch user empty');
                             dispatch(updateUserDBState("empty"));
                         break;
                     }
