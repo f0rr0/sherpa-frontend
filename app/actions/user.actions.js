@@ -5,7 +5,7 @@ import DeviceInfo from 'react-native-device-info/deviceinfo';
 import * as types from '../constants/user.actiontypes'
 import store from 'react-native-simple-store';
 import React, { LinkingIOS } from 'react-native';
-const {instagram,sherpa}=config.auth;
+const {instagram,sherpa}=config.auth[config.environment];
 const SHERPA="SHERPA";
 const INSTAGRAM="INSTAGRAM";
 let dispatcher;
@@ -38,20 +38,19 @@ export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-            if(user&&!config.debug){
+            if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
 
                 const {endpoint,version,user_uri} = sherpa;
-                console.log(user);
+                console.log('fetch',endpoint+version+user_uri+"/"+user.sherpaID);
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
                 }).then((rawSherpaResponse)=>{
-                    console.log(rawSherpaResponse.status,'response status');
-                    console.log('switch');
                     switch(rawSherpaResponse.status){
                         case 200:
                             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                             if(user.username===sherpaResponse.username){
+                                console.log('user',user)
                                 dispatch(updateUserDBState("available"));
                                 dispatch(watchJob(user.jobID));
                             }else{
@@ -63,10 +62,11 @@ export function loadUser() {
                             dispatch(updateUserDBState("empty"));
                         break;
                     }
-
                 });
             }else{
-                dispatch(updateUserDBState("empty"));
+                store.delete('user').then(()=>{
+                    dispatch(updateUserDBState("empty"));
+                })
             }
         });
     }
@@ -164,7 +164,7 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
-                console.log(rawSherpaResponse)
+                console.log(rawSherpaResponse,'from login')
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                 console.log('sherpa response',sherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;

@@ -1,5 +1,5 @@
 __DEV__ = 
-false;
+true;
 
 
 __BUNDLE_START_TIME__ = Date.now();
@@ -55216,6 +55216,7 @@ switch(rawSherpaResponse.status){
 case 200:
 var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
 if(user.username === sherpaResponse.username){
+console.log('user',user);
 dispatch(updateUserDBState("available"));
 dispatch((0,_feedActions.watchJob)(user.jobID));}else 
 {
@@ -55230,7 +55231,9 @@ break;}});}else
 
 
 {
-dispatch(updateUserDBState("empty"));}});};}
+_reactNativeSimpleStore2.default.delete('user').then(function(){
+dispatch(updateUserDBState("empty"));});}});};}
+
 
 
 
@@ -55328,7 +55331,7 @@ headers:{
 
 body:queryData}).
 then(function(rawSherpaResponse){
-console.log(rawSherpaResponse);
+console.log(rawSherpaResponse,'from login');
 var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
 console.log('sherpa response',sherpaResponse);var _sherpaResponse$user=
 sherpaResponse.user;var email=_sherpaResponse$user.email;var id=_sherpaResponse$user.id;var fullName=_sherpaResponse$user.fullName;var profilePicture=_sherpaResponse$user.profilePicture;var profile=_sherpaResponse$user.profile;var username=_sherpaResponse$user.username;
@@ -55372,27 +55375,31 @@ return ret.join("&");}
 });
 __d('Sherpa/app/actions/feed.actions.js',["Sherpa/app/constants/feed.actiontypes.js","Sherpa/app/data/config.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});exports.watchJob = watchJob;exports.loadFeed = loadFeed;exports.udpateJobState = udpateJobState;exports.udpateFeedState = udpateFeedState;exports.udpateFeed = udpateFeed;exports.updateJobProgress = updateJobProgress;function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}function _interopRequireWildcard(obj){if(obj && obj.__esModule){return obj;}else {var newObj={};if(obj != null){for(var key in obj) {if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key] = obj[key];}}newObj['default'] = obj;return newObj;}}var _constantsFeedActiontypes=require('Sherpa/app/constants/feed.actiontypes.js');var types=_interopRequireWildcard(_constantsFeedActiontypes);var _dataConfig=require(
 'Sherpa/app/data/config.js');var _dataConfig2=_interopRequireDefault(_dataConfig);var 
-sherpa=_dataConfig2.default.auth.sherpa;
+sherpa=_dataConfig2.default.auth.sherpa;var 
+parser=_dataConfig2.default.settings.parser;
 
 function watchJob(jobID){
 return function(dispatch,getState){
 udpateJobState('start_watching',jobID);var 
 endpoint=sherpa.endpoint;var version=sherpa.version;var job_uri=sherpa.job_uri;
+console.log('watch job',jobID,'job id');
 function fetchJob(){
 fetch(endpoint + version + job_uri + "/" + jobID,{
 method:'get'}).
 then(function(rawSherpaResponse){
-console.log('watch job',rawSherpaResponse);
 var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
 dispatch(udpateJobState('response_ready'),sherpaResponse[0].state);
 
-if(sherpaResponse[0].state !== 'completed'){
+var hasMinTripCountCondition=parser.minTripCount > -1 && sherpaResponse[0]["scrapesCompleted"] >= parser.minTripCount;
+var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
+console.log('parsed trips' + sherpaResponse[0]["scrapesCompleted"]);
+if(hasMinTripCountCondition || hasAllCompleteCondition){
+dispatch(udpateJobState('completed'));}else 
+{
 dispatch(udpateJobState('progress'));
 var progress=sherpaResponse[0].scrapesCompleted / sherpaResponse[0].scrapesTotal;
 dispatch(updateJobProgress(progress));
-setTimeout(function(){fetchJob();},5000);}else 
-{
-dispatch(udpateJobState('completed'));}});}
+setTimeout(function(){fetchJob();},5000);}});}
 
 
 
@@ -55450,6 +55457,11 @@ var UPDATE_JOB_STATE='UPDATE_JOB_STATE';exports.UPDATE_JOB_STATE = UPDATE_JOB_ST
 });
 __d('Sherpa/app/data/config.js',[],function(global, require, module, exports) {  module.exports = {
 debug:false,
+settings:{
+parser:{
+minTripCount:10}},
+
+
 auth:{
 instagram:{
 endpoint:"https://api.instagram.com/",
@@ -55550,7 +55562,20 @@ __d('Sherpa/app/components/ios/onboarding/onboarding.loading.ios.js',["react-nat
 StyleSheet=_reactNative2.default.StyleSheet;var 
 View=_reactNative2.default.View;var 
 Component=_reactNative2.default.Component;var 
-Text=_reactNative2.default.Text;var 
+Text=_reactNative2.default.Text;
+
+
+var styles=StyleSheet.create({
+copy:{
+color:'#4836f9',
+fontFamily:"TSTAR-bold",
+fontSize:14},
+
+container:{
+flex:1,
+justifyContent:'center',
+alignItems:'center'}});var 
+
 
 
 Loading=(function(_Component){_inherits(Loading,_Component);
@@ -55588,23 +55613,15 @@ id:this.state.currentView});}}},{key:'render',value:
 function render(){
 var loadingInfo;
 if(this.state.showProgress){
-loadingInfo = _reactNative2.default.createElement(Text,null,'Scraping Trips... ',Math.round(this.props.feed.jobProgress * 100),'%');}else 
+loadingInfo = _reactNative2.default.createElement(Text,{style:styles.copy},'ANALYZING TRIPS ',Math.round(this.props.feed.jobProgress * 100),'%');}else 
 {
-loadingInfo = _reactNative2.default.createElement(Text,null,'Loading');}
+loadingInfo = _reactNative2.default.createElement(Text,{style:styles.copy},'LOADING');}
 
 return (
 _reactNative2.default.createElement(View,{style:styles.container},
 loadingInfo));}}]);return Loading;})(Component);
 
 
-
-
-
-var styles=StyleSheet.create({
-container:{
-flex:1,
-justifyContent:'center',
-alignItems:'center'}});
 
 
 
@@ -55757,7 +55774,7 @@ this._renderContent('#fff606','Suitecase Tab'))));}}]);return Overview;})(_react
 
 Overview;module.exports = exports.default;
 });
-__d('Sherpa/app/components/ios/overview/feed/feed.ios.js',["react-native/Libraries/react-native/react-native.js","Sherpa/app/components/ios/overview/feed/feed.list.ios.js","react-redux/native.js","Sherpa/app/actions/feed.actions.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}var _reactNative=require(
+__d('Sherpa/app/components/ios/overview/feed/feed.ios.js',["react-native/Libraries/react-native/react-native.js","react-redux/native.js","Sherpa/app/actions/feed.actions.js","Sherpa/app/components/ios/overview/feed/feed.list.ios.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}var _reactNative=require(
 
 'react-native/Libraries/react-native/react-native.js');var _reactNative2=_interopRequireDefault(_reactNative);var _feedListIos=require(
 'Sherpa/app/components/ios/overview/feed/feed.list.ios.js');var _feedListIos2=_interopRequireDefault(_feedListIos);var _reactReduxNative=require(
@@ -55923,7 +55940,7 @@ resizeMode:'cover',
 source:{uri:tripData.moments[0].mediaUrl}}),
 
 _reactNative2.default.createElement(Text,{style:{color:"#FFFFFF",fontSize:14,backgroundColor:"transparent",fontFamily:"TSTAR",fontWeight:"800"}},tripData.owner.serviceUsername,'\'s'),
-_reactNative2.default.createElement(Text,{style:{color:"#FFFFFF",fontSize:35,fontFamily:"TSTAR",fontWeight:"500",letterSpacing:1,backgroundColor:"transparent"}},tripData.name))));}}]);return FeedList;})(_reactNative2.default.Component);
+_reactNative2.default.createElement(Text,{style:{color:"#FFFFFF",fontSize:35,fontFamily:"TSTAR",fontWeight:"500",textAlign:'center',letterSpacing:1,backgroundColor:"transparent"}},tripData.name))));}}]);return FeedList;})(_reactNative2.default.Component);
 
 
 
@@ -55941,7 +55958,7 @@ feed:state.feedReducer};}exports.default =
 
 (0,_reactReduxNative.connect)(select)(FeedList);module.exports = exports.default;
 });
-__d('Sherpa/app/components/ios/overview/feed/feed.trip.ios.js',["react-native/Libraries/react-native/react-native.js","Sherpa/app/components/ios/overview/feed/feed.list.ios.js"],function(global, require, module, exports) {  'use strict';var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}
+__d('Sherpa/app/components/ios/overview/feed/feed.trip.ios.js',["image!header","react-native/Libraries/react-native/react-native.js","Sherpa/app/components/ios/overview/feed/feed.list.ios.js"],function(global, require, module, exports) {  'use strict';var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}
 
 var React=require('react-native/Libraries/react-native/react-native.js');
 var FeedList=require('Sherpa/app/components/ios/overview/feed/feed.list.ios.js');var 
@@ -55980,10 +55997,35 @@ passProps:{trip:trip}});}},{key:'render',value:
 
 function render(){
 return (
+
 React.createElement(ListView,{
 dataSource:this.state.dataSource,
 renderRow:this._renderRow.bind(this),
-contentContainerStyle:styles.listView}));}},{key:'_renderRow',value:
+contentContainerStyle:styles.listView,
+renderHeader:this._renderHeader.bind(this)}));}},{key:'_renderHeader',value:
+
+
+
+
+
+function _renderHeader(){
+return (
+React.createElement(View,{style:{flex:1,width:380,height:602,top:0,padding:0,margin:0,alignItems:'center',marginBottom:20,backgroundColor:'white'}},
+
+React.createElement(Image,{
+style:{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1},
+resizeMode:'cover',
+source:require('image!header')}),
+
+
+React.createElement(Image,{
+style:{lex:1,height:50,width:50,opacity:1,marginTop:100,marginBottom:20},
+resizeMode:'cover',
+source:{uri:this.props.trip.owner.serviceProfilePicture}}),
+
+React.createElement(Text,{style:{color:"#FFFFFF",fontSize:14,backgroundColor:"transparent",fontFamily:"TSTAR",fontWeight:"800"}},this.props.trip.owner.serviceUsername,'\'s'),
+React.createElement(Text,{style:{color:"#FFFFFF",fontSize:35,width:300,fontFamily:"TSTAR",textAlign:'center',fontWeight:"500",letterSpacing:1,backgroundColor:"transparent"}},this.props.trip.name)));}},{key:'_renderRow',value:
+
 
 
 
@@ -55993,7 +56035,7 @@ return (
 React.createElement(View,{style:styles.listItemContainer},
 React.createElement(View,{style:styles.listItem},
 React.createElement(Image,{
-style:{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7},
+style:{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1},
 resizeMode:'cover',
 source:{uri:tripData.mediaUrl}}))));}}]);return FeedTrip;})(Component);
 
@@ -56015,18 +56057,20 @@ alignItems:'center'},
 
 listView:{
 alignItems:'center',
-justifyContent:"center",
-marginTop:15},
+justifyContent:"center"},
 
 listItemContainer:{
 flex:1,
 width:350,
 height:350,
-marginBottom:15}});
+marginBottom:15,
+top:0}});
 
 
 
 module.exports = FeedTrip;
+});
+__d('image!header',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/thomasragger/Documents/projectsCurrent/sherpa-frontend/ios/Sherpa/Images.xcassets/header.imageset/header.png","uri":"header","width":750,"height":1189,"deprecated":true};
 });
 __d('image!logo-sherpa',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/thomasragger/Documents/projectsCurrent/sherpa-frontend/ios/Sherpa/Images.xcassets/logo-sherpa.imageset/logo-sherpa.png","uri":"logo-sherpa","width":163,"height":36,"deprecated":true};
 });
@@ -56038,11 +56082,14 @@ __d('image!icon-profil',[],function(global, require, module, exports) {  module.
 });
 __d('image!icon-suitcase',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/thomasragger/Documents/projectsCurrent/sherpa-frontend/ios/Sherpa/Images.xcassets/icon-suitcase.imageset/icon-suitcase.png","uri":"icon-suitcase","width":42,"height":35,"deprecated":true};
 });
-__d('Sherpa/app/components/ios/onboarding/onboarding.login.ios.js',["Sherpa/app/actions/user.actions.js","react-redux/native.js","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}var _actionsUserActions=require(
+__d('Sherpa/app/components/ios/onboarding/onboarding.login.ios.js',["image!landing-bg","Sherpa/app/actions/user.actions.js","react-redux/native.js","Dimensions","react-native/Libraries/react-native/react-native.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});var _createClass=(function(){function defineProperties(target,props){for(var i=0;i < props.length;i++) {var descriptor=props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if('value' in descriptor)descriptor.writable = true;Object.defineProperty(target,descriptor.key,descriptor);}}return function(Constructor,protoProps,staticProps){if(protoProps)defineProperties(Constructor.prototype,protoProps);if(staticProps)defineProperties(Constructor,staticProps);return Constructor;};})();var _get=function get(object,property,receiver){if(object === null)object = Function.prototype;var desc=Object.getOwnPropertyDescriptor(object,property);if(desc === undefined){var parent=Object.getPrototypeOf(object);if(parent === null){return undefined;}else {return get(parent,property,receiver);}}else if('value' in desc){return desc.value;}else {var getter=desc.get;if(getter === undefined){return undefined;}return getter.call(receiver);}};function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor)){throw new TypeError('Cannot call a class as a function');}}function _inherits(subClass,superClass){if(typeof superClass !== 'function' && superClass !== null){throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass);}subClass.prototype = Object.create(superClass && superClass.prototype,{constructor:{value:subClass,enumerable:false,writable:true,configurable:true}});if(superClass)Object.setPrototypeOf?Object.setPrototypeOf(subClass,superClass):subClass.__proto__ = superClass;}var _actionsUserActions=require(
 
 
 'Sherpa/app/actions/user.actions.js');var _reactReduxNative=require(
-'react-redux/native.js');'use strict';var React=require('react-native/Libraries/react-native/react-native.js');var 
+'react-redux/native.js');var _Dimensions=require(
+'Dimensions');var _Dimensions2=_interopRequireDefault(_Dimensions);'use strict';var React=require('react-native/Libraries/react-native/react-native.js');
+
+var windowSize=_Dimensions2.default.get('window');var 
 
 
 StyleSheet=
@@ -56052,21 +56099,77 @@ StyleSheet=
 
 
 
-React.StyleSheet;var View=React.View;var Component=React.Component;var Text=React.Text;var TextInput=React.TextInput;var TouchableHighlight=React.TouchableHighlight;var AlertIOS=React.AlertIOS;
+
+React.StyleSheet;var View=React.View;var Component=React.Component;var Text=React.Text;var TextInput=React.TextInput;var TouchableHighlight=React.TouchableHighlight;var AlertIOS=React.AlertIOS;var Image=React.Image;
 
 
 var styles=StyleSheet.create({
 container:{
+flexDirection:'column',
 flex:1,
+backgroundColor:'transparent'},
+
+copy:{
+color:'white',
+fontFamily:"TSTAR-bold",
+fontSize:10},
+
+copyCenter:{
+color:'white',
+fontFamily:"TSTAR-bold",
+fontSize:9,
+textAlign:'center'},
+
+bg:{
+position:'absolute',
+left:0,
+top:0,
+width:windowSize.width,
+height:windowSize.height},
+
+login:{
+flex:1,
+padding:40,
+justifyContent:'flex-end'},
+
+textInput:{
+height:40,
+marginTop:3,
+marginBottom:20,
+backgroundColor:'white',
+padding:10,
+borderWidth:0,
+fontSize:11,
+fontFamily:"TSTAR-bold"},
+
+button:{
+backgroundColor:'#4836f9',
+height:50,
 justifyContent:'center',
-margin:30}});var 
+alignItems:'center',
+marginTop:20},
+
+imageContainer:{
+flex:1,
+alignItems:'stretch'},
+
+bgImage:{
+flex:1},
+
+copyLarge:{
+color:'white',
+fontFamily:"TSTAR-bold",
+fontSize:12},
+
+copyButton:{
+marginTop:12}});var 
 
 
 
 Login=(function(_Component){_inherits(Login,_Component);
 function Login(props){_classCallCheck(this,Login);
 _get(Object.getPrototypeOf(Login.prototype),'constructor',this).call(this,props);
-this.state = {email:"",inviteCode:"everest"};}_createClass(Login,[{key:'connectWithService',value:
+this.state = {email:"",inviteCode:"EVEREST"};}_createClass(Login,[{key:'connectWithService',value:
 
 
 function connectWithService(){
@@ -56081,33 +56184,32 @@ AlertIOS.alert("you can't request invites yet");}},{key:'render',value:
 function render(){var _this=this;
 return (
 React.createElement(View,{style:styles.container},
-React.createElement(Text,null,'We want your e-mail address'),
+React.createElement(Image,{style:styles.bg,source:require('image!landing-bg'),resizeMode:'cover'}),
+React.createElement(View,{style:styles.login},
+React.createElement(Text,{style:styles.copy},'We want your E-Mail Address'),
 React.createElement(TextInput,{
-placeholder:'Enter your e-mail address',
-clearTextOnFocus:true,
-placeholderTextColor:'#797979',
+placeholder:'YOUR MAIL',
+placeholderTextColor:'#d7d8d8',
 clearButtonMode:'while-editing',
-style:{height:40,marginTop:10,marginBottom:20,borderColor:'gray',padding:10,borderWidth:1},
+style:styles.textInput,
 onChangeText:function(email){return _this.setState({email:email});}}),
 
-React.createElement(Text,null,'Put your invite code here'),
+React.createElement(Text,{style:styles.copy},'Put your invite code here'),
 React.createElement(TextInput,{
 placeholder:'Try something with everest',
-clearTextOnFocus:true,
 clearButtonMode:'while-editing',
-placeholderTextColor:'#797979',
-style:{height:40,marginTop:10,marginBottom:20,borderColor:'gray',padding:10,borderWidth:1},
+placeholderTextColor:'#d7d8d8',
+style:styles.textInput,
 onChangeText:function(inviteCode){return _this.setState({inviteCode:inviteCode});},
 defaultValue:this.state.inviteCode}),
 
-React.createElement(TouchableHighlight,{underlayColor:'white',style:{backgroundColor:'grey',height:50,justifyContent:'center',alignItems:'center',marginTop:20},onPress:this.connectWithService.bind(this)},
+React.createElement(TouchableHighlight,{underlayColor:'white',style:styles.button,onPress:this.connectWithService.bind(this)},
 React.createElement(View,null,
-React.createElement(Text,null,'Connect with Instagram'))),
+React.createElement(Text,{style:styles.copyLarge},'CONNECT WITH INSTAGRAM'))),
 
 
-React.createElement(TouchableHighlight,{underlayColor:'white',style:{backgroundColor:'white',height:50,justifyContent:'center',alignItems:'center'},onPress:this.requestInvite.bind(this)},
-React.createElement(View,null,
-React.createElement(Text,null,'Request invite via Twitter')))));}}]);return Login;})(Component);
+React.createElement(TouchableHighlight,{underlayColor:'white',style:styles.copyButton,onPress:this.requestInvite.bind(this)},
+React.createElement(Text,{style:styles.copyCenter},'NO CODE? REQUEST AN INVITE VIA TWITTER')))));}}]);return Login;})(Component);
 
 
 
@@ -56124,6 +56226,8 @@ user:state.userReducer};}exports.default =
 
 
 (0,_reactReduxNative.connect)(select)(Login);module.exports = exports.default;
+});
+__d('image!landing-bg',[],function(global, require, module, exports) {  module.exports = {"__packager_asset":true,"isStatic":true,"path":"/Users/thomasragger/Documents/projectsCurrent/sherpa-frontend/ios/Sherpa/Images.xcassets/landing-bg.imageset/landing-bg.png","uri":"landing-bg","width":750,"height":1334,"deprecated":true};
 });
 __d('Sherpa/app/utils/configure.store.js',["redux/lib/index.js","redux-thunk/lib/index.js","Sherpa/app/reducers/root.reducer.js","redux-logger/lib/index.js"],function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});exports.default = 
 
@@ -56236,7 +56340,6 @@ if(action.feedData.trips[index].moments.length > 0){
 cleanTrips.push(action.feedData.trips[index]);}}
 
 
-console.log(cleanTrips);
 return Object.assign({},state,{
 trips:cleanTrips || state.trips});
 
@@ -56377,4 +56480,4 @@ exports["default"] = createLogger;
 module.exports = exports["default"];
 });
 ;require("Sherpa/index.ios.js");
-//@ sourceMappingURL=/index.ios.map?platform=ios&dev=false
+//@ sourceMappingURL=/index.ios.map?platform=ios&dev=true

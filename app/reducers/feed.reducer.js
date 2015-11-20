@@ -17,7 +17,6 @@ export default function userReducer(state=initialState,action){
                     cleanTrips.push(action.feedData.trips[index]);
                 }
             }
-            console.log(cleanTrips);
             return Object.assign({}, state, {
                 trips:cleanTrips || state.trips
             });

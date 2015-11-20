@@ -60,7 +60,6 @@ var styles = StyleSheet.create({
     },
     button:{
         backgroundColor:'#4836f9',
-        color:'white',
         height:50,
         justifyContent:'center',
         alignItems:'center',
@@ -79,10 +78,6 @@ var styles = StyleSheet.create({
         fontSize:12
     },
     copyButton:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:10,
-        textAlign:'center',
         marginTop:12
     }
 });

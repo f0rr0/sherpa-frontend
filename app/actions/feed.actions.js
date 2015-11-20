@@ -1,29 +1,36 @@
 import * as types from '../constants/feed.actiontypes'
 import config from '../data/config';
-const {sherpa}=config.auth;
+console.log(config.auth[config.environment]);
+const {sherpa}=config.auth[config.environment];
+const {parser}=config.settings;
 
 export function watchJob(jobID){
     return function (dispatch, getState) {
         udpateJobState('start_watching',jobID)
         const {endpoint,version,job_uri} = sherpa;
+        console.log('watch job',jobID,'job id');
         function fetchJob(){
             fetch(endpoint + version + job_uri + "/" + jobID, {
                 method: 'get'
             }).then((rawSherpaResponse)=> {
-                console.log('watch job',rawSherpaResponse)
                 var sherpaResponse = JSON.parse(rawSherpaResponse._bodyText);
                 dispatch(udpateJobState('response_ready'),sherpaResponse[0].state);
 
-                if (sherpaResponse[0].state !== 'completed') {
+                var hasMinTripCountCondition=parser.minTripCount>-1 && sherpaResponse[0]["scrapesCompleted"]>=parser.minTripCount;
+                var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
+
+                console.log('parsed trips'+sherpaResponse[0]["scrapesCompleted"]);
+
+                if(hasMinTripCountCondition || hasAllCompleteCondition){
+                    dispatch(udpateJobState('completed'));
+                }else{
                     dispatch(udpateJobState('progress'));
                     var progress=sherpaResponse[0].scrapesCompleted/sherpaResponse[0].scrapesTotal;
                     dispatch(updateJobProgress(progress));
                     setTimeout(()=>{fetchJob()}, 5000);
-                }else{
-                    dispatch(udpateJobState('completed'));
                 }
-
             });
+
         }
         fetchJob();
     }
@@ -34,6 +41,7 @@ export function loadFeed(userID,sherpaToken) {
         dispatch(udpateFeedState('request'));
 
         const {endpoint,version,feed_uri,user_uri} = sherpa;
+        console.log(endpoint+version+user_uri+"/"+userID+feed_uri)
         fetch(endpoint+version+user_uri+"/"+userID+feed_uri,{
             method:'get'
         }).then((rawSherpaResponse)=>{

@@ -88,7 +88,7 @@ class FeedList extends React.Component{
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
                     <Text style={{color:"#FFFFFF",fontSize:14,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{tripData.owner.serviceUsername}'s</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name}</Text>
                 </View>
             </TouchableHighlight>
         );
