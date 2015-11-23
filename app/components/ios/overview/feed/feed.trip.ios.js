@@ -50,10 +50,10 @@ class FeedTrip extends Component {
         )
     }
 
-    _renderHeader(){
+    _r0enderHeader(){
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'red', height:550, width:380,alignItems:'center',flex:1}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >
                     <View
                         style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1,backgroundColor:'black' }}
                     />

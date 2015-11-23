@@ -4,7 +4,7 @@ import config from '../data/config';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
 import * as types from '../constants/user.actiontypes'
 import store from 'react-native-simple-store';
-import React, { LinkingIOS } from 'react-native';
+import React, { LinkingIOS,AlertIOS } from 'react-native';
 const {instagram,sherpa}=config.auth[config.environment];
 const SHERPA="SHERPA";
 const INSTAGRAM="INSTAGRAM";
@@ -50,7 +50,7 @@ export function loadUser() {
                         case 200:
                             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                             if(user.username===sherpaResponse.username){
-                                console.log('user',user)
+                                console.log('user',user);
                                 dispatch(updateUserDBState("available"));
                                 dispatch(watchJob(user.jobID));
                             }else{
@@ -97,15 +97,13 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("service_code_request"));
 
+            console.log(":: insta service request ::")
             LinkingIOS.openURL(endpoint+code_uri + "/?" +queryData);
             LinkingIOS.addEventListener('url', instagramAuthCallback);
-
         }
 
         function instagramAuthCallback(event) {
-
             dispatch(updateUserSignupState("service_code_complete"));
-
 
             const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
             LinkingIOS.removeEventListener('url', instagramAuthCallback);
@@ -156,7 +154,7 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
-
+            console.log('login through',endpoint+version+login_uri)
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
