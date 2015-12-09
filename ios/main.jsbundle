@@ -56811,8 +56811,7 @@ ret.push(encodeURIComponent(d) + "=" + encodeURIComponent(data[d]));}
 return ret.join("&");}
 });
 __d('Sherpa/app/actions/feed.actions.js',function(global, require, module, exports) {  Object.defineProperty(exports,'__esModule',{value:true});exports.watchJob = watchJob;exports.loadFeed = loadFeed;exports.udpateJobState = udpateJobState;exports.udpateFeedState = udpateFeedState;exports.udpateFeed = udpateFeed;exports.updateJobProgress = updateJobProgress;function _interopRequireDefault(obj){return obj && obj.__esModule?obj:{'default':obj};}function _interopRequireWildcard(obj){if(obj && obj.__esModule){return obj;}else {var newObj={};if(obj != null){for(var key in obj) {if(Object.prototype.hasOwnProperty.call(obj,key))newObj[key] = obj[key];}}newObj['default'] = obj;return newObj;}}var _constantsFeedActiontypes=require('Sherpa/app/constants/feed.actiontypes.js');var types=_interopRequireWildcard(_constantsFeedActiontypes);var _dataConfig=require(
-'Sherpa/app/data/config.js');var _dataConfig2=_interopRequireDefault(_dataConfig);
-console.log(_dataConfig2.default.auth[_dataConfig2.default.environment]);var 
+'Sherpa/app/data/config.js');var _dataConfig2=_interopRequireDefault(_dataConfig);var 
 sherpa=_dataConfig2.default.auth[_dataConfig2.default.environment].sherpa;var 
 parser=_dataConfig2.default.settings.parser;
 
@@ -56820,7 +56819,6 @@ function watchJob(jobID){
 return function(dispatch,getState){
 udpateJobState('start_watching',jobID);var 
 endpoint=sherpa.endpoint;var version=sherpa.version;var job_uri=sherpa.job_uri;
-console.log('watch job',jobID,'job id');
 function fetchJob(){
 fetch(endpoint + version + job_uri + "/" + jobID,{
 method:'get'}).
@@ -56830,8 +56828,6 @@ dispatch(udpateJobState('response_ready'),sherpaResponse[0].state);
 
 var hasMinTripCountCondition=parser.minTripCount > -1 && sherpaResponse[0]["scrapesCompleted"] >= parser.minTripCount;
 var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
-
-console.log('parsed trips' + sherpaResponse[0]["scrapesCompleted"]);
 
 if(hasMinTripCountCondition || hasAllCompleteCondition){
 dispatch(udpateJobState('completed'));}else 
@@ -56853,7 +56849,6 @@ return function(dispatch,getState){
 dispatch(udpateFeedState('request'));var 
 
 endpoint=sherpa.endpoint;var version=sherpa.version;var feed_uri=sherpa.feed_uri;var user_uri=sherpa.user_uri;
-console.log(endpoint + version + user_uri + "/" + userID + feed_uri);
 fetch(endpoint + version + user_uri + "/" + userID + feed_uri,{
 method:'get'}).
 then(function(rawSherpaResponse){
@@ -56898,7 +56893,7 @@ var UPDATE_JOB_STATE='UPDATE_JOB_STATE';exports.UPDATE_JOB_STATE = UPDATE_JOB_ST
 });
 __d('Sherpa/app/data/config.js',function(global, require, module, exports) {  module.exports = {
 resetUser:false,
-environment:'debug',
+environment:'dev',
 settings:{
 parser:{
 minTripCount:10}},
@@ -57202,7 +57197,7 @@ break;}}},{key:'render',value:
 
 
 function render(){var _this=this;
-return (
+var tabBar=
 _reactNative2.default.createElement(TabBarIOS,{tintColor:'#4735f9',barTintColor:'#ffffff',style:styles.tabBar},
 _reactNative2.default.createElement(TabBarIOS.Item,{
 icon:require('image!icon-feed'),
@@ -57248,9 +57243,11 @@ _this.setState({
 selectedTab:SUITECASE});}},
 
 
-this._renderContent('#fff606','Suitecase Tab'))));}}]);return Overview;})(_reactNative2.default.Component);exports.default = 
+this._renderContent('#fff606','Suitecase Tab')));
 
 
+return (
+_reactNative2.default.createElement(_feedFeedIos2.default,null));}}]);return Overview;})(_reactNative2.default.Component);exports.default = 
 
 
 
@@ -57373,15 +57370,14 @@ marginBottom:18}});var
 FeedList=(function(_React$Component){_inherits(FeedList,_React$Component);
 function FeedList(){_classCallCheck(this,FeedList);
 _get(Object.getPrototypeOf(FeedList.prototype),'constructor',this).call(this);
-var ds=new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
+this.ds = new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
 this.state = {
-dataSource:ds.cloneWithRows([])};}_createClass(FeedList,[{key:'componentDidMount',value:
+dataSource:this.ds.cloneWithRows([])};}_createClass(FeedList,[{key:'componentDidMount',value:
 
 
 
 function componentDidMount(){
-var ds=new ListView.DataSource({rowHasChanged:function(r1,r2){return r1 !== r2;}});
-this.setState({dataSource:ds.cloneWithRows(this.props.feed.trips)});}},{key:'showTripDetail',value:
+this.setState({dataSource:this.ds.cloneWithRows(this.props.feed.trips)});}},{key:'showTripDetail',value:
 
 
 function showTripDetail(trip){
@@ -57398,7 +57394,9 @@ _reactNative2.default.createElement(ListView,{
 dataSource:this.state.dataSource,
 renderRow:this._renderRow.bind(this),
 contentContainerStyle:styles.listView,
-renderHeader:this._renderHeader.bind(this)}));}},{key:'_renderHeader',value:
+renderHeader:this._renderHeader.bind(this),
+scrollRenderAheadDistance:500,
+pageSize:2}));}},{key:'_renderHeader',value:
 
 
 
@@ -58114,4 +58112,4 @@ module.exports = exports["default"];
 });
 ;require("InitializeJavaScriptAppEngine");
 ;require("Sherpa/index.ios.js");
-__SSTOKENSTRING = "@generated SignedSource<<7619d6e267af43c0498d06b15dbd6abe>>";
+__SSTOKENSTRING = "@generated SignedSource<<06eccdb9d3628ec6c39512796fd409d8>>";

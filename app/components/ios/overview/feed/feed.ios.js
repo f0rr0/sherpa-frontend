@@ -33,14 +33,8 @@ class Feed extends Component {
                         }}
                     />
             break;
-            case "request":
-                displayComponent=<View style={styles.centeredContainer}><Text>requesting trips, please hold</Text></View>;
-            break;
-            case "complete":
-                displayComponent=<View style={styles.centeredContainer}><Text>requesting trips complete</Text></View>;
-            break;
-            case "none":
-                displayComponent=<View style={styles.centeredContainer}><Text>nothing to request</Text></View>;
+            default:
+                displayComponent=<View style={styles.centeredContainer}><Text>waiting for feed</Text></View>;
             break;
         }
 

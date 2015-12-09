@@ -1,7 +1,6 @@
 'use strict';
-
-var React = require('react-native');
-var ProfileView = require('./profile.view.ios');
+import React from 'react-native';
+import ProfileView from './profile.view.ios';
 
 var {
     StyleSheet,
@@ -15,8 +14,8 @@ class Profile extends Component {
             <NavigatorIOS
                 style={styles.container}
                 initialRoute={{
-            title: 'Feed',
-            component: FeedList
+            title: 'Profile',
+            component: ProfileView
           }}/>
         );
     }

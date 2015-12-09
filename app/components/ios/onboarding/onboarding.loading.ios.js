@@ -36,7 +36,6 @@ class Loading extends Component {
     componentWillReceiveProps(nextProps){
         switch(nextProps.user.userDBState){
             case "available":
-                console.log(nextProps.feed.feedState,'feed state');
                 if(nextProps.feed.jobState==='completed'){
                     this.setState({showProgress:false,currentView:"overview"});
                 }else{

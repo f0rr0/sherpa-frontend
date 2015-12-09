@@ -84,55 +84,57 @@ class Overview extends React.Component {
     }
 
     render() {
-        return (
-            <TabBarIOS tintColor="#4735f9" barTintColor="#ffffff" style={styles.tabBar}>
-                <TabBarIOS.Item
-                    icon={require('image!icon-feed')}
-                    selected={this.state.selectedTab === FEED}
-                    title="Feed"
-                    onPress={() => {
+        var tabBar=
+         <TabBarIOS tintColor="#4735f9" barTintColor="#ffffff" style={styles.tabBar}>
+            <TabBarIOS.Item
+                icon={require('image!icon-feed')}
+                selected={this.state.selectedTab === FEED}
+                title="Feed"
+                onPress={() => {
                     this.setState({
                         selectedTab: FEED
                     });
                 }}>
 
-                    {this._renderContent('#414A8C', 'Blue Tab')}
-                </TabBarIOS.Item>
+                {this._renderContent('#414A8C', 'Blue Tab')}
+            </TabBarIOS.Item>
 
-                <TabBarIOS.Item
-                    icon={require('image!icon-explore')}
-                    title="Explore"
-                    selected={this.state.selectedTab === EXPLORE}
-                    onPress={() => {
+            <TabBarIOS.Item
+                icon={require('image!icon-explore')}
+                title="Explore"
+                selected={this.state.selectedTab === EXPLORE}
+                onPress={() => {
                   this.setState({
                     selectedTab: EXPLORE
                   });
                 }}>
-                    {this._renderContent('#783E33', 'Explore Tab')}
-                </TabBarIOS.Item>
-                <TabBarIOS.Item
-                    selected={this.state.selectedTab === PROFILE}
-                    icon={require('image!icon-profil')}
-                    title="Profile"
-                    onPress={() => {
+                {this._renderContent('#783E33', 'Explore Tab')}
+            </TabBarIOS.Item>
+            <TabBarIOS.Item
+                selected={this.state.selectedTab === PROFILE}
+                icon={require('image!icon-profil')}
+                title="Profile"
+                onPress={() => {
                   this.setState({
                     selectedTab: PROFILE
                   });
                 }}>
-                    {this._renderContent('#21551C', 'Profile Tab')}
-                </TabBarIOS.Item>
-                <TabBarIOS.Item
-                    selected={this.state.selectedTab === SUITECASE}
-                    icon={require('image!icon-suitcase')}
-                    title="Suitcase"
-                    onPress={() => {
+                {this._renderContent('#21551C', 'Profile Tab')}
+            </TabBarIOS.Item>
+            <TabBarIOS.Item
+                selected={this.state.selectedTab === SUITECASE}
+                icon={require('image!icon-suitcase')}
+                title="Suitcase"
+                onPress={() => {
                     this.setState({
                         selectedTab: SUITECASE
                     });
                 }}>
-                    {this._renderContent('#fff606', 'Suitecase Tab')}
-                </TabBarIOS.Item>
-            </TabBarIOS>
+                {this._renderContent('#fff606', 'Suitecase Tab')}
+            </TabBarIOS.Item>
+        </TabBarIOS>
+        return (
+           <Feed/>
         );
     }
 }

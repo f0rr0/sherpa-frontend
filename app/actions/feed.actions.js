@@ -1,6 +1,5 @@
 import * as types from '../constants/feed.actiontypes'
 import config from '../data/config';
-console.log(config.auth[config.environment]);
 const {sherpa}=config.auth[config.environment];
 const {parser}=config.settings;
 
@@ -8,7 +7,6 @@ export function watchJob(jobID){
     return function (dispatch, getState) {
         udpateJobState('start_watching',jobID)
         const {endpoint,version,job_uri} = sherpa;
-        console.log('watch job',jobID,'job id');
         function fetchJob(){
             fetch(endpoint + version + job_uri + "/" + jobID, {
                 method: 'get'
@@ -18,8 +16,6 @@ export function watchJob(jobID){
 
                 var hasMinTripCountCondition=parser.minTripCount>-1 && sherpaResponse[0]["scrapesCompleted"]>=parser.minTripCount;
                 var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
-
-                console.log('parsed trips'+sherpaResponse[0]["scrapesCompleted"]);
 
                 if(hasMinTripCountCondition || hasAllCompleteCondition){
                     dispatch(udpateJobState('completed'));
@@ -36,18 +32,17 @@ export function watchJob(jobID){
     }
 }
 
-export function loadFeed(userID,sherpaToken) {
+export function loadFeed(userID,sherpaToken,page=1) {
     return function (dispatch, getState) {
-        dispatch(udpateFeedState('request'));
+        dispatch(updateFeedPage(page));
 
         const {endpoint,version,feed_uri,user_uri} = sherpa;
-        console.log(endpoint+version+user_uri+"/"+userID+feed_uri)
-        fetch(endpoint+version+user_uri+"/"+userID+feed_uri,{
+        var feedRequestURI=endpoint+version+user_uri+"/"+userID+feed_uri+"?page="+page;
+        fetch(feedRequestURI,{
             method:'get'
         }).then((rawSherpaResponse)=>{
             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
-            dispatch(udpateFeedState('complete'));
-            dispatch(udpateFeed({trips:sherpaResponse}));
+            dispatch(udpateFeed({trips:sherpaResponse,page:page}));
             dispatch(udpateFeedState('ready'));
         });
     }
@@ -64,6 +59,13 @@ export function udpateFeedState(feedState){
     return{
         type:types.UPDATE_FEED_STATE,
         feedState
+    }
+}
+
+export function updateFeedPage(feedPage){
+    return{
+        type:types.UPDATE_FEED_PAGE,
+        feedPage
     }
 }
 

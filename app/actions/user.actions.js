@@ -42,7 +42,6 @@ export function loadUser() {
                 dispatch(updateUserData(user));
 
                 const {endpoint,version,user_uri} = sherpa;
-                console.log('fetch',endpoint+version+user_uri+"/"+user.sherpaID);
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
                 }).then((rawSherpaResponse)=>{
@@ -50,7 +49,6 @@ export function loadUser() {
                         case 200:
                             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
                             if(user.username===sherpaResponse.username){
-                                console.log('user',user);
                                 dispatch(updateUserDBState("available"));
                                 dispatch(watchJob(user.jobID));
                             }else{
@@ -58,7 +56,6 @@ export function loadUser() {
                             }
                         break;
                         case 400:
-                            console.log('dispatch user empty');
                             dispatch(updateUserDBState("empty"));
                         break;
                     }
@@ -97,7 +94,6 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("service_code_request"));
 
-            console.log(":: insta service request ::")
             LinkingIOS.openURL(endpoint+code_uri + "/?" +queryData);
             LinkingIOS.addEventListener('url', instagramAuthCallback);
         }
@@ -154,7 +150,6 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
-            console.log('login through',endpoint+version+login_uri)
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -162,9 +157,7 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
-                console.log(rawSherpaResponse,'from login')
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
-                console.log('sherpa response',sherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({
