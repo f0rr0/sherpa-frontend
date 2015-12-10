@@ -98,7 +98,6 @@ class Overview extends React.Component {
 
                 {this._renderContent('#414A8C', 'Blue Tab')}
             </TabBarIOS.Item>
-
             <TabBarIOS.Item
                 icon={require('image!icon-explore')}
                 title="Explore"

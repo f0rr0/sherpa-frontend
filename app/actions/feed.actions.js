@@ -32,18 +32,32 @@ export function watchJob(jobID){
     }
 }
 
-export function loadFeed(userID,sherpaToken,page=1) {
+//types: location,city,state,user
+export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
     return function (dispatch, getState) {
+        dispatch(udpateFeedState('fetch'));
         dispatch(updateFeedPage(page));
 
         const {endpoint,version,feed_uri,user_uri} = sherpa;
-        var feedRequestURI=endpoint+version+user_uri+"/"+userID+feed_uri+"?page="+page;
+        var feedRequestURI;
+        switch(type){
+            case "location":
+                feedRequestURI=endpoint+version+"/location/"+feedTarget+"?page="+page;
+            break;
+            case "profile":
+                feedRequestURI=endpoint+version+"/profile/"+feedTarget+"/trips?page="+page;
+            break;
+            case "user":
+            default:
+                feedRequestURI=endpoint+version+user_uri+"/"+feedTarget+feed_uri+"?page="+page;
+            break;
+        }
+
         fetch(feedRequestURI,{
             method:'get'
         }).then((rawSherpaResponse)=>{
             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
             dispatch(udpateFeed({trips:sherpaResponse,page:page}));
-            dispatch(udpateFeedState('ready'));
         });
     }
 }
@@ -58,6 +72,13 @@ export function udpateJobState(jobState){
 export function udpateFeedState(feedState){
     return{
         type:types.UPDATE_FEED_STATE,
+        feedState
+    }
+}
+
+export function clearFeed(feedState){
+    return{
+        type:types.CLEAR_FEED,
         feedState
     }
 }

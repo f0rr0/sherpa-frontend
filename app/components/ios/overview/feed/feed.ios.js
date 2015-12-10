@@ -2,46 +2,54 @@
 
 import React from 'react-native';
 import FeedList from './feed.list.ios';
+import FeedProfile from './feed.profile.ios';
+import FeedLocation from './feed.location.ios';
+import FeedTrip from './feed.trip.ios';
+
 import { connect } from 'react-redux/native';
 import {loadFeed} from '../../../../actions/feed.actions';
 
 
 var {
     StyleSheet,
-    NavigatorIOS,
+    Navigator,
     Component,
     Text,
     View
     } = React;
 
 class Feed extends Component {
-
-    componentDidMount(){
-        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken));
+    renderScene(route, navigator) {
+        switch (route.id) {
+            case 'feed.list':
+                return <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+            case "feed.location":
+                return <FeedLocation navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                break;
+            case "feed.trip":
+                return <FeedTrip navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
+            case "feed.profile":
+                return <FeedProfile navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
+        }
     }
 
     render() {
-        let displayComponent=<Text>no state</Text>;
-        switch(this.props.feed.feedState){
-            case "ready":
-                displayComponent=
-                    <NavigatorIOS
-                        style={styles.container}
-                        initialRoute={{
-                            title: 'Feed',
-                            component: FeedList
-                        }}
-                    />
-            break;
-            default:
-                displayComponent=<View style={styles.centeredContainer}><Text>waiting for feed</Text></View>;
-            break;
-        }
-
         return (
-            <View style={styles.container}>
-                {displayComponent}
-            </View>
+            <Navigator
+                sceneStyle={styles.container}
+                ref={(navigator) => { this.navigator = navigator; }}
+                renderScene={this.renderScene.bind(this)}
+                configureScene={(route) => ({
+                  ...route.sceneConfig || Navigator.SceneConfigs.FloatFromRight,
+                  gestures: route.gestures
+                })}
+                initialRoute={{
+                  id:"feed.list"
+                }}
+            />
         );
     }
 }

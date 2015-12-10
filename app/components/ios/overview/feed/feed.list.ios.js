@@ -7,19 +7,18 @@ import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 
 var {
-    View,
-    Text,
     StyleSheet,
+    Text,
+    View,
     Image,
-    ListView,
     TouchableHighlight
     }=React;
 
 var styles=StyleSheet.create({
     logo:{
         width:85,
-        marginTop:10,
-        marginBottom:10
+        marginTop:15,
+        marginBottom:15
     },
     listView:{
         alignItems:'center',
@@ -35,7 +34,7 @@ var styles=StyleSheet.create({
         flex:1,
         width:350,
         height:350,
-        marginBottom:18
+        marginBottom:14
     }
 });
 
@@ -44,31 +43,39 @@ class FeedList extends React.Component{
     constructor(){
         super();
         this.itemsLoadedCallback=null;
-        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.state= {
-            dataSource:this.ds.cloneWithRows([])
-        };
     }
 
     componentDidMount(){
     }
 
-    shouldComponentUpdate(nextProps){
-        return this.props.feed.trips!==nextProps.feed.trips;
-    }
     componentDidUpdate(){
+        console.log(":: feed list did update");
+
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
-            console.log('feed state complete',this.props.feed.trips[this.props.feed.feedPage],this.props.feed.feedPage);
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
         }
     }
 
     showTripDetail(trip) {
         this.props.navigator.push({
-            title: trip.name,
-            component: FeedTrip,
-            passProps: {trip}
+            id: "feed.trip",
+            trip
         });
+    }
+
+    _onFetch(page=1,callback){
+        this.itemsLoadedCallback=callback;
+        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
+    }
+
+    _renderHeader(){
+        return (
+            <Image
+                resizeMode="contain"
+                style={styles.logo}
+                source={require('image!logo-sherpa')}
+            />
+        )
     }
 
     render(){
@@ -80,37 +87,14 @@ class FeedList extends React.Component{
                 pagination={true} // enable infinite scrolling using touch to load more
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
+                renderCustomHeader={this._renderHeader.bind(this)}
                 customStyles={{
-                    refreshableView: {
-                        marginBottom:18,
-                        marginTop:40
-                    },
                     contentContainerStyle:styles.listView
                 }}
             />
         )
     }
 
-    _onFetch(page=1,callback){
-        console.log('on fetch',page);
-        if(page===1){
-            callback(this.props.feed.trips[page]);
-        }else{
-            this.itemsLoadedCallback=callback;
-            this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
-        }
-    }
-
-
-    _renderHeader(){
-        return (
-            <Image
-                 resizeMode="contain"
-                 style={styles.logo}
-                 source={require('image!logo-sherpa')}
-            />
-        )
-    }
 
     _renderRow(tripData) {
         var country = countries.filter(function(country) {
@@ -155,12 +139,4 @@ class FeedList extends React.Component{
 }
 
 
-function select(state) {
-    return {
-        user: state.userReducer,
-        feed: state.feedReducer
-    };
-}
-
-
-export default connect(select)(FeedList);
+export default FeedList;

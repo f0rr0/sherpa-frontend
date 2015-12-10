@@ -9,10 +9,13 @@ const initialState={
 };
 
 export default function feedReducer(state=initialState,action){
-    console.log('feed reducer')
     switch(action.type){
+        case types.CLEAR_FEED:
+            return Object.assign({}, state, {
+                trips:{}
+            });
+        break;
         case types.UPDATE_FEED:
-            console.log('update feed',action);
             //TODO: Quick fix, move into actions later
             var cleanTrips=[];
 
@@ -22,17 +25,18 @@ export default function feedReducer(state=initialState,action){
                 }
             }
 
+
             var newPage={};
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
             var newTrips=Object.assign({},state.trips,newPage);
-
+            console.log("update with new trips");
             return Object.assign({}, state, {
-                trips:newTrips
+                trips:newTrips,
+                feedState:"ready"
             });
         break;
         case types.UPDATE_FEED_PAGE:
-            console.log('update feed page in reducer',action)
             return Object.assign({}, state, {
                 feedPage:action.feedPage || state.feedPage
             });
@@ -53,6 +57,5 @@ export default function feedReducer(state=initialState,action){
             });
         break;
     }
-
     return state;
 }

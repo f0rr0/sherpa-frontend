@@ -1,15 +1,15 @@
 'use strict';
 
-var React = require('react-native');
-var FeedList = require('./feed.list.ios');
-var MaskedView = require('react-native-masked-view');
-var Mapbox = require('react-native-mapbox-gl');
-import countries from './../../../../data/countries'
+import React from "react-native";
+import MaskedView from "react-native-masked-view";
+import Mapbox from "react-native-mapbox-gl";
+import FeedLocation from "./feed.location.ios";
+import FeedProfile from "./feed.profile.ios";
+import countries from "./../../../../data/countries";
 import moment from 'moment';
 
 var {
     StyleSheet,
-    NavigatorIOS,
     Component,
     View,
     Text,
@@ -29,6 +29,11 @@ class FeedTrip extends Component {
         };
     }
 
+    componentDidUpdate(){
+        console.log(":: feed trip did update");
+    }
+
+
     componentWillMount(){
         var markers=[];
         for (var i=0;i<this.props.trip.moments.length;i++){
@@ -47,15 +52,6 @@ class FeedTrip extends Component {
 
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({dataSource:ds.cloneWithRows(this.props.trip.moments),annotations:markers})
-        console.log('set state with markers');
-    }
-
-    showTripDetail(trip) {
-        this.props.navigator.push({
-            title: trip.name,
-            component: FeedTrip,
-            passProps: {trip}
-        });
     }
 
     render(){
@@ -69,6 +65,20 @@ class FeedTrip extends Component {
         )
     }
 
+    showUserProfile(trip){
+        this.props.navigator.push({
+            id: "feed.profile",
+            trip
+        });
+    }
+
+    showTripLocation(trip){
+        this.props.navigator.push({
+            id: "feed.location",
+            trip
+        });
+    }
+
     _renderHeader(){
         var tripData=this.props.trip;
         var country = countries.filter(function(country) {
@@ -80,7 +90,7 @@ class FeedTrip extends Component {
         var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
         var dayOrDays=tripDuration>1?"DAYS":"DAY";
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
-        console.log('render header');
+        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
         return (
             <View>
@@ -95,29 +105,24 @@ class FeedTrip extends Component {
                         source={{uri:this.props.trip.moments[0].mediaUrl}}
                     />
 
-
-
                     <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
-                    <TouchableHighlight style={{height:30}}>
+                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
                         <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.location.toUpperCase()}</Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}>
+                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}
                             resizeMode="cover"
                             source={{uri:this.props.trip.owner.serviceProfilePicture}}
                         />
                     </TouchableHighlight>
-                        <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
-                            <TouchableHighlight>
-                                <Text style={{color:"#FFFFFF",fontSize:12,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{country.name.toUpperCase()}</Text>
-                            </TouchableHighlight>
-                            <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>/</Text>
-                            <TouchableHighlight>
-                                <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
-                            </TouchableHighlight>
-                        </View>
+
+                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
+                        <Text style={{color:"#FFFFFF",fontSize:12,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>/</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
+                    </View>
                 </MaskedView>
                 <Mapbox
                     style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
@@ -125,13 +130,9 @@ class FeedTrip extends Component {
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                     centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
                     zoomLevel={8}
+                    annotations={this.state.annotations}
                     scrollEnabled={true}
                     zoomEnabled={true}
-                    attributionButtonIsHidden={true}
-                    logoIsHidden={true}
-                    ref="locationMap"
-                    annotations={this.state.annotations}
-
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
@@ -154,6 +155,12 @@ class FeedTrip extends Component {
                     source={require('image!shadow')}
                 />
 
+                <TouchableHighlight underlayColor="#857af4" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
+                    <View>
+                        <Text style={styles.copyLarge}>EXPLORE {this.props.trip.location.toUpperCase()}</Text>
+                    </View>
+                </TouchableHighlight>
+
             </View>
         )
     }
@@ -168,7 +175,9 @@ class FeedTrip extends Component {
                         source={{uri:tripData.mediaUrl}}
                     />
                 </View>
-                <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",position:"absolute",bottom:-20,backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                <TouchableHighlight>
+                    <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",position:"absolute",bottom:-20,backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                </TouchableHighlight>
             </View>
         );
     }
@@ -193,6 +202,23 @@ var styles = StyleSheet.create({
         width:350,
         height:350,
         marginBottom:30
+    },
+    button:{
+        backgroundColor:'#4836f9',
+        height:50,
+        marginTop:-15,
+        marginBottom:13,
+        marginLeft:15,
+        marginRight:15,
+        width:350,
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    copyLarge:{
+        color:'white',
+        fontFamily:"TSTAR-bold",
+        fontSize:12
     }
 });
 

@@ -1,0 +1,196 @@
+'use strict';
+
+import React from "react-native";
+import MaskedView from "react-native-masked-view";
+import Mapbox from "react-native-mapbox-gl";
+import countries from "./../../../../data/countries";
+import moment from 'moment';
+import { connect } from 'react-redux/native';
+import GiftedListView from 'react-native-gifted-listview';
+import {loadFeed} from '../../../../actions/feed.actions';
+import FeedTrip from './feed.trip.ios'
+
+
+var {
+    StyleSheet,
+    NavigatorIOS,
+    Component,
+    View,
+    Text,
+    ListView,
+    Image,
+    TouchableHighlight
+    } = React;
+
+class FeedLocation extends Component {
+    showTripDetail(trip) {
+        this.props.navigator.push({
+            title: "Trip",
+            component: FeedTrip,
+            passProps: {trip}
+        });
+    }
+    componentDidUpdate(){
+        console.log(":: feed location did update");
+    }
+
+    render(){
+        return(
+            <GiftedListView
+                rowView={this._renderRow.bind(this)}
+                onFetch={this._onFetch.bind(this)}
+                firstLoader={true} // display a loader for the first fetching
+                pagination={true} // enable infinite scrolling using touch to load more
+                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                withSections={false} // enable sections
+                renderCustomHeader={this._renderHeader.bind(this)}
+                customStyles={{
+                    refreshableView: {
+                        marginTop:40
+                    },
+                    contentContainerStyle:styles.listView
+                }}
+            />
+        )
+    }
+
+    _onFetch(page=1,callback){
+        console.log('on fetch',page);
+        if(page===1){
+            callback(this.props.feed.trips[page]);
+        }else{
+            this.itemsLoadedCallback=callback;
+            this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
+        }
+    }
+
+    _renderHeader(){
+        var tripData=this.props.trip;
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.country;
+        })[0];
+
+        var timeAgoStart=moment(new Date(tripData.dateStart*1000));
+        var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
+        var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
+        var visitorS=tripDuration>1?"VISITORS":"VISITOR";
+        var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
+        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
+
+        return (
+            <View>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
+                    <Mapbox
+                        style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0,fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/thomasragger/cii09y5gq000vjxm3epjautbd'}
+                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
+                        zoomLevel={8}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                    />
+
+
+                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:125,left:0,right:0,height:20}}>
+                        <View>
+                            <Text style={{color:"#282b33",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.location.toUpperCase()}</Text>
+                        </View>
+                        <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+                            <Text style={{color:"#282b33",fontSize:12,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}</Text>
+                            <Text style={{color:"#282b33",fontSize:12, fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>/</Text>
+                            <Text style={{color:"#282b33",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
+                        </View>
+                    </View>
+                </MaskedView>
+
+                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                    <Image source={require('image!icon-visitors')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {visitorS}</Text>
+
+                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
+
+                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
+
+                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:25,marginRight:25}} resizeMode="contain"></Image>
+
+                    <Image source={require('image!icon-suitcase-negative')} style={{height:9,marginBottom:3}} resizeMode="contain"></Image>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5 TRIPS</Text>
+                </View>
+
+
+            </View>
+        )
+    }
+
+    _renderRow(tripData) {
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.country;
+        })[0];
+
+        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
+        if(!country)country={name:tripData.country}
+
+        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
+        return (
+            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
+                <View style={styles.listItem}>
+                    <Image
+                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
+                        resizeMode="cover"
+                        source={{uri:tripData.moments[0].mediaUrl}}
+                    />
+                    <View style={{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
+                        <Image
+                            style={{height:50,width:50,opacity:1,borderRadius:25}}
+                            resizeMode="cover"
+                            source={{uri:tripData.owner.serviceProfilePicture}}
+                        />
+                    </View>
+
+                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{country.name.toUpperCase()}</Text>
+
+                    <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
+                        <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
+                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
+                        <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
+                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
+                    </View>
+
+                </View>
+            </TouchableHighlight>
+        );
+    }
+}
+
+var styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    listItem:{
+        flex:1,
+        backgroundColor:"black",
+        justifyContent:"center",
+        alignItems:'center'
+    },
+    listView:{
+        alignItems:'center',
+        justifyContent:"center"
+    },
+    listItemContainer:{
+        flex:1,
+        width:350,
+        height:350,
+        marginBottom:15
+    },
+
+    copyLarge:{
+        color:'white',
+        fontFamily:"TSTAR-bold",
+        fontSize:12
+    }
+});
+
+export default FeedLocation;
