@@ -29,10 +29,6 @@ class FeedTrip extends Component {
         };
     }
 
-    componentDidUpdate(){
-        console.log(":: feed trip did update");
-    }
-
 
     componentWillMount(){
         var markers=[];

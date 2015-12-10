@@ -23,15 +23,27 @@ var {
     } = React;
 
 class FeedLocation extends Component {
+    constructor(){
+        super();
+        this.itemsLoadedCallback=null;
+    }
+
+    componentDidUpdate(){
+        console.log('location view did update',this.props.feed.trips[this.props.feed.feedPage])
+        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
+            this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        }
+    }
     showTripDetail(trip) {
         this.props.navigator.push({
-            title: "Trip",
-            component: FeedTrip,
-            passProps: {trip}
+            id: "feed.trip",
+            trip
         });
     }
-    componentDidUpdate(){
-        console.log(":: feed location did update");
+
+    _onFetch(page=1,callback){
+        this.itemsLoadedCallback=callback;
+        this.props.dispatch(loadFeed(this.props.trip.location,this.props.user.sherpaToken,page,"location"));
     }
 
     render(){
@@ -45,24 +57,12 @@ class FeedLocation extends Component {
                 withSections={false} // enable sections
                 renderCustomHeader={this._renderHeader.bind(this)}
                 customStyles={{
-                    refreshableView: {
-                        marginTop:40
-                    },
                     contentContainerStyle:styles.listView
                 }}
             />
         )
     }
 
-    _onFetch(page=1,callback){
-        console.log('on fetch',page);
-        if(page===1){
-            callback(this.props.feed.trips[page]);
-        }else{
-            this.itemsLoadedCallback=callback;
-            this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
-        }
-    }
 
     _renderHeader(){
         var tripData=this.props.trip;
@@ -140,15 +140,7 @@ class FeedLocation extends Component {
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
-                    <View style={{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
-                        <Image
-                            style={{height:50,width:50,opacity:1,borderRadius:25}}
-                            resizeMode="cover"
-                            source={{uri:tripData.owner.serviceProfilePicture}}
-                        />
-                    </View>
 
-                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
                     <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{country.name.toUpperCase()}</Text>
 

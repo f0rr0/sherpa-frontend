@@ -53,6 +53,8 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             break;
         }
 
+        console.log(feedRequestURI)
+
         fetch(feedRequestURI,{
             method:'get'
         }).then((rawSherpaResponse)=>{
