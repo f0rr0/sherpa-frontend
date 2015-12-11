@@ -43,16 +43,15 @@ class FeedList extends React.Component{
     constructor(){
         super();
         this.itemsLoadedCallback=null;
-    }
+        console.log("feed list did construct");
 
-    componentDidMount(){
     }
 
     componentDidUpdate(){
-        console.log(":: feed list did update");
-
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        }else if(this.props.feed.feedState==='reset'){
+            this.refs.listview._refresh()
         }
     }
 
@@ -64,6 +63,7 @@ class FeedList extends React.Component{
     }
 
     _onFetch(page=1,callback){
+        console.log('fetch feed list')
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
     }
@@ -88,6 +88,7 @@ class FeedList extends React.Component{
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 renderCustomHeader={this._renderHeader.bind(this)}
+                ref="listview"
                 customStyles={{
                     contentContainerStyle:styles.listView
                 }}

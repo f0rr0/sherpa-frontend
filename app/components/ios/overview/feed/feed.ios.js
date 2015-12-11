@@ -7,7 +7,7 @@ import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
 
 import { connect } from 'react-redux/native';
-import {loadFeed} from '../../../../actions/feed.actions';
+import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 
 
 var {
@@ -31,7 +31,6 @@ class Feed extends Component {
             case 'list':
                 showNav=false;
                 sceneContent = <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
-                console.log(route.index);
             break;
             case "location":
                 showNav=true;
@@ -62,6 +61,7 @@ class Feed extends Component {
                 <TouchableHighlight  style={{padding:5,marginLeft:25}} onPress={
                     () => {
                         navigator.pop();
+                        this.props.dispatch(udpateFeedState("reset"));
                     }
                 }>
                     <Image

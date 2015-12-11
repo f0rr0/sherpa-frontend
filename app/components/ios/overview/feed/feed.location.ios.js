@@ -27,9 +27,10 @@ class FeedLocation extends Component {
     }
 
     componentDidUpdate(){
-        console.log('location view did update',this.props.feed.trips[this.props.feed.feedPage])
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        }else if(this.props.feed.feedState==='reset'){
+            this.refs.listview._refresh()
         }
     }
     showTripDetail(trip) {
@@ -54,6 +55,7 @@ class FeedLocation extends Component {
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 renderCustomHeader={this._renderHeader.bind(this)}
+                ref="listview"
                 customStyles={{
                     contentContainerStyle:styles.listView
                 }}
@@ -80,7 +82,7 @@ class FeedLocation extends Component {
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
 
                     <Image
-                        style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0,fontFamily:"TSTAR", fontWeight:"500"}}
+                        style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
                         source={{uri:mapURI}}
                     >
 
@@ -138,8 +140,15 @@ class FeedLocation extends Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{country.name.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"800",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:20}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP</Text>
+
+                    <View style={{position:'absolute',top:120,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
+                        <Image
+                            style={{height:90,width:90,opacity:1,borderRadius:45}}
+                            resizeMode="cover"
+                            source={{uri:tripData.owner.serviceProfilePicture}}
+                        />
+                    </View>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
@@ -161,7 +170,6 @@ var styles = StyleSheet.create({
     listItem:{
         flex:1,
         backgroundColor:"black",
-        justifyContent:"center",
         alignItems:'center'
     },
     listView:{

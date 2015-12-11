@@ -30,7 +30,7 @@ export default function feedReducer(state=initialState,action){
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
             var newTrips=Object.assign({},state.trips,newPage);
-            console.log("update with new trips");
+            console.log("update with new trips")
             return Object.assign({}, state, {
                 trips:newTrips,
                 feedState:"ready"
@@ -57,5 +57,7 @@ export default function feedReducer(state=initialState,action){
             });
         break;
     }
+
+    console.log("state updated");
     return state;
 }

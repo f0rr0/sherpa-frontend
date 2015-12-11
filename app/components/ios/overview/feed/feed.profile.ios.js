@@ -58,6 +58,8 @@ class FeedProfile extends React.Component {
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        }else if(this.props.feed.feedState==='reset'){
+            this.refs.listview._refresh()
         }
     }
 
@@ -82,6 +84,7 @@ class FeedProfile extends React.Component {
                 pagination={true} // enable infinite scrolling using touch to load more
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
+                ref="listview"
                 renderCustomHeader={this._renderHeader.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView

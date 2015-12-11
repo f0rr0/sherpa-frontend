@@ -29,6 +29,8 @@ class FeedTrip extends Component {
         };
     }
 
+    componentDidUpdate(){
+    }
 
     componentWillMount(){
         var markers=[];
@@ -57,6 +59,7 @@ class FeedTrip extends Component {
                renderRow={this._renderRow.bind(this)}
                contentContainerStyle={styles.listView}
                renderHeader={this._renderHeader.bind(this)}
+               ref="listview"
             />
         )
     }

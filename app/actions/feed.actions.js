@@ -60,6 +60,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
         }).then((rawSherpaResponse)=>{
             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
             dispatch(udpateFeed({trips:sherpaResponse,page:page}));
+            dispatch(udpateFeedState('fetch'));
         });
     }
 }
