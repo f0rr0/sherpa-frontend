@@ -63,7 +63,7 @@ class FeedProfile extends React.Component {
 
     showTripDetail(trip) {
         this.props.navigator.push({
-            id: "feed.trip",
+            id: "trip",
             trip
         });
     }
@@ -132,6 +132,7 @@ class FeedProfile extends React.Component {
                     <Image source={require('image!icon-suitcase-negative')} style={{height:9,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5 TRIPS</Text>
                 </View>
+                {this.props.navigation}
 
 
             </View>

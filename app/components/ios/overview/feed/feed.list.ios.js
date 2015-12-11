@@ -58,7 +58,7 @@ class FeedList extends React.Component{
 
     showTripDetail(trip) {
         this.props.navigator.push({
-            id: "feed.trip",
+            id: "trip",
             trip
         });
     }

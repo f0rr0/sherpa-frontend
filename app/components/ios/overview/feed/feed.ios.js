@@ -15,27 +15,72 @@ var {
     Navigator,
     Component,
     Text,
-    View
+    TouchableHighlight,
+    View,
+    Image
     } = React;
 
 class Feed extends Component {
     renderScene(route, navigator) {
+        var sceneContent;
+        var showNav=false;
+        var navColor="white";
+
+
         switch (route.id) {
-            case 'feed.list':
-                return <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+            case 'list':
+                showNav=false;
+                sceneContent = <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                console.log(route.index);
             break;
-            case "feed.location":
-                return <FeedLocation navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
-                break;
-            case "feed.trip":
-                return <FeedTrip navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            case "location":
+                showNav=true;
+                sceneContent = <FeedLocation navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
-            case "feed.profile":
-                return <FeedProfile navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            case "trip":
+                navColor="white";
+                showNav=true;
+                sceneContent = <FeedTrip navigator={navigator} navigation={this._getNavigation("white",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
+            case "profile":
+                navColor="black";
+                showNav=true;
+                sceneContent = <FeedProfile navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
         }
+
+
+        return sceneContent;
     }
 
+
+    _getNavigation(color,route,navigator){
+        var arrowImage=color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
+        var dotsImage=color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
+        return(
+            <View ref="navigation" style={{top:0,left:0,flexDirection:"row",width:380,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:'transparent',height:70,position:"absolute"}}>
+                <TouchableHighlight  style={{padding:5,marginLeft:25}} onPress={
+                    () => {
+                        navigator.pop();
+                    }
+                }>
+                    <Image
+                        style={{width:11,height:11,backgroundColor:'transparent'}}
+                        source={arrowImage}
+                        resizeMode="contain"
+                    ></Image>
+                </TouchableHighlight>
+                <Text style={{color:color,fontSize:14,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{route.id.toUpperCase()}</Text>
+                <TouchableHighlight style={{padding:5,marginRight:25}}>
+                    <Image
+                        style={{width:11,height:13,backgroundColor:'transparent'}}
+                        source={dotsImage}
+                        resizeMode="contain"
+                    ></Image>
+                </TouchableHighlight>
+            </View>
+        )
+    }
     render() {
         return (
             <Navigator
@@ -47,7 +92,8 @@ class Feed extends Component {
                   gestures: route.gestures
                 })}
                 initialRoute={{
-                  id:"feed.list"
+                  id:"list",
+                  index:0
                 }}
             />
         );

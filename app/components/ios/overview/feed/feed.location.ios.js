@@ -13,11 +13,9 @@ import FeedTrip from './feed.trip.ios'
 
 var {
     StyleSheet,
-    NavigatorIOS,
     Component,
     View,
     Text,
-    ListView,
     Image,
     TouchableHighlight
     } = React;
@@ -36,7 +34,7 @@ class FeedLocation extends Component {
     }
     showTripDetail(trip) {
         this.props.navigator.push({
-            id: "feed.trip",
+            id: "trip",
             trip
         });
     }
@@ -76,19 +74,17 @@ class FeedLocation extends Component {
         var visitorS=tripDuration>1?"VISITORS":"VISITOR";
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
+        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
-                    <Mapbox
+
+                    <Image
                         style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0,fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/thomasragger/cii09y5gq000vjxm3epjautbd'}
-                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                        centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
-                        zoomLevel={8}
-                        scrollEnabled={false}
-                        zoomEnabled={false}
-                    />
+                        source={{uri:mapURI}}
+                    >
+
+                    </Image>
 
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:125,left:0,right:0,height:20}}>
@@ -118,6 +114,7 @@ class FeedLocation extends Component {
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5 TRIPS</Text>
                 </View>
 
+                {this.props.navigation}
 
             </View>
         )

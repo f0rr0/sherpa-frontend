@@ -63,14 +63,14 @@ class FeedTrip extends Component {
 
     showUserProfile(trip){
         this.props.navigator.push({
-            id: "feed.profile",
+            id: "profile",
             trip
         });
     }
 
     showTripLocation(trip){
         this.props.navigator.push({
-            id: "feed.location",
+            id: "location",
             trip
         });
     }
@@ -89,8 +89,9 @@ class FeedTrip extends Component {
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
         return (
-            <View>
+            <View style={{flex:1}}>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >
+
                     <View
                         style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1,backgroundColor:'black' }}
                     />
@@ -157,6 +158,7 @@ class FeedTrip extends Component {
                     </View>
                 </TouchableHighlight>
 
+                {this.props.navigation}
             </View>
         )
     }
