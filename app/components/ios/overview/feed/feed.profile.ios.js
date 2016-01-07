@@ -96,15 +96,20 @@ class FeedProfile extends React.Component {
     _renderHeader(){
         var tripData=this.props.trip;
 
+
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];
 
-        var timeAgoStart=moment(new Date(tripData.dateStart*1000));
-        var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
-        var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
-        var citieS=tripDuration>1?"CITIES":"CITY";
-        var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
+
+        var trips=this.props.feed.trips["1"];
+        var tripDuration=trips.length;
+        var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
+        var moments=0;
+        for(var i=0;i<trips.length;i++){
+            moments+=trips[i].moments.length;
+        }
+        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
@@ -130,10 +135,6 @@ class FeedProfile extends React.Component {
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
 
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:25,marginRight:25}} resizeMode="contain"></Image>
-
-                    <Image source={require('image!icon-suitcase-negative')} style={{height:9,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5 TRIPS</Text>
                 </View>
                 {this.props.navigation}
 

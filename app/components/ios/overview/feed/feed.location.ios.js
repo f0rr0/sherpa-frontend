@@ -70,11 +70,19 @@ class FeedLocation extends Component {
             return country["alpha-2"] === tripData.country;
         })[0];
 
+        console.log('feed data',this.props.feed);
+
         var timeAgoStart=moment(new Date(tripData.dateStart*1000));
         var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
-        var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
+
+        var trips=this.props.feed.trips["1"];
+        var tripDuration=trips.length;
         var visitorS=tripDuration>1?"VISITORS":"VISITOR";
-        var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
+        var moments=0;
+        for(var i=0;i<trips.length;i++){
+            moments+=trips[i].moments.length;
+        }
+        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
@@ -108,12 +116,8 @@ class FeedLocation extends Component {
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
 
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
 
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:25,marginRight:25}} resizeMode="contain"></Image>
-
-                    <Image source={require('image!icon-suitcase-negative')} style={{height:9,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5 TRIPS</Text>
                 </View>
 
                 {this.props.navigation}

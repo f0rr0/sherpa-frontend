@@ -87,7 +87,7 @@ class FeedTrip extends Component {
         var timeAgoStart=moment(new Date(tripData.dateStart*1000));
         var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
         var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
-        var dayOrDays=tripDuration>1?"DAYS":"DAY";
+        var dayOrDays=Math.abs(tripDuration)>1?"DAYS":"DAY";
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
@@ -143,10 +143,7 @@ class FeedTrip extends Component {
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
 
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:25,marginRight:25}} resizeMode="contain"></Image>
 
-                    <Image source={require('image!icon-suitcase-negative')} style={{height:9,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>5X PACKED</Text>
                 </View>
 
                 <Image

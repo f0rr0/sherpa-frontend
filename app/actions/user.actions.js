@@ -93,7 +93,7 @@ export function signupUser(){
             const queryData = encodeQueryData({response_type, client_id, redirect_uri});
 
             dispatch(updateUserSignupState("service_code_request"));
-
+            console.log('insta url::',endpoint+code_uri + "/?" +queryData)
             LinkingIOS.openURL(endpoint+code_uri + "/?" +queryData);
             LinkingIOS.addEventListener('url', instagramAuthCallback);
         }

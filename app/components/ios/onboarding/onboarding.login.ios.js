@@ -15,7 +15,8 @@ var {
     TextInput,
     TouchableHighlight,
     AlertIOS,
-    Image
+    Image,
+    Animated
     } = React;
 
 
@@ -49,22 +50,16 @@ var styles = StyleSheet.create({
         justifyContent:'flex-end'
     },
     textInput:{
-        height: 40,
+        height: 50,
         marginTop:3,
-        marginBottom:20,
+        marginBottom:10,
         backgroundColor:'white',
         padding:10,
         borderWidth: 0,
         fontSize:11,
         fontFamily:"TSTAR-bold"
     },
-    button:{
-        backgroundColor:'#4836f9',
-        height:50,
-        justifyContent:'center',
-        alignItems:'center',
-        marginTop:20
-    },
+
     imageContainer:{
         flex: 1,
         alignItems: 'stretch'
@@ -79,13 +74,22 @@ var styles = StyleSheet.create({
     },
     copyButton:{
         marginTop:12
+    },
+    button:{
+        backgroundColor:'#4836f9',
+        height:50,
+        justifyContent:'center',
+        alignItems:'center'
     }
 });
 
 class Login extends Component {
     constructor(props){
         super(props);
-        this.state={email:"",inviteCode:"EVEREST"};
+        this.state={email:"",inviteCode:"EVEREST",inputBottomMargin: new Animated.Value(0),copyOpacity:new Animated.Value(1)};
+    }
+    componentDidMount(){
+
     }
 
     connectWithService(){
@@ -97,10 +101,51 @@ class Login extends Component {
         AlertIOS.alert("you can't request invites yet");
     }
 
+    moveUp(){
+        Animated.spring(
+            this.state.inputBottomMargin,
+            {
+                toValue: 308,
+                friction:6
+            }
+        ).start();
+
+        Animated.spring(
+            this.state.copyOpacity,
+            {
+                toValue:0,
+                friction:6
+            }
+        ).start();
+    }
+
+    moveDown(){
+        Animated.spring(
+            this.state.inputBottomMargin,
+            {
+                toValue: 50,
+                friction:6
+            }
+        ).start();
+
+        Animated.spring(
+            this.state.copyOpacity,
+            {
+                toValue:1,
+                friction:6
+            }
+        ).start();
+    }
+
     render() {
         return (
             <View style={styles.container}>
                 <Image style={styles.bg} source={require('image!landing-bg')} resizeMode="cover"/>
+
+                <Animated.View style={{opacity:this.state.copyOpacity}}>
+                    <Text style={{fontSize:33,fontFamily:"TSTAR-bold",color:"white",letterSpacing:4,width:300,textAlign:"center",left:42,top:230,lineHeight:35}}>DISCOVER THE WORLD THROUGH YOUR FRIENDS</Text>
+                </Animated.View>
+
                 <View style={styles.login}>
                     <Text style={styles.copy}>We want your E-Mail Address</Text>
                     <TextInput
@@ -108,25 +153,17 @@ class Login extends Component {
                         placeholderTextColor="#d7d8d8"
                         clearButtonMode="while-editing"
                         style={styles.textInput}
+                        onFocus={()=>this.moveUp()}
+                        onBlur={()=>this.moveDown()}
                         onChangeText={(email) => this.setState({email})}
                     />
-                    <Text style={styles.copy}>Put your invite code here</Text>
-                    <TextInput
-                        placeholder="Try something with everest"
-                        clearButtonMode="while-editing"
-                        placeholderTextColor="#d7d8d8"
-                        style={styles.textInput}
-                        onChangeText={(inviteCode) => this.setState({inviteCode})}
-                        defaultValue={this.state.inviteCode}
-                    />
-                    <TouchableHighlight underlayColor="white" style={styles.button} onPress={this.connectWithService.bind(this)}>
-                        <View>
+                        <Animated.View style={[{
+                        marginBottom:this.state.inputBottomMargin
+                        }]}>
+                    <TouchableHighlight style={styles.button} underlayColor="white" onPress={this.connectWithService.bind(this)}>
                             <Text style={styles.copyLarge}>CONNECT WITH INSTAGRAM</Text>
-                        </View>
                     </TouchableHighlight>
-                    <TouchableHighlight underlayColor="white" style={styles.copyButton} onPress={this.requestInvite.bind(this)}>
-                            <Text style={styles.copyCenter}>NO CODE? REQUEST AN INVITE VIA TWITTER</Text>
-                    </TouchableHighlight>
+                        </Animated.View>
                 </View>
             </View>
         );
