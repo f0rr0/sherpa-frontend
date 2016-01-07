@@ -48,7 +48,6 @@ class Feed extends Component {
             break;
         }
 
-
         return sceneContent;
     }
 
@@ -58,7 +57,7 @@ class Feed extends Component {
         var dotsImage=color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
         return(
             <View ref="navigation" style={{top:0,left:0,flexDirection:"row",width:380,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:'transparent',height:70,position:"absolute"}}>
-                <TouchableHighlight  style={{padding:5,marginLeft:25}} onPress={
+                <TouchableHighlight  style={{padding:20,marginLeft:5,top:0}} onPress={
                     () => {
                         navigator.pop();
                         this.props.dispatch(udpateFeedState("reset"));

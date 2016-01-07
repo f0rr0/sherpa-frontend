@@ -140,7 +140,7 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.bg} source={require('image!landing-bg')} resizeMode="cover"/>
+                <Image style={styles.bg} source={require('image!home-bg')} resizeMode="cover"/>
 
                 <Animated.View style={{opacity:this.state.copyOpacity}}>
                     <Text style={{fontSize:33,fontFamily:"TSTAR-bold",color:"white",letterSpacing:4,width:300,textAlign:"center",left:42,top:230,lineHeight:35}}>DISCOVER THE WORLD THROUGH YOUR FRIENDS</Text>
@@ -152,6 +152,7 @@ class Login extends Component {
                         placeholder="YOUR MAIL"
                         placeholderTextColor="#d7d8d8"
                         clearButtonMode="while-editing"
+                        keyboardType="email-address"
                         style={styles.textInput}
                         onFocus={()=>this.moveUp()}
                         onBlur={()=>this.moveDown()}

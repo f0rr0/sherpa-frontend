@@ -16,7 +16,7 @@ var {
 
 var styles=StyleSheet.create({
     logo:{
-        width:85,
+        height:25,
         marginTop:15,
         marginBottom:15
     },
@@ -48,10 +48,11 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        console.log(this.props.feed.userTripsPage)
+        if(this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]){
+            this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage])
         }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
+            //this.refs.listview._refresh()
         }
     }
 
@@ -63,7 +64,6 @@ class FeedList extends React.Component{
     }
 
     _onFetch(page=1,callback){
-        console.log('fetch feed list')
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
     }
@@ -104,10 +104,9 @@ class FeedList extends React.Component{
 
         //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
         if(!country)country={name:tripData.country}
-
-        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
+        var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         return (
-            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
+            <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}

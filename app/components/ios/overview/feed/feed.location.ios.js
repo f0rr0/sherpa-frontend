@@ -27,6 +27,7 @@ class FeedLocation extends Component {
     }
 
     componentDidUpdate(){
+        console.log('init location',this.props.feed.trips);
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
         }else if(this.props.feed.feedState==='reset'){
@@ -42,6 +43,7 @@ class FeedLocation extends Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
+        console.log('load feed location')
         this.props.dispatch(loadFeed(this.props.trip.location,this.props.user.sherpaToken,page,"location"));
     }
 
@@ -65,12 +67,13 @@ class FeedLocation extends Component {
 
 
     _renderHeader(){
+        if(Object.keys(this.props.feed.trips).length==0)return;
+
+
         var tripData=this.props.trip;
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];
-
-        console.log('feed data',this.props.feed);
 
         var timeAgoStart=moment(new Date(tripData.dateStart*1000));
         var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
@@ -87,7 +90,7 @@ class FeedLocation extends Component {
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
 
                     <Image
                         style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}

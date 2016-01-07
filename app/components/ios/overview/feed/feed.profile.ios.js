@@ -94,6 +94,7 @@ class FeedProfile extends React.Component {
     }
 
     _renderHeader(){
+        if(Object.keys(this.props.feed.trips).length==0)return;
         var tripData=this.props.trip;
 
 

@@ -152,7 +152,7 @@ class FeedTrip extends Component {
                     source={require('image!shadow')}
                 />
 
-                <TouchableHighlight underlayColor="#857af4" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
+                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
                     <View>
                         <Text style={styles.copyLarge}>EXPLORE {this.props.trip.location.toUpperCase()}</Text>
                     </View>
@@ -164,6 +164,8 @@ class FeedTrip extends Component {
     }
 
     _renderRow(tripData) {
+        if(tripData.type!=='image')return(<View></View>);
+
         return (
             <View style={styles.listItemContainer}>
                 <View style={styles.listItem}>
@@ -202,7 +204,7 @@ var styles = StyleSheet.create({
         marginBottom:30
     },
     button:{
-        backgroundColor:'#4836f9',
+        backgroundColor:'#001545',
         height:50,
         marginTop:-15,
         marginBottom:13,

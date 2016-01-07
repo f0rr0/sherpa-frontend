@@ -16,7 +16,7 @@ var {
 
 var styles = StyleSheet.create({
     copy: {
-        color:'#4836f9',
+        color:'#001545',
         fontFamily:"TSTAR-bold",
         fontSize:14,
         marginTop:20
@@ -68,7 +68,7 @@ class Loading extends Component {
         }
         return (
             <View style={styles.container}>
-                <Image style={{width: 40, height: 40}} source={{uri: 'http://www.thomasragger.com/1.gif'}} />
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
                 {loadingInfo}
             </View>
         );

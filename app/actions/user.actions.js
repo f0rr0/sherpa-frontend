@@ -150,6 +150,7 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
+            console.log(endpoint+version+login_uri);
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {

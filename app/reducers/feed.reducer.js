@@ -2,6 +2,8 @@ import * as types from '../constants/feed.actiontypes';
 
 const initialState={
     trips:{},
+    userTrips:{},
+    userTripsPage:1,
     feedState:"none",
     jobState:"none",
     jobProgress:0,
@@ -16,30 +18,46 @@ export default function feedReducer(state=initialState,action){
             });
         break;
         case types.UPDATE_FEED:
-            //TODO: Quick fix, move into actions later
             var cleanTrips=[];
 
             for(var index in action.feedData.trips){
-                if(action.feedData.trips[index].moments.length>0){
-                    cleanTrips.push(action.feedData.trips[index]);
+                var moments=action.feedData.trips[index].moments;
+                if(moments.length>0){
+                    if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
                 }
             }
-
 
             var newPage={};
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
             var newTrips=Object.assign({},state.trips,newPage);
-            console.log("update with new trips")
-            return Object.assign({}, state, {
-                trips:newTrips,
-                feedState:"ready"
-            });
+
+            console.log(action.feedData.type,'::type')
+            if(action.feedData.type==='user'){
+                console.log('user feed');
+                return Object.assign({}, state, {
+                    userTrips:newTrips,
+                    feedState:"ready"
+                });
+            }else{
+                console.log("regular feed");
+                return Object.assign({}, state, {
+                    trips:newTrips,
+                    feedState:"ready"
+                });
+            }
+
         break;
         case types.UPDATE_FEED_PAGE:
-            return Object.assign({}, state, {
-                feedPage:action.feedPage || state.feedPage
-            });
+            if(action.feedType==='user'){
+                return Object.assign({}, state, {
+                    userTripsPage:action.feedPage || state.userTripsPage
+                });
+            }else {
+                return Object.assign({}, state, {
+                    feedPage: action.feedPage || state.feedPage
+                });
+            }
         break;
         case types.UPDATE_FEED_STATE:
             return Object.assign({}, state, {

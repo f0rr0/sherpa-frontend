@@ -13,18 +13,21 @@ export function watchJob(jobID){
             }).then((rawSherpaResponse)=> {
                 var sherpaResponse = JSON.parse(rawSherpaResponse._bodyText);
                 dispatch(udpateJobState('response_ready'),sherpaResponse[0].state);
+                checkFeedReady(sherpaResponse[0].user,dispatch);
 
-                var hasMinTripCountCondition=parser.minTripCount>-1 && sherpaResponse[0]["scrapesCompleted"]>=parser.minTripCount;
-                var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
+                //var hasMinTripCountCondition=parser.minTripCount>-1 && sherpaResponse[0]["scrapesCompleted"]>=parser.minTripCount;
+                //var hasAllCompleteCondition=sherpaResponse[0].state === 'completed';
+                //
+                //console.log(sherpaResponse[0]["scrapesCompleted"])
 
-                if(hasMinTripCountCondition || hasAllCompleteCondition){
-                    dispatch(udpateJobState('completed'));
-                }else{
-                    dispatch(udpateJobState('progress'));
-                    var progress=sherpaResponse[0].scrapesCompleted/sherpaResponse[0].scrapesTotal;
-                    dispatch(updateJobProgress(progress));
-                    setTimeout(()=>{fetchJob()}, 5000);
-                }
+                //if(hasMinTripCountCondition || hasAllCompleteCondition){
+                //    dispatch(udpateJobState('completed'));
+                //}else{
+                //    dispatch(udpateJobState('progress'));
+                //    var progress=sherpaResponse[0].scrapesCompleted/sherpaResponse[0].scrapesTotal;
+                //    dispatch(updateJobProgress(progress));
+                //    setTimeout(()=>{fetchJob()}, 5000);
+                //}
             });
 
         }
@@ -32,14 +35,36 @@ export function watchJob(jobID){
     }
 }
 
+
+function checkFeedReady(userID,dispatch){
+    console.log('check feed ready');
+    const {endpoint,version,feed_uri,user_uri} = sherpa;
+    var feedRequestURI=endpoint+version+user_uri+"/"+userID+feed_uri;
+    console.log(feedRequestURI)
+    fetch(feedRequestURI,{
+        method:'get'
+    }).then((rawSherpaResponse)=>{
+        var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+        console.log(sherpaResponse.trips.length,'blablabla');
+        if(sherpaResponse.trips.length==25){
+            dispatch(udpateJobState('completed'));
+        }else{
+            setTimeout(()=>{checkFeedReady(userID,dispatch)}, 1000);
+        }
+    });
+}
+
+
 //types: location,city,state,user
 export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
     return function (dispatch, getState) {
         dispatch(udpateFeedState('fetch'));
-        dispatch(updateFeedPage(page));
+        dispatch(updateFeedPage(page,type));
 
         const {endpoint,version,feed_uri,user_uri} = sherpa;
         var feedRequestURI;
+
+        console.log("load feed type",type);
         switch(type){
             case "location":
                 feedRequestURI=endpoint+version+"/location/"+feedTarget+"?page="+page;
@@ -53,13 +78,16 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             break;
         }
 
-        console.log(feedRequestURI)
 
         fetch(feedRequestURI,{
             method:'get'
         }).then((rawSherpaResponse)=>{
             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
-            dispatch(udpateFeed({trips:sherpaResponse,page:page}));
+            if(type==="user"){
+                dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
+            }else{
+                dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));
+            }
             dispatch(udpateFeedState('fetch'));
         });
     }
@@ -86,10 +114,11 @@ export function clearFeed(feedState){
     }
 }
 
-export function updateFeedPage(feedPage){
+export function updateFeedPage(feedPage,feedType){
     return{
         type:types.UPDATE_FEED_PAGE,
-        feedPage
+        feedPage,
+        feedType
     }
 }
 
