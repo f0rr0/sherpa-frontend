@@ -5,7 +5,7 @@ const initialState={
     sherpaID:-1,
     fullName:"",
     profilePicture:"",
-    email:"",
+    email:"test@test.test",
     serviceToken:"",
     sherpaToken:"",
     inviteCode:"",

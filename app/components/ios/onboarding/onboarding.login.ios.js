@@ -39,15 +39,16 @@ var styles = StyleSheet.create({
     },
     bg:{
         position:'absolute',
-        left:0,
-        top:0,
-        width:windowSize.width,
+        left:windowSize.width*.3,
+        top:-60,
+        width:windowSize.width*.4,
         height:windowSize.height
     },
     login:{
         flex:1,
         padding:40,
-        justifyContent:'flex-end'
+        justifyContent:'center',
+        marginTop:80
     },
     textInput:{
         height: 50,
@@ -76,7 +77,7 @@ var styles = StyleSheet.create({
         marginTop:12
     },
     button:{
-        backgroundColor:'#4836f9',
+        backgroundColor:'#001545',
         height:50,
         justifyContent:'center',
         alignItems:'center'
@@ -140,24 +141,10 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.bg} source={require('image!home-bg')} resizeMode="cover"/>
-
-                <Animated.View style={{opacity:this.state.copyOpacity}}>
-                    <Text style={{fontSize:33,fontFamily:"TSTAR-bold",color:"white",letterSpacing:4,width:300,textAlign:"center",left:42,top:230,lineHeight:35}}>DISCOVER THE WORLD THROUGH YOUR FRIENDS</Text>
-                </Animated.View>
+                <Image style={styles.bg} source={require('image!logo-sherpa')} resizeMode="contain"/>
 
                 <View style={styles.login}>
-                    <Text style={styles.copy}>We want your E-Mail Address</Text>
-                    <TextInput
-                        placeholder="YOUR MAIL"
-                        placeholderTextColor="#d7d8d8"
-                        clearButtonMode="while-editing"
-                        keyboardType="email-address"
-                        style={styles.textInput}
-                        onFocus={()=>this.moveUp()}
-                        onBlur={()=>this.moveDown()}
-                        onChangeText={(email) => this.setState({email})}
-                    />
+
                         <Animated.View style={[{
                         marginBottom:this.state.inputBottomMargin
                         }]}>

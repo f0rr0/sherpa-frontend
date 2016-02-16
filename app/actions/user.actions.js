@@ -45,6 +45,7 @@ export function loadUser() {
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
                 }).then((rawSherpaResponse)=>{
+                    console.log(rawSherpaResponse,'sherpa response')
                     switch(rawSherpaResponse.status){
                         case 200:
                             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
@@ -115,7 +116,10 @@ export function signupUser(){
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body:queryData
-            }).then((rawServiceResponse)=>signupWithSherpa(JSON.parse(rawServiceResponse._bodyText)));
+            }).then((rawServiceResponse)=>{
+                console.log('insta response',rawServiceResponse._bodyText)
+                signupWithSherpa(JSON.parse(rawServiceResponse._bodyText))
+            });
         }
 
         function signupWithSherpa(serviceResponse){
@@ -151,6 +155,7 @@ export function signupUser(){
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
             console.log(endpoint+version+login_uri);
+            console.log(queryData);
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -158,7 +163,9 @@ export function signupUser(){
                 },
                 body:queryData
             }).then((rawSherpaResponse)=>{
+                console.log('response form server',rawSherpaResponse);
                 let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+                console.log(sherpaResponse,'service response')
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({

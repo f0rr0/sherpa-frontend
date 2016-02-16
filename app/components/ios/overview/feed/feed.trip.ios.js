@@ -107,7 +107,7 @@ class FeedTrip extends Component {
 
                     <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
                     <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.location.toUpperCase()}</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
                     </TouchableHighlight>
 
                     <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
@@ -119,8 +119,6 @@ class FeedTrip extends Component {
                     </TouchableHighlight>
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
-                        <Text style={{color:"#FFFFFF",fontSize:12,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}</Text>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>/</Text>
                         <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
                     </View>
                 </MaskedView>
@@ -154,7 +152,7 @@ class FeedTrip extends Component {
 
                 <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
                     <View>
-                        <Text style={styles.copyLarge}>EXPLORE {this.props.trip.location.toUpperCase()}</Text>
+                        <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
                     </View>
                 </TouchableHighlight>
 
