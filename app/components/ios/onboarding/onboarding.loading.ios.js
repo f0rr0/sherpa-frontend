@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react-native';
-import {watchJob} from '../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
 import Overview from '../overview/overview.ios';
 import Login from './onboarding.login.ios';
@@ -38,11 +37,7 @@ class Loading extends Component {
     componentWillReceiveProps(nextProps){
         switch(nextProps.user.userDBState){
             case "available":
-                if(nextProps.feed.jobState==='completed'){
-                    this.setState({showProgress:false,currentView:"overview"});
-                }else{
-                    this.setState({showProgress:true,currentView:"loading"});
-                }
+                this.setState({showProgress:false,currentView:"overview"});
             break;
             case "empty":
                 this.setState({showProgress:true,currentView:"login"});

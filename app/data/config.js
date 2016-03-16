@@ -39,7 +39,7 @@ module.exports = {
                     grant_type:"authorization_code"
                 },
                 sherpa: {
-                    endpoint:"http://sherpa-dev.elasticbeanstalk.com/api/",
+                    endpoint:"http://api.trysherpa.com/api/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",

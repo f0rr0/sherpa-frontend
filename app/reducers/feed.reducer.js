@@ -5,8 +5,6 @@ const initialState={
     userTrips:{},
     userTripsPage:1,
     feedState:"none",
-    jobState:"none",
-    jobProgress:0,
     feedPage:1
 };
 
@@ -64,18 +62,7 @@ export default function feedReducer(state=initialState,action){
                 feedState:action.feedState || state.feedState
             });
         break;
-        case types.UPDATE_JOB_STATE:
-            return Object.assign({}, state, {
-                jobState:action.jobState || state.jobState
-            });
-        break;
-        case types.UPDATE_JOB_PROGRESS:
-            return Object.assign({}, state, {
-                jobProgress:action.jobProgress || state.jobProgress
-            });
-        break;
     }
 
-    console.log("state updated");
     return state;
 }
