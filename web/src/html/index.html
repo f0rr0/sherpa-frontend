@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sherpa</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="stylesheets/global.css" rel="stylesheet">
+    <link href="libs/share-button.css" rel="stylesheet">
+    <script src="libs/share-button.js"></script>
+    <script src="libs/ig.js"></script>
+    <script src="https://use.typekit.net/iei4azk.js"></script>
+    <script src="libs/jquery-2.2.0.min.js"></script>
+    <script src="libs/TweenMax.min.js"></script>
+    <script src="libs/ScrollToPlugin.min.js"></script>
+    <script src="libs/jquery.iosslider.js"></script>
+    <script src="libs/history.min.js"></script>
+    <script src="libs/polyfiller.js"></script>
+    <script src="https://rawgit.com/flatiron/director/master/build/director.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.2.8/jquery.form-validator.min.js"></script>
+    <script src="http://jqueryvalidation.org/files/dist/jquery.validate.min.js"></script>
+
+    <script>try{Typekit.load({ async: true });}catch(e){}</script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+
+            $.validate();
+
+            document.ontouchmove = function(event){
+                event.preventDefault();
+            };
+
+
+            var routes = {
+                '/':landingPage,
+                '/post-signup': {
+                    '/:token/:email': {
+                        //
+                        // this function will return the value 'yella'.
+                        //
+                        on: function (token,email) {
+                            signupComplete();
+                        }
+                    }
+                }
+            };
+
+
+            var router = Router(routes);
+
+            $(".sherpa-signup").submit(function(e){
+                e.preventDefault();
+                $(".sherpa-signup").validate();
+                if($(".sherpa-signup").valid()){
+                    window.location.href="https://www.instagram.com/oauth/authorize/?response_type=code&client_id=6c93234fa3544a6592b382a0a814e555&redirect_uri=http://trysherpa.com/callback/?email="+encodeURIComponent($(".email-input").val());
+                }else{
+                    TweenMax.to(".connect-btn",.5,{backgroundColor:"#FF0000"})
+                }
+            });
+            function signupComplete(){
+                applyOpen=false;
+                toggleApply();
+                TweenMax.to(".step-1",.1,{autoAlpha:0});
+                TweenMax.to(".step-2",.1,{autoAlpha:1});
+            }
+
+            function landingPage(){
+                applyOpen=true;
+                toggleApply();
+            }
+
+            router.init();
+
+            $("body").scrollTop(0);
+
+            TweenMax.to("body,html",1,{autoAlpha:1,ease:Expo.easeOut})
+            $('.iosslider').iosSlider({
+                snapToChildren: true,
+                desktopClickDrag: true,
+                autoSlide:true,
+                autoSlideTimer:2400,
+                autoSlideTransTimer:1500,
+                infiniteSlider: true,
+            });
+
+            var applyOpen=false;
+            $(".btn.apply").on("click",function(e){
+                e.preventDefault();
+                toggleApply();
+            });
+
+            $(".close-signup").on("click",function(e){
+                e.preventDefault();
+                toggleApply();
+            });
+
+
+            function toggleApply(){
+                if(!applyOpen){
+                    TweenMax.to(".page-landing",.5,{top:$(window).width()<767?"-80vh":"-32vh",ease:Expo.easeOut});
+                    TweenMax.to(".page-signup",.5,{bottom:"0",ease:Expo.easeOut});
+                }else{
+                    TweenMax.to(".page-landing",.5,{top:"0",ease:Expo.easeOut});
+                    TweenMax.to(".page-signup",.5,{bottom:$(window).width()<767?"-80vh":"-40vh",ease:Expo.easeOut});
+                }
+
+                applyOpen=!applyOpen;
+            }
+
+            var shareButton = new 	ShareButton({
+                ui: {
+                    collision: true
+                }
+            });
+            shareButton.open();
+            var isOpen=false;
+
+            $(".start-slide").on("click",function(){
+
+                if(!isOpen){
+                    TweenMax.to(".slider",.5,{right:"50%",ease:Expo.easeOut},0)
+                    TweenMax.to(".start-slide",.5,{x:"150%",ease:Expo.easeOut},0)
+                    TweenMax.to(".start-slide",.1,{background:"rgba(255,255,255,0)",ease:Quad.easeOut},0)
+                    TweenMax.to(".page-landing .description",.5,{x:"8%",y:"-50%",autoAlpha:0,ease:Expo.easeOut},0)
+                    TweenMax.to(".play-icon",.5,{marginTop:"-100%",autoAlpha:0,ease:Expo.easeOut},0)
+                }else{
+                    TweenMax.to(".slider",.5,{right:"30%",ease:Expo.easeOut},0)
+                    TweenMax.to(".start-slide",.5,{x:"0%",ease:Expo.easeOut},0)
+                    TweenMax.to(".start-slide",.5,{background:"rgba(255,255,255,.5)",delay:.3,ease:Quad.easeOut},0)
+                    TweenMax.to(".page-landing .description",.5,{x:"0%",y:"-50%",autoAlpha:1,ease:Expo.easeOut},0)
+                    TweenMax.to(".play-icon",.5,{marginTop:"0%",autoAlpha:1,ease:Expo.easeOut},0)
+                }
+
+                isOpen=!isOpen;
+            })
+        })
+    </script>
+
+</head>
+<body>
+
+<div id="container"></div>
+
+<div class="page page-landing">
+    <div class="description">
+        <div class="header">
+            <img src="images/logo.png">
+        </div>
+        <div class="sub-copy">
+            <p>SHERPA TURNS THE PHOTOS WE SHARE ON INSTAGRAM INTO A GLOBAL TRAVEL GUIDE.</p>
+            <a class="btn apply" href="#"><span class="icon"><img src="images/icon-suitcase.png" alt=""></span><span class="btn-copy">Apply for the Beta</span></a>
+        </div>
+    </div>
+    <div class="slider">
+        <div class="slider-container">
+            <div class="iosslider">
+                <div class="slides">
+                    <div class="slide">
+                        <img src="images/intro-slider/01_feed.png" alt="">
+                    </div>
+                    <div class="slide">
+                        <img src="images/intro-slider/02_tripview.png" alt="">
+                    </div>
+                    <div class="slide">
+                        <img src="images/intro-slider/03_detail.png" alt="">
+                    </div>
+                    <div class="slide">
+                        <img src="images/intro-slider/04_profile.png" alt="">
+                    </div>
+                    <div class="slide">
+                        <img src="images/intro-slider/05_venue.png" alt="">
+                    </div>
+                </div>
+            </div>
+            <a href="#" class="start-slide">
+                <div class="icons">
+                    <span class="play-icon">
+                        <img src="images/play.png" alt="">
+                    </span>
+                    <span class="close-icon">
+                        <img src="images/close.png" alt="">
+                    </span>
+                </div>
+            </a>
+            <img src="images/iphone.png" class="slider-phone" alt="">
+        </div>
+    </div>
+</div>
+
+
+<div class="page-signup">
+    <div class="close-signup">
+
+    </div>
+
+    <div class="step-2">
+        <div class="sub-copy">
+            <p>Thanks, we are reviewing your Instagram travel pics
+                and will let you know when we are ready for you. <br/><br/>
+                If you can, please share with your world traveling
+                friends.</p>
+        </div>
+        <share-button></share-button>
+    </div>
+
+    <div class="step-1">
+        <div class="sub-copy">
+            <p>We are looking for experienced travelers to join our beta program. Enter your email address and connect you Instagram account to apply.</p>
+        </div>
+        <div class="signup-form">
+            <form action="" class="sherpa-signup">
+                <input class="email email-input" data-validation="email"  type="email" required placeholder="Enter your email"/>
+                 <button type="submit" class="btn connect-btn">
+                    <span class="icon icon-instagram"><img src="images/instagram.png" alt=""></span>
+                    <span class="btn-copy">Connect to Instagram</span>
+                 </button>
+            </form>
+        </div>
+    </div>
+
+
+</div>
+
+{% block javascript %}
+<script src="javascripts/app.js"></script>
+{% endblock %}
+
+
+</body>
+</html>

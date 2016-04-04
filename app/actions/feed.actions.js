@@ -30,6 +30,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
         }).then((rawSherpaResponse)=>{
             var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
             if(type==="user"){
+                console.log('sherpa response trips',sherpaResponse.trips);
                 dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
             }else{
                 dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));

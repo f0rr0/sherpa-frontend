@@ -56,7 +56,7 @@ class FeedLocation extends Component {
                 pagination={true} // enable infinite scrolling using touch to load more
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
-                renderCustomHeader={this._renderHeader.bind(this)}
+                headerView={this._renderHeader.bind(this)}
                 ref="listview"
                 customStyles={{
                     contentContainerStyle:styles.listView

@@ -48,7 +48,6 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(){
-        console.log(this.props.feed.userTripsPage)
         if(this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]){
             this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage])
         }else if(this.props.feed.feedState==='reset'){
@@ -87,10 +86,11 @@ class FeedList extends React.Component{
                 pagination={true} // enable infinite scrolling using touch to load more
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
-                renderCustomHeader={this._renderHeader.bind(this)}
+                headerView={this._renderHeader.bind(this)}
                 ref="listview"
                 customStyles={{
-                    contentContainerStyle:styles.listView
+                    contentContainerStyle:styles.listView,
+                    actionsLabel:{fontSize:12}
                 }}
             />
         )

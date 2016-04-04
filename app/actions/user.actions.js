@@ -1,13 +1,14 @@
 import {getQueryString,encodeQueryData} from '../utils/query.utils';
 import config from '../data/config';
-import DeviceInfo from 'react-native-device-info/deviceinfo';
 import * as types from '../constants/user.actiontypes'
-import store from 'react-native-simple-store';
-import React, { LinkingIOS,AlertIOS } from 'react-native';
 const {instagram,sherpa}=config.auth[config.environment];
 const SHERPA="SHERPA";
 const INSTAGRAM="INSTAGRAM";
 let dispatcher;
+import React, { Linking,AlertIOS } from 'react-native';
+import store from 'react-native-simple-store';
+import DeviceInfo from 'react-native-device-info/deviceinfo';
+
 
 /**
  * Update User Data
@@ -73,7 +74,7 @@ export function storeUser() {
         const { userReducer } = getState();
         store.save('user', userReducer).then(()=>{
             dispatch(updateUserDBState("available"));
-            dispatch(watchJob(userReducer.jobID));
+            //dispatch(watchJob(userReducer.jobID));
         })
     }
 }
@@ -91,15 +92,15 @@ export function signupUser(){
             const queryData = encodeQueryData({response_type, client_id, redirect_uri});
 
             dispatch(updateUserSignupState("service_code_request"));
-            LinkingIOS.openURL(endpoint+code_uri + "/?" +queryData);
-            LinkingIOS.addEventListener('url', instagramAuthCallback);
+            Linking.openURL(endpoint+code_uri + "/?" +queryData);
+            Linking.addEventListener('url', instagramAuthCallback);
         }
 
         function instagramAuthCallback(event) {
             dispatch(updateUserSignupState("service_code_complete"));
 
             const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
-            LinkingIOS.removeEventListener('url', instagramAuthCallback);
+            Linking.removeEventListener('url', instagramAuthCallback);
 
             let code = getQueryString("code", event.url);
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
@@ -141,8 +142,6 @@ export function signupUser(){
                 serviceData:JSON.stringify(serviceResponse.user),
                 deviceData:JSON.stringify(deviceData)
             });
-
-
 
 
             dispatch(updateUserData({

@@ -1,0 +1,419 @@
+// Include this if using an Icon Font
+@import "generated/icons";
+
+@import "base/colors";
+@import "base/mixins";
+
+body,html{
+  font-family:TSTARMedium;
+  margin:0;
+  padding:0;
+  overflow:hidden;
+  opacity:0;
+}
+#container{
+  display:none;
+}
+share-button{
+    margin-top:80px;
+}
+
+  @font-face {
+    font-family: TSTARRegular;
+    src: url("../fonts/TSTAR-RegularWeb.eot");
+}
+
+  @font-face {
+    font-family: TSTARRegular;
+    src: url("../fonts/TSTAR-RegularWeb.woff") format("woff");
+}
+
+  @font-face {
+    font-family: TSTARBold;
+    src: url("../fonts/TSTAR-BoldWeb.eot");
+}
+
+  @font-face {
+    font-family: TSTARBold;
+    src: url("../fonts/TSTAR-BoldWeb.woff") format("woff");
+}
+
+  @font-face {
+    font-family: TSTARLight;
+    src: url("../fonts/TSTAR-LightWeb.eot");
+}
+
+  @font-face {
+    font-family: TSTARLight;
+    src: url("../fonts/TSTAR-LightWeb.woff") format("woff");
+}
+
+  @font-face {
+    font-family: TSTARMedium;
+    src: url("../fonts/TSTAR-MediumWeb.eot");
+}
+
+  @font-face {
+    font-family: TSTARMedium;
+    src: url("../fonts/TSTAR-MediumWeb.woff") format("woff");
+}
+
+
+p{
+  color:$dark-blue;
+  font-size:2vw;
+}
+img{
+  max-width:100%;
+}
+
+  .page{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    height: 100vh;
+    text-align: center;
+}
+
+
+  .help-block.form-error{
+    font-size:12px;
+    width:100%;
+    display: inline-block;
+    color: #d92235;
+    font-weight:400;
+  }
+
+  .page-landing{
+    flex-direction:row;
+    display: block;
+    position: absolute;
+    .slider-container{
+      position: relative;
+    }
+    .slider{
+      width:30vw;
+      right:30%;
+      top:50%;
+      max-width:468px;
+      position: absolute;
+      transform:translateY(-50%) translateX(50%) !important;
+      .start-slide{
+        display: none;
+        position: absolute;
+        left: 19%;
+        top: 17.5%;
+        width: 62%;
+        height: 64%;
+        background:rgba(255,255,255,.5);
+        .icons{
+          content:" ";
+          width:5vw;
+          height:5vw;
+          position: absolute;
+          left:50%;
+          top:50%;
+          margin-left:-2.5vw;
+          margin-top:-2.5vw;
+          background: $dark-blue;
+          overflow:hidden;
+          cursor:pointer;
+          .play-icon,.close-icon{
+            width:100%;
+            height:100%;
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            img{
+              width:17%;
+            }
+          }
+          box-shadow: 0px 20px 80px 0px rgba(0, 0, 0, 0.2);
+        }
+
+        &:hover:after{
+          background:$dark-blue-hover;
+          background-size:.75vw;
+        }
+      }
+    }
+    .description{
+      position: absolute;
+      top:50%;
+      transform:translateY(-50%);
+      width:45%;
+      left:12%;
+      text-align: left;
+      .header {
+        margin-bottom: 5vw;
+        img{
+          width:13vw;
+          max-width:150px;
+        }
+      }
+
+      .sub-copy{
+        p{
+          text-transform:uppercase;
+          font-size:2.1vw;
+          line-height:3.3vw;
+          letter-spacing:.22em;
+          width:85%;
+        }
+        .apply{
+          margin-top:1.3vw;
+        }
+      }
+    }
+
+    
+  }
+
+  .page-signup{
+    height:25vh;
+    position: absolute;
+    width:100%;
+    bottom:-40vh;
+    background:$light-green;
+    font-family:"proxima-nova";
+
+    .sub-copy{
+      width:30%;
+      margin:0 10% 0 0;
+      p{
+        color:white;
+        font-size:1.2vw;
+      }
+    }
+
+    .connect-btn{
+      margin:10px auto;
+      background:$dark-blue;
+      &:hover{
+        background:$dark-blue-hover;
+      }
+    }
+    
+    .step-1,.step-2{
+      height:100%;
+      position: absolute;
+      top:0;
+      left:0;
+      width:100%;
+      display: flex;
+      justify-content:center;
+      align-items:center;
+      .signup-form{
+        display: flex;
+        input{
+          float:left;
+        }
+        button{
+          border:none;
+          cursor:pointer;
+        }
+      }
+    }
+    .step-1{
+      z-index:1;
+    }
+    .step-2{
+      top: 0;
+      position: absolute;
+      left: 0;
+      width: 100%;
+      opacity:0;
+      visibility: hidden;
+      .sub-copy{
+        margin-right:50%;
+      }
+
+      share-button .sb-social.sb-left.sb-top{
+        transform:translate(-90%, -100%) scale(.8);
+        li{
+          margin:0 15px !important;;
+        }
+      }
+    }
+
+    .close-signup{
+      width:4vw;
+      cursor:pointer;
+      height:4vw;
+      margin-top:-2vw;
+      position: absolute;
+      left:50%;
+      margin-left:-2vw;
+      z-index:2;
+      background:url('../images/down-arrow.png') no-repeat center $dark-blue;
+      background-size:25%;
+      transition:.2s background-color;
+      &:hover{
+        background:url('../images/down-arrow.png') no-repeat center $dark-blue-hover;
+        background-size:25%;
+      }
+    }
+  }
+
+.iosslider{
+  position: absolute !important;
+  top: 17.8% !important;
+  left: 18.9% !important;
+  width: 62.5% !important;
+  min-height: 580px;
+  z-index:0 !important;
+  .slides{
+    width:100%;
+    height:100%;
+  }
+  .slide{
+    width:100%;
+    height:100%;
+    overflow: visible !important;
+  }
+}
+  .enabled{
+    border-radius: 100%;
+    padding: 20px 0 !important;
+    background-position: center;
+    margin:0 5px !important;
+}
+
+  .btn{
+    transition:.2s background-color;
+    background-color:$light-green;
+    text-transform:uppercase;
+    text-decoration:none;
+    letter-spacing:.22em;
+    color:white;
+    font-size:10px;
+    padding:15px 30px;
+    margin-top:15px;
+    display: inline-block;
+    //transition:.5s background;
+    min-height:30px;
+    font-family:"proxima-nova";
+    line-height:30px;
+    .icon{
+      margin-right:15px;
+      width:18px;
+      display: inline-block;
+      &.icon-instagram{
+        width:12px;
+      }
+      img{
+        vertical-align: middle;
+        margin-top:-4px;
+        width:100%;
+      }
+    }
+    &:hover{
+      background-color:$light-green-hover;
+    }
+}
+
+  input{
+    font-size:14px;
+    padding:20px;
+    min-width:208px;
+    border:1px solid lightgrey;
+    letter-spacing:.1em;
+    margin:10px auto;
+    display: block;
+    min-height:20px;
+}
+
+@media only screen and (max-width: 767px) {
+  .page-signup{
+    height:65vh;
+    bottom:-100vh;
+    input{
+      margin:5vh 0 5px 0;
+    }
+    .connect-btn{
+      margin:0;
+    }
+    .sub-copy{
+      width:70%;
+      p{
+        font-size: 5.2vw;
+        text-align: center;
+      }
+    }
+
+    .close-signup{
+      width: 14vw;
+      height: 14vw;
+      margin-top: -9vw;
+      margin-left: -7vw;
+      z-index:1;
+    }
+
+    .step-1,.step-2{
+      flex-direction: column;
+      share-button .sb-social.sb-left.sb-top{
+       transform:translate(calc(-50%), -50%) scale(.7);
+          li{
+            margin:0 5px !important;;
+          }
+      }
+      .sub-copy{
+        margin:0;
+      }
+      .signup-form{
+        flex-direction:column;
+        .sherpa-signup{
+          text-align: center;
+          input{
+            width:260px;
+          }
+          button{
+            width:300px;
+          }
+          input,button{
+            float:none;
+            margin:5px auto;
+          }
+        }
+      }
+    }
+  }
+
+
+
+  .page-landing {
+      flex-direction: row;
+      .description{
+        position: absolute;
+        top: 5vh;
+        transform: translateY(0%);
+        width: 75%;
+        margin: auto;
+        text-align: center;
+        left:0;
+        .header img{
+          width:30vw;
+        }
+        .sub-copy p{
+          width:100%;
+          font-size: 4.1vw;
+          line-height: 6.3vw;
+        }
+      }
+    .start-slide{
+      display: none;}
+      .slider{
+        width: 50vw;
+        right: 0;
+        top: 0;
+        margin-top: 5vh;
+        max-width: 468px;
+        transform: translateY(0%) translateX(50%) !important;
+      }
+      .slider,.description{
+        position: relative;
+      }
+    }
+}

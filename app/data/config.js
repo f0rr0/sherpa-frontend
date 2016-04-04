@@ -1,5 +1,5 @@
 module.exports = {
-    resetUser:true,
+    resetUser:false,
     environment:'dev',
     settings:{
         parser:{
@@ -16,7 +16,9 @@ module.exports = {
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",
                     response_type:"code",
-                    grant_type:"authorization_code"
+                    grant_type:"authorization_code",
+                    redirect_uri_web:"http://www.trysherpa.com/auth",
+                    response_type_web:"token"
                 },
                 sherpa: {
                     endpoint:"http://sherpa.wild.as/api/",
@@ -36,7 +38,9 @@ module.exports = {
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",
                     response_type:"code",
-                    grant_type:"authorization_code"
+                    grant_type:"authorization_code",
+                    redirect_uri_web:"http://web.trysherpa.com/callback",
+                    response_type_web:"token"
                 },
                 sherpa: {
                     endpoint:"http://api.trysherpa.com/api/",
@@ -56,7 +60,9 @@ module.exports = {
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",
                     response_type:"code",
-                    grant_type:"authorization_code"
+                    grant_type:"authorization_code",
+                    redirect_uri_web:"http://www.trysherpa.com/auth",
+                    response_type_web:"token"
                 },
                 sherpa: {
                     endpoint:"http://sherpa.wild.as/api/",

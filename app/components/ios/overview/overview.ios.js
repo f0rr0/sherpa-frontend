@@ -14,7 +14,7 @@ var {
     TabBarIOS,
     View,
     Text,
-    StatusBarIOS,
+    StatusBar,
     Image
 } = React;
 
@@ -48,7 +48,7 @@ var styles=StyleSheet.create({
     }
 });
 
-StatusBarIOS.setHidden(true);
+StatusBar.setHidden(true);
 
 class Overview extends React.Component {
     constructor() {

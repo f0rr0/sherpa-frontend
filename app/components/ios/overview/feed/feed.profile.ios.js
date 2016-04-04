@@ -85,7 +85,7 @@ class FeedProfile extends React.Component {
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
-                renderCustomHeader={this._renderHeader.bind(this)}
+                headerView={this._renderHeader.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView
                 }}

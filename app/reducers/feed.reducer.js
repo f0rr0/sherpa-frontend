@@ -20,7 +20,10 @@ export default function feedReducer(state=initialState,action){
 
             for(var index in action.feedData.trips){
                 var moments=action.feedData.trips[index].moments;
+                console.log('trip',moments);
                 if(moments.length>0){
+                    console.log(moments.length,'moments length')
+                    console.log(moments[0].type,'moments type')
                     if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
                 }
             }
