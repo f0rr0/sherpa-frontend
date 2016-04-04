@@ -33,7 +33,8 @@ var styles = StyleSheet.create({
     },
     listView:{
         alignItems:'center',
-        justifyContent:"center"
+        justifyContent:"center",
+        paddingBottom:50
     },
     listItemContainer:{
         flex:1,
@@ -87,7 +88,8 @@ class FeedProfile extends React.Component {
                 ref="listview"
                 headerView={this._renderHeader.bind(this)}
                 customStyles={{
-                    contentContainerStyle:styles.listView
+                    contentContainerStyle:styles.listView,
+                    actionsLabel:{fontSize:12}
                 }}
             />
         )
