@@ -18,6 +18,18 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             case "profile":
                 feedRequestURI=endpoint+version+"/profile/"+feedTarget+"/trips?page="+page;
             break;
+            case "suitcase-list":
+                feedRequestURI=endpoint+version+"/user/"+feedTarget+"/suitcases?page="+page;
+            break;
+            case "single-suitcase-feed":
+                feedRequestURI=endpoint+version+"/suitcase/"+feedTarget;
+            break;
+            case "search-user":
+                feedRequestURI=endpoint+version+"/search/trips?text="+feedTarget;
+            break;
+            case "search-trip":
+                feedRequestURI=endpoint+version+"/search/users?text="+feedTarget;
+            break;
             case "user":
             default:
                 feedRequestURI=endpoint+version+user_uri+"/"+feedTarget+feed_uri+"?page="+page;
@@ -25,10 +37,13 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
         }
 
 
-        fetch(feedRequestURI,{
-            method:'get'
-        }).then((rawSherpaResponse)=>{
-            var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+
+            fetch(feedRequestURI,{
+                method:'get'
+            })
+            .then((rawSherpaResponse)=>{return rawSherpaResponse.text()})
+            .then((rawSherpaResponse)=>{
+            var sherpaResponse=JSON.parse(rawSherpaResponse);
             if(type==="user"){
                 console.log('sherpa response trips',sherpaResponse.trips);
                 dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));

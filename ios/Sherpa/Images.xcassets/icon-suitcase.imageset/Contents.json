@@ -2,17 +2,17 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "icon-suitcase.png",
+      "filename" : "icon-suitcase@2x.png",
       "scale" : "1x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-suitcase@2x.png",
+      "filename" : "",
       "scale" : "2x"
     },
     {
       "idiom" : "universal",
-      "filename" : "icon-suitcase@3x.png",
+      "filename" : "",
       "scale" : "3x"
     }
   ],

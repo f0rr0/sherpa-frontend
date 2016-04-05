@@ -89,21 +89,23 @@ export function signupUser(){
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body:queryData
-            }).then((rawSherpaResponse)=>{
-                let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+            })
+            .then((rawSherpaResponse)=>{return rawSherpaResponse.text()})
+            .then((rawSherpaResponse)=>{
+                let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
-                //dispatch(updateUserData({
-                //    sherpaID:id,
-                //    serviceID:profile,
-                //    sherpaToken:sherpaResponse.token,
-                //    jobID:sherpaResponse.jobId,
-                //    email,
-                //    fullName,
-                //    username,
-                //    profilePicture
-                //}));
-                //dispatch(storeUser());
+                dispatch(updateUserData({
+                    sherpaID:id,
+                    serviceID:profile,
+                    sherpaToken:sherpaResponse.token,
+                    jobID:sherpaResponse.jobId,
+                    email,
+                    fullName,
+                    username,
+                    profilePicture
+                }));
+                dispatch(storeUser());
             })
         }
     };

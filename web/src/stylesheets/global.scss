@@ -1,6 +1,4 @@
 // Include this if using an Icon Font
-@import "generated/icons";
-
 @import "base/colors";
 @import "base/mixins";
 
@@ -67,6 +65,28 @@ img{
   max-width:100%;
 }
 
+.terms{
+  position: absolute;
+  right: 20px;
+  bottom:20px;
+  a{
+    color:$dark-blue;
+    text-decoration: none;
+    font-size:11PX;
+    text-transform: uppercase;
+    transition:.3s;
+    &:hover{
+      color:$dark-blue-hover;
+    }
+    &:after{
+      content:" | ";
+      margin:0 10px;
+    }
+    &:last-child:after{
+      content:"";
+    }
+  }
+}
   .page{
     display:flex;
     flex-direction:column;
@@ -326,6 +346,11 @@ img{
 }
 
 @media only screen and (max-width: 767px) {
+
+  .terms{
+    bottom:80px;
+    right:80px;
+  }
   .page-signup{
     height:65vh;
     bottom:-100vh;

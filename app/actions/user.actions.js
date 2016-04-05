@@ -34,6 +34,59 @@ export function updateUserDBState(userDBState){
     };
 }
 
+export function addMomentToSuitcase(momentID){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            fetch(endpoint+version+user_uri+"/"+user.sherpaID+"/addtosuitcase/"+momentID, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:queryData
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                signupWithSherpa(JSON.parse(response))
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+export function addNotificationsDeviceToken(deviceToken){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            fetch(endpoint+version+"adddevicetoken/"+user.sherpaToken+"/addtosuitcase/"+momentID, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:queryData
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                signupWithSherpa(JSON.parse(response))
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+export function deleteUser(){
+
+}
+
+export function logoutUser(){
+
+}
+
+export function setUserHometown(){
+
+}
+
+
 export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
@@ -44,10 +97,13 @@ export function loadUser() {
                 const {endpoint,version,user_uri} = sherpa;
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
-                }).then((rawSherpaResponse)=>{
+                }).
+                then((rawSherpaResponse)=>{return rawSherpaResponse.text()})
+                then((rawSherpaResponse)=>{
+
                     switch(rawSherpaResponse.status){
                         case 200:
-                            var sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+                            var sherpaResponse=JSON.parse(rawSherpaResponse);
                             if(user.username===sherpaResponse.username){
                                 dispatch(updateUserDBState("available"));
                             }else{
@@ -94,6 +150,8 @@ export function signupUser(){
             dispatch(updateUserSignupState("service_code_request"));
             Linking.openURL(endpoint+code_uri + "/?" +queryData);
             Linking.addEventListener('url', instagramAuthCallback);
+            console.log('insta callback');
+
         }
 
         function instagramAuthCallback(event) {
@@ -113,14 +171,16 @@ export function signupUser(){
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body:queryData
-            }).then((rawServiceResponse)=>{
-                signupWithSherpa(JSON.parse(rawServiceResponse._bodyText))
-            });
+            })
+            .then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((response)=>{
+                signupWithSherpa(JSON.parse(response))
+            }).catch(err=>console.log(err));
         }
 
         function signupWithSherpa(serviceResponse){
             dispatch(updateUserSignupState("service_token_complete"));
-
             let deviceData={
                 deviceUniqueId:     DeviceInfo.getUniqueID(),
                 deviceManufacturer: DeviceInfo.getManufacturer(),
@@ -150,14 +210,17 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
+            console.log(endpoint+version+login_uri);
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body:queryData
+            }).then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
-                let sherpaResponse=JSON.parse(rawSherpaResponse._bodyText);
+                let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({

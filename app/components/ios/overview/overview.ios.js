@@ -7,6 +7,7 @@
 'use babel';
 import Feed from './feed/feed.ios';
 import React from 'react-native';
+import ProfileNavigator from './profile/profile.ios';
 
 var {
     AppRegistry,
@@ -60,14 +61,16 @@ class Overview extends React.Component {
         };
     }
 
-    _renderContent(color:string, pageText:string) {
-        var currentView;
+    _renderContent() {
+        console.log('render feed::',this.state.selectedTab)
         switch (this.state.selectedTab) {
             case FEED:
                 return (<Feed />)
             break;
-            case EXPLORE:
             case PROFILE:
+                return (<ProfileNavigator />)
+            break;
+            case EXPLORE:
             case SUITECASE:
                 return (
                     <View style={[styles.tabContent, {backgroundColor: "#FFFFFF"}]}>
@@ -76,10 +79,9 @@ class Overview extends React.Component {
                             style={styles.logo}
                             source={require('image!logo-sherpa')}
                         />
-                        <Text style={styles.tabText}>{pageText}</Text>
                     </View>
                 )
-                break;
+            break;
         }
     }
 
@@ -87,7 +89,7 @@ class Overview extends React.Component {
         var tabBar=
          <TabBarIOS tintColor="#4735f9" barTintColor="#ffffff" style={styles.tabBar}>
             <TabBarIOS.Item
-                icon={require('image!icon-feed')}
+                icon={require('./../../../images/icon-feed.png')}
                 selected={this.state.selectedTab === FEED}
                 title="Feed"
                 onPress={() => {
@@ -96,10 +98,10 @@ class Overview extends React.Component {
                     });
                 }}>
 
-                {this._renderContent('#414A8C', 'Blue Tab')}
+                {this._renderContent()}
             </TabBarIOS.Item>
             <TabBarIOS.Item
-                icon={require('image!icon-explore')}
+                icon={require('./../../../images/icon-explore.png')}
                 title="Explore"
                 selected={this.state.selectedTab === EXPLORE}
                 onPress={() => {
@@ -107,33 +109,33 @@ class Overview extends React.Component {
                     selectedTab: EXPLORE
                   });
                 }}>
-                {this._renderContent('#783E33', 'Explore Tab')}
+                {this._renderContent()}
             </TabBarIOS.Item>
             <TabBarIOS.Item
                 selected={this.state.selectedTab === PROFILE}
-                icon={require('image!icon-profil')}
+                icon={require('./../../../images/icon-profil.png')}
                 title="Profile"
                 onPress={() => {
                   this.setState({
                     selectedTab: PROFILE
                   });
                 }}>
-                {this._renderContent('#21551C', 'Profile Tab')}
+                {this._renderContent()}
             </TabBarIOS.Item>
             <TabBarIOS.Item
                 selected={this.state.selectedTab === SUITECASE}
-                icon={require('image!icon-suitcase')}
+                icon={require('./../../../images/icon-suitcase.png')}
                 title="Suitcase"
                 onPress={() => {
                     this.setState({
                         selectedTab: SUITECASE
                     });
                 }}>
-                {this._renderContent('#fff606', 'Suitecase Tab')}
+                {this._renderContent()}
             </TabBarIOS.Item>
         </TabBarIOS>
         return (
-           <Feed/>
+            <View style={{flex:1}}>{tabBar}</View>
         );
     }
 }
