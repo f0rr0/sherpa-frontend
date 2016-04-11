@@ -75,6 +75,7 @@ img{
     font-size:11PX;
     text-transform: uppercase;
     transition:.3s;
+
     &:hover{
       color:$dark-blue-hover;
     }
@@ -84,6 +85,7 @@ img{
     }
     &:last-child:after{
       content:"";
+      margin:0;
     }
   }
 }
@@ -120,8 +122,14 @@ img{
       max-width:468px;
       position: absolute;
       transform:translateY(-50%) translateX(50%) !important;
+      .sherpa-video{
+        left: 19.5%;
+        top: 18.5%;
+        width: 61%;
+        position: absolute;
+      }
       .start-slide{
-        display: none;
+        //display: none;
         position: absolute;
         left: 19%;
         top: 17.5%;
@@ -348,9 +356,13 @@ img{
 @media only screen and (max-width: 767px) {
 
   .terms{
-    bottom:80px;
-    right:80px;
-  }
+    top:calc(100vh - 100px);
+    right: 50%;
+    width:100%;
+    position: absolute;
+    transform: translateX(50%);
+
+}
   .page-signup{
     height:65vh;
     bottom:-100vh;
@@ -406,20 +418,22 @@ img{
     }
   }
 
-
+  .btn{
+    padding:10px 30px;
+  }
 
   .page-landing {
       flex-direction: row;
       .description{
         position: absolute;
-        top: 5vh;
+        top: 2.5vh;
         transform: translateY(0%);
         width: 75%;
         margin: auto;
         text-align: center;
         left:0;
         .header img{
-          width:30vw;
+          width:25vw;
         }
         .sub-copy p{
           width:100%;
@@ -427,13 +441,21 @@ img{
           line-height: 6.3vw;
         }
       }
-    .start-slide{
-      display: none;}
+
       .slider{
+        .start-slide{
+          //display: none;
+          .icons{
+            width: 12vw;
+            height: 12vw;
+            margin-left: -6vw;
+            margin-top: -6vw;
+          }
+        }
         width: 50vw;
         right: 0;
         top: 0;
-        margin-top: 5vh;
+        margin-top: 2.5vh;
         max-width: 468px;
         transform: translateY(0%) translateX(50%) !important;
       }

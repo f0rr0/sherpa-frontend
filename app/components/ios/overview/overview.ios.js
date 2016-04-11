@@ -7,22 +7,18 @@
 'use babel';
 import Feed from './feed/feed.ios';
 import React from 'react-native';
-import ProfileNavigator from './profile/profile.ios';
 
 var {
-    AppRegistry,
     StyleSheet,
     TabBarIOS,
     View,
-    Text,
     StatusBar,
-    Image
 } = React;
 
-const EXPLORE="exploreTab";
-const FEED="feedTab";
-const PROFILE="profileTab";
-const SUITECASE="suitecaseTab";
+const EXPLORE="explore";
+const FEED="feed";
+const PROFILE="own-profile";
+const SUITCASE="suitcase";
 
 var styles=StyleSheet.create({
     container:{
@@ -55,39 +51,26 @@ class Overview extends React.Component {
     constructor() {
         super();
         this.state = {
-            selectedTab: FEED,
+            selectedTab: EXPLORE,
             notifCount: 0,
             presses: 0
         };
     }
 
     _renderContent() {
-        console.log('render feed::',this.state.selectedTab)
         switch (this.state.selectedTab) {
             case FEED:
-                return (<Feed />)
-            break;
-            case PROFILE:
-                return (<ProfileNavigator />)
-            break;
             case EXPLORE:
-            case SUITECASE:
-                return (
-                    <View style={[styles.tabContent, {backgroundColor: "#FFFFFF"}]}>
-                        <Image
-                            resizeMode="contain"
-                            style={styles.logo}
-                            source={require('image!logo-sherpa')}
-                        />
-                    </View>
-                )
+            case PROFILE:
+            case SUITCASE:
+                return (<Feed initial={this.state.selectedTab} />);
             break;
         }
     }
 
     render() {
         var tabBar=
-         <TabBarIOS tintColor="#4735f9" barTintColor="#ffffff" style={styles.tabBar}>
+         <TabBarIOS tintColor="#282b33" barTintColor="#ffffff" style={styles.tabBar}>
             <TabBarIOS.Item
                 icon={require('./../../../images/icon-feed.png')}
                 selected={this.state.selectedTab === FEED}
@@ -123,12 +106,12 @@ class Overview extends React.Component {
                 {this._renderContent()}
             </TabBarIOS.Item>
             <TabBarIOS.Item
-                selected={this.state.selectedTab === SUITECASE}
+                selected={this.state.selectedTab === SUITCASE}
                 icon={require('./../../../images/icon-suitcase.png')}
                 title="Suitcase"
                 onPress={() => {
                     this.setState({
-                        selectedTab: SUITECASE
+                        selectedTab: SUITCASE
                     });
                 }}>
                 {this._renderContent()}

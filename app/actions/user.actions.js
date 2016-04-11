@@ -42,13 +42,12 @@ export function addMomentToSuitcase(momentID){
                 method: 'post',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body:queryData
+                }
             })
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
-                signupWithSherpa(JSON.parse(response))
+                console.log(response);
             }).catch(err=>console.log(err));
         }
     });
@@ -93,18 +92,20 @@ export function loadUser() {
         return store.get('user').then((user) => {
             if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
-
+                var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get'
                 }).
-                then((rawSherpaResponse)=>{return rawSherpaResponse.text()})
-                then((rawSherpaResponse)=>{
-
-                    switch(rawSherpaResponse.status){
+                then((rawServiceResponse)=>{
+                    responseStatus=rawServiceResponse.status;
+                    return rawServiceResponse.text();
+                }).then((rawSherpaResponse)=>{
+                    var responseJSON = JSON.parse(rawSherpaResponse);
+                    console.log(user)
+                    switch(responseStatus){
                         case 200:
-                            var sherpaResponse=JSON.parse(rawSherpaResponse);
-                            if(user.username===sherpaResponse.username){
+                            if(user.username===responseJSON.username){
                                 dispatch(updateUserDBState("available"));
                             }else{
                                 dispatch(updateUserDBState("empty"));

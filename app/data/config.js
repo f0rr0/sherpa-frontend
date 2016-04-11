@@ -1,5 +1,5 @@
 module.exports = {
-    resetUser:true,
+    resetUser:false,
     environment:'dev',
     settings:{
         parser:{

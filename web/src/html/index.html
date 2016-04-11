@@ -4,6 +4,12 @@
     <title>SHERPA - TURNS INSTAGRAM INTO A TRAVEL GUIDE</title>
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:title" content="Sherpa" />
+    <meta property="og:url" content="http://www.trysherpa.com" />
+    <meta property="og:image" content="http://www.trysherpa.com/share.jpg" />
+    <meta property="og:description" content="Shepra turns  instagram into a travel guide" />
+
     <link href="stylesheets/global.css" rel="stylesheet">
     <link href="libs/share-button.css" rel="stylesheet">
     <script src="libs/share-button.js"></script>
@@ -163,6 +169,11 @@
             }
 
             var shareButton = new 	ShareButton({
+                url: "http://www.trysherpa.com",
+                caption: "Worlds greatest travel guide",
+                title: "Sherpa",
+                image: "http://www.trysherpa.com/share.jpg",
+                description: "Sherpa turns Instagram into a travel guide",
                 ui: {
                     collision: true
                 }
@@ -170,20 +181,38 @@
             shareButton.open();
             var isOpen=false;
 
-            $(".start-slide").on("click",function(){
-
+            var eType=$(window).width()>767?"click":"touchstart";
+            $(".start-slide").on(eType,function(e){
+                e.preventDefault();
                 if(!isOpen){
-                    TweenMax.to(".slider",.5,{right:"50%",ease:Expo.easeOut},0)
-                    TweenMax.to(".start-slide",.5,{x:"150%",ease:Expo.easeOut},0)
-                    TweenMax.to(".start-slide",.1,{background:"rgba(255,255,255,0)",ease:Quad.easeOut},0)
-                    TweenMax.to(".page-landing .description",.5,{x:"8%",y:"-50%",autoAlpha:0,ease:Expo.easeOut},0)
-                    TweenMax.to(".play-icon",.5,{marginTop:"-100%",autoAlpha:0,ease:Expo.easeOut},0)
+                    $(".sherpa-video")[0].play();
+                    if($(window).width()>767){
+                        TweenMax.to(".slider",.5,{right:"50%",ease:Expo.easeOut},0)
+                        TweenMax.to(".start-slide",.5,{x:"150%",ease:Expo.easeOut},0)
+                        TweenMax.to(".start-slide",.1,{background:"rgba(255,255,255,0)",ease:Quad.easeOut},0)
+                        TweenMax.to(".page-landing .description",.5,{x:"8%",y:"-50%",autoAlpha:0,ease:Expo.easeOut},0)
+                        TweenMax.to(".play-icon",.5,{marginTop:"-100%",autoAlpha:0,ease:Expo.easeOut},0)
+                    }
                 }else{
-                    TweenMax.to(".slider",.5,{right:"30%",ease:Expo.easeOut},0)
-                    TweenMax.to(".start-slide",.5,{x:"0%",ease:Expo.easeOut},0)
-                    TweenMax.to(".start-slide",.5,{background:"rgba(255,255,255,.5)",delay:.3,ease:Quad.easeOut},0)
-                    TweenMax.to(".page-landing .description",.5,{x:"0%",y:"-50%",autoAlpha:1,ease:Expo.easeOut},0)
-                    TweenMax.to(".play-icon",.5,{marginTop:"0%",autoAlpha:1,ease:Expo.easeOut},0)
+                    $(".sherpa-video")[0].currentTime=0;
+                    $(".sherpa-video")[0].pause();
+
+                    if($(window).width()>767) {
+                        TweenMax.to(".slider", .5, {right: "30%", ease: Expo.easeOut}, 0)
+                        TweenMax.to(".start-slide", .5, {x: "0%", ease: Expo.easeOut}, 0)
+                        TweenMax.to(".start-slide", .5, {
+                            background: "rgba(255,255,255,.5)",
+                            delay: .3,
+                            ease: Quad.easeOut
+                        }, 0)
+                        TweenMax.to(".page-landing .description", .5, {
+                            x: "0%",
+                            y: "-50%",
+                            autoAlpha: 1,
+                            ease: Expo.easeOut
+                        }, 0)
+                        TweenMax.to(".play-icon", .5, {marginTop: "0%", autoAlpha: 1, ease: Expo.easeOut}, 0)
+                    }
                 }
 
                 isOpen=!isOpen;
@@ -208,22 +237,23 @@
     </div>
     <div class="slider">
         <div class="slider-container">
-            <div class="iosslider">
-                <div class="slides">
-                    <div class="slide">
-                        <img src="images/intro-slider/3.jpg" alt="">
-                    </div>
-                    <div class="slide">
-                        <img src="images/intro-slider/4.jpg" alt="">
-                    </div>
-                    <div class="slide">
-                        <img src="images/intro-slider/5.jpg" alt="">
-                    </div>
-                    <div class="slide">
-                        <img src="images/intro-slider/6.jpg" alt="">
-                    </div>
-                </div>
-            </div>
+            <video src="retina.mp4" class="sherpa-video"></video>
+            <!--<div class="iosslider">-->
+                <!--<div class="slides">-->
+                    <!--<div class="slide">-->
+                        <!--<img src="images/intro-slider/3.jpg" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="slide">-->
+                        <!--<img src="images/intro-slider/4.jpg" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="slide">-->
+                        <!--<img src="images/intro-slider/5.jpg" alt="">-->
+                    <!--</div>-->
+                    <!--<div class="slide">-->
+                        <!--<img src="images/intro-slider/6.jpg" alt="">-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
             <a href="#" class="start-slide">
                 <div class="icons">
                     <span class="play-icon">

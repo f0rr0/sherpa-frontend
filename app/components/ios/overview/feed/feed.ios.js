@@ -5,6 +5,9 @@ import FeedList from './feed.list.ios';
 import FeedProfile from './feed.profile.ios';
 import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
+import OwnUserProfile from './../profile/feed.own-profile.ios'
+import Suitcase from './../suitcase/feed.suitcase.ios'
+import Search from './../explore/feed.search.ios'
 
 import { connect } from 'react-redux/native';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
@@ -18,7 +21,7 @@ var {
     TouchableHighlight,
     View,
     Image
-    } = React;
+} = React;
 
 class Feed extends Component {
     renderScene(route, navigator) {
@@ -26,9 +29,8 @@ class Feed extends Component {
         var showNav=false;
         var navColor="white";
 
-
         switch (route.id) {
-            case 'list':
+            case 'feed':
                 showNav=false;
                 sceneContent = <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
@@ -45,6 +47,21 @@ class Feed extends Component {
                 navColor="black";
                 showNav=true;
                 sceneContent = <FeedProfile navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
+            case "own-profile":
+                navColor="black";
+                showNav=true;
+                sceneContent = <OwnUserProfile navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
+            case "suitcase":
+                navColor="black";
+                showNav=true;
+                sceneContent = <Suitcase  navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+            case "explore":
+                navColor="black";
+                showNav=true;
+                sceneContent = <Search  navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
 
@@ -91,7 +108,7 @@ class Feed extends Component {
                   gestures: route.gestures
                 })}
                 initialRoute={{
-                  id:"list",
+                  id:this.props.initial,
                   index:0
                 }}
             />

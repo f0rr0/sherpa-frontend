@@ -20,6 +20,7 @@ export default function feedReducer(state=initialState,action){
         case types.UPDATE_FEED:
             var cleanTrips=[];
 
+
             for(var index in action.feedData.trips){
                 var moments=action.feedData.trips[index].moments;
                 if(moments.length>0){
@@ -32,6 +33,7 @@ export default function feedReducer(state=initialState,action){
 
             var newTrips=Object.assign({},state.trips,newPage);
 
+
             switch(action.feedData.type) {
                 case "user":
                     return Object.assign({}, state, {
@@ -39,6 +41,12 @@ export default function feedReducer(state=initialState,action){
                         feedState:"ready"
                     });
                 break;
+                case "search":
+                    return Object.assign({}, state, {
+                        searchResults:newTrips,
+                        feedState:"ready"
+                    });
+                    break;
                 default:
                     return Object.assign({}, state, {
                         trips:newTrips,

@@ -7,6 +7,8 @@ import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
+import {loadFeed} from '../../../../actions/feed.actions';
+import {addMomentToSuitcase} from '../../../../actions/user.actions';
 
 var {
     StyleSheet,
@@ -17,6 +19,8 @@ var {
     Image,
     TouchableHighlight
     } = React;
+
+
 
 class FeedTrip extends Component {
     constructor(){
@@ -33,6 +37,7 @@ class FeedTrip extends Component {
     }
 
     componentWillMount(){
+        console.log('will mount',this.props.trip);
         var markers=[];
         for (var i=0;i<this.props.trip.moments.length;i++){
             markers.push({
@@ -62,6 +67,11 @@ class FeedTrip extends Component {
                ref="listview"
             />
         )
+    }
+
+    suiteCaseTrip(trip){
+        console.log('add trip',trip.id);
+        addMomentToSuitcase(trip.id);
     }
 
     showUserProfile(trip){
@@ -163,7 +173,7 @@ class FeedTrip extends Component {
 
     _renderRow(tripData) {
         if(tripData.type!=='image')return(<View></View>);
-
+        var suiteCased=false;
         return (
             <View style={styles.listItemContainer}>
                 <View style={styles.listItem}>
@@ -173,9 +183,27 @@ class FeedTrip extends Component {
                         source={{uri:tripData.mediaUrl}}
                     />
                 </View>
-                <TouchableHighlight>
-                    <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",position:"absolute",bottom:-20,backgroundColor:"transparent"}}>{tripData.venue}</Text>
-                </TouchableHighlight>
+                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                    <TouchableHighlight>
+                        <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
+                        this.suiteCaseTrip(tripData);
+                    }}>
+                        <View>
+                            <Image
+                                style={{width:18,height:18,top:0,position:"absolute"}}
+                                resizeMode="contain"
+                                source={require('./../../../../images/suitcase.png')}
+                            />
+                            <Image
+                                style={{width:10,height:10,left:5,top:5,opacity:suiteCased?1:0,position:"absolute"}}
+                                resizeMode="contain"
+                                source={require('./../../../../images/suitcase-check.png')}
+                            />
+                        </View>
+                    </TouchableHighlight>
+                </View>
             </View>
         );
     }
@@ -189,7 +217,8 @@ var styles = StyleSheet.create({
         flex:1,
         backgroundColor:"black",
         justifyContent:"center",
-        alignItems:'center'
+        alignItems:'center',
+        paddingBottom:10,
     },
     listView:{
         alignItems:'center',
