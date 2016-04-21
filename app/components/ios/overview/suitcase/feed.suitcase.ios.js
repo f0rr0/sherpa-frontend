@@ -57,24 +57,29 @@ class Suitecase extends React.Component {
     }
 
     componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+        if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
+            this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
     }
 
+    componentDidMount(){
+        this.itemsLoadedCallback=function(){
+            console.log(":: callback feed suitecase ::");
+        }
+    }
+
     showTripDetail(trip) {
         this.props.navigator.push({
-            id: "trip",
+            id: "destination",
             trip
         });
     }
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log(this.props.user.sherpaID)
-        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"profile"));
+        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"suitcase-list"));
     }
 
     render(){
@@ -82,9 +87,10 @@ class Suitecase extends React.Component {
             <GiftedListView
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
+                emptyView={this._emptyView.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                pagination={false} // enable infinite scrolling using touch to load more
+                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
                 headerView={this._renderHeader.bind(this)}
@@ -96,15 +102,25 @@ class Suitecase extends React.Component {
         )
     }
 
-    _renderHeader(){
-        if(Object.keys(this.props.feed.trips).length==0)return;
+    _emptyView(){
+        return(
+            <View style={{flex:1,justifyContent: 'center', height:400,alignItems: 'center'}}>
+                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
+            </View>
+        )
+    }
 
-        var trips=this.props.feed.trips["1"];
+    _renderHeader(){
+        if(Object.keys(this.props.feed.trips).suitcaseDestinations==0)return;
+        var trips=this.props.feed.suitcaseDestinations["1"];
+
         var tripDuration=trips.length;
         var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
         var moments=0;
-        for(var i=0;i<trips.length;i++){
-            moments+=trips[i].moments.length;
+        if(trips){
+            for(var i=0;i<trips.length;i++){
+                moments+=trips[i].moments.length;
+            }
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
@@ -139,15 +155,13 @@ class Suitecase extends React.Component {
 
     _renderRow(tripData) {
         var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
+            return country["alpha-2"] === tripData.name;
         })[0];
 
         //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        if(!country)country={name:tripData.country}
+        if(!country)country={name:tripData.name};
+        var countryOrState=(tripData.name.toUpperCase()==="US")?tripData.state:country.name;
 
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
-        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         return (
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
@@ -157,8 +171,8 @@ class Suitecase extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
+                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.moments.length} PLACES IN</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.continent.toUpperCase()}</Text>
 
                 </View>
             </TouchableHighlight>

@@ -32,7 +32,7 @@ export default function feedReducer(state=initialState,action){
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
             var newTrips=Object.assign({},state.trips,newPage);
-
+            newTrips['country']=newTrips['name'];
 
             switch(action.feedData.type) {
                 case "user":
@@ -46,7 +46,19 @@ export default function feedReducer(state=initialState,action){
                         searchResults:newTrips,
                         feedState:"ready"
                     });
-                    break;
+                break;
+                case "suitcase":
+                    return Object.assign({}, state, {
+                        suitcaseDestinations:newTrips,
+                        feedState:"ready"
+                    });
+                break;
+                case "profile":
+                    return Object.assign({}, state, {
+                        profileTrips:newTrips,
+                        feedState:"ready"
+                    });
+                break;
                 default:
                     return Object.assign({}, state, {
                         trips:newTrips,

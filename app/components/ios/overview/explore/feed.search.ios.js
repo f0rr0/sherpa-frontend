@@ -64,7 +64,8 @@ class Search extends React.Component {
         super();
         this.itemsLoadedCallback=null;
         this.state = {
-            searchQuery: "amsterdam",
+            searchQuery: "",
+            backendSearchQuery:"",
             searchType:"places"
         };
     }
@@ -86,7 +87,7 @@ class Search extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.state.searchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
+        this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
     }
 
     render(){
@@ -94,9 +95,10 @@ class Search extends React.Component {
             <GiftedListView
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
+                emptyView={this._emptyView.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
                 pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
                 headerView={this._renderHeader.bind(this)}
@@ -105,6 +107,14 @@ class Search extends React.Component {
                     actionsLabel:{fontSize:12}
                 }}
             />
+        )
+    }
+
+    _emptyView(){
+        return(
+            <View style={{flex:1,justifyContent: 'center', height:400,alignItems: 'center'}}>
+                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>Search for countries, cities or continents. We'll display the photos that match your result.</Text>
+            </View>
         )
     }
 
@@ -122,23 +132,21 @@ class Search extends React.Component {
             <View style={{flex:1}}>
                 <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380}}>
 
-                    <View style={{flex:1,flexDirection:"row", alignItems:"center",justifyContent:"center",height:80}}>
-                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{opacity:this.state.searchType=="places"?.5:1}]} onPress={() => {this.setState({searchType:"places"})}}>
-                            <View>
-                                <Text style={styles.copyLarge}>PLACES</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{opacity:this.state.searchType=="people"?.5:1}]} onPress={() => {this.setState({searchType:"people"})}}>
-                            <View>
-                                <Text style={styles.copyLarge}>PEOPLE</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
-
                     <View style={{ borderBottomColor: '#001645', borderBottomWidth: 1,flex:1,marginBottom:30}}>
                         <TextInput
-                            style={{height: 50,width:280,left:10,fontSize:25, fontFamily:"TSTAR", color:"#001645", fontWeight:"500",letterSpacing:1,marginRight:20,marginLeft:20}}
-                            onChangeText={(searchQuery) => this.setState({searchQuery})}
+                            style={{height: 50,marginTop:20,width:280,left:10,fontSize:25, fontFamily:"TSTAR", color:"#001645", fontWeight:"500",letterSpacing:1,marginRight:20,marginLeft:20}}
+                            onChangeText={(searchQuery) => {
+                                //check if search query matches country
+
+                                 var country = countries.filter(function(country) {
+                                    return country["name"] === searchQuery;
+                                })[0];
+
+                                var backendSearchQuery=country?country['alpha-2'] : searchQuery;
+
+                                this.setState({searchQuery,backendSearchQuery});
+                            }}
+                            placeholder="SEARCH FOR CITIES OR COUNTRIES"
                             value={this.state.searchQuery}
                             keyboardType="web-search"
                             clearButtonMode="always"
@@ -181,8 +189,8 @@ class Search extends React.Component {
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.continent.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>

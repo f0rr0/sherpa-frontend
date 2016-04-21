@@ -5,6 +5,7 @@ import {loadUser} from '../../actions/user.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
+import OnboardingNotifications from './onboarding/onboarding.notifications.ios';
 import { connect } from 'react-redux/native';
 
 var {
@@ -31,6 +32,11 @@ class Root extends Component {
             break;
             case "overview":
                 return <Overview navigator={navigator} />;
+            break;
+            case "onboarding-hometown":
+            break;
+            case "onboarding-notifications":
+                return <OnboardingNotifications navigator={navigator} />
             break;
         }
     }

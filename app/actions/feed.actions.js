@@ -10,6 +10,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
 
             const {endpoint,version,feed_uri,user_uri} = sherpa;
             var feedRequestURI;
+            console.log('feed request',type);
             switch(type){
                 case "location":
                     feedRequestURI=endpoint+version+"/location/"+feedTarget+"?page="+page;
@@ -38,8 +39,18 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             fetch(feedRequestURI,{
                 method:'get'
             })
-            .then((rawSherpaResponse)=>{return rawSherpaResponse.text()})
             .then((rawSherpaResponse)=>{
+                switch(rawSherpaResponse.status){
+                    case 200:
+                        return rawSherpaResponse.text()
+                    break;
+                    case 400:
+                        return '{}';
+                    break;
+                }
+            })
+            .then((rawSherpaResponse)=>{
+                console.log('feed receive',type);
             var sherpaResponse=JSON.parse(rawSherpaResponse);
             switch(type){
                 case "user":
@@ -49,10 +60,12 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                 case "search-places":
                     dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
                 break;
+                case "suitcase-list":
+                    dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"suitcase"}));
+                break;
                 default:
-                dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));
+                    dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));
             }
-            dispatch(udpateFeedState('fetch'));
         });
     }
 }

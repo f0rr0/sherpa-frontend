@@ -3,6 +3,7 @@
 import React from 'react-native';
 import FeedList from './feed.list.ios';
 import FeedProfile from './feed.profile.ios';
+import FeedDestination from './feed.destination.ios';
 import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
 import OwnUserProfile from './../profile/feed.own-profile.ios'
@@ -11,6 +12,7 @@ import Search from './../explore/feed.search.ios'
 
 import { connect } from 'react-redux/native';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
+import {updateTab} from '../../../../actions/app.actions';
 
 
 var {
@@ -43,6 +45,11 @@ class Feed extends Component {
                 showNav=true;
                 sceneContent = <FeedTrip navigator={navigator} navigation={this._getNavigation("white",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
+            case "destination":
+                navColor="white";
+                showNav=true;
+                sceneContent = <FeedDestination navigator={navigator} navigation={this._getNavigation("white",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+            break;
             case "profile":
                 navColor="black";
                 showNav=true;
@@ -64,10 +71,8 @@ class Feed extends Component {
                 sceneContent = <Search  navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
-
         return sceneContent;
     }
-
 
     _getNavigation(color,route,navigator){
         var arrowImage=color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
@@ -131,7 +136,8 @@ var styles = StyleSheet.create({
 function select(state) {
     return {
         user: state.userReducer,
-        feed: state.feedReducer
+        feed: state.feedReducer,
+        app: state.appReducer
     };
 }
 

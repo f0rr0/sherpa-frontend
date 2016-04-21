@@ -35,7 +35,7 @@
    * on the same Wi-Fi network.
    */
   
-//  jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.11:8081/index.ios.bundle?platform=ios&dev=true"];
+  //jsCodeLocation = [NSURL URLWithString:@"http://192.168.1.11:8081/index.ios.bundle?platform=ios&dev=true"];
   jsCodeLocation = [NSURL URLWithString:@"http://localhost:8081/index.ios.bundle?platform=ios&dev=true"];
 
   /**
@@ -56,16 +56,7 @@
   rootViewController.view = rootView;
   self.window.rootViewController = rootViewController;
   [self.window makeKeyAndVisible];
-  
-  
-  UIUserNotificationType types = UIUserNotificationTypeBadge |
-  UIUserNotificationTypeSound | UIUserNotificationTypeAlert;
-  UIUserNotificationSettings *mySettings =
-  [UIUserNotificationSettings settingsForTypes:types categories:nil];
-  [[UIApplication sharedApplication] registerUserNotificationSettings:mySettings];
-  
-  // Register for remote notifications.
-  [[UIApplication sharedApplication] registerForRemoteNotifications];
+
   
   return YES;
 }
@@ -85,12 +76,6 @@
 // Required for the register event.
 - (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken
 {
-//  NSString * deviceTokenString = [[[[deviceToken description]
-//                                    stringByReplacingOccurrencesOfString: @"<" withString: @""]
-//                                   stringByReplacingOccurrencesOfString: @">" withString: @""]
-//                                  stringByReplacingOccurrencesOfString: @" " withString: @""];
-//  
-//  NSLog(@"the generated device token string is : %@",deviceTokenString);
   [RCTPushNotificationManager didRegisterForRemoteNotificationsWithDeviceToken:deviceToken];
 }
 

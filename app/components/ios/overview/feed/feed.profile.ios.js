@@ -54,11 +54,37 @@ class FeedProfile extends React.Component {
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+
+        this.state= {
+            annotations:[]
+        };
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps,prevState){
         if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+
+            if (prevProps.feed.feedState !== this.props.feed.feedState) {
+                var trips = this.props.feed.trips["1"];
+                var markers = [];
+
+                for (var i = 0; i < trips.length; i++) {
+                    markers.push({
+                        coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
+                        type: 'point',
+                        title: trips[i].moments[0].venue,
+                        annotationImage: {
+                            url: 'image!icon-pin',
+                            height: 24,
+                            width: 24
+                        },
+                        id: "markers" + i
+                    })
+                }
+
+                this.setState({annotations: markers})
+            }
+
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
@@ -82,8 +108,8 @@ class FeedProfile extends React.Component {
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                pagination={false} // enable infinite scrolling using touch to load more
+                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
                 headerView={this._renderHeader.bind(this)}
@@ -108,6 +134,7 @@ class FeedProfile extends React.Component {
         var trips=this.props.feed.trips["1"];
         var tripDuration=trips.length;
         var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
+        var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
         for(var i=0;i<trips.length;i++){
             moments+=trips[i].moments.length;
@@ -119,7 +146,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-200}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
@@ -130,19 +157,36 @@ class FeedProfile extends React.Component {
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:220,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
 
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
 
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
+                </View>
 
+                <Mapbox
+                    style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:270,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                    centerCoordinate={{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}}
+                    zoomLevel={0}
+                    annotations={this.state.annotations}
+                    scrollEnabled={true}
+                    zoomEnabled={true}
+                />
+
+                <View style={{flex:1,flexDirection:"row", alignItems:"center",position:"absolute",top:430,justifyContent:"center",height:80,width:350,marginLeft:15}}>
+                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {this.props.dispatch(deleteUser())}}>
+                        <View>
+                            <Text style={styles.copyLarge}>Logout</Text>
+                        </View>
+                    </TouchableHighlight>
                 </View>
                 {this.props.navigation}
-
-
             </View>
         )
     }
@@ -168,8 +212,8 @@ class FeedProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.continent.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>

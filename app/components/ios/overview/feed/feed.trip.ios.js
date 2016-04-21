@@ -94,12 +94,10 @@ class FeedTrip extends Component {
             return country["alpha-2"] === tripData.country;
         })[0];
 
-        var timeAgoStart=moment(new Date(tripData.dateStart*1000));
-        var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
-        var tripDuration=timeAgoEnd.diff(timeAgoStart,'days')+1;
-        var dayOrDays=Math.abs(tripDuration)>1?"DAYS":"DAY";
+        var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
+
 
         return (
             <View style={{flex:1}}>
@@ -117,7 +115,7 @@ class FeedTrip extends Component {
 
                     <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
                     <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
                     </TouchableHighlight>
 
                     <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
@@ -129,7 +127,7 @@ class FeedTrip extends Component {
                     </TouchableHighlight>
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
-                        <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
                     </View>
                 </MaskedView>
                 <Mapbox
@@ -144,7 +142,7 @@ class FeedTrip extends Component {
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {dayOrDays}</Text>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
 
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
 

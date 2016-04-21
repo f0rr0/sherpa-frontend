@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */ = {isa = PBXBuildFile; fileRef = 008F07F21AC5B25A0029DE68 /* main.jsbundle */; };
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
 		00C302E81ABCBA2D00DB3ED1 /* libRCTImage.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302C01ABCB91800DB3ED1 /* libRCTImage.a */; };
@@ -37,6 +36,8 @@
 		F321A58A1BDA9A040014AA18 /* TSTAR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */; };
 		F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */; };
 		F36A331F1BDF913C00970476 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */; };
+		F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */; };
+		F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */; };
 		F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */; };
 		F3CDFF621BFBD6D100CE9567 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF611BFBD6D000CE9567 /* CoreTelephony.framework */; };
 		F3CDFF641BFBD6D800CE9567 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF631BFBD6D700CE9567 /* GLKit.framework */; };
@@ -186,7 +187,6 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
 		00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTActionSheet.xcodeproj; path = "../node_modules/react-native/Libraries/ActionSheetIOS/RCTActionSheet.xcodeproj"; sourceTree = "<group>"; };
 		00C302B51ABCB90400DB3ED1 /* RCTGeolocation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGeolocation.xcodeproj; path = "../node_modules/react-native/Libraries/Geolocation/RCTGeolocation.xcodeproj"; sourceTree = "<group>"; };
 		00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImage.xcodeproj; path = "../node_modules/react-native/Libraries/Image/RCTImage.xcodeproj"; sourceTree = "<group>"; };
@@ -221,6 +221,8 @@
 		F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Regular.otf"; sourceTree = "<group>"; };
 		F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Light.otf"; sourceTree = "<group>"; };
+		F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Regular.otf"; sourceTree = "<group>"; };
 		F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNMaskedView.xcodeproj; path = "../node_modules/react-native-masked-view/RNMaskedView.xcodeproj"; sourceTree = "<group>"; };
 		F3CDFF581BFBD5EA00CE9567 /* node_modules */ = {isa = PBXFileReference; lastKnownFileType = folder; name = node_modules; path = ../node_modules; sourceTree = "<group>"; };
 		F3CDFF611BFBD6D000CE9567 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -353,7 +355,6 @@
 			isa = PBXGroup;
 			children = (
 				F321A5781BDA99F70014AA18 /* Assets */,
-				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -454,6 +455,8 @@
 		F321A5781BDA99F70014AA18 /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */,
+				F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */,
 				F321A5791BDA9A040014AA18 /* TSTAR-Bold.otf */,
 				F321A57A1BDA9A040014AA18 /* TSTAR-BoldItalic.otf */,
 				F321A57B1BDA9A040014AA18 /* TSTAR-Headline.otf */,
@@ -521,6 +524,7 @@
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				F3100A5F1CAD98DB006A7AB9 /* Embed Frameworks */,
+				F34213EC1CBBE4D600790F26 /* ShellScript */,
 				F3100A5B1CAD97F0006A7AB9 /* ShellScript */,
 			);
 			buildRules = (
@@ -759,11 +763,12 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				008F07F31AC5B25A0029DE68 /* main.jsbundle in Resources */,
 				F321A5861BDA9A040014AA18 /* TSTAR-Light.otf in Resources */,
 				F321A5821BDA9A040014AA18 /* TSTAR-Bold.otf in Resources */,
 				F321A5881BDA9A040014AA18 /* TSTAR-Medium.otf in Resources */,
 				F321A5831BDA9A040014AA18 /* TSTAR-BoldItalic.otf in Resources */,
+				F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */,
+				F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				F321A5841BDA9A040014AA18 /* TSTAR-Headline.otf in Resources */,
 				F321A5851BDA9A040014AA18 /* TSTAR-Italic.otf in Resources */,
@@ -789,6 +794,19 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "bash\n\"${BUILT_PRODUCTS_DIR}/${FRAMEWORKS_FOLDER_PATH}/Mapbox.framework/strip-frameworks.sh\"";
+		};
+		F34213EC1CBBE4D600790F26 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "bash \"../node_modules/react-native/packager/react-native-xcode.sh\"";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -911,6 +929,7 @@
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -955,6 +974,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -1003,6 +1023,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution: We Are WILD GmbH (53PQ92N3LB)";
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = NO;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

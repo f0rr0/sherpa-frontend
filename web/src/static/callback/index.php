@@ -33,7 +33,7 @@
 		$result = $MailChimp->post("lists/$list_id/members", [
 			'email_address' => urldecode($email),
 			'status'        => 'subscribed',
-			'merge_vars' 	=> ['IGRAM'=>$data->user->username]
+			'merge_fields' 	=> ['IGRAM'=>$data->user->username]
 		]);
 
 		header('Location: http://trysherpa.com/#/post-signup/'.$token.'/'.rawurlencode($email).'/'.$serial);

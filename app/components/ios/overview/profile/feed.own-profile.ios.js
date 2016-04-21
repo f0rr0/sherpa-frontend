@@ -10,6 +10,7 @@ import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
+import { deleteUser,logoutUser } from '../../../../actions/user.actions';
 
 
 var {
@@ -51,7 +52,7 @@ var styles = StyleSheet.create({
     button:{
         backgroundColor:'#001545',
         height:50,
-        width:165,
+        width:350,
         flex:1,
         justifyContent:'center',
         alignItems:'center'
@@ -62,11 +63,39 @@ class OwnUserProfile extends React.Component {
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+
+        this.state= {
+            annotations:[],
+            trips:[]
+        };
     }
 
-    componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
+    componentDidUpdate(prevProps,prevState){
+        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips[this.props.feed.feedPage]) {
+            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
+
+            if (prevProps.feed.feedState !== this.props.feed.feedState) {
+                var trips = this.props.feed.profileTrips["1"];
+                var markers = [];
+
+                for (var i = 0; i < trips.length; i++) {
+                    markers.push({
+                        coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
+                        type: 'point',
+                        title: trips[i].moments[0].venue,
+                        annotationImage: {
+                            url: 'image!icon-pin',
+                            height: 24,
+                            width: 24
+                        },
+                        id: "markers" + i
+                    })
+                }
+
+                this.setState({annotations: markers,trips})
+            }
+
+
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
@@ -81,8 +110,7 @@ class OwnUserProfile extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log(this.props.user.sherpaID)
-        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"profile"));
+        this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
     }
 
     render(){
@@ -92,10 +120,12 @@ class OwnUserProfile extends React.Component {
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
                 pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
                 headerView={this._renderHeader.bind(this)}
+                renderFooter={this._renderFooter.bind(this)}
+                //emptyView={this._emptyView.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView,
                     actionsLabel:{fontSize:12}
@@ -104,63 +134,94 @@ class OwnUserProfile extends React.Component {
         )
     }
 
-    _renderHeader(){
-        if(Object.keys(this.props.feed.trips).length==0)return;
 
-        var trips=this.props.feed.trips["1"];
+    _renderFooter(){
+        return(
+            <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
+                <View>
+                    <Text style={styles.copyLarge}>Delete Account</Text>
+                </View>
+            </TouchableHighlight>
+        )
+    }
+    _renderHeader(){
+        if(Object.keys(this.props.feed.profileTrips).length==0)return;
+
+        var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var tripDuration=trips.length;
         var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
+        var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
-        for(var i=0;i<trips.length;i++){
-            moments+=trips[i].moments.length;
+        if(trips){
+            for(var i=0;i<trips.length;i++){
+                moments+=trips[i].moments.length;
+            }
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
+        console.log(this.props.feed.profileTrips)
 
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-180}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:380}}>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:200,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
                             resizeMode="cover"
                             source={{uri:this.props.user.profilePicture}}
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
+                        <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
                     </View>
-                    <View style={{flex:1,flexDirection:"row", alignItems:"center",justifyContent:"center",height:80,width:350,marginLeft:15}}>
-                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {}}>
+
+                    <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:200,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+
+                        <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
+                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
+
+                        <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
+
+                        <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
+                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
+                    </View>
+
+                    <Mapbox
+                        style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:250,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        centerCoordinate={trips[0]?{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}:null}
+                        zoomLevel={0}
+                        annotations={this.state.annotations}
+                        scrollEnabled={true}
+                        zoomEnabled={true}
+                    />
+                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:360,alignItems: 'center'}}>
+                        <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
+                    </View>
+
+
+
+
+                    <View style={{flex:1,flexDirection:"row", alignItems:"center",position:"absolute",top:trips[0]?430:235,justifyContent:"center",height:80,width:350,marginLeft:15}}>
+                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {this.props.dispatch(deleteUser())}}>
                             <View>
                                 <Text style={styles.copyLarge}>Logout</Text>
-                            </View>
-                        </TouchableHighlight>
-                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {}}>
-                            <View>
-                                <Text style={styles.copyLarge}>Delete Account</Text>
                             </View>
                         </TouchableHighlight>
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:310,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
-
-
-                    <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
-
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-
-                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
-
-                </View>
                 {this.props.navigation}
 
 
             </View>
         )
+    }
+
+    _getMap(){
+
     }
 
     _renderRow(tripData) {

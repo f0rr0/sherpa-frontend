@@ -7,6 +7,9 @@
 'use babel';
 import Feed from './feed/feed.ios';
 import React from 'react-native';
+import {udpateFeedState} from '../../../actions/feed.actions';
+import {updateTab} from '../../../actions/app.actions';
+import { connect } from 'react-redux/native';
 
 var {
     StyleSheet,
@@ -55,6 +58,19 @@ class Overview extends React.Component {
             notifCount: 0,
             presses: 0
         };
+        this.myFeed=null;
+
+    }
+
+    componentDidMount(){
+        this.props.dispatch(updateTab(this.state.selectedTab));
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        if(this.state.selectedTab!==prevState.selectedTab){
+            this.props.dispatch(udpateFeedState("reset"));
+            this.props.dispatch(updateTab(this.state.selectedTab));
+        }
     }
 
     _renderContent() {
@@ -123,4 +139,11 @@ class Overview extends React.Component {
     }
 }
 
-export default Overview;
+
+function select(state) {
+    return {
+        user: state.userReducer,
+        feed: state.feedReducer
+    };
+}
+export default connect(select)(Overview);

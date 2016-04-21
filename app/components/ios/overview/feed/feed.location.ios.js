@@ -53,7 +53,7 @@ class FeedLocation extends Component {
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
+                pagination={false} // enable infinite scrolling using touch to load more
                 refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 headerView={this._renderHeader.bind(this)}
@@ -106,9 +106,7 @@ class FeedLocation extends Component {
                             <Text style={{color:"#282b33",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.location.toUpperCase()}</Text>
                         </View>
                         <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-                            <Text style={{color:"#282b33",fontSize:12,  marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}</Text>
-                            <Text style={{color:"#282b33",fontSize:12, fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>/</Text>
-                            <Text style={{color:"#282b33",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{tripData.continent.toUpperCase()}</Text>
+                            <Text style={{color:"#282b33",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
                         </View>
                     </View>
                 </MaskedView>

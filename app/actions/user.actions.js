@@ -54,31 +54,45 @@ export function addMomentToSuitcase(momentID){
 }
 
 export function addNotificationsDeviceToken(deviceToken){
-    return store.get('user').then((user) => {
-        if(user){
-            const {endpoint,version,user_uri} = sherpa;
-            fetch(endpoint+version+"adddevicetoken/"+user.sherpaToken+"/addtosuitcase/"+momentID, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body:queryData
-            })
-                .then((rawServiceResponse)=>{
-                    return rawServiceResponse.text();
-                }).then((response)=>{
-                signupWithSherpa(JSON.parse(response))
-            }).catch(err=>console.log(err));
-        }
-    });
+    return function (dispatch, getState) {
+        return store.get('user').then((user) => {
+            console.log('get user',deviceToken)
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                console.log('fetch token',deviceToken)
+
+                fetch(endpoint + version + "adddevicetoken/" + user.sherpaToken + "/" + deviceToken, {
+                    method: 'post',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    console.log('response fetch token',deviceToken)
+                    dispatch(updateUserDBState("available-existing"));
+
+                }).catch(err=>console.log(err));
+            }
+        });
+    }
 }
 
 export function deleteUser(){
-
+    return function (dispatch, getState) {
+        store.delete('user').then(()=> {
+            dispatch(updateUserDBState("empty"));
+        })
+    }
 }
 
 export function logoutUser(){
-
+    return function (dispatch, getState) {
+        store.delete('user').then(()=> {
+            dispatch(updateUserDBState("empty"));
+        })
+    }
 }
 
 export function setUserHometown(){
@@ -102,11 +116,10 @@ export function loadUser() {
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
                     var responseJSON = JSON.parse(rawSherpaResponse);
-                    console.log(user)
                     switch(responseStatus){
                         case 200:
                             if(user.username===responseJSON.username){
-                                dispatch(updateUserDBState("available"));
+                                dispatch(updateUserDBState("available-existing"));
                             }else{
                                 dispatch(updateUserDBState("empty"));
                             }
@@ -130,7 +143,7 @@ export function storeUser() {
         dispatch(updateUserDBState("process"));
         const { userReducer } = getState();
         store.save('user', userReducer).then(()=>{
-            dispatch(updateUserDBState("available"));
+            dispatch(updateUserDBState("available-new"));
             //dispatch(watchJob(userReducer.jobID));
         })
     }
@@ -151,8 +164,6 @@ export function signupUser(){
             dispatch(updateUserSignupState("service_code_request"));
             Linking.openURL(endpoint+code_uri + "/?" +queryData);
             Linking.addEventListener('url', instagramAuthCallback);
-            console.log('insta callback');
-
         }
 
         function instagramAuthCallback(event) {
@@ -205,6 +216,8 @@ export function signupUser(){
             });
 
 
+            console.log(serviceResponse.user);
+
             dispatch(updateUserData({
                 serviceToken:serviceResponse["access_token"]
             }));
@@ -222,8 +235,9 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
-                const {email,id,fullName,profilePicture,profile,username} = sherpaResponse.user;
+                const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
+                console.log(sherpaResponse.user)
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,
@@ -232,7 +246,8 @@ export function signupUser(){
                     email,
                     fullName,
                     username,
-                    profilePicture
+                    profilePicture,
+                    hometown
                 }));
                 dispatch(storeUser());
             })
