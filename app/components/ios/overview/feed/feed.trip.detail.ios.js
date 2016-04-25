@@ -77,7 +77,6 @@ class TripDetail extends React.Component{
 
     render(){
         var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
-
         return (
             <View style={{flex:1}}>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >

@@ -181,10 +181,36 @@
             shareButton.open();
             var isOpen=false;
 
+
+
+            if (document.addEventListener)
+            {
+                document.addEventListener('webkitfullscreenchange', exitHandler, false);
+                document.addEventListener('mozfullscreenchange', exitHandler, false);
+                document.addEventListener('fullscreenchange', exitHandler, false);
+                document.addEventListener('MSFullscreenChange', exitHandler, false);
+            }
+
+            function exitHandler()
+            {
+                if (document.webkitIsFullScreen || document.mozFullScreen || document.msFullscreenElement !== null)
+                {
+                    $(".sherpa-video")[0].currentTime=0;
+                    $(".sherpa-video")[0].pause();
+                }
+            }
+
             var eType=$(window).width()>767?"click":"touchstart";
             $(".start-slide").on(eType,function(e){
                 e.preventDefault();
                 if(!isOpen){
+                    window.setTimeout(function() {
+                        try {
+                            $(".sherpa-video")[0].webkitEnterFullscreen();
+                        }
+                        catch(e) {}
+                    }, 250);
+
                     $(".sherpa-video")[0].play();
                     if($(window).width()>767){
                         TweenMax.to(".slider",.5,{right:"50%",ease:Expo.easeOut},0)

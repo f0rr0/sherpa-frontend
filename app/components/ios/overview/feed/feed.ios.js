@@ -54,15 +54,15 @@ class Feed extends Component {
             break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile navigator={navigator}  navigation={this._getNavigation("black",{id:"Profile"},navigator)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile navigator={navigator}  navigation={this._getNavigation("black",{id:"Profile"},navigator,true)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase  navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase  navigator={navigator} navigation={this._getNavigation("black",route,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search  navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search  navigator={navigator} navigation={this._getNavigation("black",route,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;
@@ -72,12 +72,12 @@ class Feed extends Component {
         return sceneContent;
     }
 
-    _getNavigation(color,route,navigator){
+    _getNavigation(color,route,navigator,hideBack){
         var arrowImage=color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
         var dotsImage=color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
         return(
             <View ref="navigation" style={{top:0,left:0,flexDirection:"row",width:380,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:'transparent',height:70,position:"absolute"}}>
-                <TouchableHighlight  style={{padding:20,marginLeft:5,top:0}} onPress={
+                <TouchableHighlight  style={{padding:20,marginLeft:5,top:0,opacity:hideBack?0:1}} onPress={
                     () => {
                         navigator.pop();
                         this.props.dispatch(udpateFeedState("reset"));

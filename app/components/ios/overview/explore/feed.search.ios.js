@@ -146,7 +146,7 @@ class Search extends React.Component {
 
                                 this.setState({searchQuery,backendSearchQuery});
                             }}
-                            placeholder="WHERE WOULD YOU LIKE TO GO?"
+                            placeholder="WHERE TO?"
                             value={this.state.searchQuery}
                             keyboardType="web-search"
                             clearButtonMode="always"
@@ -195,8 +195,8 @@ class Search extends React.Component {
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
-                        <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
+                        {/* <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
+                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>*/}
                     </View>
 
                 </View>
