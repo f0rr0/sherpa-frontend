@@ -128,7 +128,7 @@ class Suitecase extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:250, width:380, marginBottom:-70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:250, width:380, marginBottom:-70,marginTop:50}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:140,width:380}}>
                         <Text style={{color:"#282b33",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>YOUR DESTINATIONS</Text>
                     </View>
@@ -136,7 +136,7 @@ class Suitecase extends React.Component {
                 </MaskedView>
 
 
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:120,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:180,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
 

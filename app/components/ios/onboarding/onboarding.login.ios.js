@@ -4,7 +4,6 @@ var React = require('react-native');
 import {updateUserData,signupUser} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 import Dimensions from 'Dimensions';
-
 var windowSize=Dimensions.get('window');
 
 var {
@@ -17,14 +16,18 @@ var {
     AlertIOS,
     Image,
     Animated
-    } = React;
+} = React;
 
 
 var styles = StyleSheet.create({
     container: {
-        flexDirection:'column',
+        flexDirection:'row',
         flex:1,
-        backgroundColor:'transparent'
+        backgroundColor:'blue',
+        position:'absolute',
+        alignItems:"flex-end",
+        height:windowSize.height,
+        width:windowSize.width
     },
     copy:{
         color:'white',
@@ -39,9 +42,9 @@ var styles = StyleSheet.create({
     },
     bg:{
         position:'absolute',
-        left:windowSize.width*.3,
-        top:-60,
-        width:windowSize.width*.4,
+        left:0,
+        top:0,
+        width:windowSize.width,
         height:windowSize.height
     },
     login:{
@@ -77,7 +80,7 @@ var styles = StyleSheet.create({
         marginTop:12
     },
     button:{
-        backgroundColor:'#001545',
+        backgroundColor:'#8ad78d',
         height:50,
         justifyContent:'center',
         alignItems:'center'
@@ -141,17 +144,16 @@ class Login extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <Image style={styles.bg} source={require('image!logo-sherpa')} resizeMode="contain"/>
+                <Image
+                    style={styles.bg}
+                    source={require('./../../../images/sherpa-home.png')}
+                    resizeMode="cover"
+                />
 
                 <View style={styles.login}>
-
-                        <Animated.View style={[{
-                        marginBottom:this.state.inputBottomMargin
-                        }]}>
                     <TouchableHighlight style={styles.button} underlayColor="white" onPress={this.connectWithService.bind(this)}>
                             <Text style={styles.copyLarge}>CONNECT WITH INSTAGRAM</Text>
                     </TouchableHighlight>
-                        </Animated.View>
                 </View>
             </View>
         );

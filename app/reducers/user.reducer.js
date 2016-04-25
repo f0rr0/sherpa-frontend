@@ -12,6 +12,7 @@ const initialState={
     username:"",
     jobID:"",
     hometown:"",
+    serviceObject:"",
     service:"instagram",
     signupState:"",
     userDBState:"none" //none, empty, available
@@ -20,6 +21,7 @@ const initialState={
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
+            console.log("update ::",action)
             return Object.assign({}, state, {
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,
@@ -31,7 +33,8 @@ export default function userReducer(state=initialState,action){
                 inviteCode:         action.userData.inviteCode || state.inviteCode,
                 username:           action.userData.username || state.username,
                 jobID:              action.userData.jobID || state.jobID,
-                hometown:           action.userData.hometown || state.hometown
+                hometown:           action.userData.hometown || state.hometown,
+                serviceObject:      action.userData.serviceObject || state.serviceObject
             });
         break;
         case types.USER_SIGNUP_UPDATE_STATE:

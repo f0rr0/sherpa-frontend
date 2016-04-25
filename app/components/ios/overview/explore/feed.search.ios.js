@@ -97,7 +97,7 @@ class Search extends React.Component {
                 onFetch={this._onFetch.bind(this)}
                 emptyView={this._emptyView.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
+                pagination={false} // enable infinite scrolling using touch to load more
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
@@ -130,7 +130,7 @@ class Search extends React.Component {
 
         return (
             <View style={{flex:1}}>
-                <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380}}>
+                <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380,marginTop:70}}>
 
                     <View style={{ borderBottomColor: '#001645', borderBottomWidth: 1,flex:1,marginBottom:30}}>
                         <TextInput
@@ -139,14 +139,14 @@ class Search extends React.Component {
                                 //check if search query matches country
 
                                  var country = countries.filter(function(country) {
-                                    return country["name"] === searchQuery;
+                                    return country["name"].toLowerCase() === searchQuery.toLowerCase();
                                 })[0];
 
                                 var backendSearchQuery=country?country['alpha-2'] : searchQuery;
 
                                 this.setState({searchQuery,backendSearchQuery});
                             }}
-                            placeholder="SEARCH FOR CITIES OR COUNTRIES"
+                            placeholder="WHERE WOULD YOU LIKE TO GO?"
                             value={this.state.searchQuery}
                             keyboardType="web-search"
                             clearButtonMode="always"

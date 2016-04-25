@@ -117,7 +117,13 @@ export function loadUser() {
                 }).then((rawSherpaResponse)=>{
                     var responseJSON = JSON.parse(rawSherpaResponse);
                     switch(responseStatus){
+
                         case 200:
+                            dispatch(updateUserData({
+                                serviceObject:responseJSON,
+                                bio:responseJSON.bio
+                            }));
+
                             if(user.username===responseJSON.username){
                                 dispatch(updateUserDBState("available-existing"));
                             }else{
@@ -206,6 +212,7 @@ export function signupUser(){
             };
 
 
+            console.log('signup',serviceResponse.user)
             const queryData = encodeQueryData({
                 email:userReducer.email,
                 inviteCode:userReducer.inviteCode,
@@ -216,7 +223,6 @@ export function signupUser(){
             });
 
 
-            console.log(serviceResponse.user);
 
             dispatch(updateUserData({
                 serviceToken:serviceResponse["access_token"]
@@ -237,7 +243,6 @@ export function signupUser(){
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
-                console.log(sherpaResponse.user)
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,
@@ -247,7 +252,8 @@ export function signupUser(){
                     fullName,
                     username,
                     profilePicture,
-                    hometown
+                    hometown,
+                    serviceObject:serviceResponse.user
                 }));
                 dispatch(storeUser());
             })

@@ -61,30 +61,8 @@ class FeedProfile extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.trips[this.props.feed.feedPage])
-
-            if (prevProps.feed.feedState !== this.props.feed.feedState) {
-                var trips = this.props.feed.trips["1"];
-                var markers = [];
-
-                for (var i = 0; i < trips.length; i++) {
-                    markers.push({
-                        coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
-                        type: 'point',
-                        title: trips[i].moments[0].venue,
-                        annotationImage: {
-                            url: 'image!icon-pin',
-                            height: 24,
-                            width: 24
-                        },
-                        id: "markers" + i
-                    })
-                }
-
-                this.setState({annotations: markers})
-            }
-
+        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips[this.props.feed.feedPage]){
+            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
@@ -122,7 +100,7 @@ class FeedProfile extends React.Component {
     }
 
     _renderHeader(){
-        if(Object.keys(this.props.feed.trips).length==0)return;
+        if(Object.keys(this.props.feed.profileTrips).length==0)return;
         var tripData=this.props.trip;
 
 
@@ -130,10 +108,8 @@ class FeedProfile extends React.Component {
             return country["alpha-2"] === tripData.country;
         })[0];
 
-
-        var trips=this.props.feed.trips["1"];
+        var trips=this.props.feed.profileTrips["1"];
         var tripDuration=trips.length;
-        var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
         var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
         for(var i=0;i<trips.length;i++){
@@ -141,12 +117,26 @@ class FeedProfile extends React.Component {
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
+        var trips = this.props.feed.profileTrips["1"];
+        var markers = [];
 
+        for (var i = 0; i < trips.length; i++) {
+            markers.push({
+                coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
+                type: 'point',
+                title: trips[i].moments[0].venue,
+                annotationImage: {
+                    url: 'image!icon-pin',
+                    height: 24,
+                    width: 24
+                },
+                id: "markers" + i
+            })
+        }
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380, marginBottom:-70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
@@ -154,10 +144,24 @@ class FeedProfile extends React.Component {
                             source={{uri:this.props.trip.owner.serviceProfilePicture}}
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
+                        <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown.toUpperCase()}</Text>
+                        <Text style={{color:"#a6a7a8",width:180,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:220,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+
+                <Mapbox
+                    style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:370,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                    centerCoordinate={{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}}
+                    zoomLevel={0}
+                    annotations={markers}
+                    scrollEnabled={true}
+                    zoomEnabled={true}
+                />
+
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:340,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
@@ -168,25 +172,11 @@ class FeedProfile extends React.Component {
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                 </View>
 
-                <Mapbox
-                    style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:270,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}}
-                    zoomLevel={0}
-                    annotations={this.state.annotations}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
-                />
 
-                <View style={{flex:1,flexDirection:"row", alignItems:"center",position:"absolute",top:430,justifyContent:"center",height:80,width:350,marginLeft:15}}>
-                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {this.props.dispatch(deleteUser())}}>
-                        <View>
-                            <Text style={styles.copyLarge}>Logout</Text>
-                        </View>
-                    </TouchableHighlight>
-                </View>
+
                 {this.props.navigation}
+
+
             </View>
         )
     }

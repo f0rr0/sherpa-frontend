@@ -54,7 +54,7 @@ class Overview extends React.Component {
     constructor() {
         super();
         this.state = {
-            selectedTab: EXPLORE,
+            selectedTab: FEED,
             notifCount: 0,
             presses: 0
         };

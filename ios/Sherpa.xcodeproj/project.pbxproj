@@ -22,9 +22,6 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
-		F3100A5A1CAD977B006A7AB9 /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
-		F3100A5D1CAD98DB006A7AB9 /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A5C1CAD98DA006A7AB9 /* Mapbox.framework */; };
-		F3100A5E1CAD98DB006A7AB9 /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A5C1CAD98DA006A7AB9 /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F321A5821BDA9A040014AA18 /* TSTAR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5791BDA9A040014AA18 /* TSTAR-Bold.otf */; };
 		F321A5831BDA9A040014AA18 /* TSTAR-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A57A1BDA9A040014AA18 /* TSTAR-BoldItalic.otf */; };
 		F321A5841BDA9A040014AA18 /* TSTAR-Headline.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A57B1BDA9A040014AA18 /* TSTAR-Headline.otf */; };
@@ -36,6 +33,9 @@
 		F321A58A1BDA9A040014AA18 /* TSTAR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */; };
 		F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */; };
 		F36A331F1BDF913C00970476 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */; };
+		F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
+		F387AB101CC93FF500D88D5D /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F387AB0F1CC93FF200D88D5D /* Mapbox.framework */; };
+		F387AB111CC93FF500D88D5D /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F387AB0F1CC93FF200D88D5D /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */; };
 		F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */; };
 		F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */; };
@@ -179,7 +179,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				F3100A5E1CAD98DB006A7AB9 /* Mapbox.framework in Embed Frameworks */,
+				F387AB111CC93FF500D88D5D /* Mapbox.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -208,8 +208,6 @@
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
 		F3100A4E1CAD971D006A7AB9 /* RCTMapboxGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTMapboxGL.xcodeproj; path = "../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL.xcodeproj"; sourceTree = "<group>"; };
-		F3100A571CAD9763006A7AB9 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mapbox.framework; path = "../node_modules/react-native-mapbox-gl/ios/Mapbox.framework"; sourceTree = "<group>"; };
-		F3100A5C1CAD98DA006A7AB9 /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		F321A5791BDA9A040014AA18 /* TSTAR-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Bold.otf"; sourceTree = "<group>"; };
 		F321A57A1BDA9A040014AA18 /* TSTAR-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-BoldItalic.otf"; sourceTree = "<group>"; };
 		F321A57B1BDA9A040014AA18 /* TSTAR-Headline.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Headline.otf"; sourceTree = "<group>"; };
@@ -221,6 +219,7 @@
 		F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Regular.otf"; sourceTree = "<group>"; };
 		F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
+		F387AB0F1CC93FF200D88D5D /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Light.otf"; sourceTree = "<group>"; };
 		F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Regular.otf"; sourceTree = "<group>"; };
 		F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNMaskedView.xcodeproj; path = "../node_modules/react-native-masked-view/RNMaskedView.xcodeproj"; sourceTree = "<group>"; };
@@ -248,7 +247,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F3100A5A1CAD977B006A7AB9 /* libRCTMapboxGL.a in Frameworks */,
+				F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */,
 				F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */,
 				F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */,
 				F3CDFF721BFBD70900CE9567 /* libz.tbd in Frameworks */,
@@ -259,7 +258,7 @@
 				F3CDFF681BFBD6E600CE9567 /* MobileCoreServices.framework in Frameworks */,
 				F3CDFF661BFBD6DF00CE9567 /* ImageIO.framework in Frameworks */,
 				F3CDFF641BFBD6D800CE9567 /* GLKit.framework in Frameworks */,
-				F3100A5D1CAD98DB006A7AB9 /* Mapbox.framework in Frameworks */,
+				F387AB101CC93FF500D88D5D /* Mapbox.framework in Frameworks */,
 				F3CDFF621BFBD6D100CE9567 /* CoreTelephony.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
@@ -384,8 +383,6 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
-				F3100A5C1CAD98DA006A7AB9 /* Mapbox.framework */,
-				F3100A571CAD9763006A7AB9 /* Mapbox.framework */,
 				F3100A4E1CAD971D006A7AB9 /* RCTMapboxGL.xcodeproj */,
 				F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */,
 				F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */,
@@ -424,6 +421,7 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				F387AB0F1CC93FF200D88D5D /* Mapbox.framework */,
 				F3CDFF581BFBD5EA00CE9567 /* node_modules */,
 				13B07FAE1A68108700A75B9A /* Sherpa */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,

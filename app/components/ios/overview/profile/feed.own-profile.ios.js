@@ -77,7 +77,7 @@ class OwnUserProfile extends React.Component {
             if (prevProps.feed.feedState !== this.props.feed.feedState) {
                 var trips = this.props.feed.profileTrips["1"];
                 var markers = [];
-
+                if(trips[0]){
                 for (var i = 0; i < trips.length; i++) {
                     markers.push({
                         coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
@@ -92,6 +92,7 @@ class OwnUserProfile extends React.Component {
                     })
                 }
 
+                }
                 this.setState({annotations: markers,trips})
             }
 
@@ -159,13 +160,10 @@ class OwnUserProfile extends React.Component {
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
-        console.log(this.props.feed.profileTrips)
-
-
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:200,width:380}}>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290,marginTop:70}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
                             resizeMode="cover"
@@ -173,9 +171,22 @@ class OwnUserProfile extends React.Component {
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
+                        <Text style={{color:"#a6a7a8",width:180,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["bio"]}</Text>
                     </View>
 
-                    <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:200,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+
+                    <Mapbox
+                        style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:280,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        centerCoordinate={trips[0]?{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}:null}
+                        zoomLevel={0}
+                        annotations={this.state.annotations}
+                        scrollEnabled={true}
+                        zoomEnabled={true}
+                    />
+
+                    <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:250,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
                         <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
@@ -186,16 +197,7 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                     </View>
 
-                    <Mapbox
-                        style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:250,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                        centerCoordinate={trips[0]?{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}:null}
-                        zoomLevel={0}
-                        annotations={this.state.annotations}
-                        scrollEnabled={true}
-                        zoomEnabled={true}
-                    />
+
                     <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:360,alignItems: 'center'}}>
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>

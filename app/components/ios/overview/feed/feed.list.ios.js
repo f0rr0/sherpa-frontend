@@ -104,10 +104,10 @@ class FeedList extends React.Component{
         })[0];
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
-
         //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
         if(!country)country={name:tripData.country}
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
+
         return (
             <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>

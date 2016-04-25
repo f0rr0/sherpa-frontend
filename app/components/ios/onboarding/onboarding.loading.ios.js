@@ -37,7 +37,7 @@ class Loading extends Component {
     componentWillReceiveProps(nextProps){
         switch(nextProps.user.userDBState){
             case "available-new":
-                this.setState({showProgress:false,currentView:"onboarding-notifications"});
+                this.setState({showProgress:false,currentView:"onboarding-steps"});
             break;
             case "available-existing":
             case "notifications-registered":

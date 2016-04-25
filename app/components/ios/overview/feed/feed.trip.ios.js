@@ -1,14 +1,15 @@
 'use strict';
 
 import React from "react-native";
-import MaskedView from "react-native-masked-view";
-import Mapbox from "react-native-mapbox-gl";
 import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
+import Mapbox from "react-native-mapbox-gl";
+import MaskedView from "react-native-masked-view";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase} from '../../../../actions/user.actions';
+import {udpateFeedState} from '../../../../actions/feed.actions';
 
 var {
     StyleSheet,
@@ -25,15 +26,17 @@ var {
 class FeedTrip extends Component {
     constructor(){
         super();
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.state= {
-            dataSource: ds.cloneWithRows([]),
-            annotations:[]
+            dataSource: this.ds.cloneWithRows([]),
+            annotations:[],
+            suitCaseChange:false
         };
     }
 
     componentDidUpdate(){
+        console.log('component did update');
     }
 
     componentWillMount(){
@@ -53,8 +56,8 @@ class FeedTrip extends Component {
             })
         }
 
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({dataSource:ds.cloneWithRows(this.props.trip.moments),annotations:markers})
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({dataSource:this.ds.cloneWithRows(this.props.trip.moments),annotations:markers})
     }
 
     render(){
@@ -75,13 +78,27 @@ class FeedTrip extends Component {
     }
 
     showUserProfile(trip){
+        this.props.dispatch(udpateFeedState("reset"));
+
         this.props.navigator.push({
             id: "profile",
             trip
         });
     }
 
+    showTripDetail(trip,owner){
+        this.props.dispatch(udpateFeedState("reset"));
+
+        var tripDetails={trip,owner};
+        this.props.navigator.push({
+            id: "tripDetail",
+            tripDetails
+        });
+    }
+
     showTripLocation(trip){
+        this.props.dispatch(udpateFeedState("reset"));
+
         this.props.navigator.push({
             id: "location",
             trip
@@ -171,31 +188,37 @@ class FeedTrip extends Component {
 
     _renderRow(tripData) {
         if(tripData.type!=='image')return(<View></View>);
-        var suiteCased=false;
+        console.log('render row');
         return (
-            <View style={styles.listItemContainer}>
-                <View style={styles.listItem}>
+            <View style={styles.listItem} style={styles.listItemContainer}>
+                    <TouchableHighlight onPress={()=>{
+                        this.showTripDetail(tripData,this.props.trip.owner);
+                    }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.mediaUrl}}
                     />
-                </View>
+                    </TouchableHighlight>
                 <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                     <TouchableHighlight>
                         <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
                         this.suiteCaseTrip(tripData);
+                        tripData.suitecased=true;
+                        //this.setState({suitCaseChange:true})
+                        this.setState({dataSource:this.ds.cloneWithRows(this.props.trip.moments)})
+                        console.log('suitcasechange');
                     }}>
                         <View>
                             <Image
-                                style={{width:18,height:18,top:0,position:"absolute"}}
+                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitecased?.5:1}}
                                 resizeMode="contain"
                                 source={require('./../../../../images/suitcase.png')}
                             />
                             <Image
-                                style={{width:10,height:10,left:5,top:5,opacity:suiteCased?1:0,position:"absolute"}}
+                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitecased?1:0,position:"absolute"}}
                                 resizeMode="contain"
                                 source={require('./../../../../images/suitcase-check.png')}
                             />

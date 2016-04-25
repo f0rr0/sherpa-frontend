@@ -6,6 +6,7 @@ import FeedProfile from './feed.profile.ios';
 import FeedDestination from './feed.destination.ios';
 import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
+import TripDetail from './feed.trip.detail.ios';
 import OwnUserProfile from './../profile/feed.own-profile.ios'
 import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
@@ -29,7 +30,6 @@ class Feed extends Component {
     renderScene(route, navigator) {
         var sceneContent;
         var showNav=false;
-        var navColor="white";
 
         switch (route.id) {
             case 'feed':
@@ -41,34 +41,32 @@ class Feed extends Component {
                 sceneContent = <FeedLocation navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
-                navColor="white";
                 showNav=true;
                 sceneContent = <FeedTrip navigator={navigator} navigation={this._getNavigation("white",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
-                navColor="white";
                 showNav=true;
                 sceneContent = <FeedDestination navigator={navigator} navigation={this._getNavigation("white",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "profile":
-                navColor="black";
                 showNav=true;
                 sceneContent = <FeedProfile navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "own-profile":
-                navColor="black";
                 showNav=true;
-                sceneContent = <OwnUserProfile navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile navigator={navigator}  navigation={this._getNavigation("black",{id:"Profile"},navigator)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
-                navColor="black";
                 showNav=true;
-                sceneContent = <Suitcase  navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase  navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
-                navColor="black";
                 showNav=true;
-                sceneContent = <Search  navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search  navigator={navigator} navigation={this._getNavigation("black",route,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+            case "tripDetail":
+                showNav=true;
+                sceneContent = <TripDetail  navigator={navigator} navigation={this._getNavigation("white",route,navigator)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
             break;
         }
         return sceneContent;
