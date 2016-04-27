@@ -24,10 +24,13 @@ export default function feedReducer(state=initialState,action){
             for(var index in action.feedData.trips){
                 var moments=action.feedData.trips[index].moments;
                 if(moments.length>0){
+                    action.feedData.trips[index].moments=[];
+                    for(var i=0;i<moments.length;i++){
+                        if(moments[i].type==='image')action.feedData.trips[index].moments.push(moments[i]);
+                    }
                     if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
                 }
             }
-
             var newPage={};
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
@@ -42,6 +45,7 @@ export default function feedReducer(state=initialState,action){
                     });
                 break;
                 case "search":
+                    console.log('search results',newTrips);
                     return Object.assign({}, state, {
                         searchResults:newTrips,
                         feedState:"ready"

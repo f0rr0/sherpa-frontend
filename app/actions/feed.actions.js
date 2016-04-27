@@ -35,6 +35,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                 break;
             }
 
+
+
+            var sherpaResponse;
             fetch(feedRequestURI,{
                 method:'get'
             })
@@ -49,21 +52,21 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                 }
             })
             .then((rawSherpaResponse)=>{
-            var sherpaResponse=JSON.parse(rawSherpaResponse);
-            switch(type){
-                case "user":
-                    dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
-                break;
-                case "search-people":
-                case "search-places":
-                    dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
-                break;
-                case "suitcase-list":
-                    dispatch(udpateFeed({trips:sherpaResponse.reverse(),page:page,type:"suitcase"}));
-                break;
-                default:
-                    dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));
-            }
+                sherpaResponse=JSON.parse(rawSherpaResponse);
+                switch(type){
+                    case "user":
+                        dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
+                    break;
+                    case "search-people":
+                    case "search-places":
+                        dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
+                    break;
+                    case "suitcase-list":
+                        dispatch(udpateFeed({trips:sherpaResponse.reverse(),page:page,type:"suitcase"}));
+                    break;
+                    default:
+                        dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));
+                }
         });
     }
 }

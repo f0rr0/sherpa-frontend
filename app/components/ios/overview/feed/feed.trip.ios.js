@@ -8,8 +8,11 @@ import Mapbox from "react-native-mapbox-gl";
 import MaskedView from "react-native-masked-view";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
-import {addMomentToSuitcase} from '../../../../actions/user.actions';
+import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
+import config from '../../../../data/config';
+const {sherpa}=config.auth[config.environment];
+import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 
 var {
     StyleSheet,
@@ -24,40 +27,71 @@ var {
 
 
 class FeedTrip extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
          this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.state= {
             dataSource: this.ds.cloneWithRows([]),
             annotations:[],
-            suitCaseChange:false
+            suitCaseChange:false,
+            trip:props.trip,
+            momentIDs:[],
+            shouldUpdate:true
         };
     }
 
     componentDidUpdate(){
-        console.log('component did update');
+        const {endpoint,version} = sherpa;
+
+        fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body:encodeQueryData({
+                moments:JSON.stringify(this.state.momentIDs)
+            })
+        }).then((rawServiceResponse)=>{
+            return rawServiceResponse.text();
+        }).then((response)=>{
+            var suitcaseInfo=JSON.parse(response);
+
+            for(var i=0;i<suitcaseInfo.length;i++){
+                this.props.trip.moments[i].suitcased=suitcaseInfo[i].suitcased;
+                if(this.props.trip.moments[i].suitcased!=this.state.trip.moments[i].suitcased)this.setState({shouldUpdate:true});
+            }
+
+            if(this.state.shouldUpdate){
+                this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                this.setState({trip:this.props.trip,dataSource:this.ds.cloneWithRows(this.props.trip.moments),shouldUpdate:false})
+            }
+
+        }).catch(err=>console.log(err));
     }
 
-    componentWillMount(){
-        console.log('will mount',this.props.trip);
+    componentDidMount(){
         var markers=[];
+        var momentIDs=[];
+
         for (var i=0;i<this.props.trip.moments.length;i++){
+
             markers.push({
                 coordinates: [this.props.trip.moments[i].lat, this.props.trip.moments[i].lng],
                 type: 'point',
                 title:this.props.trip.moments[i].venue,
                 annotationImage: {
                     url: 'image!icon-pin',
-                    height: 24,
-                    width: 24
+                    height: 7,
+                    width: 7
                 },
                 id:"markers"+i
-            })
+            });
+
+            momentIDs.push(this.props.trip.moments[i].id);
         }
 
-        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({dataSource:this.ds.cloneWithRows(this.props.trip.moments),annotations:markers})
+        this.setState({momentIDs,annotations:markers});
     }
 
     render(){
@@ -74,6 +108,10 @@ class FeedTrip extends Component {
 
     suiteCaseTrip(trip){
         addMomentToSuitcase(trip.id);
+    }
+
+    unSuiteCaseTrip(trip){
+        removeMomentFromSuitcase(trip.id);
     }
 
     showUserProfile(trip){
@@ -105,7 +143,7 @@ class FeedTrip extends Component {
     }
 
     _renderHeader(){
-        var tripData=this.props.trip;
+        var tripData=this.state.trip;
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];
@@ -126,19 +164,19 @@ class FeedTrip extends Component {
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:.5 }}
                         resizeMode="cover"
-                        source={{uri:this.props.trip.moments[0].mediaUrl}}
+                        source={{uri:this.state.trip.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
-                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
+                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
+                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.state.trip)}>
                         <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
+                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.state.trip)}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}
                             resizeMode="cover"
-                            source={{uri:this.props.trip.owner.serviceProfilePicture}}
+                            source={{uri:this.state.trip.owner.serviceProfilePicture}}
                         />
                     </TouchableHighlight>
 
@@ -150,17 +188,16 @@ class FeedTrip extends Component {
                     style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
+                    centerCoordinate={{latitude: this.state.trip.moments[0].lat,longitude: this.state.trip.moments[0].lng}}
                     zoomLevel={8}
                     annotations={this.state.annotations}
                     scrollEnabled={true}
                     zoomEnabled={true}
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
-                    {/*<Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text> */}
-
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
+                    <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
+                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
+                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
 
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
@@ -169,12 +206,12 @@ class FeedTrip extends Component {
                 </View>
 
                 <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:380,backgroundColor:'transparent'}}
+                    style={{flex:1,height:60,top:335,position:"absolute",width:350,left:15,right:0,backgroundColor:'transparent'}}
                     resizeMode="cover"
                     source={require('image!shadow')}
                 />
 
-                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
+                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.state.trip)}>
                     <View>
                         <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
                     </View>
@@ -187,11 +224,10 @@ class FeedTrip extends Component {
 
     _renderRow(tripData) {
         if(tripData.type!=='image')return(<View></View>);
-        console.log('render row');
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                     <TouchableHighlight onPress={()=>{
-                        this.showTripDetail(tripData,this.props.trip.owner);
+                        this.showTripDetail(tripData,this.state.trip.owner);
                     }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
@@ -204,20 +240,22 @@ class FeedTrip extends Component {
                         <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                     </TouchableHighlight>
                     <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
-                        this.suiteCaseTrip(tripData);
-                        tripData.suitecased=true;
-                        //this.setState({suitCaseChange:true})
-                        this.setState({dataSource:this.ds.cloneWithRows(this.props.trip.moments)})
-                        console.log('suitcasechange');
+                        tripData.suitcased=!tripData.suitcased;
+                        if(tripData.suitcased){
+                            this.suiteCaseTrip(tripData);
+                        }else{
+                            this.unSuiteCaseTrip(tripData);
+                        }
+                        this.setState({dataSource:this.ds.cloneWithRows(this.state.trip.moments)})
                     }}>
                         <View>
                             <Image
-                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitecased?.5:1}}
+                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
                                 resizeMode="contain"
                                 source={require('./../../../../images/suitcase.png')}
                             />
                             <Image
-                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitecased?1:0,position:"absolute"}}
+                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
                                 resizeMode="contain"
                                 source={require('./../../../../images/suitcase-check.png')}
                             />

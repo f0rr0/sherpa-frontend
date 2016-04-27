@@ -45,8 +45,8 @@ class FeedDestination extends Component {
                 title:this.props.trip.moments[i].venue,
                 annotationImage: {
                     url: 'image!icon-pin',
-                    height: 24,
-                    width: 24
+                    height: 7,
+                    width: 7
                 },
                 id:"markers"+i
             })
@@ -68,14 +68,11 @@ class FeedDestination extends Component {
         )
     }
 
-    suiteCaseTrip(trip){
-        addMomentToSuitcase(trip.id);
-    }
-
-    showUserProfile(trip){
+    showTripDetail(trip,owner){
+        var tripDetails={trip,owner:{serviceUsername:trip.serviceJson.user.username,serviceProfilePicture:trip.serviceJson.user.profile_picture}};
         this.props.navigator.push({
-            id: "profile",
-            trip
+            id: "tripDetail",
+            tripDetails
         });
     }
 
@@ -139,7 +136,7 @@ class FeedDestination extends Component {
                 </View>
 
                 <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:380,backgroundColor:'transparent'}}
+                    style={{flex:1,height:60,top:335,position:"absolute",width:350,left:15,backgroundColor:'transparent'}}
                     resizeMode="cover"
                     source={require('image!shadow')}
                 />
@@ -158,21 +155,25 @@ class FeedDestination extends Component {
     _renderRow(tripData) {
         if(tripData.type!=='image')return(<View></View>);
         return (
-            <View style={styles.listItemContainer}>
-                <View style={styles.listItem}>
-                    <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
-                        resizeMode="cover"
-                        source={{uri:tripData.mediaUrl}}
-                    />
-                </View>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
-                    <TouchableHighlight>
-                        <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
-                    </TouchableHighlight>
+            <TouchableHighlight  onPress={()=>{
+                        this.showTripDetail(tripData);
+                    }}>
+                <View style={styles.listItemContainer}>
+                    <View style={styles.listItem}>
+                        <Image
+                            style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
+                            resizeMode="cover"
+                            source={{uri:tripData.mediaUrl}}
+                        />
+                    </View>
+                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                        <TouchableHighlight>
+                            <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                        </TouchableHighlight>
 
+                    </View>
                 </View>
-            </View>
+            </TouchableHighlight>
         );
     }
 }

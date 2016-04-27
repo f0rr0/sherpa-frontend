@@ -55,21 +55,10 @@
                                 deviceData:JSON.stringify({browser:"unknown"})
                             });
 
-                            console.log("sign up with sherpa",{
-                                email:decodeURIComponent(email),
-                                inviteCode:"web-invite",
-                                service:"instagram",
-                                token:token,
-                                serviceData:JSON.stringify(serviceData.user),
-                                deviceData:JSON.stringify({browser:"unknown"})
-                            });
-
-
                             $.ajax({type: "POST",
                                     url: url,
                                     data: queryData,
                                     success: function(res) {
-                                        console.log("success signup",res);
                                     },
                                     error:function(req,err){
                                         console.log('error signup')
@@ -110,7 +99,6 @@
                 }
             });
             function signupComplete(){
-
                 ga('send', {
                     hitType: 'event',
                     eventCategory: 'Signup',
@@ -118,6 +106,7 @@
                     eventLabel: 'Sherpa Signup Complete'
                 });
 
+                fbq('track', 'CompleteRegistration');
 
                 applyOpen=false;
                 toggleApply();
@@ -204,12 +193,6 @@
             $(".start-slide").on(eType,function(e){
                 e.preventDefault();
                 if(!isOpen){
-                    window.setTimeout(function() {
-                        try {
-                            $(".sherpa-video")[0].webkitEnterFullscreen();
-                        }
-                        catch(e) {}
-                    }, 250);
 
                     $(".sherpa-video")[0].play();
                     if($(window).width()>767){
@@ -218,6 +201,13 @@
                         TweenMax.to(".start-slide",.1,{background:"rgba(255,255,255,0)",ease:Quad.easeOut},0)
                         TweenMax.to(".page-landing .description",.5,{x:"8%",y:"-50%",autoAlpha:0,ease:Expo.easeOut},0)
                         TweenMax.to(".play-icon",.5,{marginTop:"-100%",autoAlpha:0,ease:Expo.easeOut},0)
+                    }else{
+                        window.setTimeout(function() {
+                            try {
+                                $(".sherpa-video")[0].webkitEnterFullscreen();
+                            }
+                            catch(e) {}
+                        }, 250);
                     }
                 }else{
                     $(".sherpa-video")[0].currentTime=0;

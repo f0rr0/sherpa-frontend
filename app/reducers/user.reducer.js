@@ -21,7 +21,6 @@ const initialState={
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
-            console.log("update ::",action)
             return Object.assign({}, state, {
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,

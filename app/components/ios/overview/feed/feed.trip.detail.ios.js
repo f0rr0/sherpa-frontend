@@ -5,7 +5,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import Mapbox from "react-native-mapbox-gl";
 import MaskedView from "react-native-masked-view";
-import {addMomentToSuitcase} from '../../../../actions/user.actions';
+import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/user.actions';
 
 var {
     StyleSheet,
@@ -57,22 +57,32 @@ var styles = StyleSheet.create({
 });
 
 class TripDetail extends React.Component{
-    constructor(){
+    constructor(props){
         super();
         this.state={
-            suitcased:false
+            suitcased:props.tripDetails.trip.suitcased
         }
     }
 
     componentDidMount(){
-        console.log(this.props.tripDetails,'trip details');
     }
 
+    showUserProfile(trip){
+        this.props.navigator.push({
+            id: "profile",
+            trip
+        });
+    }
+
+
     suiteCaseTrip(trip){
-        this.setState({
-            suitcased:true
-        })
-        addMomentToSuitcase(trip.id);
+        trip.suitcased=!trip.suitcased;
+        this.setState({suitcased:trip.suitcased});
+        if(trip.suitcased){
+            addMomentToSuitcase(trip.id);
+        }else{
+            removeMomentFromSuitcase(trip.id);
+        }
     }
 
     render(){
@@ -93,7 +103,7 @@ class TripDetail extends React.Component{
 
                     <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.tripDetails.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:0}}>
+                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:0}}   onPress={() => this.showUserProfile(this.props.trip)}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}
                             resizeMode="cover"
@@ -118,8 +128,8 @@ class TripDetail extends React.Component{
                             title:this.props.tripDetails.trip.venue,
                             annotationImage: {
                                 url: 'image!icon-pin',
-                                height: 24,
-                                width: 24
+                                height: 7,
+                                width: 7
                             },
                             id:"markers1"
                         }
