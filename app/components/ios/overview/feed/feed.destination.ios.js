@@ -94,7 +94,6 @@ class FeedDestination extends Component {
 
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var countryOrState=country ? country.name : tripData.name;
-        //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         var mapURI=this.props.trip.moments[0].mediaUrl;
         return (
             <View style={{flex:1}}>
@@ -113,7 +112,7 @@ class FeedDestination extends Component {
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}}>
                         <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}{countryOrState.toUpperCase()}</Text>
                         </TouchableHighlight>
                     </View>
                 </MaskedView>
@@ -128,11 +127,8 @@ class FeedDestination extends Component {
                     zoomEnabled={true}
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
-
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
-
-
                 </View>
 
                 <Image

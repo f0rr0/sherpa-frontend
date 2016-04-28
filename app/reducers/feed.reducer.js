@@ -23,6 +23,7 @@ export default function feedReducer(state=initialState,action){
 
             for(var index in action.feedData.trips){
                 var moments=action.feedData.trips[index].moments;
+                action.feedData.trips[index].name= action.feedData.trips[index].name.split("Trip to")[1];
                 if(moments.length>0){
                     action.feedData.trips[index].moments=[];
                     for(var i=0;i<moments.length;i++){
