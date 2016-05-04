@@ -11,8 +11,8 @@ import GiftedListView from 'react-native-gifted-listview';
 import { connect } from 'react-redux/native';
 import config from '../../../../data/config';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
-import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
+import {loadFeed} from '../../../../actions/feed.actions';
 
 const {sherpa}=config.auth[config.environment];
 

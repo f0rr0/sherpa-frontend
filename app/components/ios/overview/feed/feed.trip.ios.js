@@ -217,13 +217,10 @@ class FeedTrip extends Component {
     }
 
     _renderRow(tripData,sectionID,rowID) {
-        console.log('render row',rowID);
         if(tripData.type!=='image')return(<View></View>);
-        console.log('receive trip data',tripData)
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                     <TouchableHighlight onPress={()=>{
-                         console.log('suitcased send to detail',tripData.suitcased)
                         this.showTripDetail(tripData,this.props.trip.owner);
                     }}>
                     <Image
