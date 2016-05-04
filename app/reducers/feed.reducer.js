@@ -53,6 +53,7 @@ export default function feedReducer(state=initialState,action){
                     });
                 break;
                 case "suitcase":
+                    console.log('suitcase trips',newTrips);
                     return Object.assign({}, state, {
                         suitcaseDestinations:newTrips,
                         feedState:"ready"

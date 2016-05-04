@@ -8,9 +8,13 @@ import FeedTrip from './../feed/feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
-import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
+import config from '../../../../data/config';
+import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
+import {loadFeed} from '../../../../actions/feed.actions';
+import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 
+const {sherpa}=config.auth[config.environment];
 
 var {
     StyleSheet,
@@ -30,7 +34,8 @@ var styles = StyleSheet.create({
         flex:1,
         backgroundColor:"black",
         justifyContent:"center",
-        alignItems:'center'
+        alignItems:'center',
+        paddingBottom:10,
     },
     listView:{
         alignItems:'center',
@@ -41,23 +46,27 @@ var styles = StyleSheet.create({
         flex:1,
         width:350,
         height:350,
-        marginBottom:15
-    },
-
-    copyLarge:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:12
+        marginBottom:30
     },
     button:{
         backgroundColor:'#001545',
         height:50,
-        width:165,
+        marginTop:-15,
+        marginBottom:13,
+        marginLeft:15,
+        marginRight:15,
+        width:350,
         flex:1,
         justifyContent:'center',
         alignItems:'center'
+    },
+    copyLarge:{
+        color:'white',
+        fontFamily:"TSTAR-bold",
+        fontSize:12
     }
 });
+
 
 class Search extends React.Component {
     constructor(){
@@ -66,24 +75,77 @@ class Search extends React.Component {
         this.state = {
             searchQuery: "",
             backendSearchQuery:"",
-            searchType:"places"
+            searchType:"places",
+            reRender:false,
+            moments:[]
         };
+    }
+
+    suiteCaseTrip(trip){
+        addMomentToSuitcase(trip.id);
+    }
+
+    unSuiteCaseTrip(trip){
+        removeMomentFromSuitcase(trip.id);
+    }
+
+    unpackTrips(trips){
+        var unpackedResults={moments:[],momentIDs:[]};
+        for(var index in trips){
+            var tripMoments=trips[index].moments;
+            for(var i=0;i<tripMoments.length;i++){
+                tripMoments[i].trip={
+                    owner:trips[index].owner
+                };
+
+                unpackedResults.moments.push(tripMoments[i]);
+                unpackedResults.momentIDs.push(tripMoments[i].id);
+            }
+        }
+        return unpackedResults;
     }
 
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.searchResults[this.props.feed.feedPage])
+            //strip moments out of trips :: unpacking start
+            var searchResults=this.props.feed.searchResults[this.props.feed.feedPage];
+            var unpackedResults=this.unpackTrips(searchResults);
+            //:: unpacking end
+
+            const {endpoint,version} = sherpa;
+            fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:encodeQueryData({
+                    moments:JSON.stringify(unpackedResults.momentIDs)
+                })
+            }).then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((response)=>{
+                var suitcaseInfo=JSON.parse(response);
+
+                for(var i=0;i<suitcaseInfo.length;i++){
+                    unpackedResults.moments[i].suitcased=suitcaseInfo[i].suitcased;
+                }
+
+                this.itemsLoadedCallback(unpackedResults.moments);
+            }).catch(err=>console.log(err));
+
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
     }
 
-    showTripDetail(trip) {
+    showTripDetail(trip,owner){
+        var tripDetails={trip,owner};
         this.props.navigator.push({
-            id: "trip",
-            trip
+            id: "tripDetail",
+            tripDetails
         });
     }
+
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
@@ -171,36 +233,47 @@ class Search extends React.Component {
     }
 
     _renderRow(tripData) {
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-
-        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        if(!country)country={name:tripData.country}
-
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
-        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
+        var myTripData=tripData;
         return (
-            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
-                <View style={styles.listItem}>
+            <View style={styles.listItem} style={styles.listItemContainer}>
+                <TouchableHighlight onPress={()=>{
+                        this.showTripDetail(tripData,tripData.trip.owner);
+                    }}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
+                        style={{position:"absolute",top:0,left:0,height:350,width:350,opacity:1}}
                         resizeMode="cover"
-                        source={{uri:tripData.moments[0].mediaUrl}}
+                        source={{uri:tripData.mediaUrl}}
                     />
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
+                </TouchableHighlight>
+                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                    <TouchableHighlight>
+                        <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                    </TouchableHighlight>
+                    <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
+                        tripData.suitcased=!tripData.suitcased;
+                        if(tripData.suitcased){
+                            this.suiteCaseTrip(tripData);
+                        }else{
+                            this.unSuiteCaseTrip(tripData);
+                        }
 
-                    <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
-                        <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
-                        <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
-                    </View>
-
+                        this.refs.listview._refresh()
+                    }}>
+                        <View>
+                            <Image
+                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
+                                resizeMode="contain"
+                                source={require('./../../../../images/suitcase.png')}
+                            />
+                            <Image
+                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
+                                resizeMode="contain"
+                                source={require('./../../../../images/suitcase-check.png')}
+                            />
+                        </View>
+                    </TouchableHighlight>
                 </View>
-            </TouchableHighlight>
+            </View>
         );
     }
 }

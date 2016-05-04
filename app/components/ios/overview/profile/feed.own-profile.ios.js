@@ -11,6 +11,8 @@ import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
 import { deleteUser,logoutUser } from '../../../../actions/user.actions';
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 
 var {
@@ -116,6 +118,8 @@ class OwnUserProfile extends React.Component {
 
     render(){
         return(
+        <View style={{flex:1}}>
+
             <GiftedListView
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
@@ -132,6 +136,9 @@ class OwnUserProfile extends React.Component {
                     actionsLabel:{fontSize:12}
                 }}
             />
+            {this.props.navigation}
+
+        </View>
         )
     }
 
@@ -171,7 +178,7 @@ class OwnUserProfile extends React.Component {
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:180,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["bio"]}</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["bio"]}</Text>
                     </View>
 
 
@@ -202,9 +209,6 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>
 
-
-
-
                     <View style={{flex:1,flexDirection:"row", alignItems:"center",position:"absolute",top:trips[0]?430:235,justifyContent:"center",height:80,width:350,marginLeft:15}}>
                         <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {this.props.dispatch(deleteUser())}}>
                             <View>
@@ -215,7 +219,6 @@ class OwnUserProfile extends React.Component {
                 </MaskedView>
 
 
-                {this.props.navigation}
 
 
             </View>
@@ -246,7 +249,7 @@ class OwnUserProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.location.toUpperCase()}</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                     <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>

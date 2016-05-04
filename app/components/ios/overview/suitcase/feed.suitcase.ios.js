@@ -154,6 +154,8 @@ class Suitecase extends React.Component {
     }
 
     _renderRow(tripData) {
+        tripData.name="";
+        console.log('tripData',tripData);
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;
         })[0];

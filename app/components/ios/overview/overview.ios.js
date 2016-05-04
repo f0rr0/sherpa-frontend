@@ -74,14 +74,19 @@ class Overview extends React.Component {
     }
 
     _renderContent() {
+        console.log('render content',this.state.selectedTab);
+        var feed=<Feed initial={this.state.selectedTab} ref={this.state.selectedTab}/>;
+        console.log(feed);
+        console.log(this.refs[this.state.selectedTab],'current view');
         switch (this.state.selectedTab) {
             case FEED:
             case EXPLORE:
             case PROFILE:
             case SUITCASE:
-                return (<Feed initial={this.state.selectedTab} />);
+                return (feed);
             break;
         }
+
     }
 
     render() {

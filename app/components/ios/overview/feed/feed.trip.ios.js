@@ -10,9 +10,9 @@ import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
+import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
-import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 
 var {
     StyleSheet,
@@ -32,54 +32,27 @@ class FeedTrip extends Component {
          this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
         this.state= {
-            dataSource: this.ds.cloneWithRows([]),
+            dataSource: this.ds.cloneWithRows(props.trip.moments),
             annotations:[],
-            suitCaseChange:false,
-            trip:props.trip,
-            momentIDs:[],
+            moments:props.trip.moments,
             shouldUpdate:true
         };
     }
 
     componentDidUpdate(){
-        const {endpoint,version} = sherpa;
 
-        fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body:encodeQueryData({
-                moments:JSON.stringify(this.state.momentIDs)
-            })
-        }).then((rawServiceResponse)=>{
-            return rawServiceResponse.text();
-        }).then((response)=>{
-            var suitcaseInfo=JSON.parse(response);
-
-            for(var i=0;i<suitcaseInfo.length;i++){
-                this.props.trip.moments[i].suitcased=suitcaseInfo[i].suitcased;
-                if(this.props.trip.moments[i].suitcased!=this.state.trip.moments[i].suitcased)this.setState({shouldUpdate:true});
-            }
-
-            if(this.state.shouldUpdate){
-                this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                this.setState({trip:this.props.trip,dataSource:this.ds.cloneWithRows(this.props.trip.moments),shouldUpdate:false})
-            }
-
-        }).catch(err=>console.log(err));
     }
 
     componentDidMount(){
         var markers=[];
         var momentIDs=[];
 
-        for (var i=0;i<this.props.trip.moments.length;i++){
+        for (var i=0;i<this.state.moments.length;i++){
 
             markers.push({
-                coordinates: [this.props.trip.moments[i].lat, this.props.trip.moments[i].lng],
+                coordinates: [this.state.moments[i].lat, this.state.moments[i].lng],
                 type: 'point',
-                title:this.props.trip.moments[i].venue,
+                title:this.state.moments[i].venue,
                 annotationImage: {
                     url: 'image!icon-pin',
                     height: 7,
@@ -88,10 +61,31 @@ class FeedTrip extends Component {
                 id:"markers"+i
             });
 
-            momentIDs.push(this.props.trip.moments[i].id);
+            momentIDs.push(this.state.moments[i].id);
         }
 
-        this.setState({momentIDs,annotations:markers});
+        const {endpoint,version} = sherpa;
+        var newMoments=this.state.moments.slice();
+
+        fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
+            method: 'post',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body:encodeQueryData({
+                moments:JSON.stringify(momentIDs)
+            })
+        }).then((rawServiceResponse)=>{
+            return rawServiceResponse.text();
+        }).then((response)=>{
+            var suitcaseInfo=JSON.parse(response);
+            for(var i=0;i<suitcaseInfo.length;i++){
+                newMoments[i].suitcased=suitcaseInfo[i].suitcased;
+            }
+
+            this.setState({momentIDs,annotations:markers,moments:newMoments,dataSource:this.ds.cloneWithRows(newMoments)});
+        }).catch(err=>console.log(err));
+
     }
 
     render(){
@@ -143,7 +137,7 @@ class FeedTrip extends Component {
     }
 
     _renderHeader(){
-        var tripData=this.state.trip;
+        var tripData=this.props.trip;
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];
@@ -164,19 +158,19 @@ class FeedTrip extends Component {
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:.5 }}
                         resizeMode="cover"
-                        source={{uri:this.state.trip.moments[0].mediaUrl}}
+                        source={{uri:this.state.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
-                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.state.trip)}>
+                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
+                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
                         <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name}</Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.state.trip)}>
+                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}
                             resizeMode="cover"
-                            source={{uri:this.state.trip.owner.serviceProfilePicture}}
+                            source={{uri:this.props.trip.owner.serviceProfilePicture}}
                         />
                     </TouchableHighlight>
 
@@ -188,7 +182,7 @@ class FeedTrip extends Component {
                     style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude: this.state.trip.moments[0].lat,longitude: this.state.trip.moments[0].lng}}
+                    centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
                     zoomLevel={8}
                     annotations={this.state.annotations}
                     scrollEnabled={true}
@@ -211,7 +205,7 @@ class FeedTrip extends Component {
                     source={require('image!shadow')}
                 />
 
-                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.state.trip)}>
+                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
                     <View>
                         <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
                     </View>
@@ -222,12 +216,15 @@ class FeedTrip extends Component {
         )
     }
 
-    _renderRow(tripData) {
+    _renderRow(tripData,sectionID,rowID) {
+        console.log('render row',rowID);
         if(tripData.type!=='image')return(<View></View>);
+        console.log('receive trip data',tripData)
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                     <TouchableHighlight onPress={()=>{
-                        this.showTripDetail(tripData,this.state.trip.owner);
+                         console.log('suitcased send to detail',tripData.suitcased)
+                        this.showTripDetail(tripData,this.props.trip.owner);
                     }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
@@ -246,7 +243,9 @@ class FeedTrip extends Component {
                         }else{
                             this.unSuiteCaseTrip(tripData);
                         }
-                        this.setState({dataSource:this.ds.cloneWithRows(this.state.trip.moments)})
+                        var newMoments=this.state.moments.slice();
+                        newMoments[rowID].suitCased=tripData.suitcased;
+                        this.setState({moments:newMoments,dataSource:this.ds.cloneWithRows(newMoments)})
                     }}>
                         <View>
                             <Image

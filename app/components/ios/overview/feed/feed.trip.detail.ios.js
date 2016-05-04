@@ -6,6 +6,9 @@ import moment from 'moment';
 import Mapbox from "react-native-mapbox-gl";
 import MaskedView from "react-native-masked-view";
 import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/user.actions';
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
+
 
 var {
     StyleSheet,
@@ -41,7 +44,7 @@ var styles = StyleSheet.create({
     button:{
         backgroundColor:'#001545',
         height:50,
-        marginTop:-15,
+        marginTop:-5,
         marginBottom:215,
         marginLeft:15,
         marginRight:15,
@@ -89,34 +92,26 @@ class TripDetail extends React.Component{
         var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
         return (
             <View style={{flex:1}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >
-
-                    <View
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1,backgroundColor:'black' }}
-                    />
 
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:.5 }}
+                        style={{marginTop:70,marginLeft:15,height:350,width:350 }}
                         resizeMode="cover"
                         source={{uri:this.props.tripDetails.trip.mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.tripDetails.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:0}}   onPress={() => this.showUserProfile(this.props.trip)}>
+                    <TouchableHighlight style={{height:30,width:30,top:80,right:20,position:'absolute'}}   onPress={() => this.showUserProfile(this.props.tripDetails)}>
                         <Image
-                            style={{height:50,width:50,opacity:1,borderRadius:25}}
+                            style={{height:30,width:30,opacity:1,borderRadius:15}}
                             resizeMode="cover"
                             source={{uri:this.props.tripDetails.owner.serviceProfilePicture}}
                         />
                     </TouchableHighlight>
 
-                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:210,left:0,right:0,height:20,marginTop:-5}}>
-                        <Text style={{color:"#FFFFFF",fontSize:20, marginTop:0,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{this.props.tripDetails.trip.venue.toUpperCase()}</Text>
-                    </View>
-                </MaskedView>
+                <MaskedView maskImage='mask-bottom' style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10}} >
+
                 <Mapbox
-                    style={{height:150,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',bottom:70,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                    style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                     centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
@@ -134,15 +129,19 @@ class TripDetail extends React.Component{
                             id:"markers1"
                         }
                     ]}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
                 />
+
+                </MaskedView>
 
                 <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
                     <View>
                         <Text style={styles.copyLarge}>ADD TO SUITCASE</Text>
                     </View>
                 </TouchableHighlight>
+
+
 
                 {this.props.navigation}
             </View>
