@@ -20,10 +20,12 @@ export default function feedReducer(state=initialState,action){
         case types.UPDATE_FEED:
             var cleanTrips=[];
 
+            //console.log('update feed',action.feedData,'feed page',action.feedPage);
 
             for(var index in action.feedData.trips){
                 var moments=action.feedData.trips[index].moments;
-                action.feedData.trips[index].name= action.feedData.trips[index].name.split("Trip to")[1];
+                var name=action.feedData.trips[index].name;
+                if(name.indexOf("Trip to")>-1)action.feedData.trips[index].name= name.split("Trip to")[1];
                 if(moments.length>0){
                     action.feedData.trips[index].moments=[];
                     for(var i=0;i<moments.length;i++){
@@ -33,10 +35,14 @@ export default function feedReducer(state=initialState,action){
                 }
             }
             var newPage={};
+            //console.log(action.feedData.page,'feeddata page');
             newPage[action.feedData.page]=cleanTrips || state.trips;
 
-            var newTrips=Object.assign({},state.trips,newPage);
+            var newTrips=Object.assign({},{},newPage);
             newTrips['country']=newTrips['name'];
+
+            //console.log('new trips',newTrips);
+
 
             switch(action.feedData.type) {
                 case "user":
@@ -46,14 +52,14 @@ export default function feedReducer(state=initialState,action){
                     });
                 break;
                 case "search":
-                    console.log('search results',newTrips);
+                    //console.log('search results',newTrips);
                     return Object.assign({}, state, {
                         searchResults:newTrips,
                         feedState:"ready"
                     });
                 break;
                 case "suitcase":
-                    console.log('suitcase trips',newTrips);
+                    //console.log('suitcase trips',newTrips);
                     return Object.assign({}, state, {
                         suitcaseDestinations:newTrips,
                         feedState:"ready"

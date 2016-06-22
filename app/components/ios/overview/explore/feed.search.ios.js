@@ -158,7 +158,7 @@ class Search extends React.Component {
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 emptyView={this._emptyView.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
+                firstLoader={false} // display a loader for the first fetching
                 pagination={false} // enable infinite scrolling using touch to load more
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections

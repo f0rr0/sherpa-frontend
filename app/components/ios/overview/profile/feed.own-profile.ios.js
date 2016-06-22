@@ -68,39 +68,15 @@ class OwnUserProfile extends React.Component {
 
         this.state= {
             annotations:[],
-            trips:[]
+            trips:[],
+            ready:false
         };
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips[this.props.feed.feedPage]) {
+        if(prevProps.feed.feedState!=='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
-
-            if (prevProps.feed.feedState !== this.props.feed.feedState) {
-                var trips = this.props.feed.profileTrips["1"];
-                var markers = [];
-                if(trips[0]){
-                for (var i = 0; i < trips.length; i++) {
-                    markers.push({
-                        coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
-                        type: 'point',
-                        title: trips[i].moments[0].venue,
-                        annotationImage: {
-                            url: 'image!icon-pin',
-                            height: 7,
-                            width: 7
-                        },
-                        id: "markers" + i
-                    })
-                }
-
-                }
-                this.setState({annotations: markers,trips})
-            }
-
-
-        }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
+            this.setState({ready:true})
         }
     }
 
@@ -136,7 +112,6 @@ class OwnUserProfile extends React.Component {
                     actionsLabel:{fontSize:12}
                 }}
             />
-            {this.props.navigation}
 
         </View>
         )
@@ -145,16 +120,28 @@ class OwnUserProfile extends React.Component {
 
     _renderFooter(){
         return(
-            <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
-                <View>
-                    <Text style={styles.copyLarge}>Delete Account</Text>
+
+                <View style={{flex:1,alignItems:"center",justifyContent:"center",opacity:this.state.ready?1:0}}>
+                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(deleteUser())}}>
+                        <View>
+                            <Text style={styles.copyLarge}>Logout</Text>
+                        </View>
+                    </TouchableHighlight>
+                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
+                        <View>
+                            <Text style={styles.copyLarge}>Delete Account</Text>
+                        </View>
+                    </TouchableHighlight>
+
                 </View>
-            </TouchableHighlight>
+
+
         )
     }
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
 
+        console.log(this.props.feed.profileTrips,'profile trips');
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var tripDuration=trips.length;
         var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
@@ -165,11 +152,12 @@ class OwnUserProfile extends React.Component {
                 moments+=trips[i].moments.length;
             }
         }
+        console.log('this props user',this.props.user)
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290,marginTop:70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:600, width:380,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
@@ -178,20 +166,10 @@ class OwnUserProfile extends React.Component {
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["bio"]}</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject.profile.serviceBio}</Text>
                     </View>
 
 
-                    <Mapbox
-                        style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:280,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                        centerCoordinate={trips[0]?{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}:null}
-                        zoomLevel={0}
-                        annotations={this.state.annotations}
-                        scrollEnabled={true}
-                        zoomEnabled={true}
-                    />
 
                     <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:250,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
@@ -209,17 +187,12 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>
 
-                    <View style={{flex:1,flexDirection:"row", alignItems:"center",position:"absolute",top:trips[0]?430:235,justifyContent:"center",height:80,width:350,marginLeft:15}}>
-                        <TouchableHighlight underlayColor="#011e5f" style={[styles.button]} onPress={() => {this.props.dispatch(deleteUser())}}>
-                            <View>
-                                <Text style={styles.copyLarge}>Logout</Text>
-                            </View>
-                        </TouchableHighlight>
-                    </View>
+
                 </MaskedView>
 
 
 
+                {this.props.navigation}
 
             </View>
         )

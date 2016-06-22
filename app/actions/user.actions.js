@@ -8,11 +8,14 @@ let dispatcher;
 import React, { Linking,AlertIOS } from 'react-native';
 import store from 'react-native-simple-store';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
+let simpleAuthClient = require('react-native-simple-auth');
 
 
 /**
  * Update User Data
  */
+
+
 
 export function updateUserData(userData){
     return{
@@ -35,9 +38,11 @@ export function updateUserDBState(userDBState){
 }
 
 export function addMomentToSuitcase(momentID){
+    console.log('add moment to suitcase',momentID);
     return store.get('user').then((user) => {
         if(user){
             const {endpoint,version,user_uri} = sherpa;
+    console.log('url',endpoint+version+user_uri+"/"+user.sherpaID+"/addtosuitcase/"+momentID);
             fetch(endpoint+version+user_uri+"/"+user.sherpaID+"/addtosuitcase/"+momentID, {
                 method: 'post',
                 headers: {
@@ -47,6 +52,7 @@ export function addMomentToSuitcase(momentID){
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
+                console.log('response',response);
             }).catch(err=>console.log(err));
         }
     });
@@ -180,41 +186,30 @@ export function signupUser(){
         dispatch(updateUserSignupState("start"));
 
 
+
+
         function instagramAuthRequest(){
-            const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
-            const queryData = encodeQueryData({response_type, client_id, redirect_uri});
+            simpleAuthClient.configure({
+                instagram: {
+                    client_id: '610a4a6a16bc40ec95f749e95c48087a',
+                    redirect_uri: 'sherpa://oauthcallback-instagram'
+                }
+            }).then(() => {
+                simpleAuthClient.authorize('instagram').then((info) => {
+                    console.log('info data',info.data);
+                    console.log('info token',info.token);
+                    signupWithSherpa(info.token,info.data);
 
-            dispatch(updateUserSignupState("service_code_request"));
-            Linking.openURL(endpoint+code_uri + "/?" +queryData);
-            Linking.addEventListener('url', instagramAuthCallback);
+                }).catch((error) => {
+                    console.log('error',error);
+                    let errorCode = error.code;
+                    let errorDescription = error.description;
+                });
+            });
+
         }
 
-        function instagramAuthCallback(event) {
-            dispatch(updateUserSignupState("service_code_complete"));
-
-            const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
-            Linking.removeEventListener('url', instagramAuthCallback);
-
-            let code = getQueryString("code", event.url);
-            const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
-
-            dispatch(updateUserSignupState("service_token_request"));
-
-            fetch(endpoint+token_uri, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body:queryData
-            })
-            .then((rawServiceResponse)=>{
-                return rawServiceResponse.text();
-            }).then((response)=>{
-                signupWithSherpa(JSON.parse(response))
-            }).catch(err=>console.log(err));
-        }
-
-        function signupWithSherpa(serviceResponse){
+        function signupWithSherpa(instagramToken,userData){
             dispatch(updateUserSignupState("service_token_complete"));
             let deviceData={
                 deviceUniqueId:     DeviceInfo.getUniqueID(),
@@ -229,25 +224,25 @@ export function signupUser(){
             };
 
 
-            console.log('signup',serviceResponse.user)
             const queryData = encodeQueryData({
                 email:userReducer.email,
                 inviteCode:userReducer.inviteCode,
                 service:userReducer.service,
-                token:serviceResponse["access_token"],
-                serviceData:JSON.stringify(serviceResponse.user),
+                token:instagramToken,
+                serviceData:JSON.stringify(userData),
                 deviceData:JSON.stringify(deviceData)
             });
 
+            console.log('query data',queryData);
 
 
             dispatch(updateUserData({
-                serviceToken:serviceResponse["access_token"]
+                serviceToken:instagramToken
             }));
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
-            console.log(endpoint+version+login_uri);
+            console.log('signup',endpoint+version+login_uri)
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -258,6 +253,7 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
+                console.log(sherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
                 dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({
@@ -270,7 +266,7 @@ export function signupUser(){
                     username,
                     profilePicture,
                     hometown,
-                    serviceObject:serviceResponse.user
+                    serviceObject:userData
                 }));
                 dispatch(storeUser());
             })

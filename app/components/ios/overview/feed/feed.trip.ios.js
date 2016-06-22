@@ -163,10 +163,10 @@ class FeedTrip extends Component {
 
                     <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
                     <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name}</Text>
+                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                     </TouchableHighlight>
 
-                    <TouchableHighlight style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
+                    <TouchableHighlight underlayColor="rgba(0,0,0,.1)" style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}
                             resizeMode="cover"
@@ -185,8 +185,8 @@ class FeedTrip extends Component {
                     centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
                     zoomLevel={8}
                     annotations={this.state.annotations}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
@@ -233,7 +233,7 @@ class FeedTrip extends Component {
                     <TouchableHighlight>
                         <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                     </TouchableHighlight>
-                    <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
+                    <TouchableHighlight underlayColor="rgba(0,0,0,0)" style={{width:18,height:18}} onPress={()=>{
                         tripData.suitcased=!tripData.suitcased;
                         if(tripData.suitcased){
                             this.suiteCaseTrip(tripData);

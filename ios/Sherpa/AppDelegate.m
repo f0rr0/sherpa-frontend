@@ -48,8 +48,8 @@
   
   RCTRootView *rootView = [[RCTRootView alloc] initWithBundleURL:jsCodeLocation
                                                       moduleName:@"Sherpa"
-                                               initialProperties:nil
-                                                   launchOptions:launchOptions];
+                                                      initialProperties:nil
+                                                      launchOptions:launchOptions];
   
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];
@@ -60,8 +60,6 @@
   
   return YES;
 }
-
-
 
 - (BOOL)application:(UIApplication *)application openURL:(NSURL *)url sourceApplication:(NSString *)sourceApplication annotation:(id)annotation {
   return [RCTLinkingManager application:application openURL:url sourceApplication:sourceApplication annotation:annotation];

@@ -32,8 +32,8 @@ module.exports = {
             dev:{
                 instagram: {
                     endpoint:"https://api.instagram.com/",
-                    client_id:"6c93234fa3544a6592b382a0a814e555",
-                    client_secret:"afac24bc39eb4ab2bb52adf09c068293",
+                    client_id:"610a4a6a16bc40ec95f749e95c48087a",
+                    client_secret:"0518505aae83497bbcbb1c795c2a48dd",
                     redirect_uri:"sherpa://oauthcallback-instagram",
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",
@@ -54,8 +54,8 @@ module.exports = {
             live:{
                 instagram: {
                     endpoint:"https://api.instagram.com/",
-                    client_id:"6c93234fa3544a6592b382a0a814e555",
-                    client_secret:"afac24bc39eb4ab2bb52adf09c068293",
+                    client_id:"610a4a6a16bc40ec95f749e95c48087a",
+                    client_secret:"0518505aae83497bbcbb1c795c2a48dd",
                     redirect_uri:"sherpa://oauthcallback-instagram",
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",

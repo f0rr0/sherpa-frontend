@@ -69,7 +69,14 @@ class FeedDestination extends Component {
     }
 
     showTripDetail(trip,owner){
-        var tripDetails={trip,owner:{serviceUsername:trip.serviceJson.user.username,serviceProfilePicture:trip.serviceJson.user.profile_picture}};
+        //console.log('service json',trip);
+        var tripDetails={trip,owner:{
+            serviceUsername:trip.serviceJson.user.username,
+            serviceProfilePicture:trip.serviceJson.user.profile_picture,
+            id:trip.serviceJson.user.id,
+            serviceObject:{"bio":""},
+            hometown:""
+        }};
         this.props.navigator.push({
             id: "tripDetail",
             tripDetails
@@ -112,7 +119,7 @@ class FeedDestination extends Component {
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}}>
                         <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}{countryOrState.toUpperCase()}</Text>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
                         </TouchableHighlight>
                     </View>
                 </MaskedView>
@@ -123,8 +130,8 @@ class FeedDestination extends Component {
                     centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
                     zoomLevel={8}
                     annotations={this.state.annotations}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
                 />
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
@@ -150,6 +157,7 @@ class FeedDestination extends Component {
 
     _renderRow(tripData) {
         if(tripData.type!=='image')return(<View></View>);
+        tripData.suitcased=true;
         return (
             <TouchableHighlight  onPress={()=>{
                         this.showTripDetail(tripData);

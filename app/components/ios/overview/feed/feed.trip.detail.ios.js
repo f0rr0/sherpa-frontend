@@ -71,10 +71,11 @@ class TripDetail extends React.Component{
     }
 
     showUserProfile(trip){
-        this.props.navigator.push({
-            id: "profile",
-            trip
-        });
+        //console.log('show user profile',trip);
+        //this.props.navigator.push({
+        //    id: "profile",
+        //    trip
+        //});
     }
 
 
@@ -129,7 +130,7 @@ class TripDetail extends React.Component{
                             id:"markers1"
                         }
                     ]}
-                    scrollEnabled={false}
+                    scrollEnabled={true}
                     zoomEnabled={false}
                 />
 
@@ -137,7 +138,7 @@ class TripDetail extends React.Component{
 
                 <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
                     <View>
-                        <Text style={styles.copyLarge}>ADD TO SUITCASE</Text>
+                        <Text style={styles.copyLarge}>{this.state.suitcased?"SAVED TO SUITCASE":"SAVE TO SUITCASE"}</Text>
                     </View>
                 </TouchableHighlight>
 

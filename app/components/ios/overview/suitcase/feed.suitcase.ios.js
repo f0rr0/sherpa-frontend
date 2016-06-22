@@ -27,14 +27,14 @@ var styles = StyleSheet.create({
     },
     listItem:{
         flex:1,
-        backgroundColor:"black",
+        backgroundColor:"#fcfcfc",
         justifyContent:"center",
         alignItems:'center'
     },
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,
@@ -71,6 +71,7 @@ class Suitecase extends React.Component {
     }
 
     showTripDetail(trip) {
+        console.log('show trip detail',trip);
         this.props.navigator.push({
             id: "destination",
             trip
@@ -128,15 +129,9 @@ class Suitecase extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:250, width:380, marginBottom:-70,marginTop:50}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:140,width:380}}>
-                        <Text style={{color:"#282b33",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>YOUR DESTINATIONS</Text>
-                    </View>
-
-                </MaskedView>
 
 
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:180,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
 
@@ -154,8 +149,7 @@ class Suitecase extends React.Component {
     }
 
     _renderRow(tripData) {
-        tripData.name="";
-        console.log('tripData',tripData);
+        //tripData.name="";
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;
         })[0];
@@ -168,12 +162,15 @@ class Suitecase extends React.Component {
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:90,width:350,opacity:.7}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:90,width:350,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
-                    />
+                    >
+                        <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
 
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.moments.length} PLACES IN</Text>
+                    </Image>
+
+                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
 
                 </View>

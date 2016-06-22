@@ -14,6 +14,7 @@ import Search from './../explore/feed.search.ios'
 import { connect } from 'react-redux/native';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 import {updateTab} from '../../../../actions/app.actions';
+import GoogleAnalytics from 'react-native-google-analytics-bridge';
 
 
 var {
@@ -31,6 +32,7 @@ class Feed extends Component {
         var sceneContent;
         var showNav=false;
 
+        GoogleAnalytics.trackScreenView(route.id)
 
         switch (route.id) {
             case 'feed':
@@ -47,7 +49,7 @@ class Feed extends Component {
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination navigator={navigator} navigation={this._getNavigation("white",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination navigator={navigator} navigation={this._getNavigation("white","suitcase",navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "profile":
                 showNav=true;
@@ -82,7 +84,7 @@ class Feed extends Component {
         var dotsImage=color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
         return(
             <View ref="navigation" style={{top:0,left:0,flexDirection:"row",width:380,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:opaque?'white':'transparent',height:70,position:"absolute"}}>
-                <TouchableHighlight  style={{padding:20,marginLeft:5,top:0,opacity:hideBack?0:1}} onPress={
+                <TouchableHighlight underlayColor="rgba(255,255,255,.1)" style={{padding:20,marginLeft:5,top:0,opacity:hideBack?0:1}} onPress={
                     () => {
                         navigator.pop();
                         this.props.dispatch(udpateFeedState("reset"));

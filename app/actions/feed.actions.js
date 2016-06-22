@@ -51,8 +51,8 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                     break;
                 }
             })
-            .then((rawSherpaResponse)=>{
-                sherpaResponse=JSON.parse(rawSherpaResponse);
+            .then((rawSherpaResponseFinal)=>{
+                sherpaResponse=JSON.parse(rawSherpaResponseFinal);
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
@@ -62,7 +62,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
                     break;
                     case "suitcase-list":
-                        dispatch(udpateFeed({trips:sherpaResponse.reverse(),page:page,type:"suitcase"}));
+                        var bla=JSON.parse(rawSherpaResponseFinal);
+                        //console.log(bla,'bla')
+                        dispatch(udpateFeed({trips:bla,page:page,type:"suitcase"}));
                     break;
                     default:
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));

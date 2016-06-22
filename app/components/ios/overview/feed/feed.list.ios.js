@@ -16,9 +16,9 @@ var {
 
 var styles=StyleSheet.create({
     logo:{
-        height:25,
-        marginTop:15,
-        marginBottom:15
+        height:30,
+        marginTop:23,
+        marginBottom:23
     },
     listView:{
         alignItems:'center',
@@ -27,7 +27,7 @@ var styles=StyleSheet.create({
     },
     listItem:{
         flex:1,
-        backgroundColor:"black",
+        backgroundColor:"#fcfcfc",
         justifyContent:"center",
         alignItems:'center'
     },
@@ -47,9 +47,12 @@ class FeedList extends React.Component{
 
     }
 
-    componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]){
-            this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage])
+    componentDidUpdate(prevProps,prevState){
+        if(prevProps.feed.feedState!='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]){
+            this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
+            //console.log('itmems loaded user page',this.props.feed.userTrips);
+            //console.log('prev state',prevProps.feed.feedState);
+            //console.log('prev state',prevProps.feed.userTripsPage);
         }else if(this.props.feed.feedState==='reset'){
             //this.refs.listview._refresh()
         }
@@ -84,9 +87,10 @@ class FeedList extends React.Component{
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
                 pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 headerView={this._renderHeader.bind(this)}
+                refreshableTintColor={"#85d68a"}
                 ref="listview"
                 customStyles={{
                     contentContainerStyle:styles.listView,
@@ -106,15 +110,16 @@ class FeedList extends React.Component{
         //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
         if(!country)country={name:tripData.country}
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
-
         return (
             <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
-                    />
+                    >
+                        <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
+                        </Image>
                     <View style={{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
                         <Image
                             style={{height:50,width:50,opacity:1,borderRadius:25}}

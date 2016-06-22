@@ -61,10 +61,8 @@ class FeedProfile extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips[this.props.feed.feedPage]){
+        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips){
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
-        }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
         }
     }
 
@@ -136,7 +134,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:800, width:380,marginBottom:-290,marginTop:70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:620, width:380,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
@@ -148,18 +146,6 @@ class FeedProfile extends React.Component {
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
                     </View>
                 </MaskedView>
-
-
-                <Mapbox
-                    style={{opacity:trips[0]?1:0,height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:370,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude: trips[0].moments[0].lat,longitude: trips[0].moments[0].lng}}
-                    zoomLevel={0}
-                    annotations={markers}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
-                />
 
                 <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:340,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 

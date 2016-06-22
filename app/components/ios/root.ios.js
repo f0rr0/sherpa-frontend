@@ -7,7 +7,7 @@ import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
 import OnboardingSteps from './onboarding/onboarding.steps.ios';
 import { connect } from 'react-redux/native';
-
+import GoogleAnalytics from 'react-native-google-analytics-bridge';
 var {
     StyleSheet,
     Navigator,
@@ -20,9 +20,12 @@ class Root extends Component {
     constructor(props){
         super(props);
         this.props.dispatch(loadUser());
+        GoogleAnalytics.setTrackerId('UA-75939846-3')
     }
 
     renderScene(route, navigator) {
+        GoogleAnalytics.trackScreenView(route.id)
+
         switch (route.id) {
             case 'loading':
                 return <Loading navigator={navigator} />;
@@ -72,3 +75,4 @@ function select(state) {
     };
 }
 export default connect(select)(Root);
+
