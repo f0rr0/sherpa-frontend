@@ -84,9 +84,16 @@ class FeedDestination extends Component {
     }
 
     showTripLocation(trip){
+        var tripData=this.props.trip;
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.name;
+        })[0];
+        var countryOrState=country ? country.name : tripData.name;
+
         this.props.navigator.push({
             id: "location",
-            trip
+            trip,
+            location:countryOrState
         });
     }
 
@@ -151,6 +158,7 @@ class FeedDestination extends Component {
                 </TouchableHighlight>
 
                 {this.props.navigation}
+
             </View>
         )
     }

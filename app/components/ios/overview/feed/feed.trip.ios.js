@@ -129,10 +129,10 @@ class FeedTrip extends Component {
 
     showTripLocation(trip){
         this.props.dispatch(udpateFeedState("reset"));
-
         this.props.navigator.push({
             id: "location",
-            trip
+            trip,
+            location:trip.location
         });
     }
 
@@ -178,16 +178,19 @@ class FeedTrip extends Component {
                         <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
                     </View>
                 </MaskedView>
-                <Mapbox
-                    style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
-                    zoomLevel={8}
-                    annotations={this.state.annotations}
-                    scrollEnabled={false}
-                    zoomEnabled={false}
-                />
+                <View style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>
+                    <Mapbox
+                        style={{flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
+                        zoomLevel={8}
+                        annotations={this.state.annotations}
+                        scrollEnabled={false}
+                        zoomEnabled={false}
+                    />
+                    <View style={{flex:1,top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></View>
+                </View>
                 <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>

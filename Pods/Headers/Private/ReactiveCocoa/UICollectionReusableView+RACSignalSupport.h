@@ -1,1 +1,1 @@
-../../../ReactiveCocoa/ReactiveCocoa/UICollectionReusableView+RACSignalSupport.h
+../../../ReactiveCocoa/ReactiveCocoa/Objective-C/UICollectionReusableView+RACSignalSupport.h

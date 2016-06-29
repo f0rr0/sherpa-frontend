@@ -44,17 +44,20 @@ class FeedList extends React.Component{
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+    }
 
+    componentDidMount(){
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(prevProps.feed.feedState!='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]){
+        console.log(this.props.feed.feedState,this.props.feed.userTrips,'::::!!!::::')
+        if(
+            //prevProps.feed.feedState!='ready'&&
+            this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
+        ){
             this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
-            //console.log('itmems loaded user page',this.props.feed.userTrips);
-            //console.log('prev state',prevProps.feed.feedState);
-            //console.log('prev state',prevProps.feed.userTripsPage);
+            console.log('feed popilate');
         }else if(this.props.feed.feedState==='reset'){
-            //this.refs.listview._refresh()
         }
     }
 

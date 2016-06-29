@@ -71,11 +71,11 @@ class TripDetail extends React.Component{
     }
 
     showUserProfile(trip){
-        //console.log('show user profile',trip);
-        //this.props.navigator.push({
-        //    id: "profile",
-        //    trip
-        //});
+        console.log('show user profile',trip);
+        this.props.navigator.push({
+            id: "profile",
+            trip
+        });
     }
 
 

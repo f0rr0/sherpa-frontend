@@ -24,7 +24,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                     feedRequestURI=endpoint+version+"/suitcase/"+feedTarget;
                 break;
                 case "search-places":
-                    feedRequestURI=endpoint+version+"/search/trips?text="+feedTarget;
+                    feedRequestURI=endpoint+version+"/search/moments?text="+feedTarget;
                 break;
                 case "search-people":
                     feedRequestURI=endpoint+version+"/search/users?text="+feedTarget;
@@ -38,8 +38,13 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
 
 
             var sherpaResponse;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", sherpaToken);
+
+
             fetch(feedRequestURI,{
-                method:'get'
+                method:'get',
+                headers:sherpaHeaders
             })
             .then((rawSherpaResponse)=>{
                 switch(rawSherpaResponse.status){
@@ -53,6 +58,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+                console.log('raw sherpa response',sherpaResponse,type);
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
@@ -62,9 +68,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
                     break;
                     case "suitcase-list":
-                        var bla=JSON.parse(rawSherpaResponseFinal);
-                        //console.log(bla,'bla')
-                        dispatch(udpateFeed({trips:bla,page:page,type:"suitcase"}));
+                        dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"suitcase"}));
                     break;
                     default:
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type}));

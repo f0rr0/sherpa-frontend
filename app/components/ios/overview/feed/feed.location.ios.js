@@ -46,11 +46,13 @@ class FeedLocation extends Component {
             //:: unpacking end
 
             const {endpoint,version} = sherpa;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", this.props.user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
             fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
                 method: 'post',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
+                headers: sherpaHeaders,
                 body:encodeQueryData({
                     moments:JSON.stringify(unpackedResults.momentIDs)
                 })
@@ -97,7 +99,8 @@ class FeedLocation extends Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.props.trip.location,this.props.user.sherpaToken,page,"location"));
+        console.log('fetch location',this.props);
+        this.props.dispatch(loadFeed(this.props.location,this.props.user.sherpaToken,page,"location"));
     }
 
     render(){
@@ -125,6 +128,7 @@ class FeedLocation extends Component {
 
 
         var tripData=this.props.trip;
+        console.log('trip data',tripData)
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];

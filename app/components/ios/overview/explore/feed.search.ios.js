@@ -4,12 +4,14 @@ import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
+import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import { connect } from 'react-redux/native';
 import config from '../../../../data/config';
+import store from 'react-native-simple-store';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import {loadFeed} from '../../../../actions/feed.actions';
@@ -77,8 +79,12 @@ class Search extends React.Component {
             backendSearchQuery:"",
             searchType:"places",
             reRender:false,
-            moments:[]
+            moments:[],
+            momentIDs:[]
         };
+    }
+
+    componentDidMount(){
     }
 
     suiteCaseTrip(trip){
@@ -89,49 +95,41 @@ class Search extends React.Component {
         removeMomentFromSuitcase(trip.id);
     }
 
-    unpackTrips(trips){
-        var unpackedResults={moments:[],momentIDs:[]};
-        for(var index in trips){
-            var tripMoments=trips[index].moments;
-            for(var i=0;i<tripMoments.length;i++){
-                tripMoments[i].trip={
-                    owner:trips[index].owner
-                };
-
-                unpackedResults.moments.push(tripMoments[i]);
-                unpackedResults.momentIDs.push(tripMoments[i].id);
-            }
-        }
-        return unpackedResults;
-    }
-
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
             //strip moments out of trips :: unpacking start
             var searchResults=this.props.feed.searchResults[this.props.feed.feedPage];
-            var unpackedResults=this.unpackTrips(searchResults);
-            //:: unpacking end
+            var momentIDs=[];
+            for(var i=0;i<searchResults.length;i++){
+                momentIDs.push(searchResults[i].id);
+            }
 
-            const {endpoint,version} = sherpa;
-            fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
-                method: 'post',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body:encodeQueryData({
-                    moments:JSON.stringify(unpackedResults.momentIDs)
-                })
-            }).then((rawServiceResponse)=>{
-                return rawServiceResponse.text();
-            }).then((response)=>{
-                var suitcaseInfo=JSON.parse(response);
 
-                for(var i=0;i<suitcaseInfo.length;i++){
-                    unpackedResults.moments[i].suitcased=suitcaseInfo[i].suitcased;
+            return store.get('user').then((user) => {
+                if (user) {
+                    var sherpaHeaders = new Headers();
+                    sherpaHeaders.append("token", user.sherpaToken);
+                    sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                    const {endpoint,version} = sherpa;
+                    console.log(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID)
+                    fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.sherpaID, {
+                        method: 'post',
+                        headers: sherpaHeaders,
+                        body: encodeQueryData({
+                            moments: JSON.stringify(momentIDs)
+                        })
+                    }).then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                        var suitcaseInfo = JSON.parse(response);
+                        for (var i = 0; i < suitcaseInfo.length; i++) {
+                            searchResults[i].suitcased = suitcaseInfo[i].suitcased;
+                        }
+
+                        this.itemsLoadedCallback(searchResults);
+                    }).catch(err=>console.log(err));
                 }
-
-                this.itemsLoadedCallback(unpackedResults.moments);
-            }).catch(err=>console.log(err));
+            })
 
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
@@ -148,8 +146,8 @@ class Search extends React.Component {
 
 
     _onFetch(page=1,callback){
-        this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
+         this.itemsLoadedCallback=callback;
+         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
     }
 
     render(){
@@ -180,32 +178,33 @@ class Search extends React.Component {
         )
     }
 
+    updateSearchQuery(searchQuery){
+        var splittedQuery=searchQuery.split(",");
+        searchQuery=splittedQuery.length>0?splittedQuery[0]:searchQuery;
+        var country = countries.filter(function(country) {
+            return country["name"].toLowerCase() === searchQuery.toLowerCase();
+        })[0];
+
+        var backendSearchQuery=country?country['alpha-2'] : searchQuery;
+        console.log(backendSearchQuery,'search query')
+        this.setState({searchQuery,backendSearchQuery});
+    }
+
     _renderHeader(){
-        if(Object.keys(this.props.feed.searchResults).length==0)return;
-
-        var trips=this.props.feed.searchResults["1"];
-        var tripDuration=trips.length;
-        var moments=0;
-        for(var i=0;i<trips.length;i++){
-            moments+=trips[i].moments.length;
-        }
-
+        var me=this;
         return (
             <View style={{flex:1}}>
                 <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380,marginTop:70}}>
 
-                    <View style={{ borderBottomColor: '#001645', borderBottomWidth: 1,flex:1,marginBottom:30}}>
-                        <TextInput
+                    <View>
+                        {/*<TextInput
                             style={{height: 50,marginTop:20,width:280,left:10,fontSize:25, fontFamily:"TSTAR", color:"#001645", fontWeight:"500",letterSpacing:1,marginRight:20,marginLeft:20}}
                             onChangeText={(searchQuery) => {
-                                //check if search query matches country
-
                                  var country = countries.filter(function(country) {
                                     return country["name"].toLowerCase() === searchQuery.toLowerCase();
                                 })[0];
 
                                 var backendSearchQuery=country?country['alpha-2'] : searchQuery;
-
                                 this.setState({searchQuery,backendSearchQuery});
                             }}
                             placeholder="WHERE TO?"
@@ -213,15 +212,90 @@ class Search extends React.Component {
                             keyboardType="web-search"
                             clearButtonMode="always"
                             onSubmitEditing={()=>this._onFetch(1, this.refs.listview._refresh)}
-                        />
+                        />*/}
                         <Image
-                            style={{width:18,height:18,bottom:18,position:"absolute"}}
+                            style={{width:18,height:18,bottom:18,position:"absolute",top:10,left:0}}
                             resizeMode="contain"
                             source={require('./../../../../images/icon-explore-dark.png')}
                         />
+                        <GooglePlacesAutocomplete
+                            placeholder='Search'
+                            textInputProps={{
+                               onChangeText:(searchQuery) => {
+                               console.log(me.updateSearchQuery,'yoyoyo');
+                                    me.updateSearchQuery(searchQuery);
+                               }
+                            }}
+
+                            minLength={2} // minimum length of text to search
+                            autoFocus={false}
+                            fetchDetails={true}
+                            onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                                me.updateSearchQuery(data.description);
+                                me._onFetch(1, me.refs.listview._refresh)
+                            }}
+                            query={{
+                                 key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
+                                 language: 'en', // language of the results
+                                 types: '(cities)', // default: 'geocode'
+                             }}
+                            styles={{
+                                 description: {
+                                     fontWeight: 'normal',
+                                     fontFamily:"TSTAR-bold"
+                                 },
+                                     predefinedPlacesDescription: {
+                                     color: '#FFFFFF',
+                                 },
+                                 poweredContainer: {
+                                     justifyContent: 'center',
+                                     alignItems: 'center',
+                                     opacity:0
+                                 },
+                                 container:{
+                                    width:280
+                                 },
+                                 textInputContainer: {
+                                     backgroundColor:'transparent',
+                                     borderTopColor: 'transparent',
+                                     borderLeftColor:"transparent",
+                                     borderRightColor:"transparent",
+                                     borderBottomColor: '#001645',
+                                     borderBottomWidth: 1,
+                                     top:0,
+                                     paddingLeft:10
+                                 },
+                                 textInput: {
+                                     backgroundColor: 'transparent',
+                                     borderRadius: 0,
+                                     width:280,
+                                     fontSize: 25,
+                                     color:'#001645',
+                                     height:60,
+                                     marginTop:-10,
+                                     borderTopWidth:0,
+                                     fontFamily:"TSTAR"
+                                 },
+                                 separator: {
+                                     height: 0,
+                                     backgroundColor: 'transparent'
+                                 }
+                             }}
+
+                            currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+                            currentLocationLabel="Current location"
+                            nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                            GoogleReverseGeocodingQuery={{
+                             }}
+                            GooglePlacesSearchQuery={{
+                                rankby: 'distance'
+                             }}
+
+                            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+
+                        />
+
                     </View>
-
-
 
                 </View>
 
@@ -233,7 +307,6 @@ class Search extends React.Component {
     }
 
     _renderRow(tripData) {
-        var myTripData=tripData;
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                 <TouchableHighlight onPress={()=>{
@@ -251,10 +324,13 @@ class Search extends React.Component {
                     </TouchableHighlight>
                     <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
                         tripData.suitcased=!tripData.suitcased;
+                        console.log('suitcased',tripData.suitcased)
                         if(tripData.suitcased){
                             this.suiteCaseTrip(tripData);
+                            console.log('suitcase add');
                         }else{
                             this.unSuiteCaseTrip(tripData);
+                            console.log('suitcase remove');
                         }
 
                         this.refs.listview._refresh()

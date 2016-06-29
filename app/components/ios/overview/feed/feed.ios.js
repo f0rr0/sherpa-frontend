@@ -28,6 +28,14 @@ var {
 } = React;
 
 class Feed extends Component {
+
+    constructor(){
+        super();
+    }
+
+    componentDidMount(){
+    }
+
     renderScene(route, navigator) {
         var sceneContent;
         var showNav=false;
@@ -41,7 +49,7 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation navigator={navigator} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation navigator={navigator} location={route.location} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
@@ -76,7 +84,6 @@ class Feed extends Component {
     }
 
     reset(){
-        console.log('reset current feed');
     }
 
     _getNavigation(color,routeName,navigator,hideBack,opaque){

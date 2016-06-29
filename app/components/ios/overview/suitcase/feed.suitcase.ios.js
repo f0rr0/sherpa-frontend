@@ -57,6 +57,7 @@ class Suitecase extends React.Component {
     }
 
     componentDidUpdate(){
+        console.log(this.props.feed.feedState)
         if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
         }else if(this.props.feed.feedState==='reset'){
@@ -66,6 +67,7 @@ class Suitecase extends React.Component {
 
     componentDidMount(){
         this.itemsLoadedCallback=function(){
+
             console.log(":: callback feed suitecase ::");
         }
     }
@@ -80,6 +82,7 @@ class Suitecase extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
+        console.log('fetch');
         this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"suitcase-list"));
     }
 
@@ -125,8 +128,6 @@ class Suitecase extends React.Component {
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
-
-
         return (
             <View>
 
@@ -134,12 +135,9 @@ class Suitecase extends React.Component {
                 <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
-
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
-
                 </View>
                 {this.props.navigation}
 
@@ -149,6 +147,7 @@ class Suitecase extends React.Component {
     }
 
     _renderRow(tripData) {
+        console.log('render row',tripData);
         //tripData.name="";
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;
@@ -169,10 +168,8 @@ class Suitecase extends React.Component {
                         <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
 
                     </Image>
-
                     <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
-
                 </View>
             </TouchableHighlight>
         );

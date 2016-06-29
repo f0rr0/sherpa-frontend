@@ -1,1 +1,1 @@
-../../../ReactiveCocoa/ReactiveCocoa/UISlider+RACSignalSupport.h
+../../../ReactiveCocoa/ReactiveCocoa/Objective-C/UISlider+RACSignalSupport.h

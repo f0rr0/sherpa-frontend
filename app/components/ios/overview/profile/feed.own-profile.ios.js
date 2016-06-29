@@ -71,6 +71,7 @@ class OwnUserProfile extends React.Component {
             trips:[],
             ready:false
         };
+
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -78,6 +79,10 @@ class OwnUserProfile extends React.Component {
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
             this.setState({ready:true})
         }
+    }
+
+    componentDidMount(){
+        console.log(this.props.user);
     }
 
     showTripDetail(trip) {
@@ -132,7 +137,6 @@ class OwnUserProfile extends React.Component {
                             <Text style={styles.copyLarge}>Delete Account</Text>
                         </View>
                     </TouchableHighlight>
-
                 </View>
 
 
@@ -141,7 +145,6 @@ class OwnUserProfile extends React.Component {
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
 
-        console.log(this.props.feed.profileTrips,'profile trips');
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var tripDuration=trips.length;
         var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
@@ -152,7 +155,6 @@ class OwnUserProfile extends React.Component {
                 moments+=trips[i].moments.length;
             }
         }
-        console.log('this props user',this.props.user)
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
         return (
@@ -196,10 +198,6 @@ class OwnUserProfile extends React.Component {
 
             </View>
         )
-    }
-
-    _getMap(){
-
     }
 
     _renderRow(tripData) {

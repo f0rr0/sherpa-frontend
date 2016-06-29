@@ -18,48 +18,52 @@ export default function feedReducer(state=initialState,action){
             });
         break;
         case types.UPDATE_FEED:
-            var cleanTrips=[];
-
-            //console.log('update feed',action.feedData,'feed page',action.feedPage);
-
-            for(var index in action.feedData.trips){
-                var moments=action.feedData.trips[index].moments;
-                var name=action.feedData.trips[index].name;
-                if(name.indexOf("Trip to")>-1)action.feedData.trips[index].name= name.split("Trip to")[1];
-                if(moments.length>0){
-                    action.feedData.trips[index].moments=[];
-                    for(var i=0;i<moments.length;i++){
-                        if(moments[i].type==='image')action.feedData.trips[index].moments.push(moments[i]);
+            if(action.feedData.type!='search'){
+                var cleanTrips=[];
+                for(var index in action.feedData.trips){
+                    var moments=action.feedData.trips[index].moments;
+                    var name=action.feedData.trips[index].name;
+                    if(name.indexOf("Trip to")>-1)action.feedData.trips[index].name= name.split("Trip to")[1];
+                    if(moments.length>0){
+                        action.feedData.trips[index].moments=[];
+                        for(var i=0;i<moments.length;i++){
+                            if(moments[i].type==='image')action.feedData.trips[index].moments.push(moments[i]);
+                        }
+                        if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
                     }
-                    if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
                 }
+                var newPage={};
+                newPage[action.feedData.page]=cleanTrips || state.trips;
+                var newTrips=Object.assign({},{},newPage);
+                newTrips['country']=newTrips['name'];
+            }else{
+                var newPage={};
+                newPage[action.feedData.page]=action.feedData.trips || state.trips;
+                var newTrips=Object.assign({},{},newPage);
+                newTrips['country']=newTrips['name'];
             }
-            var newPage={};
-            //console.log(action.feedData.page,'feeddata page');
-            newPage[action.feedData.page]=cleanTrips || state.trips;
 
-            var newTrips=Object.assign({},{},newPage);
-            newTrips['country']=newTrips['name'];
 
-            //console.log('new trips',newTrips);
 
+
+            console.log('update feed state',action.feedData.type);
 
             switch(action.feedData.type) {
                 case "user":
-                    return Object.assign({}, state, {
+                    var newStatestate = Object.assign({}, state, {
                         userTrips:newTrips,
                         feedState:"ready"
                     });
+                    console.log(newStatestate);
+                    return newStatestate;
                 break;
                 case "search":
-                    //console.log('search results',newTrips);
                     return Object.assign({}, state, {
                         searchResults:newTrips,
                         feedState:"ready"
                     });
                 break;
                 case "suitcase":
-                    //console.log('suitcase trips',newTrips);
                     return Object.assign({}, state, {
                         suitcaseDestinations:newTrips,
                         feedState:"ready"
@@ -99,6 +103,6 @@ export default function feedReducer(state=initialState,action){
             });
         break;
     }
-
+    console.log('new state',state);
     return state;
 }
