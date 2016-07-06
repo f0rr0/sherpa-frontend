@@ -56,7 +56,7 @@ class Overview extends React.Component {
     constructor() {
         super();
         this.state = {
-            selectedTab: EXPLORE,
+            selectedTab: FEED,
             notifCount: 0,
             presses: 0
         };
@@ -75,31 +75,36 @@ class Overview extends React.Component {
         }
     }
 
+    updateTabTo(target){
+        if(this.state.selectedTab===target)this.refs[target].reset();
+        this.setState({ selectedTab: target });
+    }
+
     render() {
         var tabBar =    <TabNavigator  tabBarStyle={{ height: 60}} container={{height:60}}>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image source={require('./../../../images/icon-feed.png')} />}
-                                onPress={() => this.setState({ selectedTab: FEED })}>
-                                <Feed initial={FEED} ref={FEED}/>
+                                onPress={()=>this.updateTabTo(FEED)}>
+                                <Feed initial={FEED} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === EXPLORE}
                                 renderIcon={() => <Image source={require('./../../../images/icon-explore.png')} />}
-                                onPress={() => this.setState({ selectedTab: EXPLORE })}>
-                                <Feed initial={EXPLORE} ref={EXPLORE}/>
+                                onPress={()=>this.updateTabTo(EXPLORE)}>
+                                <Feed initial={EXPLORE} ref={EXPLORE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === PROFILE}
                                 renderIcon={() => <Image source={require('./../../../images/icon-profil.png')} />}
-                                onPress={() => this.setState({ selectedTab: PROFILE })}>
-                                <Feed initial={PROFILE} ref={PROFILE}/>
+                                onPress={()=>this.updateTabTo(PROFILE)}>
+                                <Feed initial={PROFILE} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === SUITCASE}
                                 renderIcon={() => <Image source={require('./../../../images/icon-suitcase.png')} />}
-                                onPress={() => this.setState({ selectedTab: SUITCASE })}>
-                                <Feed initial={SUITCASE} ref={SUITCASE}/>
+                                onPress={()=>this.updateTabTo(SUITCASE)}>
+                                <Feed initial={SUITCASE} ref={SUITCASE} {...this.props}/>
                             </TabNavigator.Item>
                         </TabNavigator>
 
@@ -117,7 +122,9 @@ class Overview extends React.Component {
 function select(state) {
     return {
         user: state.userReducer,
-        feed: state.feedReducer
+        feed: state.feedReducer,
+        app: state.appReducer
     };
 }
+
 export default connect(select)(Overview);

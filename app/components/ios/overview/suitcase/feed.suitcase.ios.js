@@ -65,6 +65,10 @@ class Suitecase extends React.Component {
         }
     }
 
+    reset(){
+        this.refs.listview.scrollTo({y:0,animated:true});
+    }
+
     componentDidMount(){
         this.itemsLoadedCallback=function(){
 
@@ -82,7 +86,6 @@ class Suitecase extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log('fetch');
         this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"suitcase-list"));
     }
 
@@ -147,7 +150,6 @@ class Suitecase extends React.Component {
     }
 
     _renderRow(tripData) {
-        console.log('render row',tripData);
         //tripData.name="";
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;

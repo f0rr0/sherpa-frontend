@@ -37,8 +37,15 @@ export default function feedReducer(state=initialState,action){
                 var newTrips=Object.assign({},{},newPage);
                 newTrips['country']=newTrips['name'];
             }else{
+                var cleanMoments=[];
+                    var moments=action.feedData.trips;
+                    if(moments.length>0){
+                        for(var i=0;i<moments.length;i++){
+                            if(moments[i].type==='image')cleanMoments.push(moments[i]);
+                        }
+                    }
                 var newPage={};
-                newPage[action.feedData.page]=action.feedData.trips || state.trips;
+                newPage[action.feedData.page]=cleanMoments || state.trips;
                 var newTrips=Object.assign({},{},newPage);
                 newTrips['country']=newTrips['name'];
             }
@@ -46,7 +53,6 @@ export default function feedReducer(state=initialState,action){
 
 
 
-            console.log('update feed state',action.feedData.type);
 
             switch(action.feedData.type) {
                 case "user":
@@ -54,7 +60,6 @@ export default function feedReducer(state=initialState,action){
                         userTrips:newTrips,
                         feedState:"ready"
                     });
-                    console.log(newStatestate);
                     return newStatestate;
                 break;
                 case "search":
@@ -103,6 +108,5 @@ export default function feedReducer(state=initialState,action){
             });
         break;
     }
-    console.log('new state',state);
     return state;
 }

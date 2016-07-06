@@ -89,6 +89,10 @@ class TripDetail extends React.Component{
         }
     }
 
+    reset(){
+        return true;
+    }
+
     render(){
         var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
         return (
@@ -131,7 +135,7 @@ class TripDetail extends React.Component{
                         }
                     ]}
                     scrollEnabled={true}
-                    zoomEnabled={false}
+                    zoomEnabled={true}
                 />
 
                 </MaskedView>

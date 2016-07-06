@@ -127,14 +127,12 @@ export function setUserHometown(){
 export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
-        console.log('load user');
 
         return store.get('user').then((user) => {
             if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
                 var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
-                console.log('user',user);
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
 
@@ -143,17 +141,17 @@ export function loadUser() {
                     headers:sherpaHeaders
                 }).
                 then((rawServiceResponse)=>{
-                    console.log(rawServiceResponse);
                     responseStatus=rawServiceResponse.status;
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
                     var responseJSON = JSON.parse(rawSherpaResponse);
+                    console.log('response json',responseJSON);
                     switch(responseStatus){
 
                         case 200:
                             dispatch(updateUserData({
                                 serviceObject:responseJSON,
-                                bio:responseJSON.bio
+                                bio:responseJSON.profile.serviceBio
                             }));
 
                             if(user.username===responseJSON.username){
@@ -207,7 +205,6 @@ export function signupUser(){
                 simpleAuthClient.authorize('instagram').then((info) => {
                     signupWithSherpa(info.token,info.data);
                 }).catch((error) => {
-                    console.log('error',error);
                     let errorCode = error.code;
                     let errorDescription = error.description;
                 });
@@ -257,7 +254,6 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
-                console.log(':::sherpa repsonse user:::',sherpaResponse.user);
                 dispatch(updateUserSignupState("sherpa_token_complete"));
                 dispatch(updateUserData({
                     sherpaID:id,

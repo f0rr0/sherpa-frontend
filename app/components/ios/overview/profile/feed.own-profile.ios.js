@@ -75,14 +75,14 @@ class OwnUserProfile extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(prevProps.feed.feedState!=='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
+        if(!this.state.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
             this.setState({ready:true})
         }
     }
 
-    componentDidMount(){
-        console.log(this.props.user);
+    reset(){
+        this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }
 
     showTripDetail(trip) {
@@ -156,10 +156,12 @@ class OwnUserProfile extends React.Component {
             }
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
+        console.log(this.props.user,'service bio stuff');
+        var hasDescriptionCopy=this.props.user.serviceObject.profile.serviceBio.length>0;
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:600, width:380,marginBottom:-290,marginTop:70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?550:500, width:380,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:380}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
@@ -172,7 +174,7 @@ class OwnUserProfile extends React.Component {
                     </View>
 
 
-
+                    {/*
                     <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:250,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
                         <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
@@ -183,6 +185,7 @@ class OwnUserProfile extends React.Component {
                         <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                     </View>
+                    */}
 
 
                     <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:360,alignItems: 'center'}}>
@@ -201,9 +204,11 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderRow(tripData) {
+        if(!tripData.country || !tripData.continent || !tripData.name)return <View/>;
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.country;
         })[0];
+
 
         //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
         if(!country)country={name:tripData.country}
@@ -220,9 +225,9 @@ class OwnUserProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
+                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>YOUR TRIP TO</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
-
+                        {<Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>

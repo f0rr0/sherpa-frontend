@@ -31,6 +31,7 @@ class Feed extends Component {
 
     constructor(){
         super();
+        this.currentRenderScene="";
     }
 
     componentDidMount(){
@@ -45,45 +46,53 @@ class Feed extends Component {
         switch (route.id) {
             case 'feed':
                 showNav=false;
-                sceneContent = <FeedList navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation navigator={navigator} location={route.location} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
-                sceneContent = <FeedTrip navigator={navigator} navigation={this._getNavigation("white",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination navigator={navigator} navigation={this._getNavigation("white","suitcase",navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile navigator={navigator} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,navigator)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile navigator={navigator}  navigation={this._getNavigation("black","profile",navigator,true,true)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation("black","profile",navigator,true,true)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase  navigator={navigator} navigation={this._getNavigation("black",route.id,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search  navigator={navigator} navigation={this._getNavigation("black",route.id,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,navigator,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail  navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,navigator)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,navigator)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
             break;
         }
+
+        this.currentRenderScene=route.id;
         return sceneContent;
     }
 
     reset(){
+        console.log(this.navigator.getCurrentRoutes().length)
+        if(this.navigator.getCurrentRoutes().length==1){
+            this.navigator.refs[this.currentRenderScene].reset()
+        }else{
+            this.navigator.popToTop();
+        }
     }
 
     _getNavigation(color,routeName,navigator,hideBack,opaque){
@@ -121,7 +130,7 @@ class Feed extends Component {
                 ref={(navigator) => { this.navigator = navigator; }}
                 renderScene={this.renderScene.bind(this)}
                 configureScene={(route) => ({
-                  ...route.sceneConfig || Navigator.SceneConfigs.FloatFromRight,
+                  ...Navigator.SceneConfigs.PushFromRight,
                   gestures: route.gestures
                 })}
                 initialRoute={{
@@ -144,14 +153,4 @@ var styles = StyleSheet.create({
     }
 });
 
-
-function select(state) {
-    return {
-        user: state.userReducer,
-        feed: state.feedReducer,
-        app: state.appReducer
-    };
-}
-
-
-export default connect(select)(Feed);
+export default Feed;

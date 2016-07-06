@@ -45,8 +45,8 @@ class FeedDestination extends Component {
                 title:this.props.trip.moments[i].venue,
                 annotationImage: {
                     url: 'image!icon-pin',
-                    height: 7,
-                    width: 7
+                    height: 8,
+                    width: 8
                 },
                 id:"markers"+i
             })
@@ -90,10 +90,14 @@ class FeedDestination extends Component {
         })[0];
         var countryOrState=country ? country.name : tripData.name;
 
+        var tripLocation=tripData.name;
+        trip.name=countryOrState;
+
         this.props.navigator.push({
             id: "location",
             trip,
-            location:countryOrState
+            location:tripLocation,
+            isCountry:country?true:false
         });
     }
 

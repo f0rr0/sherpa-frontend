@@ -17,8 +17,8 @@
 
 	// initialize class
 	$instagram = new Instagram(array(
-	    'apiKey' => '6c93234fa3544a6592b382a0a814e555',
-	    'apiSecret' => 'afac24bc39eb4ab2bb52adf09c068293',
+	    'apiKey' => '610a4a6a16bc40ec95f749e95c48087a',
+	    'apiSecret' => '0518505aae83497bbcbb1c795c2a48dd',
 	    'apiCallback' => 'http://trysherpa.com/callback/?email='.$email // must point to success.php
 	));
 

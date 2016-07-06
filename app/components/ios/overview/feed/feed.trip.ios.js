@@ -13,6 +13,7 @@ import {udpateFeedState} from '../../../../actions/feed.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
+import store from 'react-native-simple-store';
 
 var {
     StyleSheet,
@@ -35,7 +36,8 @@ class FeedTrip extends Component {
             dataSource: this.ds.cloneWithRows(props.trip.moments),
             annotations:[],
             moments:props.trip.moments,
-            shouldUpdate:true
+            shouldUpdate:true,
+            isCurrentUsersTrip:false
         };
     }
 
@@ -64,27 +66,40 @@ class FeedTrip extends Component {
             momentIDs.push(this.state.moments[i].id);
         }
 
-        const {endpoint,version} = sherpa;
-        var newMoments=this.state.moments.slice();
 
-        fetch(endpoint+version+"/moment/batchsuitcasedby/"+this.props.user.serviceID, {
-            method: 'post',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body:encodeQueryData({
-                moments:JSON.stringify(momentIDs)
-            })
-        }).then((rawServiceResponse)=>{
-            return rawServiceResponse.text();
-        }).then((response)=>{
-            var suitcaseInfo=JSON.parse(response);
-            for(var i=0;i<suitcaseInfo.length;i++){
-                newMoments[i].suitcased=suitcaseInfo[i].suitcased;
+        store.get('user').then((user) => {
+            if (user) {
+                var newMoments = this.state.moments.slice();
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                const {endpoint,version} = sherpa;
+
+                this.setState({isCurrentUsersTrip:this.props.user.serviceID===user.serviceID})
+
+                fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID, {
+                    method: 'post',
+                    headers: sherpaHeaders,
+                    body: encodeQueryData({
+                        moments: JSON.stringify(momentIDs)
+                    })
+                }).then((rawServiceResponse)=> {
+                    return rawServiceResponse.text();
+                }).then((response)=> {
+                    var suitcaseInfo = JSON.parse(response);
+                    for (var i = 0; i < suitcaseInfo.length; i++) {
+                        newMoments[i].suitcased = suitcaseInfo[i].suitcased;
+                    }
+
+                    this.setState({
+                        momentIDs,
+                        annotations: markers,
+                        moments: newMoments,
+                        dataSource: this.ds.cloneWithRows(newMoments)
+                    });
+                }).catch(err=>console.log(err));
             }
-
-            this.setState({momentIDs,annotations:markers,moments:newMoments,dataSource:this.ds.cloneWithRows(newMoments)});
-        }).catch(err=>console.log(err));
+        })
 
     }
 
@@ -161,7 +176,7 @@ class FeedTrip extends Component {
                         source={{uri:this.state.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
+                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
                     <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
                         <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                     </TouchableHighlight>
@@ -175,7 +190,7 @@ class FeedTrip extends Component {
                     </TouchableHighlight>
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
-                        <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
+                        {<Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
                     </View>
                 </MaskedView>
                 <View style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>

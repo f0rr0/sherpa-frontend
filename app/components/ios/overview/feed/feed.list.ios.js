@@ -50,15 +50,16 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(this.props.feed.feedState,this.props.feed.userTrips,'::::!!!::::')
         if(
-            //prevProps.feed.feedState!='ready'&&
-            this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
+            prevProps.feed.feedState!='ready'&& this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
         ){
             this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
-            console.log('feed popilate');
         }else if(this.props.feed.feedState==='reset'){
         }
+    }
+
+    reset(){
+        this.refs.listview.refs.listview.scrollTo({y:0,animated:true})
     }
 
     showTripDetail(trip) {
@@ -133,7 +134,7 @@ class FeedList extends React.Component{
 
                     <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
                     <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>
+                    {<Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>

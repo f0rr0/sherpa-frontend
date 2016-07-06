@@ -95,6 +95,11 @@ class Search extends React.Component {
         removeMomentFromSuitcase(trip.id);
     }
 
+
+    reset(){
+        this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
+    }
+
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
             //strip moments out of trips :: unpacking start
@@ -111,7 +116,6 @@ class Search extends React.Component {
                     sherpaHeaders.append("token", user.sherpaToken);
                     sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                     const {endpoint,version} = sherpa;
-                    console.log(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID)
                     fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.sherpaID, {
                         method: 'post',
                         headers: sherpaHeaders,
@@ -186,7 +190,6 @@ class Search extends React.Component {
         })[0];
 
         var backendSearchQuery=country?country['alpha-2'] : searchQuery;
-        console.log(backendSearchQuery,'search query')
         this.setState({searchQuery,backendSearchQuery});
     }
 
@@ -197,22 +200,6 @@ class Search extends React.Component {
                 <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380,marginTop:70}}>
 
                     <View>
-                        {/*<TextInput
-                            style={{height: 50,marginTop:20,width:280,left:10,fontSize:25, fontFamily:"TSTAR", color:"#001645", fontWeight:"500",letterSpacing:1,marginRight:20,marginLeft:20}}
-                            onChangeText={(searchQuery) => {
-                                 var country = countries.filter(function(country) {
-                                    return country["name"].toLowerCase() === searchQuery.toLowerCase();
-                                })[0];
-
-                                var backendSearchQuery=country?country['alpha-2'] : searchQuery;
-                                this.setState({searchQuery,backendSearchQuery});
-                            }}
-                            placeholder="WHERE TO?"
-                            value={this.state.searchQuery}
-                            keyboardType="web-search"
-                            clearButtonMode="always"
-                            onSubmitEditing={()=>this._onFetch(1, this.refs.listview._refresh)}
-                        />*/}
                         <Image
                             style={{width:18,height:18,bottom:18,position:"absolute",top:10,left:0}}
                             resizeMode="contain"
@@ -222,7 +209,6 @@ class Search extends React.Component {
                             placeholder='Search'
                             textInputProps={{
                                onChangeText:(searchQuery) => {
-                               console.log(me.updateSearchQuery,'yoyoyo');
                                     me.updateSearchQuery(searchQuery);
                                }
                             }}
@@ -237,7 +223,7 @@ class Search extends React.Component {
                             query={{
                                  key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
                                  language: 'en', // language of the results
-                                 types: '(cities)', // default: 'geocode'
+                                 types: 'geocode', // default: 'geocode'
                              }}
                             styles={{
                                  description: {
@@ -291,7 +277,7 @@ class Search extends React.Component {
                                 rankby: 'distance'
                              }}
 
-                            filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                            //filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
                         />
 
@@ -310,7 +296,7 @@ class Search extends React.Component {
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                 <TouchableHighlight onPress={()=>{
-                        this.showTripDetail(tripData,tripData.trip.owner);
+                        this.showTripDetail(tripData,tripData.profile);
                     }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,height:350,width:350,opacity:1}}
@@ -324,13 +310,10 @@ class Search extends React.Component {
                     </TouchableHighlight>
                     <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
                         tripData.suitcased=!tripData.suitcased;
-                        console.log('suitcased',tripData.suitcased)
                         if(tripData.suitcased){
                             this.suiteCaseTrip(tripData);
-                            console.log('suitcase add');
                         }else{
                             this.unSuiteCaseTrip(tripData);
-                            console.log('suitcase remove');
                         }
 
                         this.refs.listview._refresh()

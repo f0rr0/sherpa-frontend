@@ -11,6 +11,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             const {endpoint,version,feed_uri,user_uri} = sherpa;
             var feedRequestURI;
             switch(type){
+                case "location-country":
+                    feedRequestURI=endpoint+version+"/country/"+feedTarget+"?page="+page;
+                break;
                 case "location":
                     feedRequestURI=endpoint+version+"/location/"+feedTarget+"?page="+page;
                 break;
@@ -58,7 +61,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log('raw sherpa response',sherpaResponse,type);
+                console.log()
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
