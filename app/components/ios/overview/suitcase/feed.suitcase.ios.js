@@ -10,6 +10,7 @@ import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
+import StickyHeader from '../../components/stickyHeader';
 
 
 var {
@@ -66,7 +67,7 @@ class Suitecase extends React.Component {
     }
 
     reset(){
-        this.refs.listview.scrollTo({y:0,animated:true});
+        this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }
 
     componentDidMount(){
@@ -91,21 +92,36 @@ class Suitecase extends React.Component {
 
     render(){
         return(
-            <GiftedListView
-                rowView={this._renderRow.bind(this)}
-                onFetch={this._onFetch.bind(this)}
-                emptyView={this._emptyView.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
-                pagination={false} // enable infinite scrolling using touch to load more
-                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
-                ref="listview"
-                headerView={this._renderHeader.bind(this)}
-                customStyles={{
-                    contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
-                }}
-            />
+            <View style={{flex:1}}>
+
+                <GiftedListView
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this._onFetch.bind(this)}
+                    emptyView={this._emptyView.bind(this)}
+                    firstLoader={true} // display a loader for the first fetching
+                    pagination={false} // enable infinite scrolling using touch to load more
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
+                    ref="listview"
+                    onScroll={(event)=>{
+                     var currentOffset = event.nativeEvent.contentOffset.y;
+                     var direction = currentOffset > this.offset ? 'down' : 'up';
+                     this.offset = currentOffset;
+                     if(direction=='down'||currentOffset<100){
+                        this.refs.stickyHeader._setAnimation(false);
+                     }else{
+                        this.refs.stickyHeader._setAnimation(true);
+                     }
+                    }}
+                    headerView={this._renderHeader.bind(this)}
+                    customStyles={{
+                        contentContainerStyle:styles.listView,
+                        actionsLabel:{fontSize:12}
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+
+            </View>
         )
     }
 
@@ -135,14 +151,14 @@ class Suitecase extends React.Component {
             <View>
 
 
-                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                 </View>
-                {this.props.navigation}
+                {this.props.navigation.default}
 
 
             </View>

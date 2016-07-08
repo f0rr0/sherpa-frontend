@@ -1,10 +1,11 @@
 import React from 'react-native';
 import { connect } from 'react-redux/native';
 import FeedTrip from './feed.trip.ios'
-import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
+import TripTitle from "../../components/tripTitle";
+import UserImage from "../../components/userImage";
 
 var {
     StyleSheet,
@@ -106,13 +107,6 @@ class FeedList extends React.Component{
 
 
     _renderRow(tripData) {
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
-        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        if(!country)country={name:tripData.country}
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         return (
             <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
@@ -124,17 +118,12 @@ class FeedList extends React.Component{
                     >
                         <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
                         </Image>
+
                     <View style={{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
-                        <Image
-                            style={{height:50,width:50,opacity:1,borderRadius:25}}
-                            resizeMode="cover"
-                            source={{uri:tripData.owner.serviceProfilePicture}}
-                        />
+                        <UserImage radius={50} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
                     </View>
 
-                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    {<Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
+                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s"}></TripTitle>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>

@@ -18,9 +18,10 @@
 	// initialize class
 	$instagram = new Instagram(array(
 	    'apiKey' => '610a4a6a16bc40ec95f749e95c48087a',
-	    'apiSecret' => '0518505aae83497bbcbb1c795c2a48dd',
+		'apiSecret' => '0518505aae83497bbcbb1c795c2a48dd',
 	    'apiCallback' => 'http://trysherpa.com/callback/?email='.$email // must point to success.php
 	));
+
 
 	if (isset($code)) {
 	    // receive OAuth token object

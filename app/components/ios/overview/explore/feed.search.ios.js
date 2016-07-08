@@ -15,6 +15,7 @@ import store from 'react-native-simple-store';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import {loadFeed} from '../../../../actions/feed.actions';
+import StickyHeader from '../../components/stickyHeader';
 
 const {sherpa}=config.auth[config.environment];
 
@@ -42,7 +43,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,
@@ -156,21 +157,35 @@ class Search extends React.Component {
 
     render(){
         return(
-            <GiftedListView
-                rowView={this._renderRow.bind(this)}
-                onFetch={this._onFetch.bind(this)}
-                emptyView={this._emptyView.bind(this)}
-                firstLoader={false} // display a loader for the first fetching
-                pagination={false} // enable infinite scrolling using touch to load more
-                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
-                ref="listview"
-                headerView={this._renderHeader.bind(this)}
-                customStyles={{
-                    contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
-                }}
-            />
+            <View style={{flex:1}}>
+                <GiftedListView
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this._onFetch.bind(this)}
+                    emptyView={this._emptyView.bind(this)}
+                    firstLoader={false} // display a loader for the first fetching
+                    pagination={false} // enable infinite scrolling using touch to load more
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
+                    ref="listview"
+                    headerView={this._renderHeader.bind(this)}
+                    onScroll={(event)=>{
+                             var currentOffset = event.nativeEvent.contentOffset.y;
+                             var direction = currentOffset > this.offset ? 'down' : 'up';
+                             this.offset = currentOffset;
+                             if(direction=='down'||currentOffset<30){
+                                this.refs.stickyHeader._setAnimation(false);
+                             }else{
+                                this.refs.stickyHeader._setAnimation(true);
+                             }
+                        }}
+                    customStyles={{
+                        contentContainerStyle:styles.listView,
+                        actionsLabel:{fontSize:12}
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            </View>
+
         )
     }
 
@@ -190,6 +205,7 @@ class Search extends React.Component {
         })[0];
 
         var backendSearchQuery=country?country['alpha-2'] : searchQuery;
+        console.log('navig',this.props.navigation.fixed.updateRouteName);
         this.setState({searchQuery,backendSearchQuery});
     }
 
@@ -285,7 +301,7 @@ class Search extends React.Component {
 
                 </View>
 
-                {this.props.navigation}
+                {this.props.navigation.default}
 
 
             </View>

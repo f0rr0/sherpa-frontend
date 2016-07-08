@@ -12,7 +12,8 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
 import { deleteUser,logoutUser } from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
-var windowSize=Dimensions.get('window');
+import StickyHeader from '../../components/stickyHeader';
+import TripTitle from "../../components/tripTitle"
 
 
 var {
@@ -37,7 +38,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,
@@ -109,14 +110,25 @@ class OwnUserProfile extends React.Component {
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
+                onScroll={(event)=>{
+                     var currentOffset = event.nativeEvent.contentOffset.y;
+                     var direction = currentOffset > this.offset ? 'down' : 'up';
+                     this.offset = currentOffset;
+                     if(direction=='down'||currentOffset<100){
+                        this.refs.stickyHeader._setAnimation(false);
+                     }else{
+                        this.refs.stickyHeader._setAnimation(true);
+                     }
+                }}
                 headerView={this._renderHeader.bind(this)}
                 renderFooter={this._renderFooter.bind(this)}
-                //emptyView={this._emptyView.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView,
                     actionsLabel:{fontSize:12}
                 }}
             />
+
+            <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
 
         </View>
         )
@@ -174,20 +186,6 @@ class OwnUserProfile extends React.Component {
                     </View>
 
 
-                    {/*
-                    <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:250,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
-
-                        <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
-
-                        <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-
-                        <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
-                    </View>
-                    */}
-
-
                     <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:360,alignItems: 'center'}}>
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>
@@ -197,24 +195,13 @@ class OwnUserProfile extends React.Component {
 
 
 
-                {this.props.navigation}
-
+                {this.props.navigation.default}
             </View>
         )
     }
 
     _renderRow(tripData) {
         if(!tripData.country || !tripData.continent || !tripData.name)return <View/>;
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-
-
-        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        if(!country)country={name:tripData.country}
-
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
         var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         return (
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
@@ -225,9 +212,9 @@ class OwnUserProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>YOUR TRIP TO</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                        {<Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
+                    <TripTitle tripData={tripData} tripOwner="YOUR"></TripTitle>
+
+
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>

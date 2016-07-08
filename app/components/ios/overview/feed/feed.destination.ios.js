@@ -9,6 +9,7 @@ import countries from "./../../../../data/countries";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase} from '../../../../actions/user.actions';
+import StickyHeader from '../../components/stickyHeader';
 
 var {
     StyleSheet,
@@ -58,13 +59,27 @@ class FeedDestination extends Component {
 
     render(){
         return(
-            <ListView
-               dataSource={this.state.dataSource}
-               renderRow={this._renderRow.bind(this)}
-               contentContainerStyle={styles.listView}
-               renderHeader={this._renderHeader.bind(this)}
-               ref="listview"
-            />
+            <View style={{flex:1}}>
+                <ListView
+                   dataSource={this.state.dataSource}
+                   renderRow={this._renderRow.bind(this)}
+                   contentContainerStyle={styles.listView}
+                   renderHeader={this._renderHeader.bind(this)}
+                   ref="listview"
+                   onScroll={(event)=>{
+                         var currentOffset = event.nativeEvent.contentOffset.y;
+                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         this.offset = currentOffset;
+                         if(direction=='down'||currentOffset<100){
+                            this.refs.stickyHeader._setAnimation(false);
+                         }else{
+                            this.refs.stickyHeader._setAnimation(true);
+                         }
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+
+            </View>
         )
     }
 
@@ -161,7 +176,7 @@ class FeedDestination extends Component {
                     </View>
                 </TouchableHighlight>
 
-                {this.props.navigation}
+                {this.props.navigation.default}
 
             </View>
         )
@@ -208,7 +223,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,

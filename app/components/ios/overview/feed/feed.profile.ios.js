@@ -10,6 +10,8 @@ import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
+import StickyHeader from '../../components/stickyHeader';
+import TripTitle from "../../components/tripTitle"
 
 
 var {
@@ -34,7 +36,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,
@@ -80,20 +82,34 @@ class FeedProfile extends React.Component {
 
     render(){
         return(
-            <GiftedListView
-                rowView={this._renderRow.bind(this)}
-                onFetch={this._onFetch.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
-                pagination={false} // enable infinite scrolling using touch to load more
-                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
-                ref="listview"
-                headerView={this._renderHeader.bind(this)}
-                customStyles={{
-                    contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
-                }}
-            />
+            <View style={{flex:1}}>
+
+                <GiftedListView
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this._onFetch.bind(this)}
+                    firstLoader={true} // display a loader for the first fetching
+                    pagination={false} // enable infinite scrolling using touch to load more
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
+                    ref="listview"
+                    onScroll={(event)=>{
+                         var currentOffset = event.nativeEvent.contentOffset.y;
+                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         this.offset = currentOffset;
+                         if(direction=='down'||currentOffset<100){
+                            this.refs.stickyHeader._setAnimation(false);
+                         }else{
+                            this.refs.stickyHeader._setAnimation(true);
+                         }
+                    }}
+                    headerView={this._renderHeader.bind(this)}
+                    customStyles={{
+                        contentContainerStyle:styles.listView,
+                        actionsLabel:{fontSize:12}
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            </View>
         )
     }
 
@@ -160,7 +176,7 @@ class FeedProfile extends React.Component {
 
 
 
-                {this.props.navigation}
+                {this.props.navigation.default}
 
 
             </View>
@@ -188,11 +204,9 @@ class FeedProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{tripData.owner.serviceUsername.toUpperCase()}'S TRIP TO</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-                        {<Text style={{color:"#282b33",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
-                    </View>
+                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s"}></TripTitle>
+
+
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>

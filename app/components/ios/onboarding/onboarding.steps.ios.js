@@ -128,12 +128,14 @@ class OnboardingSteps extends Component {
     componentDidMount(){
     }
 
-    allowNotifications(){
+    allowNotifications() {
+        console.log(':: allow notifictions, request permissions ::')
         PushNotificationIOS.addEventListener('register', this._onRegister.bind(this));
         PushNotificationIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){
+        console.log('on register - device token:: ',deviceToken);
         this.props.dispatch(addNotificationsDeviceToken(deviceToken))
     }
 

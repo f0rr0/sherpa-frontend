@@ -14,6 +14,8 @@ import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import store from 'react-native-simple-store';
+import StickyHeader from '../../components/stickyHeader';
+
 
 var {
     StyleSheet,
@@ -105,13 +107,26 @@ class FeedTrip extends Component {
 
     render(){
         return(
-            <ListView
-               dataSource={this.state.dataSource}
-               renderRow={this._renderRow.bind(this)}
-               contentContainerStyle={styles.listView}
-               renderHeader={this._renderHeader.bind(this)}
-               ref="listview"
-            />
+            <View style={{flex:1}}>
+                <ListView
+                   dataSource={this.state.dataSource}
+                   renderRow={this._renderRow.bind(this)}
+                   contentContainerStyle={styles.listView}
+                   renderHeader={this._renderHeader.bind(this)}
+                   ref="listview"
+                   onScroll={(event)=>{
+                         var currentOffset = event.nativeEvent.contentOffset.y;
+                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         this.offset = currentOffset;
+                         if(direction=='down'||currentOffset<30){
+                            this.refs.stickyHeader._setAnimation(false);
+                         }else{
+                            this.refs.stickyHeader._setAnimation(true);
+                         }
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            </View>
         )
     }
 
@@ -228,8 +243,7 @@ class FeedTrip extends Component {
                         <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
                     </View>
                 </TouchableHighlight>
-
-                {this.props.navigation}
+                {this.props.navigation.default}
             </View>
         )
     }
@@ -295,7 +309,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:20
     },
     listItemContainer:{
         flex:1,

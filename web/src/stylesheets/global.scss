@@ -1,13 +1,16 @@
 // Include this if using an Icon Font
 @import "base/colors";
 @import "base/mixins";
+@import "share";
 
 body,html{
   font-family:TSTARMedium;
   margin:0;
   padding:0;
-  overflow:hidden;
+}
+body{
   opacity:0;
+  display: initial;
 }
 #container{
   display:none;

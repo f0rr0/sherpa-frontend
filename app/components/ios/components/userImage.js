@@ -1,40 +1,68 @@
 'use strict';
 
-import React, {Component, PropTypes} from 'react';
-import _ from 'lodash';
+var React = require('react-native');
+import store from 'react-native-simple-store';
+import config from '../../../data/config';
+
+const {instagram,sherpa}=config.auth[config.environment];
+
+var {
+    Component,
+    Image,
+    View
+    } = React;
 
 class UserImage extends Component {
-    compoonentDidMount(){
-
+    constructor(props){
+        super(props);
+        this.state={
+            imageURL:this.props.imageURL
+        }
     }
 
-    imageExists(image_url){
-        var http = new XMLHttpRequest();
+    componentDidMount(){
+        this.rescrapeImage();
+    }
 
-        http.open('HEAD', image_url, false);
-        http.send();
 
-        return http.status != 404;
+    rescrapeImage(){
+        store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+
+                console.log("URI",endpoint + version + "/profile/"+user.sherpa+"/refreshuserimage");
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                fetch(endpoint + version + "/profile/"+this.props.userID+"/refreshuserimage", {
+                    method: 'post',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    this.setState({imageURL:response});
+                }).catch(err=>console.log('device token err',err));
+            }
+        });
     }
 
     render() {
-        let image = this.props.image;
-        if (_.isNull(this.props.image) || this.props.image === '') {
-            image = Constants.defaultAvatar;
-        }
-        return <Image>
-
-        </Image>;
+        var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
+        return(
+            <Image
+                style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
+                resizeMode="cover"
+                source={{uri:imageURL}}
+            />
+        )
     }
 }
 
-UserImage.propTypes = {
-    image: PropTypes.string
-};
+UserImage.defaultProps={
+    radius:50,
+    imageURL:"",
+    userID:""
+}
 
-UserImage.defaultProps = {
-    className: 'user-image',
-    image: Constants.defaultAvatar
-};
-
-module.exports = UserImage;
+export default UserImage

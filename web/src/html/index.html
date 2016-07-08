@@ -123,7 +123,7 @@
 
             $("body").scrollTop(0);
 
-            TweenMax.to("body,html",1,{autoAlpha:1,ease:Expo.easeOut})
+            TweenMax.to("body",1,{autoAlpha:1,ease:Expo.easeOut,delay:1})
             $('.iosslider').iosSlider({
                 snapToChildren: true,
                 desktopClickDrag: true,
@@ -237,7 +237,7 @@
     </script>
 
 </head>
-<body>
+<body style="overflow: hidden;">
 
 <div id="container"></div>
 

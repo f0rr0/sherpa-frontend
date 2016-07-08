@@ -13,6 +13,7 @@ import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
+import StickyHeader from '../../components/stickyHeader';
 
 var {
     StyleSheet,
@@ -105,20 +106,33 @@ class FeedLocation extends Component {
 
     render(){
         return(
-            <GiftedListView
-                rowView={this._renderRow.bind(this)}
-                onFetch={this._onFetch.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
-                pagination={false} // enable infinite scrolling using touch to load more
-                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
-                headerView={this._renderHeader.bind(this)}
-                ref="listview"
-                customStyles={{
-                    contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
-                }}
-            />
+            <View style={{flex:1}}>
+                <GiftedListView
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this._onFetch.bind(this)}
+                    firstLoader={true} // display a loader for the first fetching
+                    pagination={false} // enable infinite scrolling using touch to load more
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
+                    headerView={this._renderHeader.bind(this)}
+                    ref="listview"
+                    onScroll={(event)=>{
+                         var currentOffset = event.nativeEvent.contentOffset.y;
+                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         this.offset = currentOffset;
+                         if(direction=='down'||currentOffset<100){
+                            this.refs.stickyHeader._setAnimation(false);
+                         }else{
+                            this.refs.stickyHeader._setAnimation(true);
+                         }
+                    }}
+                    customStyles={{
+                        contentContainerStyle:styles.listView,
+                        actionsLabel:{fontSize:12}
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            </View>
         )
     }
 
@@ -178,7 +192,7 @@ class FeedLocation extends Component {
 
                 </View>
 
-                {this.props.navigation}
+                {this.props.navigation.default}
 
             </View>
         )

@@ -87,8 +87,7 @@ export function addNotificationsDeviceToken(deviceToken){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-
-                fetch(endpoint + version + "adddevicetoken/" + user.sherpaToken + "/" + deviceToken, {
+                fetch(endpoint + version + "/user/adddevicetoken/" + user.sherpaToken + "/" + deviceToken, {
                     method: 'post',
                     headers: sherpaHeaders
                 })
@@ -96,8 +95,7 @@ export function addNotificationsDeviceToken(deviceToken){
                         return rawServiceResponse.text();
                     }).then((response)=> {
                     dispatch(updateUserDBState("available-existing"));
-
-                }).catch(err=>console.log(err));
+                }).catch(err=>console.log('device token err',err));
             }
         });
     }
@@ -128,6 +126,8 @@ export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
 
+        console.log('load user');
+
         return store.get('user').then((user) => {
             if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
@@ -145,7 +145,6 @@ export function loadUser() {
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
                     var responseJSON = JSON.parse(rawSherpaResponse);
-                    console.log('response json',responseJSON);
                     switch(responseStatus){
 
                         case 200:

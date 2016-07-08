@@ -44,6 +44,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", sherpaToken);
 
+        console.log('token',sherpaToken)
 
             fetch(feedRequestURI,{
                 method:'get',
@@ -61,7 +62,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log()
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
