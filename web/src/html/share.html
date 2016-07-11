@@ -12,24 +12,24 @@
     <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
 
     <link href="stylesheets/global.css" rel="stylesheet">
-    <link href="libs/share-button.css" rel="stylesheet">
-    <script src="libs/share-button.js"></script>
-    <script src="libs/ig.js"></script>
-    <script src="https://use.typekit.net/iei4azk.js"></script>
-    <script src="libs/jquery-2.2.0.min.js"></script>
-    <script src="libs/TweenMax.min.js"></script>
-    <script src="libs/ScrollToPlugin.min.js"></script>
-    <script src="libs/jquery.iosslider.js"></script>
-    <script src="libs/history.min.js"></script>
-    <script src="libs/polyfiller.js"></script>
-    <script src="libs/react.js"></script>
-    <script src="libs/react-dom.js"></script>
 </head>
 <body>
 
-<div id="react-root">
-
+<div class="sherpa-share">
+    <div class="share-container">
+        <div class="logo-header">
+            <img src="images/logo-sherpa-2.png" height="50" alt="">
+        </div>
+        <div class="main-header" style="background-image:url('https://scontent-lga3-1.cdninstagram.com/t51.2885-15/e35/13557091_1086034658129061_807995089_n.jpg?ig_cache_key=MTI4ODg2NTEyNTY2Mjc1MjYxOA%3D%3D.2')">
+            <h2>Your trip to</h2>
+            <h1>Bangladesh</h1>
+        </div>
+        <div id="mapInfo"></div>
+        <a href="#" class="explore-button">EXPLORE BANGLADESH</a>
+    </div>
 </div>
+
+<div id="reactContainer"></div>
 
 <script>
     L.mapbox.accessToken = 'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImRhckc5UlkifQ.f8vV1-k3KEZKVhZxiXhq0w';
@@ -39,6 +39,10 @@
     var styleLayer = L.mapbox.styleLayer('mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy')
             .addTo(map);
 </script>
+
+{% block javascript %}
+<script src="javascripts/app.js"></script>
+{% endblock %}
 
 </body>
 </html>

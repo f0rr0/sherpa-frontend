@@ -198,6 +198,7 @@ class Search extends React.Component {
     }
 
     updateSearchQuery(searchQuery){
+        console.log('serach search');
         var splittedQuery=searchQuery.split(",");
         searchQuery=splittedQuery.length>0?splittedQuery[0]:searchQuery;
         var country = countries.filter(function(country) {
@@ -223,9 +224,15 @@ class Search extends React.Component {
                         />
                         <GooglePlacesAutocomplete
                             placeholder='Search'
+                            ref="googleSearch"
                             textInputProps={{
                                onChangeText:(searchQuery) => {
                                     me.updateSearchQuery(searchQuery);
+                               },
+                               onSubmitEditing:(event)=>{
+                                    me.refs.listview.refs.listview.refs.googleSearch._onBlur()
+                                    me.updateSearchQuery(event.nativeEvent.text);
+                                    me._onFetch(1, me.refs.listview._refresh)
                                }
                             }}
 
@@ -233,6 +240,7 @@ class Search extends React.Component {
                             autoFocus={false}
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                                 console.log('serach search before');
                                 me.updateSearchQuery(data.description);
                                 me._onFetch(1, me.refs.listview._refresh)
                             }}
@@ -292,7 +300,6 @@ class Search extends React.Component {
                             GooglePlacesSearchQuery={{
                                 rankby: 'distance'
                              }}
-
                             //filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
                         />
