@@ -157,7 +157,6 @@ class FeedLocation extends Component {
             moments+=trips[i].moments.length;
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
@@ -176,7 +175,6 @@ class FeedLocation extends Component {
                             <Text style={{color:"#282b33",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                         </View>
                         <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
-                            {<Text style={{color:"#282b33",fontSize:12, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{countryOrState.toUpperCase()}/{tripData.continent.toUpperCase()}</Text>}
                         </View>
                     </View>
                 </MaskedView>
