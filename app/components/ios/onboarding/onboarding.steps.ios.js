@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-import {addNotificationsDeviceToken} from '../../../actions/user.actions';
+import {addNotificationsDeviceToken,setUserHometown,updateUserData} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -123,6 +123,9 @@ var styles = StyleSheet.create({
 class OnboardingSteps extends Component {
     constructor(props){
         super(props);
+        this.state={
+            hometown:this.props.user.hometown
+        }
     }
 
     componentDidMount(){
@@ -135,8 +138,7 @@ class OnboardingSteps extends Component {
     }
 
     _onRegister(deviceToken){
-        Clipboard.setString(deviceToken);
-        console.log('device token ::',deviceToken);
+        //Clipboard.setString(deviceToken);
         this.props.dispatch(addNotificationsDeviceToken(deviceToken))
     }
 
@@ -155,11 +157,19 @@ class OnboardingSteps extends Component {
                              autoFocus={false}
                              fetchDetails={true}
                              onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                                console.log(data);
-                                console.log(details);
+
+                                var hometownObject={
+                                    lat:details.geometry.location.lat,
+                                    lng:details.geometry.location.lng,
+                                    name:details.name
+                                }
+                                this.setState({hometown:hometownObject});
+
+                                this.props.dispatch(setUserHometown(hometownObject));
+                                this.props.dispatch(updateUserData({hometown:hometownObject.name}));
                              }}
                              getDefaultValue={() => {
-                                return this.props.user.hometown; // text input default value
+                                return this.state.hometown; // text input default value
                              }}
                              query={{
                                  key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',

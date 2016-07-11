@@ -117,8 +117,36 @@ export function logoutUser(){
     }
 }
 
-export function setUserHometown(){
+export function setUserHometown(hometown){
+    return function (dispatch, getState) {
+        return store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
 
+                const queryData = encodeQueryData({
+                    hometown:hometown.name,
+                    hometownLatitude:hometown.lat,
+                    hometownLongitude:hometown.lng,
+                    userid:user.sherpaID
+                });
+
+
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/user/hometown", {
+                    method: 'post',
+                    headers: sherpaHeaders,
+                    body:queryData
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                }).catch(err=>console.log('hometown  err',err));
+            }
+        });
+    }
 }
 
 
