@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-import {updateUserData,signupUser} from '../../../actions/user.actions';
+import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -97,6 +97,7 @@ class Login extends Component {
     }
 
     connectWithService(){
+        this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode}));
         this.props.dispatch(signupUser());
     }

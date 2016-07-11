@@ -27,10 +27,14 @@ class StickyHeader extends Component {
         }
     }
 
+    reset(){
+        this.props.reset();
+    }
+
     render() {
         return (
             <Animated.View style={{height:70,top: this.topOffset,position:'absolute',backgroundColor:'transparent'}}>
-                {this.props.navigation}
+                    {this.props.navigation}
             </Animated.View>
         );
     }

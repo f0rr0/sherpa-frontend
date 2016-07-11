@@ -77,7 +77,8 @@ class FeedTrip extends Component {
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 const {endpoint,version} = sherpa;
 
-                this.setState({isCurrentUsersTrip:this.props.user.serviceID===user.serviceID})
+                this.setState({isCurrentUsersTrip:this.props.trip.owner.id===user.sherpaID})
+
 
                 fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID, {
                     method: 'post',

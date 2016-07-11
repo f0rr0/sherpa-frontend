@@ -128,7 +128,7 @@ class OwnUserProfile extends React.Component {
                 }}
             />
 
-            <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
 
         </View>
         )
@@ -168,8 +168,7 @@ class OwnUserProfile extends React.Component {
             }
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
-        console.log(this.props.user,'service bio stuff');
-        var hasDescriptionCopy=this.props.user.serviceObject.profile.serviceBio.length>0;
+        var hasDescriptionCopy=this.props.user.serviceObject.profile&&this.props.user.serviceObject.profile.serviceBio.length>0;
 
         return (
             <View>
@@ -182,7 +181,7 @@ class OwnUserProfile extends React.Component {
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject.profile.serviceBio}</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>
                     </View>
 
 

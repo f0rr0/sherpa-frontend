@@ -14,18 +14,18 @@ var {
     Component,
     View
     } = React;
-
+let currentRoute="";
 class Root extends Component {
-
     constructor(props){
         super(props);
         this.props.dispatch(loadUser());
         GoogleAnalytics.setTrackerId('UA-75939846-3')
     }
 
+
     renderScene(route, navigator) {
         GoogleAnalytics.trackScreenView(route.id)
-
+        if(currentRoute==route.id)return;
         switch (route.id) {
             case 'loading':
                 return <Loading navigator={navigator} />;

@@ -55,7 +55,7 @@ class TripTitle extends Component {
             <View style={{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0}}>
                 <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{this.props.tripOwner.toUpperCase()} TRIP TO</Text>
                 <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent"}}>{tripName.toUpperCase()}</Text>
-                <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{subTitle}</Text>
+                <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{subTitle.toUpperCase()}</Text>
             </View>
         );
     }

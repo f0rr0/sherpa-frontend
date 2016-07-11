@@ -35,7 +35,12 @@ class Loading extends Component {
 
 
     componentWillReceiveProps(nextProps){
+        if(this.props.user.userDBState===nextProps.user.userDBState)return;
+        console.log('prev::',this.props.user.userDBState,'next::',nextProps.user.userDBState)
         switch(nextProps.user.userDBState){
+            case "waiting":
+                this.setState({showProgress:true,currentView:"loading"});
+                break;
             case "available-new":
                 this.setState({showProgress:false,currentView:"onboarding-steps"});
             break;
@@ -49,8 +54,10 @@ class Loading extends Component {
         }
     }
 
+
     componentDidUpdate(prevProps,prevState){
         if(prevState.currentView!==this.state.currentView){
+            console.log(prevState.currentView,this.state.currentView);
             this.props.navigator.push({
                 id: this.state.currentView
             });
