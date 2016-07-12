@@ -1,7 +1,7 @@
 'use strict';
 
 var React = require('react-native');
-import {addNotificationsDeviceToken,setUserHometown,updateUserData} from '../../../actions/user.actions';
+import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux/native';
 import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
@@ -17,8 +17,6 @@ var {
     Text,
     TouchableHighlight,
     PushNotificationIOS,
-    Image,
-    Clipboard
     } = React;
 
 
@@ -132,14 +130,19 @@ class OnboardingSteps extends Component {
     }
 
     allowNotifications() {
-        console.log(':: allow notifictions, request permissions ::')
+        //console.log(':: allow notifictions, request permissions ::')
         PushNotificationIOS.addEventListener('register', this._onRegister.bind(this));
         PushNotificationIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){
         //Clipboard.setString(deviceToken);
-        this.props.dispatch(addNotificationsDeviceToken(deviceToken))
+        console.log('device token',deviceToken);
+        if(deviceToken){
+            this.props.dispatch(addNotificationsDeviceToken(deviceToken))
+        }else{
+            this.props.dispatch(updateUserDBState("available-existing"));
+        }
     }
 
     render() {

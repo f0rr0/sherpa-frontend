@@ -14,18 +14,44 @@ var {
     Component,
     View
     } = React;
-let currentRoute="";
 class Root extends Component {
     constructor(props){
         super(props);
         this.props.dispatch(loadUser());
         GoogleAnalytics.setTrackerId('UA-75939846-3')
+        this.state={
+            currentView:"loading"
+        }
     }
 
+    componentWillReceiveProps(nextProps){
+        switch(nextProps.user.userDBState){
+            case "available-existing":
+            case "notifications-registered":
+                this.setState({currentView:"overview"});
+            break;
+            case "available-new":
+                this.setState({currentView:"onboarding-steps"});
+            break;
+            case "empty":
+                this.setState({currentView:"login"});
+            break;
+            case "waiting":
+                this.setState({currentView:"loading"});
+            break;
+        }
+    }
+
+    shouldComponentUpdate(nextProps,nextState){
+        return nextState.currentView!=this.state.currentView;
+    }
+
+    componentDidUpdate(){
+        this.navigator.push({id:this.state.currentView});
+    }
 
     renderScene(route, navigator) {
         GoogleAnalytics.trackScreenView(route.id)
-        if(currentRoute==route.id)return;
         switch (route.id) {
             case 'loading':
                 return <Loading navigator={navigator} />;
@@ -49,8 +75,7 @@ class Root extends Component {
                 ref={(navigator) => { this.navigator = navigator; }}
                 renderScene={this.renderScene}
                 configureScene={(route) => ({
-                  ...route.sceneConfig || Navigator.SceneConfigs.FloatFromRight,
-                  gestures: route.gestures
+                  ...route.sceneConfig || Navigator.SceneConfigs.FloatFromRight
                 })}
                 initialRoute={{
                   id:"loading"
@@ -70,9 +95,7 @@ var styles = StyleSheet.create({
 
 function select(state) {
     return {
-        user: state.userReducer,
-        feed: state.feedReducer
+        user: state.userReducer
     };
 }
 export default connect(select)(Root);
-

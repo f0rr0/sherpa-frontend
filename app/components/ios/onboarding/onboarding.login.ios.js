@@ -97,6 +97,7 @@ class Login extends Component {
     }
 
     connectWithService(){
+        console.log('connect with service');
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode}));
         this.props.dispatch(signupUser());

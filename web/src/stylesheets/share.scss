@@ -1,10 +1,11 @@
 .sherpa-share{
   background-color:#e6e6e6;
   .share-container{
-    width:650px;
+    max-width:650px;
+    width:100%;
     background:white;
     margin:auto;
-    padding:0 30px 30px 30px;
+
     .logo-header{
       display: flex;
       justify-content:center;
@@ -14,10 +15,13 @@
       background:white;
     }
     .main-header{
-      width:100%;
-      height:650px;
+      width:calc(100% - 10vw);
+      height:calc(85% - 10vw);
       background-size:cover;
       display: flex;
+      border-left:5vw solid white;
+      border-right:5vw solid white;
+      border-bottom:5vw solid white;
       align-items:center;
       justify-content: center;
       flex-direction:column;
@@ -66,8 +70,18 @@
     #mapInfo{
       width:100%;
       height:250px;
-      margin-top:30px;
       display: inline-block;
+    }
+  }
+}
+
+@media (max-width: 650px) {
+  .sherpa-share {
+    .share-container {
+      .main-header {
+        width: 90vw;
+        height: 90vw;
+      }
     }
   }
 }

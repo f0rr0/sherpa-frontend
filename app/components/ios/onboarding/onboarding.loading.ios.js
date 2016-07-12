@@ -30,48 +30,11 @@ var styles = StyleSheet.create({
 class Loading extends Component {
     constructor(props){
         super(props);
-        this.state={showProgress:false,currentView:"loading"};
-    }
-
-
-    componentWillReceiveProps(nextProps){
-        if(this.props.user.userDBState===nextProps.user.userDBState)return;
-        console.log('prev::',this.props.user.userDBState,'next::',nextProps.user.userDBState)
-        switch(nextProps.user.userDBState){
-            case "waiting":
-                this.setState({showProgress:true,currentView:"loading"});
-                break;
-            case "available-new":
-                this.setState({showProgress:false,currentView:"onboarding-steps"});
-            break;
-            case "available-existing":
-            case "notifications-registered":
-                this.setState({showProgress:false,currentView:"overview"});
-            break;
-            case "empty":
-                this.setState({showProgress:true,currentView:"login"});
-            break;
-        }
-    }
-
-
-    componentDidUpdate(prevProps,prevState){
-        if(prevState.currentView!==this.state.currentView){
-            console.log(prevState.currentView,this.state.currentView);
-            this.props.navigator.push({
-                id: this.state.currentView
-            });
-        }
     }
 
 
     render() {
-        var loadingInfo;
-        if(this.state.showProgress){
-            loadingInfo=<Text style={styles.copy}>ANALYZING TRIPS</Text>
-        }else{
-            loadingInfo=<Text style={styles.copy}>LOADING</Text>
-        }
+        var loadingInfo=<Text style={styles.copy}>LOADING</Text>
         return (
             <View style={styles.container}>
                 <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />

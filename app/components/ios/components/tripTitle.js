@@ -45,7 +45,7 @@ class TripTitle extends Component {
         if(isTripNameContinent){
             subTitle="";
         }else if(isTripNameCountry||isState||isInAmerica||countryOrState===tripData.continent){
-            subTitle=tripData.continent;
+            subTitle=tripData.continent || "";
         }else{
             subTitle=countryOrState+"/"+tripData.continent
         }

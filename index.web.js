@@ -1,16 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import RootWeb from './app/components/web/root.web';
 
 import { Provider } from 'react-redux';
 import configureStore from './app/utils/configure.store';
+import ShareTrip from './app/components/web/ShareTrip'
+import SharePage from './app/components/web/SharePage'
 const store = configureStore();
+import {Router, Route, hashHistory,IndexRedirect} from 'react-router';
 
-console.log(document.getElementById('reactContainer'),'react container bitch');
 
 ReactDOM.render(
     <Provider store={store}>
-        <RootWeb />
+        <Router history={hashHistory}>
+            <Route path="/profile/:feedTarget/:sherpaToken" component={ShareTrip} />
+            <Route path="/user/:feedTarget/:sherpaToken" component={ShareTrip} />
+            <Route path="/trip/:feedTarget/:sherpaToken" component={ShareTrip} />
+        </Router>
     </Provider>,
     document.getElementById('reactContainer')
 );

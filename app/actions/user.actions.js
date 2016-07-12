@@ -77,6 +77,7 @@ export function removeMomentFromSuitcase(momentID){
     });
 }
 
+
 export function addNotificationsDeviceToken(deviceToken){
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
@@ -154,7 +155,7 @@ export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
 
-        console.log('load user');
+
 
         return store.get('user').then((user) => {
             if(user&&!config.resetUser){
@@ -219,9 +220,6 @@ export function signupUser(){
         instagramAuthRequest();
         dispatch(updateUserSignupState("start"));
 
-
-
-
         function instagramAuthRequest(){
             simpleAuthClient.configure({
                 instagram: {
@@ -234,6 +232,7 @@ export function signupUser(){
                 }).catch((error) => {
                     let errorCode = error.code;
                     let errorDescription = error.description;
+                    dispatch(updateUserDBState("empty"));
                 });
             });
 
