@@ -17,15 +17,11 @@ import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 
-
 var {
     StyleSheet,
     Navigator,
     Component,
-    Text,
-    TouchableHighlight,
-    View,
-    Image
+    View
 } = React;
 
 class Feed extends Component {
@@ -71,7 +67,7 @@ class Feed extends Component {
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black","YOUR SUITCASE",true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black","YOUR SUITCASE",true,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
@@ -96,15 +92,19 @@ class Feed extends Component {
         }
     }
 
+    _toggleNav(){
+        if(this.navigator.refs[this.currentRenderScene].toggleNav)this.navigator.refs[this.currentRenderScene].toggleNav();
+    }
 
-    _getNavigation(color,routeName,hideBack,opaque,fixedHeader){
+
+    _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav){
         if(fixedHeader){
             return{
-                'default': <Navigation ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)} ></Navigation>,
-                'fixed': <Navigation ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)}></Navigation>
+                'default': <Navigation hideNav={hideNav} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Navigation>,
+                'fixed': <Navigation hideNav={hideNav} type="fixed" ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Navigation>
             }
         }else{
-            return <Navigation ref="nav-static" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque}  goBack={this._goBack.bind(this)}></Navigation>
+            return <Navigation hideNav={hideNav} ref="nav-static" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Navigation>
         }
     }
 
@@ -116,19 +116,22 @@ class Feed extends Component {
 
     render() {
         return (
-            <Navigator
-                sceneStyle={styles.container}
-                ref={(navigator) => { this.navigator = navigator; }}
-                renderScene={this.renderScene.bind(this)}
-                configureScene={(route) => ({
-                  ...Navigator.SceneConfigs.PushFromRight,
-                  gestures: route.gestures
-                })}
-                initialRoute={{
-                  id:this.props.initial,
-                  index:0
-                }}
-            />
+            <View style={{flex:1}}>
+
+                <Navigator
+                    sceneStyle={styles.container}
+                    ref={(navigator) => { this.navigator = navigator; }}
+                    renderScene={this.renderScene.bind(this)}
+                    configureScene={(route) => ({
+                      ...Navigator.SceneConfigs.PushFromRight,
+                      gestures: route.gestures
+                    })}
+                    initialRoute={{
+                      id:this.props.initial,
+                      index:0
+                    }}
+                />
+            </View>
         );
     }
 }

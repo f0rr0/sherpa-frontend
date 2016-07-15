@@ -10,6 +10,9 @@ import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase} from '../../../../actions/user.actions';
 import StickyHeader from '../../components/stickyHeader';
+import PopOver from '../../components/popOver';
+import config from '../../../../data/config';
+
 
 var {
     StyleSheet,
@@ -35,6 +38,10 @@ class FeedDestination extends Component {
     }
 
     componentDidUpdate(){
+    }
+
+    toggleNav(){
+        this.refs.popover._setAnimation("toggle");
     }
 
     componentWillMount(){
@@ -78,6 +85,7 @@ class FeedDestination extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
 
             </View>
         )

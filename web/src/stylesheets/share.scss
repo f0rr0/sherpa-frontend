@@ -1,5 +1,81 @@
 .sherpa-share{
   background-color:#e6e6e6;
+  .trip-title{
+    &.user{
+      background:white;
+      color:#333;
+      text-transform: uppercase;
+      .profile-picture{
+        width:120px;
+        height:120px;
+      }
+
+      .profile-bio{
+        margin-top:20px;
+        color:#9a9a9a;
+      }
+    }
+    color:white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    position: absolute;
+    left:0;
+    top:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,.3);
+    .profile-picture{
+      width:70px;
+      height:70px;
+      margin-top:-50px;
+      margin-bottom:50px;
+      border-radius:100%;
+      display: inline-block;
+    }
+    h1,h2{
+      font-weight:500;
+      margin:0;
+    }
+    h1{
+      font-size:50px;
+      margin:10px 0;
+    }
+
+    h2{
+      font-size:15px;
+    }
+  }
+  .moment-container{
+    &.profile{
+      position: relative;
+      margin-bottom:15px;
+      .trip-title{
+        pointer-events: none  ;
+      }
+      .profile-picture{
+        display: none;
+      }
+    }
+    .moment-image{
+      width:100%;
+      height:calc(85% - 10vw);
+      background-size:cover;
+      background-position:center;
+      display: flex;
+      position: relative;
+    }
+
+    .moment-description{
+      height:40px;
+      background:white;
+      display: flex;
+      align-items:center;
+      margin-left:20px;
+      font-size:14px;
+    }
+  }
   .share-container{
     max-width:650px;
     width:100%;
@@ -15,35 +91,18 @@
       background:white;
     }
     .main-header{
-      width:calc(100% - 10vw);
-      height:calc(85% - 10vw);
+      width:calc(100% - 6vw);
+      height:calc(85% - 6vw);
       background-size:cover;
+      background-position:center;
       display: flex;
-      border-left:5vw solid white;
-      border-right:5vw solid white;
-      border-bottom:5vw solid white;
+      border-left:3vw solid white;
+      border-right:3vw solid white;
+      border-bottom:3vw solid white;
       align-items:center;
       justify-content: center;
       flex-direction:column;
       position: relative;
-      h1,h2{
-        text-transform:uppercase;
-        color:white;
-        text-align: center;
-        font-weight:500;
-        margin:0;
-        z-index:1;
-      }
-      h1{
-        font-size:40px;
-        letter-spacing:.1em;
-      }
-      h2{
-        margin-bottom:10px;
-        letter-spacing:.22em;
-        font-size:14px;
-        font-weight:600;
-      }
 
       &:before{
         position: absolute;
@@ -71,16 +130,74 @@
       width:100%;
       height:250px;
       display: inline-block;
+      //pointer-events:none;
     }
   }
 }
 
 @media (max-width: 650px) {
   .sherpa-share {
-    .share-container {
-      .main-header {
+    .moment-container{
+      width: 90vw;
+      height:97vw;
+      margin-left:5vw;
+      margin-top:5vw;
+      &.profile{
+        height:90vw;
+      }
+
+      .moment-description{
+        margin-left:0;
+      }
+      .moment-image,.trip-title{
         width: 90vw;
         height: 90vw;
+      }
+    }
+
+    #mapInfo {
+      pointer-events: none;
+    }
+
+      .trip-title{
+
+      &.user {
+        .moment-container{
+          margin-top:0;
+        }
+        .profile-picture {
+          width: 60px;
+          height: 60px;
+        }
+      }
+
+      h1,h2{
+        font-weight:500;
+        margin:0;
+      }
+      h1{
+        font-size:30px;
+        margin:10px 0;
+      }
+
+      h2{
+        font-size:12px;
+      }
+    }
+
+    .share-container {
+      .main-header {
+        width: 100vw;
+        height: 100vw;
+        border:none;
+      }
+
+      .logo-header {
+        height: 60px;
+        img {
+          width: 80px;
+          height: auto;
+        }
       }
     }
   }

@@ -6,6 +6,7 @@ module.exports = {
             minTripCount:10
         }
     },
+    shareBaseURL:"http://www.trysherpa.com/share.html#",
     auth:{
             debug:{
                 instagram: {

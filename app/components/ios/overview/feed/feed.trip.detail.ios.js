@@ -8,6 +8,7 @@ import MaskedView from "react-native-masked-view";
 import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+import PopOver from '../../components/popOver';
 
 
 var {
@@ -78,6 +79,9 @@ class TripDetail extends React.Component{
         });
     }
 
+    toggleNav(){
+        this.refs.popover._setAnimation("toggle");
+    }
 
     suiteCaseTrip(trip){
         trip.suitcased=!trip.suitcased;
@@ -149,6 +153,7 @@ class TripDetail extends React.Component{
 
 
                 {this.props.navigation}
+                <PopOver ref="popover"></PopOver>
             </View>
         )
     }

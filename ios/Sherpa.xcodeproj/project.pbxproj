@@ -33,6 +33,7 @@
 		F321A5891BDA9A040014AA18 /* TSTAR-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5801BDA9A040014AA18 /* TSTAR-MediumItalic.otf */; };
 		F321A58A1BDA9A040014AA18 /* TSTAR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */; };
 		F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */; };
+		F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F35D9AE41D394F1500D768A3 /* libActivityView.a */; };
 		F36A331F1BDF913C00970476 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */; };
 		F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */; };
 		F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */; };
@@ -154,6 +155,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTPushNotification;
 		};
+		F35D9AE31D394F1500D768A3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = ActivityView;
+		};
 		F36A331D1BDF8F7D00970476 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */;
@@ -233,6 +241,7 @@
 		F321A5801BDA9A040014AA18 /* TSTAR-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-MediumItalic.otf"; sourceTree = "<group>"; };
 		F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Regular.otf"; sourceTree = "<group>"; };
 		F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ActivityView.xcodeproj; path = "../node_modules/react-native-activity-view/ActivityView.xcodeproj"; sourceTree = "<group>"; };
 		F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -267,6 +276,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */,
 				F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */,
 				F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
 				F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */,
@@ -425,6 +435,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */,
 				F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */,
 				F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */,
 				F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */,
@@ -520,6 +531,14 @@
 			isa = PBXGroup;
 			children = (
 				F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F35D9AE01D394F1500D768A3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F35D9AE41D394F1500D768A3 /* libActivityView.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -628,6 +647,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = F35D9AE01D394F1500D768A3 /* Products */;
+					ProjectRef = F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -787,6 +810,13 @@
 			fileType = archive.ar;
 			path = libRCTPushNotification.a;
 			remoteRef = F32D8FA81CAD891200E58DA1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F35D9AE41D394F1500D768A3 /* libActivityView.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libActivityView.a;
+			remoteRef = F35D9AE31D394F1500D768A3 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */ = {

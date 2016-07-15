@@ -4,6 +4,7 @@ import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
+import config from '../../../../data/config';
 
 import countries from './../../../../data/countries'
 import moment from 'moment';
@@ -12,6 +13,7 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
+import PopOver from '../../components/popOver';
 
 
 var {
@@ -75,6 +77,10 @@ class FeedProfile extends React.Component {
         });
     }
 
+    toggleNav(){
+        this.refs.popover._setAnimation("toggle");
+    }
+
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.trip.owner.id,this.props.user.sherpaToken,page,"profile"));
@@ -109,6 +115,8 @@ class FeedProfile extends React.Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <PopOver ref="popover" shareCopy="SHARE THIS PROFILE" shareURL={config.shareBaseURL+"/profile/"+this.props.trip.owner.user+"/"+this.props.user.sherpaToken}></PopOver>
+
             </View>
         )
     }
@@ -184,14 +192,14 @@ class FeedProfile extends React.Component {
     }
 
     _renderRow(tripData) {
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-
-        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        if(!country)country={name:tripData.country}
-
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
+        //var country = countries.filter(function(country) {
+        //    return country["alpha-2"] === tripData.country;
+        //})[0];
+        //
+        ////if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
+        //if(!country)country={name:tripData.country}
+        //
+        //var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
         var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         tripData.owner=this.props.trip.owner;

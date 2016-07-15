@@ -6,7 +6,7 @@ import TripTitle from './components/tripTitle';
 let { Component } = React;
 import 'whatwg-fetch';
 
-class ShareTrip extends Component{
+class ShareDetail extends Component{
     constructor(props) {
         super(props);
         this.state= {
@@ -114,7 +114,7 @@ class ShareTrip extends Component{
         let firstMoment=this.state.moments[0];
         let tripData=this.state.tripData;
         let momentIndex=0;
-        
+
         return(
             <div className="sherpa-share">
                 <div className="share-container">
@@ -122,14 +122,14 @@ class ShareTrip extends Component{
                         <img src="images/logo-sherpa-2.png" height="50" alt="" />
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
-                        <TripTitle tripData={tripData} owner={tripData.owner} sherpaToken={this.props.routeParams.sherpaToken}></TripTitle>
+                        <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername} profilePicture={tripData.owner.serviceProfilePicture}></TripTitle>
                     </div>
                     <div id="mapInfo"></div>
-                    <a href={"#/location/"+tripData.location+"/"+this.props.routeParams.sherpaToken} className="explore-button">EXPLORE {tripData.location.toUpperCase()}</a>
+                    <a href="#" className="explore-button">EXPLORE {tripData.location.toUpperCase()}</a>
                     {
                         this.state.moments.map(function(moment) {
                             momentIndex++;
-                            if(moment.type!='image')return;
+                            if(moment.type!='image'||momentIndex==1)return;
                             return (
                                 <div className="moment-container" key={moment.id}>
                                     <div className="moment-image" style={{backgroundImage:'url('+moment.mediaUrl+')'}}></div>
@@ -144,4 +144,4 @@ class ShareTrip extends Component{
     }
 }
 
-export default ShareTrip
+export default ShareDetail

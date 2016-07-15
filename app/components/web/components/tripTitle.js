@@ -1,11 +1,8 @@
-var React = require('react-native');
-import countries from '../../../data/countries'
+import countries from '../../../data/countries';
+import React from 'react';
+import ReactDOM from 'react-dom';
+var { Component } = React;
 
-var {
-    Component,
-    View,
-    Text
-    } = React;
 
 class TripTitle extends Component {
     constructor(props) {
@@ -23,8 +20,9 @@ class TripTitle extends Component {
             return country["alpha-2"] === tripData.country;
         })[0];
 
+        console.log(tripData);
 
-        if(!country)country={name:tripData.country||""};
+        if(!country)country={name:tripData.country}
 
         var tripName=tripData.name.replace(/\s+/g, '');
 
@@ -39,7 +37,7 @@ class TripTitle extends Component {
         }
 
         var isState=(country.name.toUpperCase()==="US");
-        var isInAmerica=(country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")
+        var isInAmerica=(country["alpha-2"].toUpperCase()==="US")
         var countryOrState=isState?tripData.state:country.name;
 
         var subTitle="";
@@ -51,13 +49,15 @@ class TripTitle extends Component {
             subTitle=countryOrState+"/"+tripData.continent
         }
 
+        var profilePic=this.props.owner.serviceProfilePicture? <a href={"#/profile/"+this.props.owner.id+"/"+this.props.sherpaToken}><img className="profile-picture" src={this.props.owner.serviceProfilePicture} alt=""/></a>:<span></span>;
 
         return (
-            <View style={{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0}}>
-                <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{this.props.tripOwner.toUpperCase()} TRIP TO</Text>
-                <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent"}}>{tripName.toUpperCase()}</Text>
-                <Text style={{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{subTitle.toUpperCase()}</Text>
-            </View>
+            <div className="trip-title">
+                {profilePic}
+                <h2>{this.props.owner.serviceUsername.toUpperCase()} TRIP TO</h2>
+                <h1>{tripName.replace("Tripto","").toUpperCase()}</h1>
+                <h2>{subTitle.toUpperCase()}</h2>
+            </div>
         );
     }
 }

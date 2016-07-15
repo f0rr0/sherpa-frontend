@@ -148,7 +148,7 @@ class Suitecase extends React.Component {
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
         return (
-            <View>
+            <View style={{flex:1,justifyContent:'center',width:380,alignItems:'center'}}>
 
 
                 <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>

@@ -3,10 +3,12 @@ import ReactDOM from 'react-dom';
 import config from '../../data/config';
 const {sherpa}=config.auth[config.environment];
 import TripTitle from './components/tripTitle';
-let { Component } = React;
+import countries from "./../../data/countries";
 import 'whatwg-fetch';
+let { Component } = React;
 
-class ShareTrip extends Component{
+
+class ShareLocation extends Component{
     constructor(props) {
         super(props);
         this.state= {
@@ -72,15 +74,27 @@ class ShareTrip extends Component{
         if(prevProps.routeParams.feedTarget!=this.props.routeParams.feedTarget)this.requestEndpoint();
     }
 
+    isCountry(location){
+        var country = countries.filter(function(country) {
+            return country["name"].toLowerCase() === location.toLowerCase();
+        });
+
+        return country;
+    }
+
     requestEndpoint(){
+        var isCountry=this.isCountry(this.props.routeParams.feedTarget);
+        let endpointTarget=isCountry.length>0?"country/"+isCountry[0]["alpha-2"]:"location/"+this.props.routeParams.feedTarget;
         const {endpoint,version,feed_uri,user_uri} = sherpa;
         let feedRequestURI;
-        feedRequestURI=endpoint+version+"/trip/"+this.props.routeParams.feedTarget;
+        feedRequestURI=endpoint+version+"/"+endpointTarget;
 
         let sherpaResponse;
         let sherpaHeaders = new Headers();
         sherpaHeaders.append("token", this.props.routeParams.sherpaToken);
         var me=this;
+
+        console.log(feedRequestURI)
 
         fetch(feedRequestURI,{
             method:'get',
@@ -88,6 +102,7 @@ class ShareTrip extends Component{
             mode: 'cors'
         })
             .then((rawSherpaResponse)=>{
+                console.log('response status',rawSherpaResponse.status);
                 switch(rawSherpaResponse.status){
                     case 200:
                         return rawSherpaResponse.text()
@@ -98,10 +113,33 @@ class ShareTrip extends Component{
                 }
             })
             .then((rawSherpaResponseFinal)=>{
-                sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                this.setState({tripData:sherpaResponse,moments:sherpaResponse.moments});
+                console.log(JSON.parse(rawSherpaResponseFinal));
+                sherpaResponse= this.unpackTrips(JSON.parse(rawSherpaResponseFinal));
+
+                var cleanMoments=[];
+                sherpaResponse.moments.map(function(moment){
+                    if(moment.type==='image')cleanMoments.push(moment);
+                })
+
+                this.setState({moments:cleanMoments});
                 this.initMap();
             });
+    }
+
+    unpackTrips(trips){
+        var unpackedResults={moments:[],momentIDs:[]};
+        for(var index in trips){
+            var tripMoments=trips[index].moments;
+            for(var i=0;i<tripMoments.length;i++){
+                tripMoments[i].trip={
+                    owner:trips[index].owner
+                };
+
+                unpackedResults.moments.push(tripMoments[i]);
+                unpackedResults.momentIDs.push(tripMoments[i].id);
+            }
+        }
+        return unpackedResults;
     }
 
     _renderMoments(){
@@ -112,9 +150,8 @@ class ShareTrip extends Component{
         if(this.state.moments.length==0)return (<div></div>);
 
         let firstMoment=this.state.moments[0];
-        let tripData=this.state.tripData;
         let momentIndex=0;
-        
+
         return(
             <div className="sherpa-share">
                 <div className="share-container">
@@ -122,14 +159,13 @@ class ShareTrip extends Component{
                         <img src="images/logo-sherpa-2.png" height="50" alt="" />
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
-                        <TripTitle tripData={tripData} owner={tripData.owner} sherpaToken={this.props.routeParams.sherpaToken}></TripTitle>
-                    </div>
+                        <div className="trip-title">
+                            <h1>{this.props.routeParams.feedTarget.toUpperCase()}</h1>
+                        </div>                    </div>
                     <div id="mapInfo"></div>
-                    <a href={"#/location/"+tripData.location+"/"+this.props.routeParams.sherpaToken} className="explore-button">EXPLORE {tripData.location.toUpperCase()}</a>
                     {
                         this.state.moments.map(function(moment) {
                             momentIndex++;
-                            if(moment.type!='image')return;
                             return (
                                 <div className="moment-container" key={moment.id}>
                                     <div className="moment-image" style={{backgroundImage:'url('+moment.mediaUrl+')'}}></div>
@@ -144,4 +180,4 @@ class ShareTrip extends Component{
     }
 }
 
-export default ShareTrip
+export default ShareLocation

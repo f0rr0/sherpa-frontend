@@ -240,7 +240,6 @@ class Search extends React.Component {
                             autoFocus={false}
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                                 console.log('serach search before');
                                 me.updateSearchQuery(data.description);
                                 me._onFetch(1, me.refs.listview._refresh)
                             }}

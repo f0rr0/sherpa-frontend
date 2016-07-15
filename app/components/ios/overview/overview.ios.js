@@ -14,10 +14,9 @@ import TabNavigator from 'react-native-tab-navigator';
 
 var {
     StyleSheet,
-    TabBarIOS,
     View,
     StatusBar,
-    Image
+    Image,
 } = React;
 
 const EXPLORE="explore";

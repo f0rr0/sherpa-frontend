@@ -14,6 +14,7 @@ import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
+import PopOver from '../../components/popOver';
 
 var {
     StyleSheet,
@@ -38,6 +39,10 @@ class FeedLocation extends Component {
 
     unSuiteCaseTrip(trip){
         removeMomentFromSuitcase(trip.id);
+    }
+
+    toggleNav(){
+        this.refs.popover._setAnimation("toggle");
     }
 
     componentDidUpdate(){
@@ -105,6 +110,7 @@ class FeedLocation extends Component {
     }
 
     render(){
+        console.log('share url',config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken)
         return(
             <View style={{flex:1}}>
                 <GiftedListView
@@ -132,6 +138,8 @@ class FeedLocation extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <PopOver ref="popover" shareCopy="SHARE LOCATION" shareURL={config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
+
             </View>
         )
     }

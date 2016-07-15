@@ -15,7 +15,7 @@ import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import store from 'react-native-simple-store';
 import StickyHeader from '../../components/stickyHeader';
-
+import PopOver from '../../components/popOver';
 
 var {
     StyleSheet,
@@ -45,6 +45,10 @@ class FeedTrip extends Component {
 
     componentDidUpdate(){
 
+    }
+
+    toggleNav(){
+       this.refs.popover._setAnimation("toggle");
     }
 
     componentDidMount(){
@@ -77,7 +81,7 @@ class FeedTrip extends Component {
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 const {endpoint,version} = sherpa;
 
-                this.setState({isCurrentUsersTrip:this.props.trip.owner.id===user.sherpaID})
+                this.setState({isCurrentUsersTrip:this.props.trip.owner.id===user.sherpaID,sherpaToken:user.sherpaToken})
 
 
                 fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID, {
@@ -127,9 +131,11 @@ class FeedTrip extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.state.sherpaToken}></PopOver>
             </View>
         )
     }
+
 
     suiteCaseTrip(trip){
         addMomentToSuitcase(trip.id);

@@ -1,0 +1,27 @@
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:title" content="Sherpa" />
+    <meta property="og:url" content="http://www.trysherpa.com" />
+    <meta property="og:image" content="http://www.trysherpa.com/share.jpg" />
+    <meta property="og:description" content="Sherpa turns instagram into a travel guide" />
+
+    <script src='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.js'></script>
+    <link href='https://api.mapbox.com/mapbox.js/v2.4.0/mapbox.css' rel='stylesheet' />
+
+    <link href="stylesheets/global.css" rel="stylesheet">
+</head>
+<body>
+
+
+<div id="reactContainer"></div>
+
+
+{% block javascript %}
+<script src="javascripts/app.js"></script>
+{% endblock %}
+
+</body>
+</html>

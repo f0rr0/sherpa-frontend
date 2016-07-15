@@ -27,6 +27,8 @@
     "react-native-gifted-listview":"*",
     "jquery":"*",
     "underscore":"*",
-    "react-router":"*"
+    "react-router":"*",
+    "whatwg-fetch":"*",
+    "react-native-activity-view":"*"
   }
 }

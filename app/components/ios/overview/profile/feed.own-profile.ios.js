@@ -10,10 +10,11 @@ import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux/native';
-import { deleteUser,logoutUser } from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
+import PopOver from '../../components/popOver';
+import config from '../../../../data/config';
 
 
 var {
@@ -129,26 +130,20 @@ class OwnUserProfile extends React.Component {
             />
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
+            <PopOver ref="popover" shareCopy="SHARE YOUR PROFILE" shareURL={config.shareBaseURL+"/profile/"+this.props.user.serviceID+"/"+this.props.user.sherpaToken} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
 
         </View>
         )
     }
 
+    toggleNav(){
+        this.refs.popover._setAnimation("toggle");
+    }
 
     _renderFooter(){
         return(
 
                 <View style={{flex:1,alignItems:"center",justifyContent:"center",opacity:this.state.ready?1:0}}>
-                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(deleteUser())}}>
-                        <View>
-                            <Text style={styles.copyLarge}>Logout</Text>
-                        </View>
-                    </TouchableHighlight>
-                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{marginBottom:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
-                        <View>
-                            <Text style={styles.copyLarge}>Delete Account</Text>
-                        </View>
-                    </TouchableHighlight>
                 </View>
 
 
