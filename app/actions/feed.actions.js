@@ -2,6 +2,8 @@ import * as types from '../constants/feed.actiontypes'
 import config from '../data/config';
 const {sherpa}=config.auth[config.environment];
 const {parser}=config.settings;
+import {getQueryString,encodeQueryData} from '../utils/query.utils';
+
 
 export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
     return function (dispatch, getState) {
@@ -27,7 +29,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                     feedRequestURI=endpoint+version+"/suitcase/"+feedTarget;
                 break;
                 case "search-places":
-                    feedRequestURI=endpoint+version+"/search/moments?text="+feedTarget;
+                    feedRequestURI=endpoint+version+"/search";
                 break;
                 case "search-people":
                     feedRequestURI=endpoint+version+"/search/users?text="+feedTarget;
@@ -45,10 +47,19 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             sherpaHeaders.append("token", sherpaToken);
 
 
-            fetch(feedRequestURI,{
+        console.log('feed target',feedTarget)
+            var reqBody=type=='search-places'?{
+                method:'post',
+                headers:sherpaHeaders,
+                body:encodeQueryData({"needle":feedTarget.length>0?feedTarget:"----"})
+            }:{
                 method:'get',
-                headers:sherpaHeaders
-            })
+                headers:sherpaHeaders,
+            };
+
+        console.log(reqBody);
+
+            fetch(feedRequestURI,reqBody)
             .then((rawSherpaResponse)=>{
                 switch(rawSherpaResponse.status){
                     case 200:
@@ -61,6 +72,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+                console.log('sherpa response',sherpaResponse)
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
