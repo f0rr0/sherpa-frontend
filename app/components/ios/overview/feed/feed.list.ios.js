@@ -88,6 +88,7 @@ class FeedList extends React.Component{
     render(){
         return(
             <GiftedListView
+                enableEmptySections={true}
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching

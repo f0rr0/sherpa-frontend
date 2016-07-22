@@ -134,6 +134,7 @@ class FeedTrip extends Component {
         return(
             <View style={{flex:1}}>
                 <ListView
+                    enableEmptySections={true}
                    dataSource={this.state.dataSource}
                    renderRow={this._renderRow.bind(this)}
                    contentContainerStyle={styles.listView}

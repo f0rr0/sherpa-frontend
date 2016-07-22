@@ -26,3 +26,4 @@ class Sherpa extends Component {
 
 
 AppRegistry.registerComponent('Sherpa', () => Sherpa);
+console.ignoredYellowBox = ['Warning: ReactNative.createElement'];

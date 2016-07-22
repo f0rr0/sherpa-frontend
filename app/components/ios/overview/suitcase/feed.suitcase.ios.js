@@ -95,6 +95,7 @@ class Suitecase extends React.Component {
             <View style={{flex:1}}>
 
                 <GiftedListView
+                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     emptyView={this._emptyView.bind(this)}

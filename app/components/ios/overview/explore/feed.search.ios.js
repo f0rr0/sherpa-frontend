@@ -159,6 +159,7 @@ class Search extends React.Component {
         return(
             <View style={{flex:1}}>
                 <GiftedListView
+                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     emptyView={this._emptyView.bind(this)}
@@ -308,6 +309,7 @@ class Search extends React.Component {
                 </View>
 
                 {this.props.navigation.default}
+
 
             </View>
         )

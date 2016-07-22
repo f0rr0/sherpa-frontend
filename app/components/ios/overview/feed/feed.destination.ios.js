@@ -72,6 +72,7 @@ class FeedDestination extends Component {
                    renderRow={this._renderRow.bind(this)}
                    contentContainerStyle={styles.listView}
                    renderHeader={this._renderHeader.bind(this)}
+                   enableEmptySections={true}
                    ref="listview"
                    onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;

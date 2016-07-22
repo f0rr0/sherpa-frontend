@@ -104,6 +104,7 @@ class FeedLocation extends Component {
         return(
             <View style={{flex:1}}>
                 <GiftedListView
+                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
