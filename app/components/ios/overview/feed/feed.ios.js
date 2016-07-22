@@ -12,7 +12,7 @@ import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Navigation from '../../components/navigation'
 
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
@@ -33,6 +33,21 @@ class Feed extends Component {
 
     componentDidMount(){
         //check if deeplinking, if yes, request data for deep
+    }
+
+    setView(deepLinkObject){
+        switch(deepLinkObject.type){
+            case "TRIP":
+            break;
+            case "PROFILE":
+            break;
+            case "MOMENT":
+            break;
+            case "PROFILE":
+            break;
+        }
+
+        console.log('deep link',deepLinkObject);
     }
 
     renderScene(route, navigator) {

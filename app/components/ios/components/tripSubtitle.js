@@ -40,7 +40,6 @@ class TripSubtitle extends Component {
             if(tripName.toLowerCase()==continents[i].toLowerCase())isTripNameContinent=true;
         }
 
-        console.log('country name',country.name)
         var isState=(country.name.toUpperCase()==="US"||country.name.toUpperCase()==="UNITED STATES OF AMERICA");
         var isInAmerica=(country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")
         var countryOrState=isState?tripData.state:country.name;

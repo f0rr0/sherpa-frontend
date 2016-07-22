@@ -24,6 +24,8 @@ class WikpediaInfoBox extends Component {
         this.getWikipediaData(this.props.location);
     }
 
+
+    //add latitude/longitude and location type (settlement,country,continent)
     getWikipediaData(query){
         var dbpediaHeaders = new Headers();
         dbpediaHeaders.append("accept", "application/json");
@@ -39,8 +41,9 @@ class WikpediaInfoBox extends Component {
         strVar += "";
         strVar += "SELECT DISTINCT *";
         strVar += "WHERE {";
-        strVar += "   ?city rdf:type dbpedia-owl:Settlement ;";
-        strVar += "         rdfs:label \"Murau\"@en ;";
+        strVar += "   ?place rdf:type dbpedia-owl:Place ;";
+        strVar += "         rdfs:label \""+query+"\" ;";
+        strVar += "         dbpedia-owl:country ?country;";
         strVar += "         dbpedia-owl:abstract ?abstract;";
         strVar += "         geo:lat ?lat;";
         strVar += "         geo:long ?long.";
@@ -48,18 +51,22 @@ class WikpediaInfoBox extends Component {
         strVar += "}";
 
         var dbQuery = [strVar].join(" ");
-        var url="http://dbpedia.org";
-        var queryUrl = url+"?query="+ encodeURIComponent(dbQuery) +"&format=json";
+        var url="http://dbpedia.org/sparql?default-graph-uri=http%3A%2F%2Fdbpedia.org&query=";
+        var queryUrl = url + encodeURIComponent(dbQuery) +"&format=json&timeout=30000&debug=on";
 
 
-        fetch(queryUrl, {
+        //console.log(queryUrl);
+                fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString="+query, {
+
+        //fetch(queryUrl, {
             method: 'get',
             headers: dbpediaHeaders
         }).then((rawServiceResponse)=> {
             return rawServiceResponse.text();
         }).then((response)=> {
-            console.log('response dbpedia',response);
-            //this.setState({"wikipediaDescription":JSON.parse(response).results[0].description})
+            //console.log('response',JSON.parse(response))
+            //this.setState({"wikipediaDescription":JSON.parse(response).results.bindings[0].abstract.value})
+            this.setState({"wikipediaDescription":JSON.parse(response).results[0].description})
         }).catch(err=>console.log('device token err',err));
     }
 
@@ -68,7 +75,7 @@ class WikpediaInfoBox extends Component {
             <Text style={{position:'absolute',left:8,top:8,fontSize:10,color:"#999999"}}>WIKIPEDIA</Text>
             <Text style={{fontSize:13}}>{this.state.wikipediaDescription}</Text>
         </View>:<View></View>;
-        console.log('wikipedia',wikipedia)
+        //console.log('wikipedia',wikipedia)
         return(
             <View>
                 {wikipedia}

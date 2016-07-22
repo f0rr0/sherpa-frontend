@@ -9,7 +9,7 @@ import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete'
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import config from '../../../../data/config';
 import store from 'react-native-simple-store';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
@@ -163,10 +163,11 @@ class Search extends React.Component {
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     emptyView={this._emptyView.bind(this)}
-                    firstLoader={true} // display a loader for the first fetching
+                    firstLoader={false} // display a loader for the first fetching
                     pagination={false} // enable infinite scrolling using touch to load more
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
+                    initialLoad={false}
                     ref="listview"
                     headerView={this._renderHeader.bind(this)}
                     onScroll={(event)=>{
@@ -199,16 +200,29 @@ class Search extends React.Component {
     }
 
     updateSearchQuery(searchQuery){
-        console.log('serach search');
+        var needle=searchQuery;
         var splittedQuery=searchQuery.split(",");
-        searchQuery=splittedQuery.length>0?splittedQuery[0]:searchQuery;
+        var standalone=true;
+
+        if(splittedQuery.length>1){
+            needle=splittedQuery[0];
+            standalone=false;
+        }
         var country = countries.filter(function(country) {
-            return country["name"].toLowerCase() === searchQuery.toLowerCase();
+            return searchQuery.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
         })[0];
 
-        var backendSearchQuery=country?country['alpha-2'] : searchQuery;
-        console.log('navig',this.props.navigation.fixed.updateRouteName);
-        this.setState({searchQuery,backendSearchQuery});
+        if(standalone&&country){
+            console.log('COUNTRY')
+            this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
+        }else if(!standalone&&country){
+            console.log('LOCATION')
+            this.setState({searchQuery,backendSearchQuery:{type:'location',location:needle,country:country['alpha-2']}});
+        }else{
+            console.log('NEEDLE')
+            this.setState({searchQuery,backendSearchQuery:{needle}});
+        }
+
     }
 
     _renderHeader(){
@@ -233,7 +247,8 @@ class Search extends React.Component {
                                onSubmitEditing:(event)=>{
                                     me.refs.listview.refs.listview.refs.googleSearch._onBlur()
                                     me.updateSearchQuery(event.nativeEvent.text);
-                                    me._onFetch(1, me.refs.listview._refresh)
+                                    me._onFetch(1, me.refs.listview._refresh);
+
                                }
                             }}
 

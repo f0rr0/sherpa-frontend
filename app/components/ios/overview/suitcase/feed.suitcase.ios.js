@@ -9,7 +9,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 
 

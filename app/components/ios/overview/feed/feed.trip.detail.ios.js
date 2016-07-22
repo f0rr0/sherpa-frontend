@@ -1,5 +1,5 @@
 import React from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';

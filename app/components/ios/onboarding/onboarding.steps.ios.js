@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState} from '../../../actions/user.actions';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Swiper from 'react-native-swiper';

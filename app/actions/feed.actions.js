@@ -5,7 +5,7 @@ const {parser}=config.settings;
 import {getQueryString,encodeQueryData} from '../utils/query.utils';
 
 
-export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
+export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
     return function (dispatch, getState) {
             dispatch(udpateFeedState('fetch'));
             dispatch(updateFeedPage(page,type));
@@ -14,18 +14,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             const {endpoint,version,feed_uri,user_uri} = sherpa;
             var feedRequestURI;
             switch(type){
-                case "location-continent":
-                    feedRequestURI=endpoint+version+"/search";
-                    searchBody={type:'continent',continent:feedTarget};
-                break;
-                case "location-country":
-                    feedRequestURI=endpoint+version+"/search";
-                    searchBody={type:'country',country:feedTarget};
-                break;
                 case "location":
                     feedRequestURI=endpoint+version+"/search";
-                    searchBody={needle:feedTarget.length>0?feedTarget:"----"};
-                    //feedRequestURI=endpoint+version+"/location/"+feedTarget+"?page="+page;
+                    searchBody=feedTarget;
                 break;
                 case "profile":
                     feedRequestURI=endpoint+version+"/profile/"+feedTarget+"/trips?page="+page;
@@ -38,7 +29,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                 break;
                 case "search-places":
                     feedRequestURI=endpoint+version+"/search";
-                    searchBody={needle:feedTarget.length>0?feedTarget:"----"};
+                    searchBody=feedTarget;
                 break;
                 case "search-people":
                     feedRequestURI=endpoint+version+"/search/users?text="+feedTarget;
@@ -54,6 +45,8 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             var sherpaResponse;
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
 
 
             var reqBody=searchBody?{
@@ -65,6 +58,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                 headers:sherpaHeaders,
             };
 
+            console.log('req body',reqBody);
 
             fetch(feedRequestURI,reqBody)
             .then((rawSherpaResponse)=>{
@@ -79,7 +73,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log('sherpa response',sherpaResponse)
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
@@ -89,6 +82,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user') {
                     case "location-continent":
                     case "location-country":
                     case "location":
+                        console.log(sherpaResponse,'response')
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
                     break;
                     case "suitcase-list":

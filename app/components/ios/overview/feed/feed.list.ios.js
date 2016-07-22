@@ -1,5 +1,5 @@
 import React from 'react-native';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';

@@ -9,7 +9,7 @@ import Feed from './feed/feed.ios';
 import React from 'react-native';
 import {udpateFeedState} from '../../../actions/feed.actions';
 import {updateTab} from '../../../actions/app.actions';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
 
@@ -69,6 +69,9 @@ class Overview extends React.Component {
         this.props.dispatch(updateTab(this.state.selectedTab));
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
+
+        console.log(":: set state ::");
+        this.setState({selectedTab:FEED,selectedView:{"deep":"link",}});
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -76,6 +79,11 @@ class Overview extends React.Component {
             this.props.dispatch(udpateFeedState("reset"));
             this.props.dispatch(updateTab(this.state.selectedTab));
         }
+
+        if(this.state.selectedView!==prevState.selectedView){
+            this.refs[this.state.selectedTab].setView(this.state.selectedView)
+        }
+
     }
 
     updateTabTo(target){
@@ -91,17 +99,7 @@ class Overview extends React.Component {
     _onNotificationOpened(notification) {
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=JSON.parse(notification.getMessage());
-        switch(deepLinkObject.type){
-            case "TRIP":
-            break;
-            case "PROFILE":
-            break;
-            case "MOMENT":
-            break;
-            case "PROFILE":
-            break;
-        }
-        this.setState({selectedTab:FEED});
+        this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }
 
     render() {

@@ -2,7 +2,7 @@
 
 var React = require('react-native');
 import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 

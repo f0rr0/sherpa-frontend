@@ -6,7 +6,7 @@ import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
 import OnboardingSteps from './onboarding/onboarding.steps.ios';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 var {
     StyleSheet,

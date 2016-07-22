@@ -5,7 +5,7 @@ import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
-import { connect } from 'react-redux/native';
+import { connect } from 'react-redux';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import FeedTrip from './feed.trip.ios'
@@ -96,7 +96,13 @@ class FeedLocation extends Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.props.location,this.props.user.sherpaToken,page,this.props.isCountry?"location-country":"location"));
+        var req={}
+        if(this.props.isCountry){
+            req={type:'country',country:this.props.location}
+        }else{
+            req={needle:this.props.location}
+        }
+        this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
     render(){
