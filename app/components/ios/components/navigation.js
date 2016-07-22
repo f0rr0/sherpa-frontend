@@ -41,7 +41,6 @@ class Navigation extends Component {
                         resizeMode="contain"
                     ></Image>
                 </TouchableHighlight>
-
                 <View style={{position:'absolute',height:50,backgroundColor:'red',bottom:0,flex:1,width:100}}></View>
             </View>
         );

@@ -16,8 +16,9 @@ var {
     Component,
     Text,
     TouchableHighlight,
-    PushNotificationIOS,
     } = React;
+
+import NotificationsIOS from 'react-native-notifications';
 
 
 var styles = StyleSheet.create({
@@ -131,8 +132,8 @@ class OnboardingSteps extends Component {
 
     allowNotifications() {
         //console.log(':: allow notifictions, request permissions ::')
-        PushNotificationIOS.addEventListener('register', this._onRegister.bind(this));
-        PushNotificationIOS.requestPermissions();
+        NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
+        NotificationsIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){

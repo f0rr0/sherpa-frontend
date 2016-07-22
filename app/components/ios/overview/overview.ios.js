@@ -11,12 +11,14 @@ import {udpateFeedState} from '../../../actions/feed.actions';
 import {updateTab} from '../../../actions/app.actions';
 import { connect } from 'react-redux/native';
 import TabNavigator from 'react-native-tab-navigator';
+import NotificationsIOS from 'react-native-notifications';
 
 var {
     StyleSheet,
     View,
     StatusBar,
     Image,
+    PushNotificationIOS
 } = React;
 
 const EXPLORE="explore";
@@ -65,6 +67,8 @@ class Overview extends React.Component {
 
     componentDidMount(){
         this.props.dispatch(updateTab(this.state.selectedTab));
+        NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
+        NotificationsIOS.consumeBackgroundQueue();
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -77,6 +81,27 @@ class Overview extends React.Component {
     updateTabTo(target){
         if(this.state.selectedTab===target)this.refs[target].reset();
         this.setState({ selectedTab: target });
+    }
+
+    componentWillUnmount(){
+        NotificationsIOS.removeEventListener('notificationOpened', this._onNotificationOpened.bind(this));
+    }
+
+
+    _onNotificationOpened(notification) {
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        var deepLinkObject=JSON.parse(notification.getMessage());
+        switch(deepLinkObject.type){
+            case "TRIP":
+            break;
+            case "PROFILE":
+            break;
+            case "MOMENT":
+            break;
+            case "PROFILE":
+            break;
+        }
+        this.setState({selectedTab:FEED});
     }
 
     render() {

@@ -41,7 +41,7 @@ var styles = StyleSheet.create({
 class PopOver extends Component {
     constructor(props) {
         super(props);
-        this.bottomOffset = new Animated.Value(-250);
+        this.bottomOffset = new Animated.Value(-350);
         this.enabled=false;
     }
 
@@ -53,7 +53,7 @@ class PopOver extends Component {
         if(this.enabled!=enable){
             this.enabled=enable;
             Animated.spring(this.bottomOffset, {
-                toValue: enable?-40:-250   // return to start
+                toValue: enable?-40:-350   // return to start
             }).start()
         }
     }
@@ -64,53 +64,13 @@ class PopOver extends Component {
 
     openShare(){
         ActivityView.show({
-            text: "Sherpa turns instagram into a travel guide",
             url: this.props.shareURL
         });
 
         this._setAnimation("toggle");
     }
 
-    logoutUser(){
-
-    }
-
-    deleteUser(){
-
-    }
-
     render() {
-
-        /*
-        var shareButton=this.props.showShare?
-            <TouchableHighlight onPress={this.openShare.bind(this)} underlayColor="#ececec" style={styles.button}>
-                <Text style={styles.buttonCopy}>SHARE YOUR TRIP</Text>
-            </TouchableHighlight>:<View></View>;
-
-        var logoutButton=this.props.showLogout?
-            <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
-                <View>
-                    <Text style={styles.buttonCopy}>Logout</Text>
-                </View>
-            </TouchableHighlight>:<View></View>;
-
-        var deleteButton=this.props.showDelete?
-            <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
-                <View>
-                    <Text style={styles.buttonCopy}>Delete Account</Text>
-                </View>
-            </TouchableHighlight>:<View></View>;
-
-
-
-        return (
-            <Animated.View style={styles.container}>
-                {deleteButton}
-                {logoutButton}
-                {shareButton}
-            </Animated.View>
-        );
-        */
 
         var shareButton=this.props.showShare?
             <TouchableHighlight onPress={this.openShare.bind(this)} underlayColor="#ececec" style={styles.button}>
@@ -127,11 +87,17 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
             </TouchableHighlight>:<View></View>;
 
+        var cancelButton=
+            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this._setAnimation(false)}}>
+                <Text style={styles.buttonCopy}>CANCEL</Text>
+            </TouchableHighlight>;
+
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {shareButton}
                 {logoutButton}
                 {deleteButton}
+                {cancelButton}
             </Animated.View>
         );
     }

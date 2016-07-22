@@ -32,6 +32,7 @@ class Feed extends Component {
     }
 
     componentDidMount(){
+        //check if deeplinking, if yes, request data for deep
     }
 
     renderScene(route, navigator) {
@@ -75,7 +76,7 @@ class Feed extends Component {
             break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,true)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
             break;
         }
 

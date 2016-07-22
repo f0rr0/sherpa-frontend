@@ -37,6 +37,7 @@
 		F36A331F1BDF913C00970476 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */; };
 		F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */; };
 		F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */; };
+		F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */; };
 		F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F386799C1D184F11002DBE52 /* SimpleAuth.framework */; };
 		F38679B31D1851C4002DBE52 /* SimpleAuthWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */; };
 		F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
@@ -176,6 +177,13 @@
 			remoteGlobalIDString = A79185C61C30694E001236A6;
 			remoteInfo = RCTGoogleAnalyticsBridge;
 		};
+		F371BA9D1D417C7C00FAD5D1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNNotifications;
+		};
 		F3B7276C1BFF68AC006A33CA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */;
@@ -245,6 +253,7 @@
 		F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
+		F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNNotifications.xcodeproj; path = "../node_modules/react-native-notifications/RNNotifications/RNNotifications.xcodeproj"; sourceTree = "<group>"; };
 		F386799C1D184F11002DBE52 /* SimpleAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleAuth.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Sherpa-crsigiawhdrczddfiqcpyecxabqn/Build/Products/Debug-iphonesimulator/SimpleAuth.framework"; sourceTree = "<group>"; };
 		F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleAuthWrapper.h; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.h"; sourceTree = "<group>"; };
 		F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthWrapper.m; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.m"; sourceTree = "<group>"; };
@@ -276,6 +285,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */,
 				F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */,
 				F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */,
 				F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
@@ -435,6 +445,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */,
 				F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */,
 				F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */,
 				F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */,
@@ -555,6 +566,14 @@
 			isa = PBXGroup;
 			children = (
 				F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F371BA9A1D417C7C00FAD5D1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -711,6 +730,10 @@
 					ProductGroup = F3B727681BFF68AB006A33CA /* Products */;
 					ProjectRef = F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */;
 				},
+				{
+					ProductGroup = F371BA9A1D417C7C00FAD5D1 /* Products */;
+					ProjectRef = F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -831,6 +854,13 @@
 			fileType = archive.ar;
 			path = libRCTGoogleAnalyticsBridge.a;
 			remoteRef = F36CD9E41CE3DD5E00E3AFFB /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNNotifications.a;
+			remoteRef = F371BA9D1D417C7C00FAD5D1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */ = {
@@ -1056,6 +1086,7 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-masked-view/RNMaskedView",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
+					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
 				);
 				INFOPLIST_FILE = Sherpa/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
@@ -1092,6 +1123,7 @@
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
 					"$(SRCROOT)/../node_modules/react-native-masked-view/RNMaskedView",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
+					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
 				);
 				INFOPLIST_FILE = Sherpa/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;

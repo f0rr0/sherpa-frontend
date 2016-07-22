@@ -85,14 +85,13 @@ class ShareUser extends Component{
         let momentIndex=0;
         let sherpaToken=this.props.routeParams.sherpaToken;
         let user=this.state.user;
-        console.log(user.profile);
         return(
             <div className="sherpa-share">
                 <div className="share-container">
                     <div className="logo-header">
                         <img src="images/logo-sherpa-2.png" height="50" alt="" />
                     </div>
-                    <div className="main-header">
+                    <div className="main-header profile">
                         <div className="trip-title user">
                             <img className="profile-picture" src={this.state.user.profilePicture} alt=""/>
                             <h1>{this.state.user.username}</h1>

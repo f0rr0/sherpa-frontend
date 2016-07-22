@@ -21,7 +21,7 @@ export default function feedReducer(state=initialState,action){
             if(action.feedData.type!='search'){
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
-                    var moments=action.feedData.trips[index].moments;
+                    var moments=action.feedData.trips[index].moments.reverse();
                     var name=action.feedData.trips[index].name;
                     if(name.indexOf("Trip to ")>-1)action.feedData.trips[index].name= name.split("Trip to ")[1];
                     if(moments.length>0){
@@ -48,6 +48,8 @@ export default function feedReducer(state=initialState,action){
                 newPage[action.feedData.page]=cleanMoments || state.trips;
                 var newTrips=Object.assign({},{},newPage);
                 newTrips['country']=newTrips['name'];
+
+                console.log(newTrips,'new trips');
             }
 
 

@@ -16,7 +16,7 @@ class Sherpa extends Component {
     render() {
         return (
             <Provider store={store}>
-                {() => <Root />}
+                <Root />
             </Provider>
         );
     }

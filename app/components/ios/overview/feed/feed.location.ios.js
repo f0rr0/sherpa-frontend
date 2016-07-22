@@ -15,6 +15,7 @@ import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
+import WikpediaInfoBox from '../../components/wikipediaInfoBox';
 
 var {
     StyleSheet,
@@ -46,10 +47,14 @@ class FeedLocation extends Component {
     }
 
     componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.trips[this.props.feed.feedPage]){
+        if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
             //strip moments out of trips :: unpacking start
-            var unpackedResults=this.unpackTrips(this.props.feed.trips[this.props.feed.feedPage]);
+            //var unpackedResults=this.unpackTrips(this.props.feed.trips[this.props.feed.feedPage]);
             //:: unpacking end
+
+            var unpackedResults=this.props.feed.searchResults[this.props.feed.feedPage];
+
+            console.log(unpackedResults,'unpacked results');
 
             const {endpoint,version} = sherpa;
             var sherpaHeaders = new Headers();
@@ -71,7 +76,7 @@ class FeedLocation extends Component {
                     unpackedResults.moments[i].suitcased=suitcaseInfo[i].suitcased;
                 }
 
-                this.itemsLoadedCallback(unpackedResults.moments);
+                this.itemsLoadedCallback(unpackedResults);
             }).catch(err=>console.log(err));
 
         }else if(this.props.feed.feedState==='reset'){
@@ -79,21 +84,7 @@ class FeedLocation extends Component {
         }
     }
 
-    unpackTrips(trips){
-        var unpackedResults={moments:[],momentIDs:[]};
-        for(var index in trips){
-            var tripMoments=trips[index].moments;
-            for(var i=0;i<tripMoments.length;i++){
-                tripMoments[i].trip={
-                    owner:trips[index].owner
-                };
 
-                unpackedResults.moments.push(tripMoments[i]);
-                unpackedResults.momentIDs.push(tripMoments[i].id);
-            }
-        }
-        return unpackedResults;
-    }
 
     showTripDetail(trip,owner){
         var tripDetails={trip,owner};
@@ -105,7 +96,6 @@ class FeedLocation extends Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log('is country',this.props.isCountry);
         this.props.dispatch(loadFeed(this.props.location,this.props.user.sherpaToken,page,this.props.isCountry?"location-country":"location"));
     }
 
@@ -146,26 +136,12 @@ class FeedLocation extends Component {
 
 
     _renderHeader(){
-        if(Object.keys(this.props.feed.trips).length==0)return;
-
 
         var tripData=this.props.trip;
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
+        var moments=this.props.feed.searchResults[this.props.feed.feedPage];
 
-        var timeAgoStart=moment(new Date(tripData.dateStart*1000));
-        var timeAgoEnd=moment(new Date(tripData.dateEnd*1000));
-
-        var trips=this.props.feed.trips["1"];
-        var tripDuration=trips.length;
-        var visitorS=tripDuration>1?"VISITORS":"VISITOR";
-        var moments=0;
-        for(var i=0;i<trips.length;i++){
-            moments+=trips[i].moments.length;
-        }
-        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
-        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+this.props.trip.moments[0].lng+","+this.props.trip.moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
+        var photoOrPhotos=moments.length>1?moments.length+" PHOTOS":"1 PHOTO";
+        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
@@ -187,17 +163,7 @@ class FeedLocation extends Component {
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
-                    <Image source={require('image!icon-visitors')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {visitorS}</Text>
-
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-
-                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
-
-                </View>
-
+                <WikpediaInfoBox location={tripData.name}></WikpediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

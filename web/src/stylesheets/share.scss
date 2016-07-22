@@ -104,6 +104,11 @@
       flex-direction:column;
       position: relative;
 
+      &.profile{
+          height: 30vh;
+          margin-top: 10vh;
+      }
+
       &:before{
         position: absolute;
         content:' ';

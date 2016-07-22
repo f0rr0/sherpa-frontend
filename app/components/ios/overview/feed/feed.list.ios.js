@@ -92,7 +92,7 @@ class FeedList extends React.Component{
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
                 pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 headerView={this._renderHeader.bind(this)}
                 refreshableTintColor={"#85d68a"}

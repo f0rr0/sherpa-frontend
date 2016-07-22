@@ -9,6 +9,8 @@ import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
+import StickyHeader from '../../components/stickyHeader';
+import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 
 
 var {
@@ -16,6 +18,7 @@ var {
     View,
     Text,
     Image,
+    ScrollView,
     TouchableHighlight
     } = React;
 
@@ -98,51 +101,65 @@ class TripDetail extends React.Component{
     }
 
     render(){
-        var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
+        var profilePic= this.props.tripDetails.owner?
+            <TouchableHighlight style={{height:30,width:30,top:80,right:20,position:'absolute'}}   onPress={() => this.showUserProfile(this.props.tripDetails)}>
+                <Image
+                    style={{height:30,width:30,opacity:1,borderRadius:15}}
+                    resizeMode="cover"
+                    source={{uri:this.props.tripDetails.owner.serviceProfilePicture}}
+                />
+            </TouchableHighlight>:<View></View>
+
         return (
-            <View style={{flex:1}}>
+            <ScrollView style={{flex:1}}>
 
-                    <Image
-                        style={{marginTop:70,marginLeft:15,height:350,width:350 }}
-                        resizeMode="cover"
-                        source={{uri:this.props.tripDetails.trip.mediaUrl}}
-                    />
+                <Image
+                    style={{marginTop:70,marginLeft:15,height:350,width:350 }}
+                    resizeMode="cover"
+                    source={{uri:this.props.tripDetails.trip.mediaUrl}}
+                />
 
 
-                    <TouchableHighlight style={{height:30,width:30,top:80,right:20,position:'absolute'}}   onPress={() => this.showUserProfile(this.props.tripDetails)}>
-                        <Image
-                            style={{height:30,width:30,opacity:1,borderRadius:15}}
-                            resizeMode="cover"
-                            source={{uri:this.props.tripDetails.owner.serviceProfilePicture}}
-                        />
-                    </TouchableHighlight>
+                {profilePic}
 
                 <MaskedView maskImage='mask-bottom' style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10}} >
 
-                <Mapbox
-                    style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                    centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
-                    zoomLevel={8}
-                    annotations={[
-                        {
-                            coordinates: [this.props.tripDetails.trip.lat, this.props.tripDetails.trip.lng],
-                            type: 'point',
-                            title:this.props.tripDetails.trip.venue,
-                            annotationImage: {
-                                url: 'image!icon-pin',
-                                height: 7,
-                                width: 7
-                            },
-                            id:"markers1"
-                        }
-                    ]}
-                    scrollEnabled={true}
-                    zoomEnabled={true}
-                />
+                    <Mapbox
+                        style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
+                        zoomLevel={8}
+                        onScroll={(event)=>{
+                             var currentOffset = event.nativeEvent.contentOffset.y;
+                             var direction = currentOffset > this.offset ? 'down' : 'up';
+                             this.offset = currentOffset;
+                             if(direction=='down'||currentOffset<30){
+                                this.refs.stickyHeader._setAnimation(false);
+                             }else{
+                                this.refs.stickyHeader._setAnimation(true);
+                             }
+                        }}
+                        annotations={[
+                            {
+                                coordinates: [this.props.tripDetails.trip.lat, this.props.tripDetails.trip.lng],
+                                type: 'point',
+                                title:this.props.tripDetails.trip.venue,
+                                annotationImage: {
+                                    url: 'image!icon-pin',
+                                    height: 7,
+                                    width: 7
+                                },
+                                id:"markers1"
+                            }
+                        ]}
+                        scrollEnabled={true}
+                        zoomEnabled={true}
+                    />
 
                 </MaskedView>
+                <WikipediaInfoBox location={this.props.tripDetails.trip.venue}></WikipediaInfoBox>
+
 
                 <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
                     <View>
@@ -151,10 +168,10 @@ class TripDetail extends React.Component{
                 </TouchableHighlight>
 
 
-
-                {this.props.navigation}
+                {this.props.navigation.default}
                 <PopOver ref="popover"></PopOver>
-            </View>
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+            </ScrollView>
         )
     }
 }
