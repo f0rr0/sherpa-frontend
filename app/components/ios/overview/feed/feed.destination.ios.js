@@ -12,6 +12,8 @@ import {addMomentToSuitcase} from '../../../../actions/user.actions';
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import config from '../../../../data/config';
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 
 var {
@@ -139,13 +141,13 @@ class FeedDestination extends Component {
         var mapURI=this.props.trip.moments[0].mediaUrl;
         return (
             <View style={{flex:1}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1}} >
 
                     <View
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1,backgroundColor:'black' }}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' }}
                     />
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:.5 }}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 }}
                         source={{uri:mapURI}}
                     >
 
@@ -159,7 +161,7 @@ class FeedDestination extends Component {
                     </View>
                 </MaskedView>
                 <Mapbox
-                    style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                    style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                     centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
@@ -168,13 +170,13 @@ class FeedDestination extends Component {
                     scrollEnabled={false}
                     zoomEnabled={false}
                 />
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
+                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
                 </View>
 
                 <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:350,left:15,backgroundColor:'transparent'}}
+                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width-30,left:15,backgroundColor:'transparent'}}
                     resizeMode="cover"
                     source={require('image!shadow')}
                 />
@@ -201,12 +203,12 @@ class FeedDestination extends Component {
                 <View style={styles.listItemContainer}>
                     <View style={styles.listItem}>
                         <Image
-                            style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
+                            style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                             resizeMode="cover"
                             source={{uri:tripData.mediaUrl}}
                         />
                     </View>
-                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                         <TouchableHighlight>
                             <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                         </TouchableHighlight>
@@ -236,8 +238,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:30
     },
     button:{
@@ -247,7 +249,7 @@ var styles = StyleSheet.create({
         marginBottom:13,
         marginLeft:15,
         marginRight:15,
-        width:350,
+        width:windowSize.width-30,
         flex:1,
         justifyContent:'center',
         alignItems:'center'

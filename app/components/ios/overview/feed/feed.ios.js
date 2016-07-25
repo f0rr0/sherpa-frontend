@@ -46,8 +46,6 @@ class Feed extends Component {
             case "PROFILE":
             break;
         }
-
-        console.log('deep link',deepLinkObject);
     }
 
     renderScene(route, navigator) {
@@ -87,7 +85,7 @@ class Feed extends Component {
             break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,true,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,true,false,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;

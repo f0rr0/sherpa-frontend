@@ -17,7 +17,8 @@ import store from 'react-native-simple-store';
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import TripSubtitle from '../../components/tripSubtitle'
-
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 var {
     StyleSheet,
@@ -132,7 +133,7 @@ class FeedTrip extends Component {
 
     render(){
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
                 <ListView
                     enableEmptySections={true}
                    dataSource={this.state.dataSource}
@@ -223,14 +224,14 @@ class FeedTrip extends Component {
             </View>:<View></View>;
 
         return (
-            <View style={{flex:1}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:380,alignItems:'center',flex:1}} >
+            <View style={{flex:1,backgroundColor:'white'}}>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1}} >
                     <View
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:1,backgroundColor:'black' }}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' }}
                     />
 
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:380,opacity:.5 }}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 }}
                         resizeMode="cover"
                         source={{uri:this.state.moments[0].mediaUrl}}
                     />
@@ -253,7 +254,7 @@ class FeedTrip extends Component {
                         <TripSubtitle tripData={this.props.trip}></TripSubtitle>
                     </View>
                 </MaskedView>
-                <View style={{height:200,width:350,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>
+                <View style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>
                     <Mapbox
                         style={{flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
                         styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
@@ -266,7 +267,7 @@ class FeedTrip extends Component {
                     />
                     <View style={{flex:1,top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></View>
                 </View>
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
+                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
                     <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
@@ -275,7 +276,7 @@ class FeedTrip extends Component {
                 </View>
 
                 <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:350,left:15,right:0,backgroundColor:'transparent'}}
+                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width,left:15,right:0,backgroundColor:'transparent'}}
                     resizeMode="cover"
                     source={require('image!shadow')}
                 />
@@ -298,12 +299,12 @@ class FeedTrip extends Component {
                         this.showTripDetail(tripData,this.props.trip.owner);
                     }}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.mediaUrl}}
                     />
                     </TouchableHighlight>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                         <TouchableHighlight>
                             <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                         </TouchableHighlight>
@@ -355,8 +356,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:30
     },
     button:{
@@ -366,7 +367,7 @@ var styles = StyleSheet.create({
         marginBottom:13,
         marginLeft:15,
         marginRight:15,
-        width:350,
+        width:windowSize.width-30,
         flex:1,
         justifyContent:'center',
         alignItems:'center'

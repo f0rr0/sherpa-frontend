@@ -6,6 +6,8 @@ import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import TripTitle from "../../components/tripTitle";
 import UserImage from "../../components/userImage";
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 var {
     StyleSheet,
@@ -34,8 +36,8 @@ var styles=StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:14
     }
 });
@@ -113,7 +115,7 @@ class FeedList extends React.Component{
             <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:1}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     >

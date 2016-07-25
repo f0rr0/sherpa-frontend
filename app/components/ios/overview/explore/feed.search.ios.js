@@ -28,6 +28,10 @@ var {
     TextInput
     } = React;
 
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
+
+
 
 var styles = StyleSheet.create({
     container: {
@@ -47,8 +51,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:30
     },
     button:{
@@ -58,7 +62,7 @@ var styles = StyleSheet.create({
         marginBottom:13,
         marginLeft:15,
         marginRight:15,
-        width:350,
+        width:windowSize.width-30,
         flex:1,
         justifyContent:'center',
         alignItems:'center'
@@ -69,6 +73,9 @@ var styles = StyleSheet.create({
         fontSize:12
     }
 });
+const msg_empty="Search for countries, cities or continents. We'll display the photos that match your result.";
+const msg_noresults="No results found for this search query";
+const msg_loading="Loading";
 
 
 class Search extends React.Component {
@@ -77,11 +84,12 @@ class Search extends React.Component {
         this.itemsLoadedCallback=null;
         this.state = {
             searchQuery: "",
-            backendSearchQuery:"",
+            backendSearchQuery:undefined,
             searchType:"places",
             reRender:false,
             moments:[],
-            momentIDs:[]
+            momentIDs:[],
+            searchEmptyMessage:msg_empty
         };
     }
 
@@ -110,7 +118,6 @@ class Search extends React.Component {
                 momentIDs.push(searchResults[i].id);
             }
 
-
             return store.get('user').then((user) => {
                 if (user) {
                     var sherpaHeaders = new Headers();
@@ -132,6 +139,7 @@ class Search extends React.Component {
                         }
 
                         this.itemsLoadedCallback(searchResults);
+                        if(searchResults.length==0)this.setState({"searchEmptyMessage":msg_noresults})
                     }).catch(err=>console.log(err));
                 }
             })
@@ -151,8 +159,9 @@ class Search extends React.Component {
 
 
     _onFetch(page=1,callback){
-         this.itemsLoadedCallback=callback;
-         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
+        this.itemsLoadedCallback=callback;
+        if(this.state.backendSearchQuery)this.state.backendSearchQuery['page']=page;
+        this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
     }
 
     render(){
@@ -164,7 +173,7 @@ class Search extends React.Component {
                     onFetch={this._onFetch.bind(this)}
                     emptyView={this._emptyView.bind(this)}
                     firstLoader={false} // display a loader for the first fetching
-                    pagination={false} // enable infinite scrolling using touch to load more
+                    pagination={true} // enable infinite scrolling using touch to load more
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     initialLoad={false}
@@ -194,13 +203,13 @@ class Search extends React.Component {
     _emptyView(){
         return(
             <View style={{flex:1,justifyContent: 'center', height:400,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>Search for countries, cities or continents. We'll display the photos that match your result.</Text>
+                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>{this.state.searchEmptyMessage}</Text>
             </View>
         )
     }
 
     updateSearchQuery(searchQuery){
-        var needle=searchQuery;
+        var needle=searchQuery || "---";
         var splittedQuery=searchQuery.split(",");
         var standalone=true;
 
@@ -213,13 +222,10 @@ class Search extends React.Component {
         })[0];
 
         if(standalone&&country){
-            console.log('COUNTRY')
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&country){
-            console.log('LOCATION')
             this.setState({searchQuery,backendSearchQuery:{type:'location',location:needle,country:country['alpha-2']}});
         }else{
-            console.log('NEEDLE')
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
 
@@ -229,7 +235,7 @@ class Search extends React.Component {
         var me=this;
         return (
             <View style={{flex:1}}>
-                <View style={{flex:1, alignItems:'center',justifyContent:'center',width:380,marginTop:70}}>
+                <View style={{flex:1, alignItems:'center',justifyContent:'center',width:windowSize.width,marginTop:70}}>
 
                     <View>
                         <Image
@@ -247,8 +253,9 @@ class Search extends React.Component {
                                onSubmitEditing:(event)=>{
                                     me.refs.listview.refs.listview.refs.googleSearch._onBlur()
                                     me.updateSearchQuery(event.nativeEvent.text);
-                                    me._onFetch(1, me.refs.listview._refresh);
 
+                                    this.setState({"searchEmptyMessage":msg_loading});
+                                    me._onFetch(1, me.refs.listview._refresh);
                                }
                             }}
 
@@ -257,6 +264,7 @@ class Search extends React.Component {
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                                 me.updateSearchQuery(data.description);
+                                this.setState({"searchEmptyMessage":msg_loading});
                                 me._onFetch(1, me.refs.listview._refresh)
                             }}
                             query={{
@@ -278,7 +286,7 @@ class Search extends React.Component {
                                      opacity:0
                                  },
                                  container:{
-                                    width:280
+                                    width:windowSize.width-80
                                  },
                                  textInputContainer: {
                                      backgroundColor:'transparent',
@@ -293,7 +301,7 @@ class Search extends React.Component {
                                  textInput: {
                                      backgroundColor: 'transparent',
                                      borderRadius: 0,
-                                     width:280,
+                                     width:windowSize.width-80,
                                      fontSize: 25,
                                      color:'#001645',
                                      height:60,
@@ -337,12 +345,12 @@ class Search extends React.Component {
                         this.showTripDetail(tripData,tripData.profile);
                     }}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,height:350,width:350,opacity:1}}
+                        style={{position:"absolute",top:0,left:0,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.mediaUrl}}
                     />
                 </TouchableHighlight>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                     <TouchableHighlight>
                         <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                     </TouchableHighlight>

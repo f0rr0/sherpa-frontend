@@ -53,7 +53,7 @@ class UserImage extends Component {
             <Image
                 style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
                 resizeMode="cover"
-                source={{uri:imageURL}}
+                source={{uri:this.props.imageURL}}
             />
         )
     }

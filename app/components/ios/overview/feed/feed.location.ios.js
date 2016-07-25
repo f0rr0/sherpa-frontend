@@ -16,6 +16,8 @@ const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import WikpediaInfoBox from '../../components/wikipediaInfoBox';
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 var {
     StyleSheet,
@@ -108,7 +110,7 @@ class FeedLocation extends Component {
     render(){
         console.log('share url',config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken)
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
                 <GiftedListView
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
@@ -151,10 +153,10 @@ class FeedLocation extends Component {
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:550, width:380, marginBottom:-200,alignItems:'center',flex:1}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
 
                     <Image
-                        style={{height:602,width:380,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
+                        style={{height:602,width:windowSize.width,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
                         source={{uri:mapURI}}
                     >
 
@@ -185,12 +187,12 @@ class FeedLocation extends Component {
                         this.showTripDetail(tripData,tripData.trip.owner);
                     }}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,height:350,width:350,opacity:1}}
+                        style={{position:"absolute",top:0,left:0,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.mediaUrl}}
                     />
                 </TouchableHighlight>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:350,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                     <TouchableHighlight>
                         <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                     </TouchableHighlight>
@@ -242,8 +244,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:30
     },
     copyLarge:{

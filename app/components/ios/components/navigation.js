@@ -7,6 +7,11 @@ var {
     Text
     } = React;
 
+import GlobalStyles from "../styles/global"
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
+
+
 class Navigation extends Component {
     constructor(props) {
         super(props);
@@ -19,9 +24,10 @@ class Navigation extends Component {
     }
 
     render() {
-
         return (
-            <View ref="navigation" style={{top:0,left:0,flexDirection:"row",width:380,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:this.props.opaque?'white':'transparent',height:70,position:"absolute"}}>
+            <View ref="navigation" style={
+                    {top:0,left:0,flexDirection:"row",width:windowSize.width,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:this.props.opaque?'white':'transparent',height:70,position:"absolute"}
+                }>
                 <TouchableHighlight underlayColor="#ececec" style={{padding:20,marginLeft:5,top:0,opacity:this.props.hideBack?0:1}} onPress={
                     () => {
                         this.props.goBack();
@@ -41,7 +47,6 @@ class Navigation extends Component {
                         resizeMode="contain"
                     ></Image>
                 </TouchableHighlight>
-                <View style={{position:'absolute',height:50,backgroundColor:'red',bottom:0,flex:1,width:100}}></View>
             </View>
         );
     }

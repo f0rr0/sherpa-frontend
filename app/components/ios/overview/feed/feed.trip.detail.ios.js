@@ -41,8 +41,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width,
+        height:windowSize.width-30,
         marginBottom:30
     },
     button:{
@@ -52,7 +52,7 @@ var styles = StyleSheet.create({
         marginBottom:215,
         marginLeft:15,
         marginRight:15,
-        width:350,
+        width:windowSize.width-30,
         justifyContent:'center',
         alignItems:'center'
     },
@@ -111,10 +111,10 @@ class TripDetail extends React.Component{
             </TouchableHighlight>:<View></View>
 
         return (
-            <ScrollView style={{flex:1}}>
+            <ScrollView style={{flex:1,backgroundColor:'white'}}>
 
                 <Image
-                    style={{marginTop:70,marginLeft:15,height:350,width:350 }}
+                    style={{marginTop:70,marginLeft:15,height:windowSize.width-30,width:windowSize.width-30 }}
                     resizeMode="cover"
                     source={{uri:this.props.tripDetails.trip.mediaUrl}}
                 />
@@ -158,7 +158,7 @@ class TripDetail extends React.Component{
                     />
 
                 </MaskedView>
-                <WikipediaInfoBox location={this.props.tripDetails.trip.venue}></WikipediaInfoBox>
+                <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
 
 
                 <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>

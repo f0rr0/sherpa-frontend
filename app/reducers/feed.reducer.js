@@ -48,8 +48,6 @@ export default function feedReducer(state=initialState,action){
                 newPage[action.feedData.page]=cleanMoments || state.trips;
                 var newTrips=Object.assign({},{},newPage);
                 newTrips['country']=newTrips['name'];
-
-                console.log(newTrips,'new trips');
             }
 
 

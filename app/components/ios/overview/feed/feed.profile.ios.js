@@ -15,6 +15,8 @@ import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 var {
     StyleSheet,
@@ -42,8 +44,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:15
     },
 
@@ -88,7 +90,7 @@ class FeedProfile extends React.Component {
 
     render(){
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
 
                 <GiftedListView
                     enableEmptySections={true}
@@ -159,8 +161,8 @@ class FeedProfile extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:620, width:380,marginBottom:-290,marginTop:70}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:380}}>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:620, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
                             resizeMode="cover"
@@ -172,7 +174,7 @@ class FeedProfile extends React.Component {
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:340,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:340,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
@@ -208,7 +210,7 @@ class FeedProfile extends React.Component {
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:.7}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />

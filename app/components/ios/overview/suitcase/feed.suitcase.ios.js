@@ -13,6 +13,9 @@ import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 
 
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
+
 var {
     StyleSheet,
     View,
@@ -39,7 +42,7 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
+        width:windowSize.width-30,
         height:90,
         marginBottom:5
     },
@@ -58,7 +61,6 @@ class Suitecase extends React.Component {
     }
 
     componentDidUpdate(){
-        console.log(this.props.feed.feedState)
         if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
         }else if(this.props.feed.feedState==='reset'){
@@ -149,10 +151,10 @@ class Suitecase extends React.Component {
         var photoOrPhotos=moments>1?"LOCATIONS":"LOCATION";
 
         return (
-            <View style={{flex:1,justifyContent:'center',width:380,alignItems:'center'}}>
+            <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
 
 
-                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:350,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
@@ -180,7 +182,7 @@ class Suitecase extends React.Component {
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:90,width:350,opacity:1}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:90,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     >

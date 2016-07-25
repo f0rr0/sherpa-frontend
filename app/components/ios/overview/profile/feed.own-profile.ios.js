@@ -4,17 +4,18 @@ import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
-
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux';
-import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import config from '../../../../data/config';
+
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 
 
 var {
@@ -43,8 +44,8 @@ var styles = StyleSheet.create({
     },
     listItemContainer:{
         flex:1,
-        width:350,
-        height:350,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
         marginBottom:15
     },
 
@@ -56,7 +57,7 @@ var styles = StyleSheet.create({
     button:{
         backgroundColor:'#001545',
         height:50,
-        width:350,
+        width:windowSize.width-30,
         flex:1,
         justifyContent:'center',
         alignItems:'center'
@@ -101,7 +102,7 @@ class OwnUserProfile extends React.Component {
 
     render(){
         return(
-        <View style={{flex:1}}>
+        <View style={{flex:1,backgroundColor:'white'}}>
 
             <GiftedListView
                 enableEmptySections={true}
@@ -168,8 +169,8 @@ class OwnUserProfile extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?550:500, width:380,marginBottom:-290,marginTop:70}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:380}}>
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?550:500, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width}}>
                         <Image
                             style={{height:80,width:80,opacity:1,borderRadius:40}}
                             resizeMode="cover"
@@ -181,7 +182,7 @@ class OwnUserProfile extends React.Component {
                     </View>
 
 
-                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:360,alignItems: 'center'}}>
+                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:windowSize.width-20,alignItems: 'center'}}>
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>
 
@@ -202,7 +203,7 @@ class OwnUserProfile extends React.Component {
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:350,width:350,opacity:.7}}
+                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:.7}}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />

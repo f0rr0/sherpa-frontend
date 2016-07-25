@@ -58,7 +58,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 headers:sherpaHeaders,
             };
 
-            console.log('req body',reqBody);
 
             fetch(feedRequestURI,reqBody)
             .then((rawSherpaResponse)=>{
@@ -82,7 +81,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                     case "location-continent":
                     case "location-country":
                     case "location":
-                        console.log(sherpaResponse,'response')
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
                     break;
                     case "suitcase-list":

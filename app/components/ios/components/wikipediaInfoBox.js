@@ -56,17 +56,21 @@ class WikpediaInfoBox extends Component {
 
 
         //console.log(queryUrl);
-                fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString="+query, {
-
-        //fetch(queryUrl, {
+        fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows=1&username=travelsherpa&q="+query, {
             method: 'get',
             headers: dbpediaHeaders
         }).then((rawServiceResponse)=> {
             return rawServiceResponse.text();
         }).then((response)=> {
-            //console.log('response',JSON.parse(response))
-            //this.setState({"wikipediaDescription":JSON.parse(response).results.bindings[0].abstract.value})
-            this.setState({"wikipediaDescription":JSON.parse(response).results[0].description})
+            var wikiResult=JSON.parse(response).geonames[0];
+            if(
+                this.props.coordinates&&
+                this.props.coordinates.lat.toFixed(2)===wikiResult.lat.toFixed(2)&&
+                this.props.coordinates.lng.toFixed(2)===wikiResult.lng.toFixed(2)&&
+                wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1
+            ){
+                this.setState({"wikipediaDescription":wikiResult.summary})
+            }
         }).catch(err=>console.log('device token err',err));
     }
 
