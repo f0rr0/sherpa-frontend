@@ -70,8 +70,8 @@ class Overview extends React.Component {
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
 
-        console.log(":: set state ::");
         this.setState({selectedTab:FEED,selectedView:{"deep":"link",}});
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -97,7 +97,6 @@ class Overview extends React.Component {
 
 
     _onNotificationOpened(notification) {
-        PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=JSON.parse(notification.getMessage());
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }

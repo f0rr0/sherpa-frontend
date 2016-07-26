@@ -221,6 +221,7 @@ class Search extends React.Component {
             return searchQuery.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
         })[0];
 
+
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&country){

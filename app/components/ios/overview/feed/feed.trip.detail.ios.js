@@ -11,6 +11,7 @@ var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
 import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
+import FoursquareInfoBox from '../../components/foursquareInfoBox';
 
 
 var {
@@ -159,7 +160,7 @@ class TripDetail extends React.Component{
 
                 </MaskedView>
                 <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
-
+                <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
 
                 <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
                     <View>

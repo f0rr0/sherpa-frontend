@@ -67,6 +67,7 @@ class FeedDestination extends Component {
     }
 
     render(){
+        console.log('this props trip',this.props.trip)
         return(
             <View style={{flex:1}}>
                 <ListView
@@ -88,7 +89,8 @@ class FeedDestination extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
+
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/suitcase/"+this.props.trip.id+"-"+this.props.user.sherpaID+"/"+this.props.user.sherpaToken}></PopOver>
 
             </View>
         )

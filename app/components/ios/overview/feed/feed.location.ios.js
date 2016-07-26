@@ -172,7 +172,7 @@ class FeedLocation extends Component {
                     </View>
                 </MaskedView>
 
-                <WikpediaInfoBox location={tripData.name}></WikpediaInfoBox>
+                <WikpediaInfoBox location={tripData.name} coordinates={{lat:tripData.lat,lng:tripData.lng}}></WikpediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

@@ -55,18 +55,23 @@ class WikpediaInfoBox extends Component {
         var queryUrl = url + encodeURIComponent(dbQuery) +"&format=json&timeout=30000&debug=on";
 
 
-        //console.log(queryUrl);
+        console.log("http://api.geonames.org/wikipediaSearchJSON?maxRows=1&username=travelsherpa&q="+query);
         fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows=1&username=travelsherpa&q="+query, {
             method: 'get',
             headers: dbpediaHeaders
         }).then((rawServiceResponse)=> {
             return rawServiceResponse.text();
         }).then((response)=> {
-            var wikiResult=JSON.parse(response).geonames[0];
+            var wikiResponse=JSON.parse(response).geonames;
+            if(wikiResponse.length==0)return;
+
+            console.log()
+
+            var wikiResult=wikiResponse[0];
             if(
                 this.props.coordinates&&
-                this.props.coordinates.lat.toFixed(2)===wikiResult.lat.toFixed(2)&&
-                this.props.coordinates.lng.toFixed(2)===wikiResult.lng.toFixed(2)&&
+                this.props.coordinates.lat.toFixed(1)===wikiResult.lat.toFixed(1)&&
+                this.props.coordinates.lng.toFixed(1)===wikiResult.lng.toFixed(1)&&
                 wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1
             ){
                 this.setState({"wikipediaDescription":wikiResult.summary})
@@ -79,7 +84,6 @@ class WikpediaInfoBox extends Component {
             <Text style={{position:'absolute',left:8,top:8,fontSize:10,color:"#999999"}}>WIKIPEDIA</Text>
             <Text style={{fontSize:13}}>{this.state.wikipediaDescription}</Text>
         </View>:<View></View>;
-        //console.log('wikipedia',wikipedia)
         return(
             <View>
                 {wikipedia}

@@ -42,8 +42,7 @@ class FeedTrip extends Component {
             annotations:[],
             moments:props.trip.moments,
             shouldUpdate:true,
-            isCurrentUsersTrip:false,
-            wikipediaDescription:""
+            isCurrentUsersTrip:false
         };
     }
 
@@ -111,25 +110,7 @@ class FeedTrip extends Component {
                 }).catch(err=>console.log(err));
             }
         })
-
-        this.getWikipediaData(this.props.trip.venue);
     }
-
-    getWikipediaData(query){
-
-        var dbpediaHeaders = new Headers();
-        dbpediaHeaders.append("accept", "application/json");
-
-        fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString="+query, {
-            method: 'get',
-            headers: dbpediaHeaders
-        }).then((rawServiceResponse)=> {
-            return rawServiceResponse.text();
-        }).then((response)=> {
-            this.setState({"wikipediaDescription":JSON.parse(response).results[0].description})
-        }).catch(err=>console.log('device token err',err));
-    }
-
 
     render(){
         return(
@@ -218,10 +199,6 @@ class FeedTrip extends Component {
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
 
-        var wikipedia=
-            this.state.wikipediaDescription.length>0?<View style={{paddingTop:20,paddingBottom:20,paddingLeft:20,paddingRight:20,marginLeft:15,marginRight:10,backgroundColor:'white'}}>
-                <Text style={{fontSize:12}}>{this.state.wikipediaDescription}</Text>
-            </View>:<View></View>;
 
         return (
             <View style={{flex:1,backgroundColor:'white'}}>
@@ -240,7 +217,8 @@ class FeedTrip extends Component {
                     <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
                         <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                     </TouchableHighlight>
-                    {wikipedia}
+
+                    {/*wikipedia*/}
 
                     <TouchableHighlight underlayColor="rgba(0,0,0,.1)" style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
                         <Image

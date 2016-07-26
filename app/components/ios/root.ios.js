@@ -5,6 +5,7 @@ import {loadUser} from '../../actions/user.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
+import NotWhitelisted from './onboarding/onboarding.not-whitelisted.ios';
 import OnboardingSteps from './onboarding/onboarding.steps.ios';
 import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
@@ -33,6 +34,9 @@ class Root extends Component {
             case "available-new":
                 this.setState({currentView:"onboarding-steps"});
             break;
+            case "not-whitelisted":
+                this.setState({currentView:"not-whitelisted"});
+            break;
             case "empty":
                 this.setState({currentView:"login"});
             break;
@@ -52,12 +56,16 @@ class Root extends Component {
 
     renderScene(route, navigator) {
         GoogleAnalytics.trackScreenView(route.id)
+        console.log(route.id,'route id');
         switch (route.id) {
             case 'loading':
                 return <Loading navigator={navigator} />;
             break;
             case "login":
                 return <Login navigator={navigator} />;
+            break;
+            case "not-whitelisted":
+                return <NotWhitelisted navigator={navigator} />;
             break;
             case "overview":
                 return <Overview navigator={navigator} />;

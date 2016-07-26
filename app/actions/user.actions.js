@@ -280,20 +280,26 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
-                dispatch(updateUserSignupState("sherpa_token_complete"));
-                dispatch(updateUserData({
-                    sherpaID:id,
-                    serviceID:profile,
-                    sherpaToken:sherpaResponse.token,
-                    jobID:sherpaResponse.jobId,
-                    email,
-                    fullName,
-                    username,
-                    profilePicture,
-                    hometown,
-                    serviceObject:userData
-                }));
-                dispatch(storeUser());
+                console.log('whitelisted',sherpaResponse);
+                if(!sherpaResponse.whitelisted){
+                    dispatch(updateUserDBState("not-whitelisted"));
+                }else{
+                    dispatch(updateUserSignupState("sherpa_token_complete"));
+                    dispatch(updateUserData({
+                        sherpaID:id,
+                        serviceID:profile,
+                        sherpaToken:sherpaResponse.token,
+                        jobID:sherpaResponse.jobId,
+                        email,
+                        fullName,
+                        username,
+                        profilePicture,
+                        hometown,
+                        serviceObject:userData
+                    }));
+                    dispatch(storeUser());
+                }
+
             })
         }
     };

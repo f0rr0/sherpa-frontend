@@ -80,7 +80,6 @@ class Suitecase extends React.Component {
     }
 
     showTripDetail(trip) {
-        console.log('show trip detail',trip);
         this.props.navigator.push({
             id: "destination",
             trip
