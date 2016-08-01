@@ -9,7 +9,9 @@ const {instagram,sherpa}=config.auth[config.environment];
 var {
     Component,
     View,
-    Text
+    Text,
+    Linking,
+    TouchableHighlight
     } = React;
 
 class WikpediaInfoBox extends Component {
@@ -65,25 +67,35 @@ class WikpediaInfoBox extends Component {
             var wikiResponse=JSON.parse(response).geonames;
             if(wikiResponse.length==0)return;
 
-            console.log()
-
             var wikiResult=wikiResponse[0];
             if(
-                this.props.coordinates&&
+                (!this.props.coordinates||
+                (this.props.coordinates&&
                 this.props.coordinates.lat.toFixed(1)===wikiResult.lat.toFixed(1)&&
-                this.props.coordinates.lng.toFixed(1)===wikiResult.lng.toFixed(1)&&
+                this.props.coordinates.lng.toFixed(1)===wikiResult.lng.toFixed(1)))&&
                 wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1
             ){
-                this.setState({"wikipediaDescription":wikiResult.summary})
+                wikiResult.summary=wikiResult.summary.replace("(...)","...");
+                console.log(wikiResult);
+                this.setState({"wikipediaDescription":wikiResult.summary,"wikiURL":wikiResult.wikipediaUrl})
             }
         }).catch(err=>console.log('device token err',err));
     }
 
+    openWikipedia(){
+        console.log('open url',this.state.wikiURL);
+        Linking.openURL('http://'+this.state.wikiURL);
+    }
+
     render() {
-        var wikipedia=this.state.wikipediaDescription.length>0?<View style={{paddingTop:28,paddingBottom:20,paddingLeft:20,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'}}>
-            <Text style={{position:'absolute',left:8,top:8,fontSize:10,color:"#999999"}}>WIKIPEDIA</Text>
-            <Text style={{fontSize:13}}>{this.state.wikipediaDescription}</Text>
-        </View>:<View></View>;
+        var wikipedia=this.state.wikipediaDescription.length>0?
+                <View style={{paddingTop:28,paddingBottom:20,paddingLeft:20,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'}}>
+                    <Text style={{position:'absolute',left:8,top:8,fontSize:10,color:"#999999"}}>WIKIPEDIA</Text>
+                    <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openWikipedia()}}>
+                        <Text style={{fontSize:13}}>{this.state.wikipediaDescription}</Text>
+                    </TouchableHighlight>
+                </View>
+            :<View></View>;
         return(
             <View>
                 {wikipedia}

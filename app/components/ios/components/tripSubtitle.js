@@ -40,8 +40,8 @@ class TripSubtitle extends Component {
             if(tripName.toLowerCase()==continents[i].toLowerCase())isTripNameContinent=true;
         }
 
-        var isState=(country.name.toUpperCase()==="US"||country.name.toUpperCase()==="UNITED STATES OF AMERICA");
-        var isInAmerica=(country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")
+        var isState=(country["alpha-2"].toUpperCase()==="US"||tripData.name.toUpperCase().indexOf("UNITED STATES OF AMERICA")>-1);
+        var isInAmerica=((country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")||country.name.toLowerCase()=='united states')
         var countryOrState=isState?tripData.state:country.name;
 
         var subTitle="";

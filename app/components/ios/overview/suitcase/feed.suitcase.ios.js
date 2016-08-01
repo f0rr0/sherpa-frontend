@@ -105,6 +105,10 @@ class Suitecase extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     ref="listview"
+                    onEndReachedThreshold={1200}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';

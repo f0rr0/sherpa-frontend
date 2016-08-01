@@ -8,13 +8,16 @@ import TripTitle from "../../components/tripTitle";
 import UserImage from "../../components/userImage";
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+import StickyHeader from '../../components/stickyHeader';
 
 var {
     StyleSheet,
     Text,
     View,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+    AppState,
+    Alert
     }=React;
 
 var styles=StyleSheet.create({
@@ -47,9 +50,14 @@ class FeedList extends React.Component{
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+        this.state={
+            currentAppState:'undefined'
+        }
     }
 
     componentDidMount(){
+        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -59,6 +67,18 @@ class FeedList extends React.Component{
             this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
         }else if(this.props.feed.feedState==='reset'){
         }
+
+        if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+            this.refs.listview._refresh();
+        }
+    }
+
+    componentWillUmount(){
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange(currentAppState) {
+        this.setState({ currentAppState });
     }
 
     reset(){
@@ -79,32 +99,48 @@ class FeedList extends React.Component{
 
     _renderHeader(){
         return (
-            <Image
-                resizeMode="contain"
-                style={styles.logo}
-                source={require('image!logo-sherpa')}
-            />
+            <View style={{flex:1,justifyContent:'center',height:70,width:windowSize.width,alignItems:'center'}}>
+               {this.props.navigation.default}
+            </View>
         )
     }
 
     render(){
         return(
-            <GiftedListView
-                enableEmptySections={true}
-                rowView={this._renderRow.bind(this)}
-                onFetch={this._onFetch.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
-                refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
-                headerView={this._renderHeader.bind(this)}
-                refreshableTintColor={"#85d68a"}
-                ref="listview"
-                customStyles={{
-                    contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
-                }}
-            />
+            <View style={{flex:1}}>
+                <GiftedListView
+                    enableEmptySections={true}
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this._onFetch.bind(this)}
+                    firstLoader={true} // display a loader for the first fetching
+                    pagination={true} // enable infinite scrolling using touch to load more
+                    refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
+                    headerView={this._renderHeader.bind(this)}
+                    refreshableTintColor={"#85d68a"}
+                    onEndReachedThreshold={1200}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
+                    onScroll={(event)=>{
+                     var currentOffset = event.nativeEvent.contentOffset.y;
+                     var direction = currentOffset > this.offset ? 'down' : 'up';
+                     this.offset = currentOffset;
+                     if(direction=='down'||currentOffset<100){
+                        this.refs.stickyHeader._setAnimation(false);
+                     }else{
+                        this.refs.stickyHeader._setAnimation(true);
+                     }
+                    }}
+                    ref="listview"
+                    customStyles={{
+                        contentContainerStyle:styles.listView,
+                        actionsLabel:{fontSize:12}
+                    }}
+                />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+
+            </View>
         )
     }
 

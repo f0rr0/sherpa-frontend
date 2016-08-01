@@ -12,13 +12,13 @@ import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/
 import {udpateFeedState} from '../../../../actions/feed.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
-const {sherpa}=config.auth[config.environment];
 import store from 'react-native-simple-store';
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import TripSubtitle from '../../components/tripSubtitle'
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+const {sherpa}=config.auth[config.environment];
 
 var {
     StyleSheet,
@@ -169,7 +169,7 @@ class FeedTrip extends Component {
 
     showTripLocation(trip){
         var tripLocation=this.getTripLocation(trip);
-
+        console.log('show location',tripLocation);
         this.props.navigator.push({
             id: "location",
             trip,
@@ -181,7 +181,7 @@ class FeedTrip extends Component {
     getTripLocation(tripData){
         console.log('tripdata',tripData);
         var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.name;
+            return country["name"] === tripData.name;
         })[0];
 
         var tripLocation=tripData.name;
@@ -191,14 +191,8 @@ class FeedTrip extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
-        var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
 
         return (
             <View style={{flex:1,backgroundColor:'white'}}>
@@ -213,20 +207,20 @@ class FeedTrip extends Component {
                         source={{uri:this.state.moments[0].mediaUrl}}
                     />
 
-                    <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
-                    <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                        <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
-                    </TouchableHighlight>
+                        <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
+                        <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
+                        </TouchableHighlight>
 
-                    {/*wikipedia*/}
+                        {/*wikipedia*/}
 
-                    <TouchableHighlight underlayColor="rgba(0,0,0,.1)" style={{height:50,width:50,marginTop:20,marginBottom:20}}  onPress={() => this.showUserProfile(this.props.trip)}>
-                        <Image
-                            style={{height:50,width:50,opacity:1,borderRadius:25}}
-                            resizeMode="cover"
-                            source={{uri:this.props.trip.owner.serviceProfilePicture}}
-                        />
-                    </TouchableHighlight>
+                        <TouchableHighlight underlayColor="rgba(0,0,0,.1)" style={{height:50,width:50}}  onPress={() => this.showUserProfile(this.props.trip)}>
+                            <Image
+                                style={{height:50,width:50,opacity:1,borderRadius:25}}
+                                resizeMode="cover"
+                                source={{uri:this.props.trip.owner.serviceProfilePicture}}
+                            />
+                        </TouchableHighlight>
 
                     <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
                         <TripSubtitle tripData={this.props.trip}></TripSubtitle>

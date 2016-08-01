@@ -113,6 +113,10 @@ class OwnUserProfile extends React.Component {
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
+                onEndReachedThreshold={1200}
+                onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
                 onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -124,7 +128,6 @@ class OwnUserProfile extends React.Component {
                      }
                 }}
                 headerView={this._renderHeader.bind(this)}
-                renderFooter={this._renderFooter.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView,
                     actionsLabel:{fontSize:12}
@@ -132,7 +135,7 @@ class OwnUserProfile extends React.Component {
             />
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
-            <PopOver ref="popover" shareCopy="SHARE YOUR PROFILE" shareURL={config.shareBaseURL+"/profile/"+this.props.user.serviceID+"/"+this.props.user.sherpaToken} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
+            <PopOver ref="popover" showShare={false} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
 
         </View>
         )
@@ -156,15 +159,12 @@ class OwnUserProfile extends React.Component {
 
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var tripDuration=trips.length;
-        var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
-        var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){
                 moments+=trips[i].moments.length;
             }
         }
-        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
         var hasDescriptionCopy=this.props.user.serviceObject.profile&&this.props.user.serviceObject.profile.serviceBio.length>0;
 
         return (

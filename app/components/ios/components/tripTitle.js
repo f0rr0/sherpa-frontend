@@ -20,6 +20,7 @@ class TripTitle extends Component {
     render() {
         var tripData=this.props.tripData;
         var tripName=tripData.name.trim();
+        if(tripName.toLowerCase()=="united states of america")tripName="united states";
 
         return (
             <View style={{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0}}>

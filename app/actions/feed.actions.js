@@ -59,6 +59,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             };
 
 
+
+        console.log('fetch',feedRequestURI)
+
             fetch(feedRequestURI,reqBody)
             .then((rawSherpaResponse)=>{
                 switch(rawSherpaResponse.status){
@@ -71,6 +74,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 }
             })
             .then((rawSherpaResponseFinal)=>{
+                if(!rawSherpaResponseFinal)return;
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
                 switch(type){
                     case "user":

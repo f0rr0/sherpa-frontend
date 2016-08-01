@@ -10,7 +10,9 @@ var {
     Component,
     View,
     Text,
-    Image
+    Image,
+    TouchableHighlight,
+    Linking
     } = React;
 
 class FoursquareInfoBox extends Component {
@@ -94,7 +96,7 @@ class FoursquareInfoBox extends Component {
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     var venueInfo=JSON.parse(response).response.venue;
-                    if(!venueInfo)return;
+                    if(!venueInfo||!venueInfo.rating)return;
                     var venueObject={
                         category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
                         rating:venueInfo.rating||undefined,
@@ -103,28 +105,30 @@ class FoursquareInfoBox extends Component {
                         icon:venueInfo.categories[0].icon.prefix+"64"+venueInfo.categories[0].icon.suffix
                     }
 
-                    this.setState({venue:venueObject});
+                    this.setState({venue:venueObject,foursquareURL:venueInfo.canonicalUrl});
 
                 })
             }
         }).catch(err=>console.log('device token err',err));
     }
 
+    openFoursquare(){
+        Linking.openURL(this.state.foursquareURL)
+    }
+
     render() {
         if(!this.state.venue)return(<View></View>);
-
-        console.log(this.state.venue);
-
         var ratings=this.state.venue.rating?
-            <View>
-                <View style={{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'}}>
-                    <Text>{this.state.venue.rating}/</Text>
-                    <Text style={{fontSize:8,marginTop:1,marginLeft:1}}>10</Text>
-                </View>
-                <View>
-                    <Text style={{fontSize:10,color:"#999"}}>{this.state.venue.ratingCount} Ratings</Text>
-                </View>
-            </View>:<View></View>
+                    <View>
+                        <View style={{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'}}>
+                            <Text>{this.state.venue.rating}/</Text>
+                            <Text style={{fontSize:8,marginTop:1,marginLeft:1}}>10</Text>
+                        </View>
+                        <View>
+                            <Text style={{fontSize:10,color:"#999"}}>{this.state.venue.ratingCount} Ratings</Text>
+                        </View>
+                    </View>
+                :<View></View>
 
 
         var pricing;
@@ -148,25 +152,29 @@ class FoursquareInfoBox extends Component {
             }
 
         return(
-            <View style={{paddingTop:20,paddingBottom:20,paddingLeft:5,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'}}>
-                <Text style={{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"}}>FOURSQUARE</Text>
-                <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
-                    <View>
-                        <View style={{width:30,height:30,backgroundColor:"#8ad78d",flex:1,alignItems:'center',justifyContent:'center',borderRadius:3}}>
-                            <Image
-                                style={{height:16,width:16}}
-                                resizeMode="contain"
-                                source={{uri:this.state.venue.icon}}
-                            />
+                <View style={{paddingTop:20,paddingBottom:20,paddingLeft:5,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'}} >
+                    <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openFoursquare()}}>
+                        <View>
+                            <Text style={{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"}}>FOURSQUARE</Text>
+                            <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
+                                <View>
+                                    <View style={{width:30,height:30,backgroundColor:"#8ad78d",flex:1,alignItems:'center',justifyContent:'center',borderRadius:3}}>
+                                        <Image
+                                            style={{height:16,width:16}}
+                                            resizeMode="contain"
+                                            source={{uri:this.state.venue.icon}}
+                                        />
+                                    </View>
+                                </View>
+                                <View style={{marginLeft:8,flex:1,justifyContent:'center'}}>
+                                    <Text style={{fontSize:12,color:"#333"}}>{this.state.venue.category}</Text>
+                                    {pricing}
+                                </View>
+                                {ratings}
+                            </View>
                         </View>
-                    </View>
-                    <View style={{marginLeft:8,flex:1,justifyContent:'center'}}>
-                        <Text style={{fontSize:12,color:"#333"}}>{this.state.venue.category}</Text>
-                        {pricing}
-                    </View>
-                    {ratings}
+                    </TouchableHighlight>
                 </View>
-            </View>
         )
     }
 }

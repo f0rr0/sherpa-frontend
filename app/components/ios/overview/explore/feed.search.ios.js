@@ -5,6 +5,7 @@ import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
+import states from './../../../../data/states';
 
 import countries from './../../../../data/countries'
 import moment from 'moment';
@@ -104,13 +105,12 @@ class Search extends React.Component {
         removeMomentFromSuitcase(trip.id);
     }
 
-
     reset(){
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }
 
-    componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
+    componentDidUpdate(prevProps){
+        if( prevProps.feed.feedState!='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
             //strip moments out of trips :: unpacking start
             var searchResults=this.props.feed.searchResults[this.props.feed.feedPage];
             var momentIDs=[];
@@ -177,6 +177,10 @@ class Search extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     initialLoad={false}
+                    onEndReachedThreshold={1200}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
                     ref="listview"
                     headerView={this._renderHeader.bind(this)}
                     onScroll={(event)=>{
@@ -208,24 +212,23 @@ class Search extends React.Component {
         )
     }
 
-    updateSearchQuery(searchQuery){
+    updateSearchQuery(searchQuery,detailed){
         var needle=searchQuery || "---";
-        var splittedQuery=searchQuery.split(",");
-        var standalone=true;
+        var standalone=!detailed;
+        var country;
 
-        if(splittedQuery.length>1){
-            needle=splittedQuery[0];
-            standalone=false;
+        if(standalone){
+            country = countries.filter(function(country) {
+                return searchQuery.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
+            })[0];
         }
-        var country = countries.filter(function(country) {
-            return searchQuery.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
-        })[0];
-
 
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
-        }else if(!standalone&&country){
-            this.setState({searchQuery,backendSearchQuery:{type:'location',location:needle,country:country['alpha-2']}});
+        }else if(!standalone&&searchQuery.state){
+            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
+        }if(!standalone&&searchQuery.country){
+            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country}});
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
@@ -264,7 +267,17 @@ class Search extends React.Component {
                             autoFocus={false}
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-                                me.updateSearchQuery(data.description);
+                                var result=details.address_components;
+                                var info=[];
+                                for(var i=0;i<result.length;++i){
+                                    if(result[i].types[0]=="administrative_area_level_1"){info.state=result[i].long_name}
+                                    if(result[i].types[0]=="locality"){info.location=result[i].long_name}
+                                    if(result[i].types[0]=="country"){info.country=result[i].short_name}
+                                }
+
+                                info.query=details.formatted_address;
+
+                                me.updateSearchQuery(info,true);
                                 this.setState({"searchEmptyMessage":msg_loading});
                                 me._onFetch(1, me.refs.listview._refresh)
                             }}

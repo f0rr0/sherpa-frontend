@@ -9,6 +9,7 @@ import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
+import UserImage from '../../components/userImage';
 import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import FoursquareInfoBox from '../../components/foursquareInfoBox';
@@ -103,13 +104,9 @@ class TripDetail extends React.Component{
 
     render(){
         var profilePic= this.props.tripDetails.owner?
-            <TouchableHighlight style={{height:30,width:30,top:80,right:20,position:'absolute'}}   onPress={() => this.showUserProfile(this.props.tripDetails)}>
-                <Image
-                    style={{height:30,width:30,opacity:1,borderRadius:15}}
-                    resizeMode="cover"
-                    source={{uri:this.props.tripDetails.owner.serviceProfilePicture}}
-                />
-            </TouchableHighlight>:<View></View>
+            <View style={{height:30,width:30,top:80,right:20,position:'absolute'}}>
+                <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
+            </View>:<View></View>
 
         return (
             <ScrollView style={{flex:1,backgroundColor:'white'}}>

@@ -19,6 +19,7 @@ class StickyHeader extends Component {
 
     _setAnimation(enable) {
         if(this.enabled!=enable){
+            console.log(enable);
             this.enabled=enable;
             Animated.timing(this.topOffset, {
                 duration: 400,

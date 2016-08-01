@@ -14,6 +14,7 @@ import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
+import UserImage from '../../components/userImage';
 
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -101,6 +102,10 @@ class FeedProfile extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     ref="listview"
+                    onEndReachedThreshold={1200}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
                     onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;
                          var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -118,7 +123,7 @@ class FeedProfile extends React.Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE THIS PROFILE" shareURL={config.shareBaseURL+"/profile/"+this.props.trip.owner.user+"/"+this.props.user.sherpaToken}></PopOver>
+                <PopOver ref="popover" showShare={false}></PopOver>
 
             </View>
         )
@@ -126,12 +131,6 @@ class FeedProfile extends React.Component {
 
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
-        var tripData=this.props.trip;
-
-
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
 
         var trips=this.props.feed.profileTrips["1"];
         var tripDuration=trips.length;
@@ -163,11 +162,8 @@ class FeedProfile extends React.Component {
             <View>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:620, width:windowSize.width,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
-                        <Image
-                            style={{height:80,width:80,opacity:1,borderRadius:40}}
-                            resizeMode="cover"
-                            source={{uri:this.props.trip.owner.serviceProfilePicture}}
-                        />
+
+                        <UserImage radius={80} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown.toUpperCase()}</Text>
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
@@ -195,15 +191,6 @@ class FeedProfile extends React.Component {
     }
 
     _renderRow(tripData) {
-        //var country = countries.filter(function(country) {
-        //    return country["alpha-2"] === tripData.country;
-        //})[0];
-        //
-        ////if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
-        //if(!country)country={name:tripData.country}
-        //
-        //var countryOrState=(tripData.country.toUpperCase()==="US")?tripData.state:country.name;
-
         var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         tripData.owner=this.props.trip.owner;
         return (

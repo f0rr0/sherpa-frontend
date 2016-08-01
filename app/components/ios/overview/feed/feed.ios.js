@@ -57,7 +57,7 @@ class Feed extends Component {
         switch (route.id) {
             case 'feed':
                 showNav=false;
-                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation("black","LATEST TRIPS",true,true,true,true)}/>;
             break;
             case "location":
                 showNav=true;
@@ -73,7 +73,7 @@ class Feed extends Component {
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,false,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,false,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "own-profile":
                 showNav=true;
@@ -137,8 +137,7 @@ class Feed extends Component {
                     ref={(navigator) => { this.navigator = navigator; }}
                     renderScene={this.renderScene.bind(this)}
                     configureScene={(route) => ({
-                      ...Navigator.SceneConfigs.PushFromRight,
-                      gestures: route.gestures
+                      ...Navigator.SceneConfigs.PushFromRight
                     })}
                     initialRoute={{
                       id:this.props.initial,

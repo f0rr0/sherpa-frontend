@@ -51,7 +51,7 @@ class Root extends Component {
     }
 
     componentDidUpdate(){
-        this.navigator.push({id:this.state.currentView});
+        this.navigator.replace({id:this.state.currentView});
     }
 
     renderScene(route, navigator) {

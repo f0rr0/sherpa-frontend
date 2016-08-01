@@ -78,12 +78,12 @@ class PopOver extends Component {
             </TouchableHighlight>:<View></View>;
 
         var logoutButton=this.props.showLogout?
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
+            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
                 <Text style={styles.buttonCopy}>LOGOUT</Text>
             </TouchableHighlight>:<View></View>;
 
         var deleteButton=this.props.showDelete?
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
+            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
                 <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
             </TouchableHighlight>:<View></View>;
 
@@ -108,7 +108,7 @@ PopOver.defaultProps = {
     showLogout:false,
     showDelete:false,
     shareURL:"http://trysherpa.com/",
-    shareCopy:"SHARE THIS TRIP"
+    shareCopy:"SHARE"
 }
 
 export default PopOver;

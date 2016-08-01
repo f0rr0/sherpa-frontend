@@ -9,7 +9,8 @@ const {instagram,sherpa}=config.auth[config.environment];
 var {
     Component,
     Image,
-    View
+    View,
+    TouchableHighlight
     } = React;
 
 class UserImage extends Component {
@@ -18,12 +19,21 @@ class UserImage extends Component {
         this.state={
             imageURL:this.props.imageURL
         }
+
+        this.mounted=false;
     }
 
     componentDidMount(){
-        this.rescrapeImage();
+        this.mounted=true;
     }
 
+    componentWillUnmount(){
+        this.mounted=false;
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        if(!this.state.imageURL||this.state.imageURL!=this.props.imageURL)this.rescrapeImage();
+    }
 
     rescrapeImage(){
         store.get('user').then((user) => {
@@ -41,7 +51,7 @@ class UserImage extends Component {
                     .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    this.setState({imageURL:response});
+                    if(this.mounted)this.setState({imageURL:response});
                 }).catch(err=>console.log('device token err',err));
             }
         });
@@ -50,11 +60,13 @@ class UserImage extends Component {
     render() {
         var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
         return(
-            <Image
-                style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
-                resizeMode="cover"
-                source={{uri:this.props.imageURL}}
-            />
+            <TouchableHighlight onPress={()=>{this.props.onPress()}}>
+                <Image
+                    style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
+                    resizeMode="cover"
+                    source={{uri:imageURL}}
+                />
+            </TouchableHighlight>
         )
     }
 }

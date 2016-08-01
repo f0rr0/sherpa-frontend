@@ -100,10 +100,12 @@ class FeedLocation extends Component {
         this.itemsLoadedCallback=callback;
         var req={}
         if(this.props.isCountry){
-            req={type:'country',country:this.props.location}
+            req={type:'country',country:this.props.trip.country}
         }else{
             req={needle:this.props.location}
         }
+
+        console.log('location view request',req);
         this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
@@ -116,11 +118,15 @@ class FeedLocation extends Component {
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
-                    pagination={false} // enable infinite scrolling using touch to load more
+                    pagination={true} // enable infinite scrolling using touch to load more
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     headerView={this._renderHeader.bind(this)}
                     ref="listview"
+                    onEndReachedThreshold={1200}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
                     onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;
                          var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -136,9 +142,9 @@ class FeedLocation extends Component {
                         actionsLabel:{fontSize:12}
                     }}
                 />
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE LOCATION" shareURL={config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
 
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )
     }
@@ -148,8 +154,6 @@ class FeedLocation extends Component {
 
         var tripData=this.props.trip;
         var moments=this.props.feed.searchResults[this.props.feed.feedPage];
-
-        var photoOrPhotos=moments.length>1?moments.length+" PHOTOS":"1 PHOTO";
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         return (
             <View>
@@ -172,7 +176,7 @@ class FeedLocation extends Component {
                     </View>
                 </MaskedView>
 
-                <WikpediaInfoBox location={tripData.name} coordinates={{lat:tripData.lat,lng:tripData.lng}}></WikpediaInfoBox>
+                <WikpediaInfoBox location={tripData.name}></WikpediaInfoBox>
                 {this.props.navigation.default}
 
             </View>
@@ -183,8 +187,7 @@ class FeedLocation extends Component {
         return (
             <View style={styles.listItem} style={styles.listItemContainer}>
                 <TouchableHighlight onPress={()=>{
-                console.log(tripData);
-                        this.showTripDetail(tripData,tripData.trip.owner);
+                        this.showTripDetail(tripData,tripData.profile);
                     }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}

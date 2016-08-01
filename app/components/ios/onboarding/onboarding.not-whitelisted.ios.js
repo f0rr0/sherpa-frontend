@@ -112,7 +112,7 @@ class NotWhitelisted extends Component {
 
                 <View style={styles.login}>
                     <TouchableHighlight style={styles.button} underlayColor="white" onPress={this.connectWithService.bind(this)}>
-                        <Text style={styles.copyLarge}>GO TO TRYSHERPA.COM</Text>
+                        <Text style={styles.copyLarge}>APPLY AT TRYSHERPA.COM</Text>
                     </TouchableHighlight>
                 </View>
             </View>
