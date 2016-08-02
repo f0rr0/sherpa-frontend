@@ -1,10 +1,7 @@
-var React = require('react-native');
-
-var {
-    Component,
-    Animated,
-    View
-    } = React;
+import {
+    Animated
+} from 'react-native';
+import React, { Component } from 'react';
 
 class StickyHeader extends Component {
     constructor(props) {

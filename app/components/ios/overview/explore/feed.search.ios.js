@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
@@ -19,15 +18,17 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import StickyHeader from '../../components/stickyHeader';
 
 const {sherpa}=config.auth[config.environment];
-
-var {
+import {
     StyleSheet,
     View,
     Text,
     Image,
     TouchableHighlight,
     TextInput
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
+
 
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -177,9 +178,10 @@ class Search extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     initialLoad={false}
-                    onEndReachedThreshold={1200}
-                    onEndReached={()=>{
-                         this.refs.listview._onPaginate();
+                    onEndReached={(event)=>{
+                        if(event&&event.nativeEvent.contentOffset.y>200){
+                                this.refs.listview._onPaginate();
+                        }
                     }}
                     ref="listview"
                     headerView={this._renderHeader.bind(this)}

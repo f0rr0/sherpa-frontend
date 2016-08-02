@@ -104,7 +104,8 @@ export function addNotificationsDeviceToken(deviceToken){
 
 export function deleteUser(){
     return function (dispatch, getState) {
-        store.delete('user').then(()=> {
+        store.get('user').then((user) => {
+
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
 
@@ -112,14 +113,17 @@ export function deleteUser(){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-                fetch(endpoint + version + "/user/" + user.sherpaToken, {
-                    method: 'post',
+                fetch(endpoint + version + "/user/" + user.sherpaID, {
+                    method: 'delete',
                     headers: sherpaHeaders
                 })
                     .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    dispatch(updateUserDBState("available-existing"));
+                    store.delete('user').then(()=> {
+                        dispatch(updateUserDBState("empty"));
+                    })
+
                 }).catch(err=>console.log('device token err',err));
             }
             dispatch(updateUserDBState("empty"));

@@ -1,12 +1,12 @@
-var React = require('react-native');
 import TripSubtitle from '../components/tripSubtitle'
 import countries from '../../../data/countries'
 
-var {
-    Component,
+import {
     View,
     Text
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 class TripTitle extends Component {
     constructor(props) {

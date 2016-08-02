@@ -1,13 +1,11 @@
-var React = require('react-native');
-
-var {
-    Component,
+import {
     Animated,
     View,
     TouchableHighlight,
     Text,
     StyleSheet
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 import ActivityView from "react-native-activity-view";
 import { deleteUser,logoutUser } from '../../../actions/user.actions';
@@ -63,6 +61,7 @@ class PopOver extends Component {
     }
 
     openShare(){
+        console.log(this.props.shareURL);
         ActivityView.show({
             url: this.props.shareURL
         });

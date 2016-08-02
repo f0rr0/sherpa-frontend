@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
@@ -16,14 +15,14 @@ import StickyHeader from '../../components/stickyHeader';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
-var {
+import {
     StyleSheet,
     View,
     Text,
     Image,
     TouchableHighlight
-    } = React;
-
+} from 'react-native';
+import React, { Component } from 'react';
 
 var styles = StyleSheet.create({
     container: {
@@ -74,12 +73,11 @@ class Suitecase extends React.Component {
 
     componentDidMount(){
         this.itemsLoadedCallback=function(){
-
-            console.log(":: callback feed suitecase ::");
         }
     }
 
     showTripDetail(trip) {
+        console.log('trip data suitcase',trip);
         this.props.navigator.push({
             id: "destination",
             trip
@@ -105,10 +103,6 @@ class Suitecase extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     ref="listview"
-                    onEndReachedThreshold={1200}
-                    onEndReached={()=>{
-                         this.refs.listview._onPaginate();
-                    }}
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';

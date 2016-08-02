@@ -1,30 +1,31 @@
 'use strict';
 
-var React = require('react-native');
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
 
 const {instagram,sherpa}=config.auth[config.environment];
 
-var {
-    Component,
+
+import {
     Image,
     View,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 class UserImage extends Component {
     constructor(props){
         super(props);
         this.state={
-            imageURL:this.props.imageURL
-        }
+            imageURL:undefined
+        };
 
         this.mounted=false;
     }
 
     componentDidMount(){
         this.mounted=true;
+        this.rescrapeImage();
     }
 
     componentWillUnmount(){
@@ -32,15 +33,17 @@ class UserImage extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(!this.state.imageURL||this.state.imageURL!=this.props.imageURL)this.rescrapeImage();
+        if(this.props.imageURL!=prevProps.imageURL){
+            console.log('refresh');
+            this.rescrapeImage();
+        }
     }
 
     rescrapeImage(){
         store.get('user').then((user) => {
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
-
-                console.log("URI",endpoint + version + "/profile/"+user.sherpa+"/refreshuserimage");
+                console.log("URI",endpoint + version + "/profile/"+this.props.userID+"/refreshuserimage");
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -49,9 +52,14 @@ class UserImage extends Component {
                     headers: sherpaHeaders
                 })
                     .then((rawServiceResponse)=> {
+                        console.log(rawServiceResponse)
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    if(this.mounted)this.setState({imageURL:response});
+                    console.log('response',response,this.mounted);
+
+                    if(this.mounted){
+                        this.setState({imageURL:response});
+                    }
                 }).catch(err=>console.log('device token err',err));
             }
         });

@@ -1,6 +1,5 @@
 'use strict';
 
-import React from 'react-native';
 import FeedList from './feed.list.ios';
 import FeedProfile from './feed.profile.ios';
 import FeedDestination from './feed.destination.ios';
@@ -17,12 +16,14 @@ import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 
-var {
+import {
     StyleSheet,
     Navigator,
-    Component,
     View
-} = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
+
 
 class Feed extends Component {
 

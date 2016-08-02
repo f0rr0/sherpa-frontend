@@ -77,7 +77,7 @@ class ShareSuitcase extends Component{
         const {endpoint,version,feed_uri,user_uri} = sherpa;
         let feedRequestURI;
         var ids=this.props.routeParams.feedTarget.split("-");
-        feedRequestURI=endpoint+version+"/user/"+ids[1]+"/suitcases";
+        feedRequestURI=endpoint+version+"/user/"+ids[1]+"/suitcases/?page=1";
 
         let sherpaResponse;
         let sherpaHeaders = new Headers();
@@ -104,8 +104,7 @@ class ShareSuitcase extends Component{
                 console.log(ids[0],sherpaResponse);
                 var targetSuitcase;
                 for(var suitcase in sherpaResponse){
-                    console.log(suitcase);
-                    if(sherpaResponse[suitcase].id==30)targetSuitcase=sherpaResponse[suitcase];
+                    if(sherpaResponse[suitcase].id==ids[0])targetSuitcase=sherpaResponse[suitcase];
                 }
                 this.setState({tripData:targetSuitcase,moments:targetSuitcase.moments});
                 this.initMap();

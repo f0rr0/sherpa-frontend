@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
@@ -20,15 +19,16 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
 
-var {
+
+import {
     StyleSheet,
-    Component,
     View,
     Text,
     ListView,
     Image,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 
 
@@ -232,7 +232,7 @@ class FeedTrip extends Component {
                         styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                         accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                         centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
-                        zoomLevel={6}
+                        zoomLevel={5}
                         annotations={this.state.annotations}
                         scrollEnabled={false}
                         zoomEnabled={false}

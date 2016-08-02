@@ -1,4 +1,3 @@
-import React from 'react-native';
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import countries from './../../../../data/countries'
@@ -15,15 +14,15 @@ import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import FoursquareInfoBox from '../../components/foursquareInfoBox';
 
 
-var {
+import {
     StyleSheet,
     View,
     Text,
     Image,
     ScrollView,
     TouchableHighlight
-    } = React;
-
+} from 'react-native';
+import React, { Component } from 'react';
 
 var styles = StyleSheet.create({
     container: {
@@ -74,6 +73,7 @@ class TripDetail extends React.Component{
     }
 
     componentDidMount(){
+        console.log('trip detail');
     }
 
     showUserProfile(trip){
@@ -103,9 +103,10 @@ class TripDetail extends React.Component{
     }
 
     render(){
+        console.log(this.props.tripDetails.owner);
         var profilePic= this.props.tripDetails.owner?
             <View style={{height:30,width:30,top:80,right:20,position:'absolute'}}>
-                <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
+                <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
             </View>:<View></View>
 
         return (

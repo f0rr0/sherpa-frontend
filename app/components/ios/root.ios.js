@@ -1,6 +1,5 @@
 'use strict';
 
-import React from 'react-native';
 import {loadUser} from '../../actions/user.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
@@ -9,12 +8,13 @@ import NotWhitelisted from './onboarding/onboarding.not-whitelisted.ios';
 import OnboardingSteps from './onboarding/onboarding.steps.ios';
 import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
-var {
+import {
     StyleSheet,
     Navigator,
-    Component,
     View
-    } = React;
+    } from 'react-native';;
+import React, { Component } from 'react';
+
 class Root extends Component {
     constructor(props){
         super(props);

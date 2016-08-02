@@ -1,6 +1,5 @@
 'use strict';
 
-var React = require('react-native');
 import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
@@ -9,14 +8,15 @@ import Swiper from 'react-native-swiper';
 import OnboardingScreen from './onboarding.screen.ios'
 
 var windowSize=Dimensions.get('window');
-
-var {
+import {
     StyleSheet,
     View,
-    Component,
     Text,
     TouchableHighlight,
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
+
 
 import NotificationsIOS from 'react-native-notifications';
 

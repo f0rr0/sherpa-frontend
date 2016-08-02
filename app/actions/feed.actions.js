@@ -23,6 +23,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 break;
                 case "suitcase-list":
                     feedRequestURI=endpoint+version+"/user/"+feedTarget+"/suitcases?page="+page;
+                    console.log(feedRequestURI);
                 break;
                 case "single-suitcase-feed":
                     feedRequestURI=endpoint+version+"/suitcase/"+feedTarget;

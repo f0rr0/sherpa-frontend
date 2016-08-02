@@ -1,11 +1,11 @@
-var React = require('react-native');
-var {
-    Component,
+import {
     View,
     TouchableHighlight,
     Image,
     Text
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 import GlobalStyles from "../styles/global"
 import Dimensions from 'Dimensions';
@@ -24,6 +24,11 @@ class Navigation extends Component {
     }
 
     render() {
+
+        var title=this.state.routeName.substring(0,30);
+        if(this.state.routeName.length>30)title+="...";
+        title=title.toUpperCase();
+
         return (
             <View ref="navigation" style={
                     {top:0,left:0,flexDirection:"row",width:windowSize.width,flex:1,alignItems:"center",justifyContent:"space-between",right:0,backgroundColor:this.props.opaque?'white':'transparent',height:70,position:"absolute"}
@@ -39,7 +44,7 @@ class Navigation extends Component {
                         resizeMode="contain"
                     ></Image>
                 </TouchableHighlight>
-                <Text style={{color:this.props.color,fontSize:14,  marginLeft:-8,marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{this.state.routeName.toUpperCase()}</Text>
+                <Text style={{color:this.props.color,fontSize:14,  marginLeft:-8,marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{title}</Text>
                 <TouchableHighlight  underlayColor="#ececec" onPress={()=>{this.props.toggleNav()}} style={{opacity:this.props.hideNav?0:1,padding:20,marginRight:5}}>
                     <Image
                         style={{width:11,height:13,backgroundColor:'transparent'}}

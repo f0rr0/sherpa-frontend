@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
@@ -15,18 +14,20 @@ import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
-import WikpediaInfoBox from '../../components/wikipediaInfoBox';
+import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
-var {
+
+import {
     StyleSheet,
-    Component,
     View,
     Text,
     Image,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 class FeedLocation extends Component {
     constructor(props){
@@ -175,8 +176,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-
-                <WikpediaInfoBox location={tripData.name}></WikpediaInfoBox>
+                <WikipediaInfoBox location={tripData.name} coordinates={{lat:this.props.feed.searchResults[this.props.feed.feedPage][0].lat,lng:this.props.feed.searchResults[this.props.feed.feedPage][0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

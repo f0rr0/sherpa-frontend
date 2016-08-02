@@ -1,18 +1,17 @@
 'use strict';
-
-var React = require('react-native');
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
 
 const {instagram,sherpa}=config.auth[config.environment];
 
-var {
-    Component,
+import {
     View,
     Text,
     Linking,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 class WikpediaInfoBox extends Component {
     constructor(props){
@@ -68,16 +67,48 @@ class WikpediaInfoBox extends Component {
             if(wikiResponse.length==0)return;
 
             var wikiResult=wikiResponse[0];
+            console.log( this.props.coordinates.lat.toFixed(1),wikiResult.lat.toFixed(1),
+                this.props.coordinates.lng.toFixed(1),wikiResult.lng.toFixed(1));
             if(
                 (!this.props.coordinates||
                 (this.props.coordinates&&
-                this.props.coordinates.lat.toFixed(1)===wikiResult.lat.toFixed(1)&&
-                this.props.coordinates.lng.toFixed(1)===wikiResult.lng.toFixed(1)))&&
+                Math.round(this.props.coordinates.lat)===Math.round(wikiResult.lat))&&
+                Math.round(this.props.coordinates.lng)===Math.round(wikiResult.lng))&&
                 wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1
             ){
-                wikiResult.summary=wikiResult.summary.replace("(...)","...");
-                console.log(wikiResult);
-                this.setState({"wikipediaDescription":wikiResult.summary,"wikiURL":wikiResult.wikipediaUrl})
+                console.log(wikiResult)
+                console.log('fetch result')
+
+                //http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString=berlin
+                fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles="+wikiResult.title, {
+                    method: 'get',
+                    headers: dbpediaHeaders
+                }).then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                    var jsonResp=JSON.parse(response);
+                    console.log('response json',jsonResp)
+
+                    var res;
+                    for(var page in jsonResp.query.pages){
+                        res = jsonResp.query.pages[page];
+                        break;
+                    }
+
+                    console.log('res',res)
+                    var abstract=res.extract.replace(/<\/?[^>]+(>|$)/g, "");
+                    var abstractSentences = abstract.match( /[^\.!\?]+[\.!\?]+/g );
+                    console.log(abstractSentences);
+                    var shortAbstract="";
+                    for(var i=0;i<4;i++){
+                        shortAbstract+=abstractSentences[i];
+                    }
+                    //console.log(abstract);
+                    //wikiResult.summary=wikiResult.summary.replace("(...)","...");
+                    //console.log(wikiResult);
+                    this.setState({"wikipediaDescription":shortAbstract,"wikiURL":wikiResult.wikipediaUrl})
+                })
+
             }
         }).catch(err=>console.log('device token err',err));
     }

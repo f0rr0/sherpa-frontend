@@ -1,17 +1,17 @@
 'use strict';
 
-import React from 'react-native';
 import { connect } from 'react-redux';
 import Overview from '../overview/overview.ios';
 import Login from './onboarding.login.ios';
 
-var {
+import {
     StyleSheet,
     View,
-    Component,
     Text,
     Image
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 var styles = StyleSheet.create({
     copy: {

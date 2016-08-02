@@ -1,19 +1,19 @@
 'use strict';
 
-var React = require('react-native');
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
 import _ from 'underscore';
 const {instagram,sherpa,foursquare}=config.auth[config.environment];
 
-var {
-    Component,
+
+import {
     View,
     Text,
     Image,
     TouchableHighlight,
     Linking
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 class FoursquareInfoBox extends Component {
     constructor(props){
@@ -96,7 +96,7 @@ class FoursquareInfoBox extends Component {
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     var venueInfo=JSON.parse(response).response.venue;
-                    if(!venueInfo||!venueInfo.rating)return;
+                    //if(!venueInfo||!venueInfo.rating)return;
                     var venueObject={
                         category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
                         rating:venueInfo.rating||undefined,

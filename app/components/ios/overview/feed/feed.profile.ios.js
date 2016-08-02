@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
@@ -19,13 +18,16 @@ import UserImage from '../../components/userImage';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
-var {
+
+import {
     StyleSheet,
     View,
     Text,
     Image,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 
 var styles = StyleSheet.create({
@@ -131,7 +133,8 @@ class FeedProfile extends React.Component {
 
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
-
+        console.log('feed',this.props.feed);
+        console.log('trips',this.props.feed.profileTrips);
         var trips=this.props.feed.profileTrips["1"];
         var tripDuration=trips.length;
         var tripS=tripDuration>1?"TRIPS":"TRIP";

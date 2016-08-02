@@ -1,4 +1,3 @@
-import React from 'react-native';
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import moment from 'moment';
@@ -10,7 +9,7 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import StickyHeader from '../../components/stickyHeader';
 
-var {
+import {
     StyleSheet,
     Text,
     View,
@@ -18,7 +17,8 @@ var {
     TouchableHighlight,
     AppState,
     Alert
-    }=React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 var styles=StyleSheet.create({
     logo:{
@@ -69,7 +69,7 @@ class FeedList extends React.Component{
         }
 
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
-            this.refs.listview._refresh();
+           this.refs.listview._refresh();
         }
     }
 

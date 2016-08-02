@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
@@ -18,13 +17,14 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
 
-var {
+import {
     StyleSheet,
     View,
     Text,
     Image,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 
 var styles = StyleSheet.create({
@@ -109,14 +109,10 @@ class OwnUserProfile extends React.Component {
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 firstLoader={true} // display a loader for the first fetching
-                pagination={true} // enable infinite scrolling using touch to load more
+                pagination={false} // enable infinite scrolling using touch to load more
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
-                onEndReachedThreshold={1200}
-                onEndReached={()=>{
-                         this.refs.listview._onPaginate();
-                    }}
                 onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -159,13 +155,16 @@ class OwnUserProfile extends React.Component {
 
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var tripDuration=trips.length;
+        var citieS=tripDuration>1?"LOCATIONS":"LOCATION";
+        var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){
                 moments+=trips[i].moments.length;
             }
         }
-        var hasDescriptionCopy=this.props.user.serviceObject.profile&&this.props.user.serviceObject.profile.serviceBio.length>0;
+        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
+        var hasDescriptionCopy=true;//this.props.user.serviceObject.profile&&this.props.user.serviceObject.profile.serviceBio.length>0;
 
         return (
             <View>
@@ -178,7 +177,8 @@ class OwnUserProfile extends React.Component {
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>
+                        {/*<Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>*/}
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Geo tag photos outside of your hometown on Instagram to update your Sherpa travel profile.</Text>
                     </View>
 
 

@@ -6,20 +6,22 @@
 'use strict';
 'use babel';
 import Feed from './feed/feed.ios';
-import React from 'react-native';
 import {udpateFeedState} from '../../../actions/feed.actions';
 import {updateTab} from '../../../actions/app.actions';
 import { connect } from 'react-redux';
 import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
 
-var {
+import {
     StyleSheet,
     View,
     StatusBar,
     Image,
     PushNotificationIOS
-} = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
+
 
 const EXPLORE="explore";
 const FEED="feed";

@@ -1,6 +1,5 @@
 'use strict';
 
-import React from "react-native";
 import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedLocation from "./feed.location.ios";
@@ -16,15 +15,17 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
 
-var {
+
+import {
     StyleSheet,
-    Component,
     View,
     Text,
     ListView,
     Image,
     TouchableHighlight
-    } = React;
+} from 'react-native';
+import React, { Component } from 'react';
+
 
 
 
@@ -67,7 +68,6 @@ class FeedDestination extends Component {
     }
 
     render(){
-        console.log('this props trip',this.props.trip)
         return(
             <View style={{flex:1}}>
                 <ListView
@@ -97,7 +97,6 @@ class FeedDestination extends Component {
     }
 
     showTripDetail(trip,owner){
-        //console.log('service json',trip);
         var tripDetails={trip,owner:{
             serviceUsername:trip.serviceJson.user.username,
             serviceProfilePicture:trip.serviceJson.user.profile_picture,

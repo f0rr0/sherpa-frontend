@@ -6,8 +6,8 @@
     "start": "node_modules/react-native/packager/packager.sh"
   },
   "dependencies": {
-    "react":"^0.14.2",
-    "react-native": "^0.25.1",
+    "react": "15.0.2",
+    "react-native": "0.26.1",
     "react-native-device-info": "^0.9.1",
     "react-native-localization": "^0.1.10",
     "react-native-mapbox-gl": "^4.0.0",

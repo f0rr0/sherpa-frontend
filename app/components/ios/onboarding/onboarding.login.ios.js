@@ -1,22 +1,21 @@
 'use strict';
 
-var React = require('react-native');
 import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
-var {
+
+import {
     StyleSheet,
     View,
-    Component,
     Text,
-    TextInput,
     TouchableHighlight,
     AlertIOS,
     Image,
     Animated
-} = React;
+} from 'react-native';
+import React, { Component } from 'react';
 
 
 var styles = StyleSheet.create({
