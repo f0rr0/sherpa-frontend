@@ -63,6 +63,8 @@ export default function feedReducer(state=initialState,action){
                     return newStatestate;
                 break;
                 case "search":
+                    var newTrips=Object.assign({},state.searchResults,newPage);
+
                     return Object.assign({}, state, {
                         searchResults:newTrips,
                         feedState:"ready"
@@ -75,12 +77,8 @@ export default function feedReducer(state=initialState,action){
                     });
                 break;
                 case "profile":
-                    console.log(action.feedData,'feed data');
-                    console.log(action.feedData.page,'feed page');
-                    console.log(state,'this state');
 
                     var newTrips=Object.assign({},state.profileTrips,newPage);
-                    console.log(newTrips)
                     return Object.assign({}, state, {
                         feedState:"ready",
                         profileTrips: newTrips

@@ -8,7 +8,7 @@ import {
 import React, { Component } from 'react';
 
 import ActivityView from "react-native-activity-view";
-import { deleteUser,logoutUser } from '../../../actions/user.actions';
+import { deleteUser,logoutUser,resetProfile } from '../../../actions/user.actions';
 
 var styles = StyleSheet.create({
     button:{
@@ -81,6 +81,14 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>LOGOUT</Text>
             </TouchableHighlight>:<View></View>;
 
+        var resetProfileButton=this.props.showReset?
+            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
+                        this.props.resetProfileCallback();
+                        this._setAnimation(false)
+                }}>
+                <Text style={styles.buttonCopy}>RESET PROFILE</Text>
+            </TouchableHighlight>:<View></View>;
+
         var deleteButton=this.props.showDelete?
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
                 <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
@@ -94,6 +102,7 @@ class PopOver extends Component {
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {shareButton}
+                {resetProfileButton}
                 {logoutButton}
                 {deleteButton}
                 {cancelButton}
@@ -106,6 +115,7 @@ PopOver.defaultProps = {
     showShare:true,
     showLogout:false,
     showDelete:false,
+    showReset:false,
     shareURL:"http://trysherpa.com/",
     shareCopy:"SHARE"
 }

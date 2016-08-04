@@ -73,11 +73,9 @@ class TripDetail extends React.Component{
     }
 
     componentDidMount(){
-        console.log('trip detail');
     }
 
     showUserProfile(trip){
-        console.log('show user profile',trip);
         this.props.navigator.push({
             id: "profile",
             trip
@@ -103,7 +101,6 @@ class TripDetail extends React.Component{
     }
 
     render(){
-        console.log(this.props.tripDetails.owner);
         var profilePic= this.props.tripDetails.owner?
             <View style={{height:30,width:30,top:80,right:20,position:'absolute'}}>
                 <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
@@ -169,7 +166,6 @@ class TripDetail extends React.Component{
 
                 {this.props.navigation.default}
                 <PopOver ref="popover"></PopOver>
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </ScrollView>
         )
     }

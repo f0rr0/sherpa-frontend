@@ -57,7 +57,6 @@ class FeedLocation extends Component {
 
             var unpackedResults=this.props.feed.searchResults[this.props.feed.feedPage];
 
-            console.log(unpackedResults,'unpacked results');
 
             const {endpoint,version} = sherpa;
             var sherpaHeaders = new Headers();
@@ -106,12 +105,19 @@ class FeedLocation extends Component {
             req={needle:this.props.location}
         }
 
-        console.log('location view request',req);
         this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
+
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
+        )
+    }
+
     render(){
-        console.log('share url',config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken)
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
                 <GiftedListView
@@ -125,6 +131,8 @@ class FeedLocation extends Component {
                     headerView={this._renderHeader.bind(this)}
                     ref="listview"
                     onEndReachedThreshold={1200}
+                    paginationFetchingView={this._renderEmpty.bind(this)}
+
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
@@ -152,7 +160,6 @@ class FeedLocation extends Component {
 
 
     _renderHeader(){
-
         var tripData=this.props.trip;
         var moments=this.props.feed.searchResults[this.props.feed.feedPage];
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
@@ -176,7 +183,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-                <WikipediaInfoBox location={tripData.name} coordinates={{lat:this.props.feed.searchResults[this.props.feed.feedPage][0].lat,lng:this.props.feed.searchResults[this.props.feed.feedPage][0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={tripData.country} location={tripData.name} coordinates={{lat:this.props.feed.searchResults[this.props.feed.feedPage][0].lat,lng:this.props.feed.searchResults[this.props.feed.feedPage][0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

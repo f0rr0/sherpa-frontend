@@ -67,6 +67,8 @@ class FeedProfile extends React.Component {
         this.state= {
             annotations:[]
         };
+
+
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -88,6 +90,7 @@ class FeedProfile extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
+        console.log(this.props.trip.owner)
         this.props.dispatch(loadFeed(this.props.trip.owner.id,this.props.user.sherpaToken,page,"profile"));
     }
 
@@ -104,6 +107,8 @@ class FeedProfile extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     ref="listview"
+                    paginationFetchingView={this._renderEmpty.bind(this)}
+
                     onEndReachedThreshold={1200}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
@@ -130,6 +135,16 @@ class FeedProfile extends React.Component {
             </View>
         )
     }
+
+
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
+        )
+    }
+
 
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
@@ -163,7 +178,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:620, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:640, width:windowSize.width,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
 
                         <UserImage radius={80} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
@@ -173,7 +188,7 @@ class FeedProfile extends React.Component {
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:340,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:370,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
 
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>

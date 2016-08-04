@@ -11,7 +11,8 @@ import GoogleAnalytics from 'react-native-google-analytics-bridge';
 import {
     StyleSheet,
     Navigator,
-    View
+    View,
+    AppState
     } from 'react-native';;
 import React, { Component } from 'react';
 
@@ -21,8 +22,22 @@ class Root extends Component {
         this.props.dispatch(loadUser());
         GoogleAnalytics.setTrackerId('UA-75939846-3')
         this.state={
-            currentView:"loading"
+            currentView:"loading",
+            currentAppState:'undefined'
         }
+    }
+
+    componentDidMount(){
+        AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+    }
+
+    componentWillUnmount(){
+        AppState.removeEventListener('change', this._handleAppStateChange);
+    }
+
+    _handleAppStateChange(currentAppState) {
+        this.setState({ currentAppState })
+        console.log('update state');
     }
 
     componentWillReceiveProps(nextProps){
@@ -46,17 +61,26 @@ class Root extends Component {
         }
     }
 
+
     shouldComponentUpdate(nextProps,nextState){
-        return nextState.currentView!=this.state.currentView;
+        return ((nextState.currentView!=this.state.currentView)||((this.state.currentAppState=='background'||this.state.currentAppState=='background')&&nextState.currentAppState=='active'));
     }
 
-    componentDidUpdate(){
-        this.navigator.replace({id:this.state.currentView});
+    componentDidUpdate(prevProps,prevState){
+        console.log('did update')
+        if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+           if(this.props.user.userDBState=="not-whitelisted"){
+               this.navigator.replace({id:"login"});
+           }
+        }else{
+            this.navigator.replace({id:this.state.currentView});
+        }
+
+
     }
 
     renderScene(route, navigator) {
         GoogleAnalytics.trackScreenView(route.id)
-        console.log(route.id,'route id');
         switch (route.id) {
             case 'loading':
                 return <Loading navigator={navigator} />;

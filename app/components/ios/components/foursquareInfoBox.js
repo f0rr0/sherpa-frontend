@@ -25,7 +25,11 @@ class FoursquareInfoBox extends Component {
     }
 
     componentDidMount(){
-        this.getFoursquareData(this.props.location);
+        var location=this.props.location;
+        if(location.split(",").length>=0)location=location.split(",")[0];
+
+        console.log('foursquare location',location);
+        this.getFoursquareData(location);
     }
 
     getFoursquareData(query){

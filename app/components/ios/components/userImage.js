@@ -34,7 +34,6 @@ class UserImage extends Component {
 
     componentDidUpdate(prevProps,prevState){
         if(this.props.imageURL!=prevProps.imageURL){
-            console.log('refresh');
             this.rescrapeImage();
         }
     }
@@ -43,7 +42,6 @@ class UserImage extends Component {
         store.get('user').then((user) => {
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
-                console.log("URI",endpoint + version + "/profile/"+this.props.userID+"/refreshuserimage");
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -52,10 +50,8 @@ class UserImage extends Component {
                     headers: sherpaHeaders
                 })
                     .then((rawServiceResponse)=> {
-                        console.log(rawServiceResponse)
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    console.log('response',response,this.mounted);
 
                     if(this.mounted){
                         this.setState({imageURL:response});

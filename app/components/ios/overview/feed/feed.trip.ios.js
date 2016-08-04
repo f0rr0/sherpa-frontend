@@ -36,7 +36,6 @@ class FeedTrip extends Component {
     constructor(props){
         super(props);
          this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
         this.state= {
             dataSource: this.ds.cloneWithRows(props.trip.moments),
             annotations:[],
@@ -96,6 +95,7 @@ class FeedTrip extends Component {
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    console.log('feed trip')
                     var suitcaseInfo = JSON.parse(response);
                     for (var i = 0; i < suitcaseInfo.length; i++) {
                         newMoments[i].suitcased = suitcaseInfo[i].suitcased;
@@ -169,7 +169,7 @@ class FeedTrip extends Component {
 
     showTripLocation(trip){
         var tripLocation=this.getTripLocation(trip);
-        console.log('show location',tripLocation);
+        console.log(tripLocation,'get trip location',trip);
         this.props.navigator.push({
             id: "location",
             trip,
@@ -179,7 +179,6 @@ class FeedTrip extends Component {
     }
 
     getTripLocation(tripData){
-        console.log('tripdata',tripData);
         var country = countries.filter(function(country) {
             return country["name"] === tripData.name;
         })[0];

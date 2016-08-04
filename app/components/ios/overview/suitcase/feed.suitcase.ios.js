@@ -84,6 +84,14 @@ class Suitecase extends React.Component {
         });
     }
 
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
+        )
+    }
+
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page,"suitcase-list"));
@@ -103,6 +111,8 @@ class Suitecase extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     ref="listview"
+                    paginationFetchingView={this._renderEmpty.bind(this)}
+
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';

@@ -15,6 +15,7 @@ import config from '../../../../data/config';
 
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+const {sherpa}=config.auth[config.environment];
 
 
 import {
@@ -113,6 +114,8 @@ class OwnUserProfile extends React.Component {
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false} // enable sections
                 ref="listview"
+                paginationFetchingView={this._renderEmpty.bind(this)}
+
                 onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -131,25 +134,58 @@ class OwnUserProfile extends React.Component {
             />
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
-            <PopOver ref="popover" showShare={false} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
+            <PopOver ref="popover" showReset={false} resetProfileCallback={this.resetProfile.bind(this)} showShare={false} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
 
         </View>
         )
+    }
+
+    resetProfile(){
+        console.log('reset profile')
+        const {endpoint,version,feed_uri,user_uri} = sherpa;
+        let feedRequestURI;
+        feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
+        console.log('reset call',feedRequestURI);
+
+        let sherpaResponse;
+        let sherpaHeaders = new Headers();
+        sherpaHeaders.append("token", this.props.user.sherpaToken);
+        var me = this;
+
+        fetch(feedRequestURI, {
+            method: 'post',
+            headers: sherpaHeaders,
+            mode: 'cors'
+        })
+            .then((rawSherpaResponse)=> {
+                console.log(rawSherpaResponse)
+                switch (rawSherpaResponse.status) {
+                    case 200:
+                        return rawSherpaResponse.text()
+                        break;
+                    case 400:
+                        return '{}';
+                        break;
+                }
+            })
+            .then((rawSherpaResponseFinal)=> {
+                me.refs.listview._refresh();
+            });
     }
 
     toggleNav(){
         this.refs.popover._setAnimation("toggle");
     }
 
-    _renderFooter(){
-        return(
 
-                <View style={{flex:1,alignItems:"center",justifyContent:"center",opacity:this.state.ready?1:0}}>
-                </View>
-
-
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
         )
     }
+
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
 
@@ -178,15 +214,11 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
                         {/*<Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>*/}
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Geo tag photos outside of your hometown on Instagram to update your Sherpa travel profile.</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Tag your photos on Instagram to update your profile.</Text>
                     </View>
-
-
-                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:windowSize.width-20,alignItems: 'center'}}>
+                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
                         <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
                     </View>
-
-
                 </MaskedView>
 
 
@@ -210,14 +242,12 @@ class OwnUserProfile extends React.Component {
 
                     <TripTitle tripData={tripData} tripOwner="YOUR"></TripTitle>
 
-
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
                         <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
                     </View>
-
                 </View>
             </TouchableHighlight>
         );

@@ -138,7 +138,6 @@ export function logoutUser(){
         })
     }
 }
-
 export function setUserHometown(hometown){
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
@@ -184,20 +183,24 @@ export function loadUser() {
                 var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
                 var sherpaHeaders = new Headers();
+                console.log('sherpa token',user.sherpaToken)
                 sherpaHeaders.append("token", user.sherpaToken);
+
+                console.log(endpoint+version+user_uri+"/"+user.sherpaID)
 
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get',
                     headers:sherpaHeaders
                 }).
                 then((rawServiceResponse)=>{
+                    console.log('raw response',rawServiceResponse)
                     responseStatus=rawServiceResponse.status;
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
-                    var responseJSON = JSON.parse(rawSherpaResponse);
                     switch(responseStatus){
 
                         case 200:
+                            var responseJSON = JSON.parse(rawSherpaResponse);
                             dispatch(updateUserData({
                                 serviceObject:responseJSON,
                                 bio:responseJSON.profile.serviceBio

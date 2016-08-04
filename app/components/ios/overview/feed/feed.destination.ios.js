@@ -182,12 +182,6 @@ class FeedDestination extends Component {
                     source={require('image!shadow')}
                 />
 
-                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
-                    <View>
-                        <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
-                    </View>
-                </TouchableHighlight>
-
                 {this.props.navigation.default}
 
             </View>

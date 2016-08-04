@@ -27,7 +27,7 @@ class Navigation extends Component {
 
         var title=this.state.routeName.substring(0,30);
         if(this.state.routeName.length>30)title+="...";
-        title=title.toUpperCase();
+        title=title.trim().toUpperCase();
 
         return (
             <View ref="navigation" style={
@@ -44,7 +44,7 @@ class Navigation extends Component {
                         resizeMode="contain"
                     ></Image>
                 </TouchableHighlight>
-                <Text style={{color:this.props.color,fontSize:14,  marginLeft:-8,marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{title}</Text>
+                <Text style={{color:this.props.color,fontSize:14, marginTop:2,fontFamily:"TSTAR",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}}>{title}</Text>
                 <TouchableHighlight  underlayColor="#ececec" onPress={()=>{this.props.toggleNav()}} style={{opacity:this.props.hideNav?0:1,padding:20,marginRight:5}}>
                     <Image
                         style={{width:11,height:13,backgroundColor:'transparent'}}

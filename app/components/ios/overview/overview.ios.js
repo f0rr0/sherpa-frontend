@@ -64,7 +64,6 @@ class Overview extends React.Component {
             presses: 0
         };
         this.myFeed=null;
-
     }
 
     componentDidMount(){
@@ -72,11 +71,13 @@ class Overview extends React.Component {
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
 
-        this.setState({selectedTab:FEED,selectedView:{"deep":"link",}});
+        //this.setState({selectedTab:FEED,selectedView:{"type":"TRIP",id:22164}});
+        //this.setState({selectedTab:PROFILE,selectedView:{"type":"PROFILE",id:1233}});
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
 
     componentDidUpdate(prevProps,prevState){
+
         if(this.state.selectedTab!==prevState.selectedTab){
             this.props.dispatch(udpateFeedState("reset"));
             this.props.dispatch(updateTab(this.state.selectedTab));
@@ -93,13 +94,11 @@ class Overview extends React.Component {
         this.setState({ selectedTab: target });
     }
 
-    componentWillUnmount(){
-        NotificationsIOS.removeEventListener('notificationOpened', this._onNotificationOpened.bind(this));
-    }
-
 
     _onNotificationOpened(notification) {
-        var deepLinkObject=JSON.parse(notification.getMessage());
+        console.log('get message',notification.getMessage())
+        console.log('get data',notification.getData())
+        var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }
 

@@ -149,7 +149,7 @@ class OnboardingSteps extends Component {
     render() {
         return (
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
-                    <OnboardingScreen
+                {/*<OnboardingScreen
                         backgroundImage={require('./../../../images/onboarding_1.png')}
                         headline="WHERE DO YOU LIVE?"
                         description="This will help our algorithms determine when you are traveling."
@@ -235,7 +235,7 @@ class OnboardingSteps extends Component {
                          />
                         }
 
-                    />
+                    />*/}
                     <OnboardingScreen
                         middleImage={require('./../../../images/onboarding_2.png')}
                         headline="TAG YOUR TRIPS"

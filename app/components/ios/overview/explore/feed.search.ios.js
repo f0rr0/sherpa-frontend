@@ -17,6 +17,10 @@ import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/
 import {loadFeed} from '../../../../actions/feed.actions';
 import StickyHeader from '../../components/stickyHeader';
 
+import ImageProgress from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
+
+
 const {sherpa}=config.auth[config.environment];
 import {
     StyleSheet,
@@ -165,6 +169,14 @@ class Search extends React.Component {
         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
     }
 
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
+        )
+    }
+
     render(){
         return(
             <View style={{flex:1}}>
@@ -178,6 +190,7 @@ class Search extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     initialLoad={false}
+                    paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={(event)=>{
                         if(event&&event.nativeEvent.contentOffset.y>200){
                                 this.refs.listview._onPaginate();
@@ -229,8 +242,8 @@ class Search extends React.Component {
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
-        }if(!standalone&&searchQuery.country){
-            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country}});
+        }else if(!standalone&&searchQuery.country){
+            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'country',country:searchQuery.country}});
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
@@ -360,10 +373,15 @@ class Search extends React.Component {
                 <TouchableHighlight onPress={()=>{
                         this.showTripDetail(tripData,tripData.profile);
                     }}>
-                    <Image
+                    <ImageProgress
                         style={{position:"absolute",top:0,left:0,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
                         source={{uri:tripData.mediaUrl}}
+                        indicator={Progress.Circle}
+                        indicatorProps={{
+                            color: 'rgba(150, 150, 150, 1)',
+                            unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                        }}
                     />
                 </TouchableHighlight>
                 <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>

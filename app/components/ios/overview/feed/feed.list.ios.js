@@ -1,22 +1,21 @@
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
-import moment from 'moment';
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed} from '../../../../actions/feed.actions';
-import TripTitle from "../../components/tripTitle";
-import UserImage from "../../components/userImage";
+import ImageRow from '../../components/imageRow'
 import Dimensions from 'Dimensions';
-var windowSize=Dimensions.get('window');
 import StickyHeader from '../../components/stickyHeader';
+
+var windowSize=Dimensions.get('window');
 
 import {
     StyleSheet,
     Text,
     View,
-    Image,
     TouchableHighlight,
     AppState,
-    Alert
+    Alert,
+    Image
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -30,18 +29,6 @@ var styles=StyleSheet.create({
         alignItems:'center',
         justifyContent:"center",
         paddingBottom:50
-    },
-    listItem:{
-        flex:1,
-        backgroundColor:"#fcfcfc",
-        justifyContent:"center",
-        alignItems:'center'
-    },
-    listItemContainer:{
-        flex:1,
-        width:windowSize.width-30,
-        height:windowSize.width-30,
-        marginBottom:14
     }
 });
 
@@ -73,7 +60,7 @@ class FeedList extends React.Component{
         }
     }
 
-    componentWillUmount(){
+    componentWillUnmount(){
         AppState.removeEventListener('change', this._handleAppStateChange);
     }
 
@@ -105,6 +92,14 @@ class FeedList extends React.Component{
         )
     }
 
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            </View>
+        )
+    }
+
     render(){
         return(
             <View style={{flex:1}}>
@@ -119,6 +114,7 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
+                    paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
@@ -146,33 +142,8 @@ class FeedList extends React.Component{
 
 
     _renderRow(tripData) {
-        var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         return (
-            <TouchableHighlight style={styles.listItemContainer} pressRetentionOffset={{top:1,left:1,bottom:1,right:1}} onPress={() => this.showTripDetail(tripData)}>
-                <View style={styles.listItem}>
-                    <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
-                        resizeMode="cover"
-                        source={{uri:tripData.moments[0].mediaUrl}}
-                    >
-                        <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
-                        </Image>
-
-                    <View style={{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'}}>
-                        <UserImage radius={50} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
-                    </View>
-
-                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s"}></TripTitle>
-
-                    <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
-                        <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
-                        <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
-                    </View>
-
-                </View>
-            </TouchableHighlight>
+            <ImageRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></ImageRow>
         );
     }
 }

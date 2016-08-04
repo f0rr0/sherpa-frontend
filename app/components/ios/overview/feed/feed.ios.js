@@ -15,6 +15,8 @@ import { connect } from 'react-redux';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
 import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
+import config from "../../../../data/config"
+const {sherpa}=config.auth[config.environment];
 
 import {
     StyleSheet,
@@ -37,16 +39,48 @@ class Feed extends Component {
     }
 
     setView(deepLinkObject){
+        console.log('set view',deepLinkObject);
         switch(deepLinkObject.type){
             case "TRIP":
+                this.getTrip(deepLinkObject.id)
             break;
-            case "PROFILE":
-            break;
-            case "MOMENT":
-            break;
-            case "PROFILE":
-            break;
+
         }
+    }
+
+    getTrip(id){
+        const {endpoint,version,feed_uri,user_uri} = sherpa;
+        let feedRequestURI;
+        feedRequestURI=endpoint+version+"/trip/"+id;
+
+        let sherpaResponse;
+        let sherpaHeaders = new Headers();
+        sherpaHeaders.append("token", this.props.user.sherpaToken);
+        var me=this;
+
+        fetch(feedRequestURI,{
+            method:'get',
+            headers:sherpaHeaders,
+            mode: 'cors'
+        })
+            .then((rawSherpaResponse)=>{
+                switch(rawSherpaResponse.status){
+                    case 200:
+                        return rawSherpaResponse.text()
+                        break;
+                    case 400:
+                        return '{}';
+                        break;
+                }
+            })
+            .then((rawSherpaResponseFinal)=>{
+                sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+                console.log(sherpaResponse)
+                this.navigator.push({
+                    id: "trip",
+                    trip:sherpaResponse
+                });
+            });
     }
 
     renderScene(route, navigator) {
@@ -66,7 +100,8 @@ class Feed extends Component {
             break;
             case "trip":
                 showNav=true;
-                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white",route.id+" TO "+route.trip.name,false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                //route.id+" TO "+route.trip.name
+                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
                 showNav=true;
