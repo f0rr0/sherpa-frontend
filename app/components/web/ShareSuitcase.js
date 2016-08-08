@@ -4,6 +4,7 @@ import config from '../../data/config';
 const {sherpa}=config.auth[config.environment];
 import TripTitle from './components/tripTitle';
 let { Component } = React;
+import countries from '../../data/countries';
 import _ from 'underscore';
 import 'whatwg-fetch';
 
@@ -20,6 +21,16 @@ class ShareSuitcase extends Component{
     componentDidMount(){
         this.requestEndpoint();
     }
+
+    getTripLocation(tripData){
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.name;
+        })[0];
+
+        var tripLocation=country.name||tripData.name;
+        return {location:tripLocation,country:country,countryCode:tripData.country};
+    }
+
 
     initMap(coords){
         L.mapbox.accessToken = 'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImRhckc5UlkifQ.f8vV1-k3KEZKVhZxiXhq0w';
@@ -101,7 +112,7 @@ class ShareSuitcase extends Component{
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log(ids[0],sherpaResponse);
+                //console.log(ids[0],sherpaResponse);
                 var targetSuitcase;
                 for(var suitcase in sherpaResponse){
                     if(sherpaResponse[suitcase].id==ids[0])targetSuitcase=sherpaResponse[suitcase];
@@ -121,6 +132,7 @@ class ShareSuitcase extends Component{
         let firstMoment=this.state.moments[0];
         let tripData=this.state.tripData;
         let momentIndex=0;
+        var destination=this.getTripLocation(tripData);
 
         return(
             <div className="sherpa-share">
@@ -130,7 +142,7 @@ class ShareSuitcase extends Component{
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
                         <div className="trip-title">
-                            <h1>{tripData.name.toUpperCase()}</h1>
+                            <h1>{destination.location.toUpperCase()}</h1>
                         </div>
                     </div>
                     <div id="mapInfo"></div>

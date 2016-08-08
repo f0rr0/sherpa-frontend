@@ -37,7 +37,7 @@ class Root extends Component {
 
     _handleAppStateChange(currentAppState) {
         this.setState({ currentAppState })
-        console.log('update state');
+        //console.log('update state');
     }
 
     componentWillReceiveProps(nextProps){
@@ -67,7 +67,7 @@ class Root extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log('did update')
+        //console.log('did update')
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            if(this.props.user.userDBState=="not-whitelisted"){
                this.navigator.replace({id:"login"});

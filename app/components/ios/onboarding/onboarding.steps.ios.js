@@ -131,14 +131,14 @@ class OnboardingSteps extends Component {
     }
 
     allowNotifications() {
-        //console.log(':: allow notifictions, request permissions ::')
+        ////console.log(':: allow notifictions, request permissions ::')
         NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
         NotificationsIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){
         //Clipboard.setString(deviceToken);
-        console.log('device token',deviceToken);
+        //console.log('device token',deviceToken);
         if(deviceToken){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{

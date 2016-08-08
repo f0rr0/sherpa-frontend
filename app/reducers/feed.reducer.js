@@ -64,11 +64,12 @@ export default function feedReducer(state=initialState,action){
                 break;
                 case "search":
                     var newTrips=Object.assign({},state.searchResults,newPage);
-
-                    return Object.assign({}, state, {
+                    var res=Object.assign({}, state, {
                         searchResults:newTrips,
                         feedState:"ready"
                     });
+                    //console.log(res);
+                    return  res;
                 break;
                 case "suitcase":
                     return Object.assign({}, state, {

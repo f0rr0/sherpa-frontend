@@ -141,11 +141,11 @@ class OwnUserProfile extends React.Component {
     }
 
     resetProfile(){
-        console.log('reset profile')
+        //console.log('reset profile')
         const {endpoint,version,feed_uri,user_uri} = sherpa;
         let feedRequestURI;
         feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
-        console.log('reset call',feedRequestURI);
+        //console.log('reset call',feedRequestURI);
 
         let sherpaResponse;
         let sherpaHeaders = new Headers();
@@ -158,7 +158,7 @@ class OwnUserProfile extends React.Component {
             mode: 'cors'
         })
             .then((rawSherpaResponse)=> {
-                console.log(rawSherpaResponse)
+                //console.log(rawSherpaResponse)
                 switch (rawSherpaResponse.status) {
                     case 200:
                         return rawSherpaResponse.text()
@@ -214,10 +214,10 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>
                         {/*<Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>*/}
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Tag your photos on Instagram to update your profile.</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your photos on Instagram to update your profile.</Text>
                     </View>
                     <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                        <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet. The next time you're travelling, remember to tag your Instagram photos with your location.</Text>
+                        <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
                     </View>
                 </MaskedView>
 

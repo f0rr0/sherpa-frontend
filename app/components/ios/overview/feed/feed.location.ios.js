@@ -45,15 +45,15 @@ class FeedLocation extends Component {
         removeMomentFromSuitcase(trip.id);
     }
 
+    componentDidMount(){
+        console.log("start!!!");
+    }
     toggleNav(){
         this.refs.popover._setAnimation("toggle");
     }
 
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
-            //strip moments out of trips :: unpacking start
-            //var unpackedResults=this.unpackTrips(this.props.feed.trips[this.props.feed.feedPage]);
-            //:: unpacking end
 
             var unpackedResults=this.props.feed.searchResults[this.props.feed.feedPage];
 
@@ -82,7 +82,7 @@ class FeedLocation extends Component {
             }).catch(err=>console.log(err));
 
         }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
+            //this.refs.listview._refresh()
         }
     }
 
@@ -105,6 +105,8 @@ class FeedLocation extends Component {
             req={needle:this.props.location}
         }
 
+        console.log('search rq',req)
+        console.log('fetch',page)
         this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
@@ -115,6 +117,15 @@ class FeedLocation extends Component {
                 <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
             </View>
         )
+    }
+
+    getTripLocation(tripData){
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.name;
+        })[0];
+
+        var tripLocation=tripData.name;
+        return {location:tripLocation,country:country,countryCode:tripData.country};
     }
 
     render(){
@@ -135,6 +146,7 @@ class FeedLocation extends Component {
 
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
+                         console.log("++ paginate ++");
                     }}
                     onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;
@@ -161,8 +173,13 @@ class FeedLocation extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        var moments=this.props.feed.searchResults[this.props.feed.feedPage];
+        //console.log(this.props.feed.searchResults)
+        var moments=this.props.feed.searchResults[1];
+        //console.log('moments',moments[0])
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
+        var country=this.getTripLocation(tripData);
+
+        //console.log(country,'country country');
         return (
             <View>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
@@ -183,7 +200,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={tripData.country} location={tripData.name} coordinates={{lat:this.props.feed.searchResults[this.props.feed.feedPage][0].lat,lng:this.props.feed.searchResults[this.props.feed.feedPage][0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.props.feed.searchResults[1][0].lat,lng:this.props.feed.searchResults[1][0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

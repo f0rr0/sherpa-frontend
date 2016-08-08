@@ -20,7 +20,7 @@ class TripTitle extends Component {
             return country["alpha-2"] === tripData.country;
         })[0];
 
-        console.log(tripData);
+        //console.log(tripData);
 
         if(!country)country={name:tripData.country}
 

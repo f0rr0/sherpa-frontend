@@ -61,7 +61,7 @@ class PopOver extends Component {
     }
 
     openShare(){
-        console.log(this.props.shareURL);
+        //console.log(this.props.shareURL);
         ActivityView.show({
             url: this.props.shareURL
         });

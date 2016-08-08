@@ -77,7 +77,7 @@ class Suitecase extends React.Component {
     }
 
     showTripDetail(trip) {
-        console.log('trip data suitcase',trip);
+        //console.log('trip data suitcase',trip);
         this.props.navigator.push({
             id: "destination",
             trip

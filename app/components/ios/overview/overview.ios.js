@@ -96,8 +96,9 @@ class Overview extends React.Component {
 
 
     _onNotificationOpened(notification) {
-        console.log('get message',notification.getMessage())
-        console.log('get data',notification.getData())
+        //console.log('get message',notification.getMessage())
+        //console.log('get data',notification.getData())
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }

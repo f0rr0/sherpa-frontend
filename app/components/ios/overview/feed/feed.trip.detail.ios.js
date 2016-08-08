@@ -100,12 +100,22 @@ class TripDetail extends React.Component{
         return true;
     }
 
+    getTripLocation(tripData){
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.name;
+        })[0];
+
+        var tripLocation=tripData.name;
+        return {location:tripLocation,country:country,countryCode:tripData.country};
+    }
+
     render(){
         var profilePic= this.props.tripDetails.owner?
             <View style={{height:30,width:30,top:80,right:20,position:'absolute'}}>
                 <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
             </View>:<View></View>
 
+        var country=this.getTripLocation(this.props.tripDetails.trip);
         return (
             <ScrollView style={{flex:1,backgroundColor:'white'}}>
 

@@ -95,7 +95,7 @@ class FeedTrip extends Component {
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
-                    console.log('feed trip')
+                    //console.log('feed trip')
                     var suitcaseInfo = JSON.parse(response);
                     for (var i = 0; i < suitcaseInfo.length; i++) {
                         newMoments[i].suitcased = suitcaseInfo[i].suitcased;
@@ -169,7 +169,7 @@ class FeedTrip extends Component {
 
     showTripLocation(trip){
         var tripLocation=this.getTripLocation(trip);
-        console.log(tripLocation,'get trip location',trip);
+        //console.log(tripLocation,'get trip location',trip);
         this.props.navigator.push({
             id: "location",
             trip,
@@ -180,7 +180,7 @@ class FeedTrip extends Component {
 
     getTripLocation(tripData){
         var country = countries.filter(function(country) {
-            return country["name"] === tripData.name;
+            return country["name"].toLowerCase() === tripData.name.toLowerCase();
         })[0];
 
         var tripLocation=tripData.name;

@@ -94,7 +94,7 @@ class ShareLocation extends Component{
         sherpaHeaders.append("token", this.props.routeParams.sherpaToken);
         var me=this;
 
-        console.log(feedRequestURI)
+        //console.log(feedRequestURI)
 
         fetch(feedRequestURI,{
             method:'get',
@@ -102,7 +102,7 @@ class ShareLocation extends Component{
             mode: 'cors'
         })
             .then((rawSherpaResponse)=>{
-                console.log('response status',rawSherpaResponse.status);
+                //console.log('response status',rawSherpaResponse.status);
                 switch(rawSherpaResponse.status){
                     case 200:
                         return rawSherpaResponse.text()
@@ -113,7 +113,7 @@ class ShareLocation extends Component{
                 }
             })
             .then((rawSherpaResponseFinal)=>{
-                console.log(JSON.parse(rawSherpaResponseFinal));
+                //console.log(JSON.parse(rawSherpaResponseFinal));
                 sherpaResponse= this.unpackTrips(JSON.parse(rawSherpaResponseFinal));
 
                 var cleanMoments=[];

@@ -1127,7 +1127,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
-				PROVISIONING_PROFILE = "0dbe72f0-374b-4076-893b-4d31f028273e";
+				PROVISIONING_PROFILE = "c2e3a05d-ab5b-4837-a9ef-1692e5346efa";
 			};
 			name = Debug;
 		};
@@ -1164,7 +1164,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
-				PROVISIONING_PROFILE = "0dbe72f0-374b-4076-893b-4d31f028273e";
+				PROVISIONING_PROFILE = "c2e3a05d-ab5b-4837-a9ef-1692e5346efa";
 			};
 			name = Release;
 		};

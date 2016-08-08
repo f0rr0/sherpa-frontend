@@ -39,7 +39,7 @@ class Feed extends Component {
     }
 
     setView(deepLinkObject){
-        console.log('set view',deepLinkObject);
+        //console.log('set view',deepLinkObject);
         switch(deepLinkObject.type){
             case "TRIP":
                 this.getTrip(deepLinkObject.id)
@@ -75,7 +75,7 @@ class Feed extends Component {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log(sherpaResponse)
+                //console.log(sherpaResponse)
                 this.navigator.push({
                     id: "trip",
                     trip:sherpaResponse

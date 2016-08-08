@@ -94,7 +94,7 @@ class NotWhitelisted extends Component {
     }
 
     connectWithService(){
-        console.log('connect with service');
+        //console.log('connect with service');
         Linking.openURL("http://www.trysherpa.com");
     }
 

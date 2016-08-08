@@ -77,11 +77,12 @@ var styles = StyleSheet.create({
         color:'white',
         fontFamily:"TSTAR-bold",
         fontSize:12
-    }
+    },
+    copyEmpty:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}
 });
-const msg_empty="Search for countries, cities or continents. We'll display the photos that match your result.";
-const msg_noresults="No results found for this search query";
-const msg_loading="Loading";
+const msg_empty=<Text style={styles.copyEmpty}>Search for countries, cities or continents. We'll display the photos that match your result.</Text>;
+const msg_noresults=<Text style={styles.copyEmpty}>No results found for this search query</Text>;
+const msg_loading=<Text style={styles.copyEmpty}>Loading</Text>;
 
 
 class Search extends React.Component {
@@ -150,7 +151,7 @@ class Search extends React.Component {
             })
 
         }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
+            //this.refs.listview._refresh()
         }
     }
 
@@ -222,7 +223,7 @@ class Search extends React.Component {
     _emptyView(){
         return(
             <View style={{flex:1,justifyContent: 'center', height:400,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>{this.state.searchEmptyMessage}</Text>
+                {this.state.searchEmptyMessage}
             </View>
         )
     }
@@ -272,9 +273,10 @@ class Search extends React.Component {
                                onSubmitEditing:(event)=>{
                                     me.refs.listview.refs.listview.refs.googleSearch._onBlur()
                                     me.updateSearchQuery(event.nativeEvent.text);
-
-                                    this.setState({"searchEmptyMessage":msg_loading});
-                                    me._onFetch(1, me.refs.listview._refresh);
+                                    me.setState({"searchEmptyMessage":this._renderEmpty()});
+                                    if(this.itemsLoadedCallback)this.itemsLoadedCallback([]);
+                                    me._onFetch(1, me.refs.listview._postRefresh);
+                                    //console.log('fetch:::')
                                }
                             }}
 
@@ -284,7 +286,7 @@ class Search extends React.Component {
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                                 var result=details.address_components;
                                 var info=[];
-                                for(var i=0;i<result.length;++i){
+                                for(var i= 0;i<result.length;++i){
                                     if(result[i].types[0]=="administrative_area_level_1"){info.state=result[i].long_name}
                                     if(result[i].types[0]=="locality"){info.location=result[i].long_name}
                                     if(result[i].types[0]=="country"){info.country=result[i].short_name}
@@ -293,8 +295,9 @@ class Search extends React.Component {
                                 info.query=details.formatted_address;
 
                                 me.updateSearchQuery(info,true);
-                                this.setState({"searchEmptyMessage":msg_loading});
-                                me._onFetch(1, me.refs.listview._refresh)
+                                this.setState({"searchEmptyMessage":this._renderEmpty()});
+                                if(this.itemsLoadedCallback)this.itemsLoadedCallback([]);
+                                me._onFetch(1, me.refs.listview._postRefresh);
                             }}
                             query={{
                                  key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',

@@ -90,7 +90,7 @@ class FeedProfile extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log(this.props.trip.owner)
+        //console.log(this.props.trip.owner)
         this.props.dispatch(loadFeed(this.props.trip.owner.id,this.props.user.sherpaToken,page,"profile"));
     }
 
@@ -148,8 +148,8 @@ class FeedProfile extends React.Component {
 
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
-        console.log('feed',this.props.feed);
-        console.log('trips',this.props.feed.profileTrips);
+        //console.log('feed',this.props.feed);
+        //console.log('trips',this.props.feed.profileTrips);
         var trips=this.props.feed.profileTrips["1"];
         var tripDuration=trips.length;
         var tripS=tripDuration>1?"TRIPS":"TRIP";
@@ -176,12 +176,13 @@ class FeedProfile extends React.Component {
             })
         }
 
+        console.log('original url',this.props.trip.owner)
         return (
             <View>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:640, width:windowSize.width,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
 
-                        <UserImage radius={80} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
+                        <UserImage radius={80} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
                         <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown.toUpperCase()}</Text>
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
