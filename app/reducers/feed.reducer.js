@@ -18,6 +18,7 @@ export default function feedReducer(state=initialState,action){
             });
         break;
         case types.UPDATE_FEED:
+            console.log('update feed !')
             if(action.feedData.type!='search'){
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
@@ -49,6 +50,8 @@ export default function feedReducer(state=initialState,action){
                 var newTrips=Object.assign({},state.trips,newPage);
                 newTrips['country']=newTrips['name'];
             }
+
+            console.log(newPage,'new page',state.searchResults);
 
 
 

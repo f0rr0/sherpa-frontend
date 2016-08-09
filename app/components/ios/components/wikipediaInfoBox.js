@@ -33,11 +33,6 @@ class WikpediaInfoBox extends Component {
         //console.log('query',query);
 
         query=query.indexOf(",")>0?query.split(',')[0]:query;
-
-
-        //
-
-
         var me=this;
         var featureType=this.props.type=='country'?"&feature=country":"";
         fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows=5&username=travelsherpa"+featureType+"&q="+query, {
@@ -50,16 +45,19 @@ class WikpediaInfoBox extends Component {
             if(wikiResponse.length==0)return;
 
             var wikiResult=wikiResponse[0];
-
-            console.log(wikiResponse,this.props.coordinates);
+            var titleMatch=false;
             for(var i=0;i<5;i++){
-                if(wikiResponse[i].feature==this.props.type){
+                console.log(wikiResponse[i].title.toLowerCase(),query.toLowerCase());
+                if(wikiResponse[i].title.toLowerCase()==query.toLowerCase()){
+                    console.log("*** title match ***");
+                    wikiResult=wikiResponse[i];
+                    titleMatch=true;
+                    break;
+                }
+                else if(wikiResponse[i].feature==this.props.type){
                     wikiResult=wikiResponse[i];
                     break;
                 }else if(this.props.country&&wikiResponse[i].countryCode==this.props.country.countryCode){
-                    wikiResult=wikiResponse[i];
-                    break;
-                }else if(this.props.type=='default'){
                     wikiResult=wikiResponse[i];
                     break;
                 }
@@ -71,13 +69,18 @@ class WikpediaInfoBox extends Component {
             (Math.floor(this.props.coordinates.lng)===Math.floor(wikiResult.lng)):
                 true;
 
+            //console.log(wikiResult.title)
+
+            console.log('check location',locationCheck);
+            console.log('check title 1',wikiResult.title.toLowerCase(),query.toLowerCase() )
+            console.log('check title 2',titleMatch );
 
             if(
                 locationCheck&&
-                (wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1)
+                (wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1||titleMatch)
             ){
+                //console.log("+++ MATCH +++");
 
-console.log('made copy check',wikiResult.title);
                 //console.log('this props type',this.props.type);
 
                 if(this.props.type!="default"){
@@ -113,7 +116,7 @@ console.log('made copy check',wikiResult.title);
                     //    //console.log('response json',response)
                     //});
 
-                    //console.log("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString="+query+" "+me.props.country);
+                    //console.log("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=place&QueryString="+query);
 
                     fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=PopulatedPlace&QueryString="+query, {
                         method: 'get',
@@ -122,6 +125,7 @@ console.log('made copy check',wikiResult.title);
                         return rawServiceResponse.text();
                     }).then((response)=> {
                         var results=JSON.parse(response).results;
+                        //console.log('results',results);
                         for(var i=0;i<results.length;i++){
                             if(results[i].label.toLowerCase().indexOf(query.toLowerCase())>-1){
                                 var finalDescription=results[i].description;
@@ -132,40 +136,59 @@ console.log('made copy check',wikiResult.title);
                         }
                     })
                 }else{
-                    console.log('regular fetch');
-                    fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles="+wikiResult.title, {
+                    //console.log(query,'query')
+                    fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryString="+query, {
                         method: 'get',
-                        headers: dbpediaHeaders
-                    }).then((rawServiceResponse)=>{
+                        headers:dbpediaHeaders
+                    }).then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
-                    }).then((response)=>{
-                        var jsonResp=JSON.parse(response);
-                        console.log('response json',jsonResp)
-
-                        var res;
-                        for(var page in jsonResp.query.pages){
-                            res = jsonResp.query.pages[page];
-                            break;
+                    }).then((response)=> {
+                        var results=JSON.parse(response).results;
+                        //console.log('results',results);
+                        for(var i=0;i<results.length;i++){
+                            //console.log('org',results[i].label.toLowerCase().replace(/\s/g, ''))
+                            //console.log('borg',query.replace(/\s/g, '').toLowerCase())
+                            if(results[i].label.toLowerCase().replace(/\s/g, '').indexOf(query.replace(/\s/g, '').toLowerCase())>-1){
+                                var finalDescription=results[i].description;
+                                if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
+                                this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
+                                break;
+                            }
                         }
-
-                        ////console.log('res',res)
-                        var abstract=res.extract.replace(/<\/?[^>]+(>|$)/g, "");
-                        var abstractSentences = abstract.match( /[^\.!\?]+[\.!\?]+/g );
-                        //console.log(abstractSentences);
-                        var shortAbstract="";
-                        var maxSentences=4;
-                        var targetSentences=abstractSentences.length>=maxSentences?maxSentences:abstractSentences.length;
-                        for(var i=0;i<targetSentences;i++){
-                            shortAbstract+=abstractSentences[i];
-                        }
-                        //shortAbstract+="..";
-                        ////console.log(abstract);
-                        //wikiResult.summary=wikiResult.summary.replace("(...)","...");
-                        ////console.log(wikiResult);
-                        this.setState({"wikipediaDescription":shortAbstract,"wikiURL":wikiResult.wikipediaUrl})
                     })
-
-
+                //    fetch("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts&exintro=&explaintext=&titles="+wikiResult.title, {
+                //        method: 'get',
+                //        headers: dbpediaHeaders
+                //    }).then((rawServiceResponse)=>{
+                //        return rawServiceResponse.text();
+                //    }).then((response)=>{
+                //        var jsonResp=JSON.parse(response);
+                //        console.log('response json',jsonResp)
+                //
+                //        var res;
+                //        for(var page in jsonResp.query.pages){
+                //            res = jsonResp.query.pages[page];
+                //            break;
+                //        }
+                //
+                //        ////console.log('res',res)
+                //        var abstract=res.extract.replace(/<\/?[^>]+(>|$)/g, "");
+                //        var abstractSentences = abstract.match( /[^\.!\?]+[\.!\?]+/g );
+                //        //console.log(abstractSentences);
+                //        var shortAbstract="";
+                //        var maxSentences=4;
+                //        var targetSentences=abstractSentences.length>=maxSentences?maxSentences:abstractSentences.length;
+                //        for(var i=0;i<targetSentences;i++){
+                //            shortAbstract+=abstractSentences[i];
+                //        }
+                //        //shortAbstract+="..";
+                //        ////console.log(abstract);
+                //        //wikiResult.summary=wikiResult.summary.replace("(...)","...");
+                //        ////console.log(wikiResult);
+                //        this.setState({"wikipediaDescription":shortAbstract,"wikiURL":wikiResult.wikipediaUrl})
+                //    })
+                //
+                //
                 }
 
 

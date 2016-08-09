@@ -69,7 +69,7 @@ class FeedDestination extends Component {
 
     render(){
         return(
-            <View style={{flex:1}}>
+            <View style={{flex:1,backgroundColor:"white"}}>
                 <ListView
                    dataSource={this.state.dataSource}
                    renderRow={this._renderRow.bind(this)}
@@ -217,7 +217,7 @@ class FeedDestination extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
     },
     listItem:{
         flex:1,

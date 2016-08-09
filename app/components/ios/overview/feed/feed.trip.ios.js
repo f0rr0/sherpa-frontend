@@ -247,7 +247,7 @@ class FeedTrip extends Component {
                 </View>
 
                 <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width,left:15,right:0,backgroundColor:'transparent'}}
+                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width-30,left:15,right:0,backgroundColor:'transparent'}}
                     resizeMode="cover"
                     source={require('image!shadow')}
                 />

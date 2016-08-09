@@ -184,7 +184,7 @@ class FeedProfile extends React.Component {
 
                         <UserImage radius={80} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
-                        <Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown.toUpperCase()}</Text>
+                        {/*<Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown.toUpperCase()}</Text>*/}
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
                     </View>
                 </MaskedView>

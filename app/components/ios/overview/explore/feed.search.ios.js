@@ -101,6 +101,7 @@ class Search extends React.Component {
     }
 
     componentDidMount(){
+        this.props.feed.searchResults=[];
     }
 
     suiteCaseTrip(trip){
@@ -165,6 +166,7 @@ class Search extends React.Component {
 
 
     _onFetch(page=1,callback){
+        console.log('initial fetch')
         this.itemsLoadedCallback=callback;
         if(this.state.backendSearchQuery)this.state.backendSearchQuery['page']=page;
         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));

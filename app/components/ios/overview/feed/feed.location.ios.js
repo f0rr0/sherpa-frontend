@@ -46,13 +46,14 @@ class FeedLocation extends Component {
     }
 
     componentDidMount(){
-        console.log("start!!!");
     }
     toggleNav(){
         this.refs.popover._setAnimation("toggle");
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps,prevState){
+        console.log(this.props.feed.searchResults,'search results')
+        //console.log(prevProps.feed.feedState,'prevprops feed state',this.props.feed.searchResults[this.props.feed.feedPage],this.props.feed.feedPage);
         if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
 
             var unpackedResults=this.props.feed.searchResults[this.props.feed.feedPage];
@@ -78,7 +79,7 @@ class FeedLocation extends Component {
                     unpackedResults.moments[i].suitcased=suitcaseInfo[i].suitcased;
                 }
 
-                this.itemsLoadedCallback(unpackedResults);
+                this.itemsLoadedCallback(unpackedResults,{allLoaded:unpackedResults.length==0});
             }).catch(err=>console.log(err));
 
         }else if(this.props.feed.feedState==='reset'){
@@ -97,16 +98,16 @@ class FeedLocation extends Component {
     }
 
     _onFetch(page=1,callback){
+        console.log('on fetch',page);
         this.itemsLoadedCallback=callback;
         var req={}
         if(this.props.isCountry){
-            req={type:'country',country:this.props.trip.country}
+            req={type:'country',country:this.props.trip.country,page}
         }else{
-            req={needle:this.props.location}
+            req={needle:this.props.location,page}
         }
 
-        console.log('search rq',req)
-        console.log('fetch',page)
+        console.log('request',req);
         this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
@@ -255,7 +256,8 @@ class FeedLocation extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1
+        flex: 1,
+        backgroundColor:'white'
     },
     listItem:{
         flex:1,
@@ -273,7 +275,8 @@ var styles = StyleSheet.create({
         flex:1,
         width:windowSize.width-30,
         height:windowSize.width-30,
-        marginBottom:30
+        marginBottom:0,
+        marginTop:30
     },
     copyLarge:{
         color:'white',

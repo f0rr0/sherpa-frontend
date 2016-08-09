@@ -5,10 +5,11 @@ import {
     Text,
     StyleSheet
 } from 'react-native';
-import React, { Component } from 'react';
 
+import Communications from 'react-native-communications';
+import React, { Component } from 'react';
 import ActivityView from "react-native-activity-view";
-import { deleteUser,logoutUser,resetProfile } from '../../../actions/user.actions';
+import { deleteUser,logoutUser } from '../../../actions/user.actions';
 
 var styles = StyleSheet.create({
     button:{
@@ -99,12 +100,18 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>CANCEL</Text>
             </TouchableHighlight>;
 
+        var emailFeedbackButton=
+            <TouchableHighlight style={styles.button} onPress={()=>{Communications.email(['paul@trysherpa.com'], null, null, "Beta Feedback", null)}}>
+                <Text style={styles.buttonCopy}>SEND FEEDBACK</Text>
+            </TouchableHighlight>;
+
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {shareButton}
                 {resetProfileButton}
                 {logoutButton}
                 {deleteButton}
+                {emailFeedbackButton}
                 {cancelButton}
             </Animated.View>
         );

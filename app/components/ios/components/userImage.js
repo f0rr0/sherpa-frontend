@@ -39,7 +39,7 @@ class UserImage extends Component {
     }
 
     rescrapeImage(){
-        console.log('rescrape image');
+        //console.log('rescrape image');
         store.get('user').then((user) => {
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
@@ -51,12 +51,12 @@ class UserImage extends Component {
                     headers: sherpaHeaders
                 })
                     .then((rawServiceResponse)=> {
-                        console.log('raw response',rawServiceResponse);
+                        //console.log('raw response',rawServiceResponse);
                         return rawServiceResponse.text();
                     }).then((response)=> {
 
                     if(this.mounted){
-                        console.log('set state',response)
+                        //console.log('set state',response)
                         this.setState({imageURL:response});
                     }
                 }).catch(err=>console.log('device token err',err));
