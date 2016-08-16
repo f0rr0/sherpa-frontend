@@ -11,8 +11,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             dispatch(updateFeedPage(page,type));
             var searchBody=undefined;
 
-        //console.log(sherpaToken)
-
             const {endpoint,version,feed_uri,user_uri} = sherpa;
             var feedRequestURI;
             switch(type){
@@ -81,13 +79,11 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
                     break;
-                    case "search-people":
                     case "search-places":
-                    case "location-continent":
-                    case "location-country":
-                    case "location":
-                        //console.log(sherpaResponse,"::",type);
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"search"}));
+                    break;
+                    case "location":
+                        dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"location-search"}));
                     break;
                     case "suitcase-list":
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"suitcase"}));

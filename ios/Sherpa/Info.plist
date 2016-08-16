@@ -32,7 +32,21 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>56</string>
+	<string>62</string>
+	<key>Fabric</key>
+	<dict>
+		<key>APIKey</key>
+		<string>63a89ce3a088795a372a367022e7c8df3307fc3d</string>
+		<key>Kits</key>
+		<array>
+			<dict>
+				<key>KitInfo</key>
+				<dict/>
+				<key>KitName</key>
+				<string>Crashlytics</string>
+			</dict>
+		</array>
+	</dict>
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<string>NO</string>
 	<key>LSApplicationQueriesSchemes</key>

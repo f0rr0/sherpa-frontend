@@ -244,6 +244,7 @@ class Search extends React.Component {
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
+            console.log('location search',{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state})
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
         }else if(!standalone&&searchQuery.country){
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'country',country:searchQuery.country}});
@@ -251,13 +252,14 @@ class Search extends React.Component {
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
 
+
     }
 
     _renderHeader(){
         var me=this;
         return (
-            <View style={{flex:1}}>
-                <View style={{flex:1, alignItems:'center',justifyContent:'center',width:windowSize.width,marginTop:70}}>
+            <View style={{zIndex:1}}>
+                <View style={{alignItems:'center',justifyContent:'center',width:windowSize.width,marginTop:70}}>
 
                     <View>
                         <Image
@@ -276,7 +278,7 @@ class Search extends React.Component {
                                     me.refs.listview.refs.listview.refs.googleSearch._onBlur()
                                     me.updateSearchQuery(event.nativeEvent.text);
                                     me.setState({"searchEmptyMessage":this._renderEmpty()});
-                                    if(this.itemsLoadedCallback)this.itemsLoadedCallback([]);
+                                    me.refs.listview._postRefresh([]);
                                     me._onFetch(1, me.refs.listview._postRefresh);
                                     //console.log('fetch:::')
                                }
@@ -287,6 +289,7 @@ class Search extends React.Component {
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                                 var result=details.address_components;
+                                console.log(result);
                                 var info=[];
                                 for(var i= 0;i<result.length;++i){
                                     if(result[i].types[0]=="administrative_area_level_1"){info.state=result[i].long_name}
@@ -304,7 +307,7 @@ class Search extends React.Component {
                             query={{
                                  key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
                                  language: 'en', // language of the results
-                                 types: 'geocode', // default: 'geocode'
+                                 types: '(regions)', // default: 'geocode'
                              }}
                             styles={{
                                  description: {
@@ -330,7 +333,7 @@ class Search extends React.Component {
                                      borderBottomColor: '#001645',
                                      borderBottomWidth: 1,
                                      top:0,
-                                     paddingLeft:10
+                                     paddingLeft:10,
                                  },
                                  textInput: {
                                      backgroundColor: 'transparent',
@@ -342,6 +345,9 @@ class Search extends React.Component {
                                      marginTop:-10,
                                      borderTopWidth:0,
                                      fontFamily:"TSTAR"
+                                 },
+                                 listView:{
+                                    backgroundColor:"white"
                                  },
                                  separator: {
                                      height: 0,

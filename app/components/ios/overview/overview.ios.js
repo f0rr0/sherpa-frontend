@@ -17,7 +17,9 @@ import {
     View,
     StatusBar,
     Image,
-    PushNotificationIOS
+    PushNotificationIOS,
+    NetInfo,
+    Alert
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -74,6 +76,26 @@ class Overview extends React.Component {
         //this.setState({selectedTab:FEED,selectedView:{"type":"TRIP",id:22164}});
         //this.setState({selectedTab:PROFILE,selectedView:{"type":"PROFILE",id:1233}});
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
+
+        NetInfo.fetch().done(this.handleFirstConnectivityChange);
+
+        NetInfo.addEventListener(
+            'change',
+            this.handleFirstConnectivityChange
+        );
+    }
+
+    handleFirstConnectivityChange(reach) {
+        if(reach=='none'){
+            // Works on both iOS and Android
+            Alert.alert(
+                'No internet connection',
+                "Please verify your connection and try again.",
+                [
+                    {text: 'OK', onPress: () => console.log('OK Pressed')},
+                ]
+            )
+        }
     }
 
     componentDidUpdate(prevProps,prevState){

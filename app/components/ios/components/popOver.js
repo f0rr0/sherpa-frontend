@@ -102,7 +102,7 @@ class PopOver extends Component {
 
         var emailFeedbackButton=
             <TouchableHighlight style={styles.button} onPress={()=>{Communications.email(['paul@trysherpa.com'], null, null, "Beta Feedback", null)}}>
-                <Text style={styles.buttonCopy}>SEND FEEDBACK</Text>
+                <Text style={styles.buttonCopy}>FEEDBACK</Text>
             </TouchableHighlight>;
 
         return (

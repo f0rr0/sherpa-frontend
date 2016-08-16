@@ -116,7 +116,7 @@ class FeedTrip extends Component {
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
                 <ListView
-                    enableEmptySections={true}
+                    enableEmptySections={false}
                    dataSource={this.state.dataSource}
                    renderRow={this._renderRow.bind(this)}
                    contentContainerStyle={styles.listView}
@@ -194,7 +194,7 @@ class FeedTrip extends Component {
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
 
         return (
-            <View style={{flex:1,backgroundColor:'white'}}>
+            <View style={{flex:1,backgroundColor:'white', height:600}}>
                 <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1}} >
                     <View
                         style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' }}

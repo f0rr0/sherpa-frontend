@@ -5,6 +5,7 @@ const initialState={
     userTrips:{},
     searchResults:{},
     suitcaseDestinations:{},
+    locationResults:{},
     userTripsPage:1,
     feedState:"none",
     feedPage:1
@@ -18,8 +19,8 @@ export default function feedReducer(state=initialState,action){
             });
         break;
         case types.UPDATE_FEED:
-            console.log('update feed !')
-            if(action.feedData.type!='search'){
+            if(action.feedData.type!='search'&&action.feedData.type!='location-search'){
+                console.log('location search',action.feedData.type);
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
                     var moments=action.feedData.trips[index].moments.reverse();
@@ -51,12 +52,6 @@ export default function feedReducer(state=initialState,action){
                 newTrips['country']=newTrips['name'];
             }
 
-            console.log(newPage,'new page',state.searchResults);
-
-
-
-
-
             switch(action.feedData.type) {
                 case "user":
                     var newStatestate = Object.assign({}, state, {
@@ -71,9 +66,16 @@ export default function feedReducer(state=initialState,action){
                         searchResults:newTrips,
                         feedState:"ready"
                     });
-                    //console.log(res);
                     return  res;
                 break;
+                case "location-search":
+                    var newTrips=Object.assign({},state.locationResults,newPage);
+                    var res=Object.assign({}, state, {
+                        locationResults:newTrips,
+                        feedState:"ready"
+                    });
+                    return  res;
+                    break;
                 case "suitcase":
                     return Object.assign({}, state, {
                         suitcaseDestinations:newTrips,
@@ -81,7 +83,6 @@ export default function feedReducer(state=initialState,action){
                     });
                 break;
                 case "profile":
-
                     var newTrips=Object.assign({},state.profileTrips,newPage);
                     return Object.assign({}, state, {
                         feedState:"ready",

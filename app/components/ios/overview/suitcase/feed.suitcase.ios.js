@@ -32,7 +32,7 @@ var styles = StyleSheet.create({
         flex:1,
         backgroundColor:"#fcfcfc",
         justifyContent:"center",
-        alignItems:'center'
+        alignItems:'center',
     },
     listView:{
         alignItems:'center',
@@ -43,6 +43,7 @@ var styles = StyleSheet.create({
         flex:1,
         width:windowSize.width-30,
         height:90,
+
         marginBottom:5
     },
 
@@ -158,9 +159,7 @@ class Suitecase extends React.Component {
         var photoOrPhotos=moments>1?"LOCATIONS":"LOCATION";
 
         return (
-            <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
-
-
+            <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:150}}>
                 <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
                     <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
@@ -169,8 +168,6 @@ class Suitecase extends React.Component {
                     <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                 </View>
                 {this.props.navigation.default}
-
-
             </View>
         )
     }

@@ -44,17 +44,13 @@ var styles = StyleSheet.create({
     },
     topArea:{
         alignItems:"center",
-        height:windowSize.height*.25
+        height:windowSize.height*.25,
     },
     middleArea:{
-        flex:1,
         height:windowSize.height*.5,
         width:windowSize.width,
-        alignItems:"flex-start",
-        justifyContent:"flex-start"
     },
     slide:{
-        flex:1
     },
     bottomArea:{
         alignItems:"center",
@@ -69,9 +65,7 @@ var styles = StyleSheet.create({
         width:windowSize.width*.8
     },
     mainComponent:{
-        flex:1,
         padding:40,
-        justifyContent:'center',
         marginTop:80,
         position:'absolute',
         top:180,
@@ -90,8 +84,8 @@ class OnboardingScreen extends Component {
 
     render() {
         return (
-            <View style={styles.slide}>
-                {(()=>{if(this.props.backgroundImage){return(<Image source={this.props.backgroundImage} style={{width:windowSize.width,height:windowSize.height,position:"absolute",top:0,left:0,flex:1}} resizeMode="cover"></Image>)}})()}
+            <View>
+                {(()=>{if(this.props.backgroundImage){return(<Image source={this.props.backgroundImage} style={{width:windowSize.width,height:windowSize.height,position:"absolute",top:0,left:0}} resizeMode="cover"></Image>)}})()}
 
                 <View style={styles.topArea}>
                     <Text style={[styles.baseText,styles.headline]}>{this.props.headline}</Text>
@@ -99,7 +93,7 @@ class OnboardingScreen extends Component {
                 </View>
 
                 <View style={styles.middleArea}>
-                    {(()=>{if(this.props.middleImage){return(<Image source={this.props.middleImage} style={{width:windowSize.width,flex:1}} resizeMode="contain"></Image>)}})()}
+                    {(()=>{if(this.props.middleImage){return(<Image source={this.props.middleImage} style={{width:windowSize.width,height:windowSize.height*.5}} resizeMode="contain"></Image>)}})()}
                 </View>
 
                 <View style={styles.bottomArea}>

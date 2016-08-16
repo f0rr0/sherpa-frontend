@@ -52,11 +52,11 @@ class FeedLocation extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(this.props.feed.searchResults,'search results')
-        //console.log(prevProps.feed.feedState,'prevprops feed state',this.props.feed.searchResults[this.props.feed.feedPage],this.props.feed.feedPage);
-        if(this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
+        console.log(this.props.feed.locationResults,'search results')
+        //console.log(prevProps.feed.feedState,'prevprops feed state',this.props.feed.locationResults[this.props.feed.feedPage],this.props.feed.feedPage);
+        if(this.props.feed.feedState==='ready'&&this.props.feed.locationResults[this.props.feed.feedPage]){
 
-            var unpackedResults=this.props.feed.searchResults[this.props.feed.feedPage];
+            var unpackedResults=this.props.feed.locationResults[this.props.feed.feedPage];
 
 
             const {endpoint,version} = sherpa;
@@ -174,8 +174,8 @@ class FeedLocation extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        //console.log(this.props.feed.searchResults)
-        var moments=this.props.feed.searchResults[1];
+        //console.log(this.props.feed.locationResults)
+        var moments=this.props.feed.locationResults[1];
         //console.log('moments',moments[0])
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         var country=this.getTripLocation(tripData);
@@ -201,7 +201,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.props.feed.searchResults[1][0].lat,lng:this.props.feed.searchResults[1][0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.props.feed.locationResults[1][0].lat,lng:this.props.feed.locationResults[1][0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

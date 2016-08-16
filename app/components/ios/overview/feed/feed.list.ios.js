@@ -5,7 +5,7 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import ImageRow from '../../components/imageRow'
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
-
+import SGGiftedListView from '../../components/SGGiftedListView';
 var windowSize=Dimensions.get('window');
 
 import {
@@ -51,6 +51,7 @@ class FeedList extends React.Component{
         if(
             prevProps.feed.feedState!='ready'&& this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
         ){
+            this.props.feed.userTrips[this.props.feed.userTripsPage].shift();
             this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
         }else if(this.props.feed.feedState==='reset'){
         }
@@ -94,7 +95,7 @@ class FeedList extends React.Component{
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
             </View>
         )

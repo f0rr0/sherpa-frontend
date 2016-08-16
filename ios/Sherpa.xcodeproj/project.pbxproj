@@ -34,6 +34,8 @@
 		F321A58A1BDA9A040014AA18 /* TSTAR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */; };
 		F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */; };
 		F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F35D9AE41D394F1500D768A3 /* libActivityView.a */; };
+		F36471AB1D5B775100CB5E40 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36471A91D5B775100CB5E40 /* Fabric.framework */; };
+		F36471AC1D5B775100CB5E40 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36471AA1D5B775100CB5E40 /* Crashlytics.framework */; };
 		F36A331F1BDF913C00970476 /* libRNDeviceInfo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36A331E1BDF8F7D00970476 /* libRNDeviceInfo.a */; };
 		F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */; };
 		F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */; };
@@ -258,6 +260,8 @@
 		F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Regular.otf"; sourceTree = "<group>"; };
 		F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ActivityView.xcodeproj; path = "../node_modules/react-native-activity-view/ActivityView.xcodeproj"; sourceTree = "<group>"; };
+		F36471A91D5B775100CB5E40 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
+		F36471AA1D5B775100CB5E40 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
 		F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNDeviceInfo.xcodeproj; path = "../node_modules/react-native-device-info/RNDeviceInfo.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
@@ -304,6 +308,7 @@
 				F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */,
 				F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */,
 				F3CDFF721BFBD70900CE9567 /* libz.tbd in Frameworks */,
+				F36471AC1D5B775100CB5E40 /* Crashlytics.framework in Frameworks */,
 				F3CDFF701BFBD70300CE9567 /* libsqlite3.tbd in Frameworks */,
 				F3CDFF6E1BFBD6FB00CE9567 /* libc++.tbd in Frameworks */,
 				F3CDFF6C1BFBD6F200CE9567 /* SystemConfiguration.framework in Frameworks */,
@@ -313,6 +318,7 @@
 				F3CDFF641BFBD6D800CE9567 /* GLKit.framework in Frameworks */,
 				F387AB101CC93FF500D88D5D /* Mapbox.framework in Frameworks */,
 				F3CDFF621BFBD6D100CE9567 /* CoreTelephony.framework in Frameworks */,
+				F36471AB1D5B775100CB5E40 /* Fabric.framework in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
 				00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */,
 				00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */,
@@ -455,6 +461,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F36471A91D5B775100CB5E40 /* Fabric.framework */,
+				F36471AA1D5B775100CB5E40 /* Crashlytics.framework */,
 				F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */,
 				F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */,
 				F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */,
@@ -640,6 +648,7 @@
 				F3100A5B1CAD97F0006A7AB9 /* ShellScript */,
 				DD5E03B780627DB6B7F33807 /* Embed Pods Frameworks */,
 				72C5D6D5809403DE1BE853AA /* Copy Pods Resources */,
+				F36471A81D5B771C00CB5E40 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -1011,6 +1020,19 @@
 			shellPath = /bin/sh;
 			shellScript = "bash \"../node_modules/react-native/packager/react-native-xcode.sh\"";
 		};
+		F36471A81D5B771C00CB5E40 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "./Fabric.framework/run 63a89ce3a088795a372a367022e7c8df3307fc3d eabb55b61417bda220af76b7ec5eabc92e6fcb609dcca9126b3c2578fae33833";
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1100,7 +1122,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Travel Sherpa Inc (VQ89ZPS6NL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEAD_CODE_STRIPPING = NO;
 				ENABLE_BITCODE = NO;
@@ -1137,7 +1159,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Distribution: Travel Sherpa Inc (VQ89ZPS6NL)";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				DEAD_CODE_STRIPPING = NO;
 				ENABLE_BITCODE = NO;
@@ -1186,6 +1208,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = NO;
@@ -1235,6 +1258,7 @@
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = NO;
