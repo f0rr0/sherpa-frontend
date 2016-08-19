@@ -163,10 +163,4 @@ class Login extends Component {
 
 
 
-function select(state) {
-    return {
-        user: state.userReducer
-    };
-}
-
-export default connect(select)(Login);
+export default Login;

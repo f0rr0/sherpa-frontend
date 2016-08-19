@@ -58,14 +58,17 @@ var styles=StyleSheet.create({
 StatusBar.setHidden(true);
 
 class Overview extends React.Component {
-    constructor() {
+    constructor(props) {
         super();
         this.state = {
             selectedTab: FEED,
             notifCount: 0,
             presses: 0
         };
+
         this.myFeed=null;
+        console.log('props constructor ++',props);
+
     }
 
     componentDidMount(){
@@ -83,6 +86,8 @@ class Overview extends React.Component {
             'change',
             this.handleFirstConnectivityChange
         );
+
+
     }
 
     handleFirstConnectivityChange(reach) {
@@ -118,8 +123,6 @@ class Overview extends React.Component {
 
 
     _onNotificationOpened(notification) {
-        //console.log('get message',notification.getMessage())
-        //console.log('get data',notification.getData())
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
@@ -164,12 +167,6 @@ class Overview extends React.Component {
 }
 
 
-function select(state) {
-    return {
-        user: state.userReducer,
-        feed: state.feedReducer,
-        app: state.appReducer
-    };
-}
 
-export default connect(select)(Overview);
+
+export default Overview;

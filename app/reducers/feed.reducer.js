@@ -20,7 +20,7 @@ export default function feedReducer(state=initialState,action){
         break;
         case types.UPDATE_FEED:
             if(action.feedData.type!='search'&&action.feedData.type!='location-search'){
-                console.log('location search',action.feedData.type);
+                console.log('regular search',action.feedData.type);
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
                     var moments=action.feedData.trips[index].moments.reverse();

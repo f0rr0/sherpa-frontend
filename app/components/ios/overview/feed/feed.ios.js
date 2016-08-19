@@ -35,11 +35,9 @@ class Feed extends Component {
     }
 
     componentDidMount(){
-        //check if deeplinking, if yes, request data for deep
     }
 
     setView(deepLinkObject){
-        //console.log('set view',deepLinkObject);
         switch(deepLinkObject.type){
             case "TRIP":
                 this.getTrip(deepLinkObject.id)
@@ -75,7 +73,6 @@ class Feed extends Component {
             })
             .then((rawSherpaResponseFinal)=>{
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                //console.log(sherpaResponse)
                 this.navigator.push({
                     id: "trip",
                     trip:sherpaResponse
@@ -92,40 +89,40 @@ class Feed extends Component {
         switch (route.id) {
             case 'feed':
                 showNav=false;
-                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation("black","LATEST TRIPS",true,true,true,true)}/>;
+                sceneContent = <FeedList ref={route.id} navigator={navigator} {...this.props} navigation={this._getNavigation("black","LATEST TRIPS",true,true,true,true)}/>;
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation("black",route.id,false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation("black",route.id,false,false,true)} trip={route.trip} {...this.props}/>;
             break;
             case "trip":
                 showNav=true;
                 //route.id+" TO "+route.trip.name
-                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true)} trip={route.trip} f{...this.props}/>;
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",false,false,true)} trip={route.trip} {...this.props}/>;
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,false,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,false,true,true,true)} trip={route.trip} {...this.props}/>;
             break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation("black","YOUR PROFILE",true,true,true)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation("black","YOUR PROFILE",true,true,true)}  {...this.props}/>;
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black","YOUR SUITCASE",true,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black","YOUR SUITCASE",true,true,true,true)} trip={route.trip} {...this.props} />;
             break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,true,false,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,true,false,true,true)} trip={route.trip} {...this.props} />;
             break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,true)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,true)} tripDetails={route.tripDetails} {...this.props} />;
             break;
         }
 
@@ -165,6 +162,7 @@ class Feed extends Component {
 
 
     render() {
+        console.log('inital route',this.props.initial);
         return (
             <View style={{flex:1}}>
 

@@ -45,10 +45,4 @@ class Loading extends Component {
     }
 }
 
-function select(state) {
-    return {
-        user: state.userReducer,
-        feed: state.feedReducer
-    };
-}
-export default connect(select)(Loading);
+export default Loading;

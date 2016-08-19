@@ -279,4 +279,4 @@ function select(state) {
     };
 }
 
-export default connect(select)(OnboardingSteps);
+export default OnboardingSteps;

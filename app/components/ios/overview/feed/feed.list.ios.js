@@ -5,7 +5,6 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import ImageRow from '../../components/imageRow'
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
-import SGGiftedListView from '../../components/SGGiftedListView';
 var windowSize=Dimensions.get('window');
 
 import {
@@ -34,12 +33,12 @@ var styles=StyleSheet.create({
 
 class FeedList extends React.Component{
 
-    constructor(){
+    constructor(props){
         super();
         this.itemsLoadedCallback=null;
         this.state={
             currentAppState:'undefined'
-        }
+        };
     }
 
     componentDidMount(){

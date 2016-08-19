@@ -23,6 +23,7 @@
 		146834051AC3E58100842450 /* libReact.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 146834041AC3E56700842450 /* libReact.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		B37CE64314D434E04C0FAD12 /* Pods_Sherpa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88D135E3BCB4EB92F7CB96F5 /* Pods_Sherpa.framework */; settings = {ATTRIBUTES = (Required, ); }; };
+		F311811C1D6705130016C988 /* libSafariViewManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F311811B1D6704B50016C988 /* libSafariViewManager.a */; };
 		F321A5821BDA9A040014AA18 /* TSTAR-Bold.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5791BDA9A040014AA18 /* TSTAR-Bold.otf */; };
 		F321A5831BDA9A040014AA18 /* TSTAR-BoldItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A57A1BDA9A040014AA18 /* TSTAR-BoldItalic.otf */; };
 		F321A5841BDA9A040014AA18 /* TSTAR-Headline.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A57B1BDA9A040014AA18 /* TSTAR-Headline.otf */; };
@@ -152,6 +153,13 @@
 			remoteGlobalIDString = C5DBB34B1AF2EF2B00E611A9;
 			remoteInfo = RCTMapboxGLTests;
 		};
+		F311811A1D6704B50016C988 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F31181021D6704B50016C988 /* SafariViewManager.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = SafariViewManager;
+		};
 		F32D8FA81CAD891200E58DA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */;
@@ -249,6 +257,7 @@
 		88D135E3BCB4EB92F7CB96F5 /* Pods_Sherpa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sherpa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9E197C938CB99310B3179645 /* Pods-Sherpa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Sherpa.release.xcconfig"; path = "../Pods/Target Support Files/Pods-Sherpa/Pods-Sherpa.release.xcconfig"; sourceTree = "<group>"; };
 		F3100A4E1CAD971D006A7AB9 /* RCTMapboxGL.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTMapboxGL.xcodeproj; path = "../node_modules/react-native-mapbox-gl/ios/RCTMapboxGL.xcodeproj"; sourceTree = "<group>"; };
+		F31181021D6704B50016C988 /* SafariViewManager.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = SafariViewManager.xcodeproj; path = "../node_modules/react-native-safari-view/SafariViewManager.xcodeproj"; sourceTree = "<group>"; };
 		F321A5791BDA9A040014AA18 /* TSTAR-Bold.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Bold.otf"; sourceTree = "<group>"; };
 		F321A57A1BDA9A040014AA18 /* TSTAR-BoldItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-BoldItalic.otf"; sourceTree = "<group>"; };
 		F321A57B1BDA9A040014AA18 /* TSTAR-Headline.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Headline.otf"; sourceTree = "<group>"; };
@@ -298,6 +307,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F311811C1D6705130016C988 /* libSafariViewManager.a in Frameworks */,
 				F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */,
 				F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */,
 				F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */,
@@ -461,6 +471,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F31181021D6704B50016C988 /* SafariViewManager.xcodeproj */,
 				F36471A91D5B775100CB5E40 /* Fabric.framework */,
 				F36471AA1D5B775100CB5E40 /* Crashlytics.framework */,
 				F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */,
@@ -535,6 +546,14 @@
 			children = (
 				F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */,
 				F3100A561CAD971D006A7AB9 /* RCTMapboxGLTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F31181031D6704B50016C988 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F311811B1D6704B50016C988 /* libSafariViewManager.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -766,6 +785,10 @@
 					ProductGroup = F371BA9A1D417C7C00FAD5D1 /* Products */;
 					ProjectRef = F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */;
 				},
+				{
+					ProductGroup = F31181031D6704B50016C988 /* Products */;
+					ProjectRef = F31181021D6704B50016C988 /* SafariViewManager.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -858,6 +881,13 @@
 			fileType = wrapper.cfbundle;
 			path = RCTMapboxGLTests.xctest;
 			remoteRef = F3100A551CAD971D006A7AB9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F311811B1D6704B50016C988 /* libSafariViewManager.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libSafariViewManager.a;
+			remoteRef = F311811A1D6704B50016C988 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */ = {

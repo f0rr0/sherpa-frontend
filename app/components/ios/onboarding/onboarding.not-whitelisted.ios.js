@@ -4,6 +4,7 @@ import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+import SafariView from "react-native-safari-view";
 
 import {
     StyleSheet,
@@ -95,7 +96,14 @@ class NotWhitelisted extends Component {
 
     connectWithService(){
         //console.log('connect with service');
-        Linking.openURL("http://www.trysherpa.com");
+        SafariView.isAvailable()
+            .then(SafariView.show({
+                url: "http://www.trysherpa.com"
+            }))
+            .catch(error => {
+                // Fallback WebView code for iOS 8 and earlier
+                Linking.openURL("http://www.trysherpa.com");
+            });
     }
 
     render() {

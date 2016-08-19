@@ -7,7 +7,6 @@ import {
 import React, { Component } from 'react';
 
 
-import GlobalStyles from "../styles/global"
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 

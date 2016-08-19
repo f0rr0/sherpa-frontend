@@ -8,13 +8,25 @@ import NotWhitelisted from './onboarding/onboarding.not-whitelisted.ios';
 import OnboardingSteps from './onboarding/onboarding.steps.ios';
 import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
+import React, { Component } from 'react';
+
+
 import {
     StyleSheet,
     Navigator,
     View,
     AppState
-    } from 'react-native';;
-import React, { Component } from 'react';
+    } from 'react-native';
+
+
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white'
+    }
+});
+
+
 
 class Root extends Component {
     constructor(props){
@@ -62,17 +74,13 @@ class Root extends Component {
     }
 
 
-    shouldComponentUpdate(nextProps,nextState){
-        return ((nextState.currentView!=this.state.currentView)||((this.state.currentAppState=='background'||this.state.currentAppState=='background')&&nextState.currentAppState=='active'));
-    }
-
     componentDidUpdate(prevProps,prevState){
         //console.log('did update')
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            if(this.props.user.userDBState=="not-whitelisted"){
                this.navigator.replace({id:"login"});
            }
-        }else{
+        }else if(prevState.currentView!=this.state.currentView){
             this.navigator.replace({id:this.state.currentView});
         }
 
@@ -83,19 +91,19 @@ class Root extends Component {
         GoogleAnalytics.trackScreenView(route.id)
         switch (route.id) {
             case 'loading':
-                return <Loading navigator={navigator} />;
+                return <Loading navigator={navigator} {...this.props}/>;
             break;
             case "login":
-                return <Login navigator={navigator} />;
+                return <Login navigator={navigator} {...this.props}/>;
             break;
             case "not-whitelisted":
                 return <NotWhitelisted navigator={navigator} />;
             break;
             case "overview":
-                return <Overview navigator={navigator} />;
+                return <Overview navigator={navigator} {...this.props}/>;
             break;
             case "onboarding-steps":
-                return <OnboardingSteps navigator={navigator} />
+                return <OnboardingSteps navigator={navigator} {...this.props}/>
             break;
         }
     }
@@ -105,7 +113,7 @@ class Root extends Component {
             <Navigator
                 sceneStyle={styles.container}
                 ref={(navigator) => { this.navigator = navigator; }}
-                renderScene={this.renderScene}
+                renderScene={this.renderScene.bind(this)}
                 configureScene={(route) => ({
                   ...route.sceneConfig || Navigator.SceneConfigs.FloatFromRight
                 })}
@@ -117,17 +125,13 @@ class Root extends Component {
     }
 }
 
-var styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: 'white'
-    }
-});
-
 
 function select(state) {
     return {
-        user: state.userReducer
+        user: state.userReducer,
+        feed: state.feedReducer,
+        app: state.appReducer
     };
 }
+
 export default connect(select)(Root);

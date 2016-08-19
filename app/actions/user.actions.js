@@ -304,7 +304,6 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
-                console.log('whitelisted',sherpaResponse);
                 if(!sherpaResponse.whitelisted){
                     dispatch(updateUserDBState("not-whitelisted"));
                 }else{

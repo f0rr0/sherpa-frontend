@@ -40,6 +40,8 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 break;
             }
 
+            console.log(feedRequestURI,'feed request uri');
+
 
 
             var sherpaResponse;
@@ -75,6 +77,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             .then((rawSherpaResponseFinal)=>{
                 if(!rawSherpaResponseFinal)return;
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+                console.log('response',sherpaResponse);
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
