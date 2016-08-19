@@ -58,7 +58,7 @@ var styles=StyleSheet.create({
 StatusBar.setHidden(true);
 
 class Overview extends React.Component {
-    constructor(props) {
+    constructor() {
         super();
         this.state = {
             selectedTab: FEED,
@@ -67,8 +67,6 @@ class Overview extends React.Component {
         };
 
         this.myFeed=null;
-        console.log('props constructor ++',props);
-
     }
 
     componentDidMount(){
@@ -81,6 +79,7 @@ class Overview extends React.Component {
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
 
         NetInfo.fetch().done(this.handleFirstConnectivityChange);
+        //console.log('props ++',this.props);
 
         NetInfo.addEventListener(
             'change',
@@ -123,6 +122,8 @@ class Overview extends React.Component {
 
 
     _onNotificationOpened(notification) {
+        //console.log('get message',notification.getMessage())
+        //console.log('get data',notification.getData())
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});

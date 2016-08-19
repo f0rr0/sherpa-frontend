@@ -184,17 +184,17 @@ export function loadUser() {
                 var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
                 var sherpaHeaders = new Headers();
-                console.log('sherpa token',user.sherpaToken)
+                //console.log('sherpa token',user.sherpaToken)
                 sherpaHeaders.append("token", user.sherpaToken);
 
-                console.log(endpoint+version+user_uri+"/"+user.sherpaID)
+                //console.log(endpoint+version+user_uri+"/"+user.sherpaID)
 
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get',
                     headers:sherpaHeaders
                 }).
                 then((rawServiceResponse)=>{
-                    console.log('raw response',rawServiceResponse)
+                    //console.log('raw response',rawServiceResponse)
                     responseStatus=rawServiceResponse.status;
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
@@ -251,7 +251,7 @@ export function signupUser(){
             const queryData = encodeQueryData({response_type, client_id, redirect_uri});
 
             dispatch(updateUserSignupState("service_code_request"));
-            console.log('call ',endpoint+code_uri + "/?" +queryData)
+            //console.log('call ',endpoint+code_uri + "/?" +queryData)
             SafariView.isAvailable()
                 .then(()=>{
                     SafariView.show({
@@ -264,7 +264,7 @@ export function signupUser(){
                     );
                 })
                 .catch(error => {
-                    console.log(error,'error');
+                    //console.log(error,'error');
                     instagramSimpleAuthWithWebview();
                 });
 
@@ -275,13 +275,13 @@ export function signupUser(){
 
             const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
             SafariView.removeEventListener('onCode', instagramAuthCallback);
-            console.log(event,'response onCode');
+            //console.log(event,'response onCode');
 
             let code = event.code;
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
 
             dispatch(updateUserSignupState("service_token_request"));
-            console.log('fetch ',queryData);
+            //console.log('fetch ',queryData);
             fetch(endpoint+token_uri, {
                 method: 'post',
                 headers: {
@@ -294,7 +294,7 @@ export function signupUser(){
                 var info=JSON.parse(rawSherpaResponse);
                 signupWithSherpa(info.access_token,info.user);
             }).catch(error => {
-                console.log(error,'error');
+                //console.log(error,'error');
                 dispatch(updateUserDBState("empty"));
             });
         }

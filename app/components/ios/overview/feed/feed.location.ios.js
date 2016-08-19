@@ -98,7 +98,7 @@ class FeedLocation extends Component {
     }
 
     _onFetch(page=1,callback){
-        console.log('on fetch',page);
+        //console.log('on fetch',page);
         this.itemsLoadedCallback=callback;
         var req={}
         if(this.props.isCountry){
@@ -107,7 +107,7 @@ class FeedLocation extends Component {
             req={needle:this.props.location,page}
         }
 
-        console.log('request',req);
+        //console.log('request',req);
         this.props.dispatch(loadFeed(req,this.props.user.sherpaToken,page,"location"));
     }
 
@@ -147,7 +147,7 @@ class FeedLocation extends Component {
 
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
-                         console.log("++ paginate ++");
+                         //console.log("++ paginate ++");
                     }}
                     onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;

@@ -46,7 +46,7 @@ class FeedTrip extends Component {
     }
 
     componentDidUpdate(){
-
+        //console.log('component did update');
     }
 
     toggleNav(){

@@ -74,13 +74,20 @@ class Root extends Component {
     }
 
 
+    //shouldComponentUpdate(nextProps,nextState){
+        //return (
+        //(nextState.currentView!=this.state.currentView)||
+        //((this.state.currentAppState=='background'||this.state.currentAppState=='background')&&nextState.currentAppState=='active')
+        //);
+    //}
+
     componentDidUpdate(prevProps,prevState){
         //console.log('did update')
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            if(this.props.user.userDBState=="not-whitelisted"){
                this.navigator.replace({id:"login"});
            }
-        }else if(prevState.currentView!=this.state.currentView){
+        }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});
         }
 
