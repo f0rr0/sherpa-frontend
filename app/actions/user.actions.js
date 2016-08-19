@@ -9,6 +9,7 @@ import React, { Linking,AlertIOS } from 'react-native';
 import store from 'react-native-simple-store';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
 let simpleAuthClient = require('react-native-simple-auth');
+import SafariView from "react-native-safari-view";
 
 
 /**
@@ -244,7 +245,61 @@ export function signupUser(){
         instagramAuthRequest();
         dispatch(updateUserSignupState("start"));
 
+
         function instagramAuthRequest(){
+            const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
+            const queryData = encodeQueryData({response_type, client_id, redirect_uri});
+
+            dispatch(updateUserSignupState("service_code_request"));
+            console.log('call ',endpoint+code_uri + "/?" +queryData)
+            SafariView.isAvailable()
+                .then(()=>{
+                    SafariView.show({
+                        url: endpoint+code_uri + "/?" +queryData
+                    });
+
+                    SafariView.addEventListener(
+                        "onCode",
+                        instagramAuthCallback
+                    );
+                })
+                .catch(error => {
+                    console.log(error,'error');
+                    instagramSimpleAuthWithWebview();
+                });
+
+        }
+
+        function instagramAuthCallback(event) {
+            dispatch(updateUserSignupState("service_code_complete"));
+
+            const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
+            SafariView.removeEventListener('onCode', instagramAuthCallback);
+            console.log(event,'response onCode');
+
+            let code = event.code;
+            const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
+
+            dispatch(updateUserSignupState("service_token_request"));
+            console.log('fetch ',queryData);
+            fetch(endpoint+token_uri, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:queryData
+            }).then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=>{
+                var info=JSON.parse(rawSherpaResponse);
+                signupWithSherpa(info.access_token,info.user);
+            }).catch(error => {
+                console.log(error,'error');
+                dispatch(updateUserDBState("empty"));
+            });
+        }
+
+        function instagramSimpleAuthWithWebview(){
             simpleAuthClient.configure({
                 instagram: {
                     client_id: '610a4a6a16bc40ec95f749e95c48087a',
@@ -259,7 +314,6 @@ export function signupUser(){
                     dispatch(updateUserDBState("empty"));
                 });
             });
-
         }
 
         function signupWithSherpa(instagramToken,userData){
