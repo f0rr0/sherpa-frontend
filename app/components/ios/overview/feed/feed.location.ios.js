@@ -83,7 +83,7 @@ class FeedLocation extends Component {
             }).catch(err=>console.log(err));
 
         }else if(this.props.feed.feedState==='reset'){
-            //this.refs.listview._refresh()
+            this.refs.listview._refresh()
         }
     }
 

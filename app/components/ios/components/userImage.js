@@ -1,17 +1,20 @@
 'use strict';
 
-import store from 'react-native-simple-store';
-import config from '../../../data/config';
-
-const {instagram,sherpa}=config.auth[config.environment];
-
-
 import {
     Image,
     View,
     TouchableHighlight
 } from 'react-native';
+
+import store from 'react-native-simple-store';
+import config from '../../../data/config';
 import React, { Component } from 'react';
+
+const {sherpa}=config.auth[config.environment];
+
+var styles=StyleSheet.create({
+    userImage:{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}
+});
 
 class UserImage extends Component {
     constructor(props){
@@ -39,10 +42,9 @@ class UserImage extends Component {
     }
 
     rescrapeImage(){
-        //console.log('rescrape image');
         store.get('user').then((user) => {
             if (user) {
-                const {endpoint,version,user_uri} = sherpa;
+                const {endpoint,version} = sherpa;
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -51,12 +53,10 @@ class UserImage extends Component {
                     headers: sherpaHeaders
                 })
                     .then((rawServiceResponse)=> {
-                        //console.log('raw response',rawServiceResponse);
                         return rawServiceResponse.text();
                     }).then((response)=> {
 
                     if(this.mounted){
-                        //console.log('set state',response)
                         this.setState({imageURL:response});
                     }
                 }).catch(err=>console.log('device token err',err));
@@ -69,7 +69,7 @@ class UserImage extends Component {
         return(
             <TouchableHighlight onPress={()=>{this.props.onPress()}}>
                 <Image
-                    style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
+                    style={styles.userImage}
                     resizeMode="cover"
                     source={{uri:imageURL}}
                 />

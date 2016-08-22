@@ -7,15 +7,16 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 
+var styles=StyleSheet.create({
+    tripTitleContainer:{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0},
+    tripTitleLarge: {color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"},
+    tripTitleSmall:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"}
+});
 
 class TripTitle extends Component {
     constructor(props) {
         super(props);
     }
-
-    componentDidMount(){
-    }
-
 
     render() {
         var tripData=this.props.tripData;
@@ -23,9 +24,9 @@ class TripTitle extends Component {
         if(tripName.toLowerCase()=="united states of america")tripName="united states";
 
         return (
-            <View style={{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0}}>
-                <Text style={{color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"}}>{this.props.tripOwner.toUpperCase()} TRIP TO</Text>
-                <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"}}>{tripName.toUpperCase()}</Text>
+            <View style={styles.tripTitleContainer}>
+                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()} TRIP TO</Text>
+                <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
                 <TripSubtitle tripData={this.props.tripData}></TripSubtitle>
             </View>
         );

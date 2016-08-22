@@ -90,9 +90,6 @@ class NotWhitelisted extends Component {
     constructor(props){
         super(props);
     }
-    componentDidMount(){
-
-    }
 
     connectWithService(){
         //console.log('connect with service');

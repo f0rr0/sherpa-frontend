@@ -6,20 +6,16 @@ import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Swiper from 'react-native-swiper';
 import OnboardingScreen from './onboarding.screen.ios'
-
-var windowSize=Dimensions.get('window');
+import React, { Component } from 'react';
+import NotificationsIOS from 'react-native-notifications';
 import {
     StyleSheet,
     View,
     Text,
     TouchableHighlight,
 } from 'react-native';
-import React, { Component } from 'react';
 
-
-
-import NotificationsIOS from 'react-native-notifications';
-
+var windowSize=Dimensions.get('window');
 
 var styles = StyleSheet.create({
     container: {
@@ -131,14 +127,11 @@ class OnboardingSteps extends Component {
     }
 
     allowNotifications() {
-        ////console.log(':: allow notifictions, request permissions ::')
         NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
         NotificationsIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){
-        //Clipboard.setString(deviceToken);
-        //console.log('device token',deviceToken);
         if(deviceToken){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{
@@ -268,15 +261,6 @@ class OnboardingSteps extends Component {
 
         );
     }
-}
-
-
-
-function select(state) {
-    return {
-        user: state.userReducer,
-        feed: state.feedReducer
-    };
 }
 
 export default OnboardingSteps;

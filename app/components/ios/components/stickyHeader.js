@@ -1,17 +1,16 @@
-import {
-    Animated
-} from 'react-native';
+import {Animated} from 'react-native';
 import React, { Component } from 'react';
 
+var styles=StyleSheet.create({
+    headerContainer:{height:70,top: this.topOffset,position:'absolute',backgroundColor:'transparent'}
+});
+
 class StickyHeader extends Component {
+
     constructor(props) {
         super(props);
         this.topOffset = new Animated.Value(-100);
         this.enabled=false;
-    }
-
-    componentDidMount(){
-        this.props.navigation.props.routeName='bla'
     }
 
     _setAnimation(enable) {
@@ -30,7 +29,7 @@ class StickyHeader extends Component {
 
     render() {
         return (
-            <Animated.View style={{height:70,top: this.topOffset,position:'absolute',backgroundColor:'transparent'}}>
+            <Animated.View style={styles.headerContainer}>
                     {this.props.navigation}
             </Animated.View>
         );

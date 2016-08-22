@@ -4,10 +4,7 @@ var React = require('react');
 
 var {
     ListView,
-    Platform,
-    TouchableHighlight,
     View,
-    Text,
     RefreshControl,
     } = require('react-native');
 
@@ -108,12 +105,7 @@ var SherpaGiftedListView = React.createClass({
         }
 
         return (
-            <View></View>
-            //<View style={[this.defaultStyles.paginationView, this.props.customStyles.paginationView]}>
-            //  <Text style={[this.defaultStyles.actionsLabel, this.props.customStyles.actionsLabel]}>
-            //    ~
-            //  </Text>
-            //</View>
+           null
         );
     },
     paginationWaitingView(paginateCallback) {
@@ -136,23 +128,7 @@ var SherpaGiftedListView = React.createClass({
             return this.props.emptyView(refreshCallback);
         }
 
-        return (<View></View>)
-        //return (
-        //  <View style={[this.defaultStyles.defaultView, this.props.customStyles.defaultView]}>
-        //    <Text style={[this.defaultStyles.defaultViewTitle, this.props.customStyles.defaultViewTitle]}>
-        //      Sorry, there is no content to display
-        //    </Text>
-        //
-        //    <TouchableHighlight
-        //      underlayColor='#c8c7cc'
-        //      onPress={refreshCallback}
-        //    >
-        //      <Text>
-        //        ↻
-        //      </Text>
-        //    </TouchableHighlight>
-        //  </View>
-        //);
+        return null
     },
     renderSeparator() {
         if (this.props.renderSeparator) {

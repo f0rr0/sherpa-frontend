@@ -25,7 +25,8 @@ var styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center',
         backgroundColor:"white"
-    }
+    },
+    loaderGIF:{width: 250, height: 250}
 })
 
 class Loading extends Component {
@@ -38,7 +39,7 @@ class Loading extends Component {
         var loadingInfo=<Text style={styles.copy}>LOADING</Text>
         return (
             <View style={styles.container}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+                <Image style={styles.loaderGIF} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
                 {loadingInfo}
             </View>
         );

@@ -70,22 +70,21 @@ var styles = StyleSheet.create({
         position:'absolute',
         top:180,
         width:windowSize.width
-    }
+    },
+
+    backgroundImage:{width:windowSize.width,height:windowSize.height,position:"absolute",top:0,left:0},
+    middleImage:{width:windowSize.width,height:windowSize.height*.5}
 });
 
 class OnboardingScreen extends Component {
     constructor(props){
         super(props);
     }
-    componentDidMount(){
-
-    }
-
 
     render() {
         return (
             <View>
-                {(()=>{if(this.props.backgroundImage){return(<Image source={this.props.backgroundImage} style={{width:windowSize.width,height:windowSize.height,position:"absolute",top:0,left:0}} resizeMode="cover"></Image>)}})()}
+                {(()=>{if(this.props.backgroundImage){return(<Image source={this.props.backgroundImage} style={styles.backgroundImage} resizeMode="cover"></Image>)}})()}
 
                 <View style={styles.topArea}>
                     <Text style={[styles.baseText,styles.headline]}>{this.props.headline}</Text>
@@ -93,7 +92,7 @@ class OnboardingScreen extends Component {
                 </View>
 
                 <View style={styles.middleArea}>
-                    {(()=>{if(this.props.middleImage){return(<Image source={this.props.middleImage} style={{width:windowSize.width,height:windowSize.height*.5}} resizeMode="contain"></Image>)}})()}
+                    {(()=>{if(this.props.middleImage){return(<Image source={this.props.middleImage} style={styles.middleImage} resizeMode="contain"></Image>)}})()}
                 </View>
 
                 <View style={styles.bottomArea}>

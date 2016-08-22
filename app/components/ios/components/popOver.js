@@ -125,6 +125,6 @@ PopOver.defaultProps = {
     showReset:false,
     shareURL:"http://trysherpa.com/",
     shareCopy:"SHARE"
-}
+};
 
 export default PopOver;

@@ -15,6 +15,25 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 
+
+var styles=Stylesheet.create({
+    ratingContainer:{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'},
+    ratingNumber:{fontSize:8,marginTop:1,marginLeft:1},
+    ratingCount:{fontSize:10,color:"#999"},
+
+    pricingLight:{fontSize:12,color:"#333"},
+    pricingDark:{fontSize:12,color:"#999"},
+    pricingContainer:{marginLeft:8,flex:1,justifyContent:'center'},
+
+
+    infoBoxContainer:{paddingTop:20,paddingBottom:20,paddingLeft:5,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'},
+    infoBoxTitle:{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"},
+
+    venueContainer:{flex:1,flexDirection:'row',justifyContent:'space-between'},
+    venueIconContainer:{width:30,height:30,backgroundColor:"#8ad78d",flex:1,alignItems:'center',justifyContent:'center',borderRadius:3},
+    venueIcon:{height:16,width:16}
+});
+
 class FoursquareInfoBox extends Component {
     constructor(props){
         super(props);
@@ -51,28 +70,6 @@ class FoursquareInfoBox extends Component {
 
             var targetIndex=-1;
 
-            //var targetIndex=-1;
-            //var s1 = query.toLowerCase();
-            //var s1Parts= s1.split(' ');
-            //var score=-1;
-            //for(var i=0;i<venueResult.length;i++){
-            //
-            //    var s2 = venueResult[i].name.toLowerCase();
-            //    var s2Parts= s2.split(' ');
-            //
-            //    var allParts=s2Parts.concat(s1Parts);
-            //    var oldCount=allParts.length;
-            //    allParts = allParts.sort();
-            //    allParts=allParts.filter( function(v,i,o){if(i>=0 && v!==o[i-1]) return v;});
-            //    var newScore=oldCount-allParts.length;
-            //
-            //
-            //    if(newScore>=2&&newScore>score){
-            //        score=newScore;
-            //        targetIndex=i;
-            //    }
-            //}
-
             var s1 = query.toLowerCase();
             for(var i=0;i<venueResult.length;i++){
 
@@ -100,7 +97,6 @@ class FoursquareInfoBox extends Component {
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     var venueInfo=JSON.parse(response).response.venue;
-                    //console.log(venueInfo);
                     if(venueInfo.name.toLowerCase()!=query.toLowerCase())return;
                     var venueObject={
                         category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
@@ -125,12 +121,12 @@ class FoursquareInfoBox extends Component {
         if(!this.state.venue)return(<View></View>);
         var ratings=this.state.venue.rating?
                     <View>
-                        <View style={{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'}}>
+                        <View style={styles.ratingContainer}>
                             <Text>{this.state.venue.rating}/</Text>
-                            <Text style={{fontSize:8,marginTop:1,marginLeft:1}}>10</Text>
+                            <Text style={styles.ratingNumber}>10</Text>
                         </View>
                         <View>
-                            <Text style={{fontSize:10,color:"#999"}}>{this.state.venue.ratingCount} Ratings</Text>
+                            <Text style={styles.ratingCount}>{this.state.venue.ratingCount} Ratings</Text>
                         </View>
                     </View>
                 :<View></View>
@@ -149,30 +145,30 @@ class FoursquareInfoBox extends Component {
                 }
                 pricing=
                     <View style={{flex:1,flexDirection:'row'}}>
-                        <Text style={{fontSize:12,color:"#333"}}>{dollarsStart}</Text>
-                        <Text style={{fontSize:12,color:"#999"}}>{dollarsEnd}</Text>
+                        <Text style={styles.pricingLight}>{dollarsStart}</Text>
+                        <Text style={styles.pricingDark}>{dollarsEnd}</Text>
                     </View>
             }else{
                 pricing=<View></View>
             }
 
         return(
-                <View style={{paddingTop:20,paddingBottom:20,paddingLeft:5,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'}} >
+                <View style={styles.infoBoxContainer} >
                     <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openFoursquare()}}>
                         <View>
-                            <Text style={{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"}}>FOURSQUARE</Text>
-                            <View style={{flex:1,flexDirection:'row',justifyContent:'space-between'}}>
+                            <Text style={styles.infoBoxTitle}>FOURSQUARE</Text>
+                            <View style={styles.venueContainer}>
                                 <View>
-                                    <View style={{width:30,height:30,backgroundColor:"#8ad78d",flex:1,alignItems:'center',justifyContent:'center',borderRadius:3}}>
+                                    <View style={styles.venueIconContainer}>
                                         <Image
-                                            style={{height:16,width:16}}
+                                            style={styles.venueIcon}
                                             resizeMode="contain"
                                             source={{uri:this.state.venue.icon}}
                                         />
                                     </View>
                                 </View>
-                                <View style={{marginLeft:8,flex:1,justifyContent:'center'}}>
-                                    <Text style={{fontSize:12,color:"#333"}}>{this.state.venue.category}</Text>
+                                <View style={styles.pricingContainer}>
+                                    <Text style={styles.pricingDark}>{this.state.venue.category}</Text>
                                     {pricing}
                                 </View>
                                 {ratings}

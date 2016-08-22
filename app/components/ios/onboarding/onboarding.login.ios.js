@@ -22,7 +22,6 @@ var styles = StyleSheet.create({
     container: {
         flexDirection:'row',
         flex:1,
-        //backgroundColor:'blue',
         position:'absolute',
         alignItems:"flex-end",
         height:windowSize.height,
