@@ -11,7 +11,7 @@ import {updateTab} from '../../../actions/app.actions';
 import { connect } from 'react-redux';
 import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
-
+import React, { Component } from 'react';
 import {
     StyleSheet,
     View,
@@ -21,8 +21,6 @@ import {
     NetInfo,
     Alert
 } from 'react-native';
-import React, { Component } from 'react';
-
 
 
 const EXPLORE="explore";
@@ -52,7 +50,9 @@ var styles=StyleSheet.create({
         width:85,
         marginTop:30,
         marginBottom:30
-    }
+    },
+    tabBarHeight:{height: 60},
+    tabBarShadow:{width:375,height:30,left:0,bottom:55,position:'absolute'}
 });
 
 StatusBar.setHidden(true);
@@ -73,25 +73,16 @@ class Overview extends React.Component {
         this.props.dispatch(updateTab(this.state.selectedTab));
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
-
-        //this.setState({selectedTab:FEED,selectedView:{"type":"TRIP",id:22164}});
-        //this.setState({selectedTab:PROFILE,selectedView:{"type":"PROFILE",id:1233}});
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
-
         NetInfo.fetch().done(this.handleFirstConnectivityChange);
-        //console.log('props ++',this.props);
-
         NetInfo.addEventListener(
             'change',
             this.handleFirstConnectivityChange
         );
-
-
     }
 
     handleFirstConnectivityChange(reach) {
         if(reach=='none'){
-            // Works on both iOS and Android
             Alert.alert(
                 'No internet connection',
                 "Please verify your connection and try again.",
@@ -103,7 +94,6 @@ class Overview extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-
         if(this.state.selectedTab!==prevState.selectedTab){
             this.props.dispatch(udpateFeedState("reset"));
             this.props.dispatch(updateTab(this.state.selectedTab));
@@ -122,15 +112,13 @@ class Overview extends React.Component {
 
 
     _onNotificationOpened(notification) {
-        //console.log('get message',notification.getMessage())
-        //console.log('get data',notification.getData())
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }
 
     render() {
-        var tabBar =    <TabNavigator  tabBarStyle={{ height: 60}} container={{height:60}}>
+        var tabBar =    <TabNavigator  tabBarStyle={styles.tabBarHeight} container={styles.tabBarHeight}>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image source={require('./../../../images/icon-feed.png')} />}
@@ -161,7 +149,7 @@ class Overview extends React.Component {
 
             <View style={{flex:1}}>
                 {tabBar}
-                <Image source={require('./../../../images/navbar_dropshadow.png')} resizeMode="contain" style={{width:375,height:30,left:0,bottom:55,position:'absolute'}}></Image>
+                <Image source={require('./../../../images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
             </View>
         );
     }

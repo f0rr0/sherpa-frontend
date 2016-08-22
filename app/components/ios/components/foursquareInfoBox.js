@@ -11,12 +11,13 @@ import {
     Text,
     Image,
     TouchableHighlight,
-    Linking
+    Linking,
+    StyleSheet
 } from 'react-native';
 import React, { Component } from 'react';
 
 
-var styles=Stylesheet.create({
+var styles=StyleSheet.create({
     ratingContainer:{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'},
     ratingNumber:{fontSize:8,marginTop:1,marginLeft:1},
     ratingCount:{fontSize:10,color:"#999"},

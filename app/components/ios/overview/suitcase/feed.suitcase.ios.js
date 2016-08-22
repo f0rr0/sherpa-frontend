@@ -51,7 +51,26 @@ var styles = StyleSheet.create({
         color:'white',
         fontFamily:"TSTAR-bold",
         fontSize:12
-    }
+    },
+
+    loaderContainer:{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'},
+    loaderImage:{width: 250, height: 250},
+
+    emptyContainer:{flex:1,justifyContent: 'center', height:400,alignItems: 'center'},
+    emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
+
+    suitcaseCopySmall:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5},
+    suitcaseCopyLarge:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"},
+    listViewLabel:{fontSize:12},
+
+    suitcaseHeaderContainer:{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:150},
+    suitcaseHeaderInfo:{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"},
+    suitcaseHeaderInfoCopy:{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
+
+    iconCountries:{height:8,marginBottom:3},
+    iconDivider:{height:25,marginLeft:35,marginRight:25},
+    iconImages:{height:7,marginBottom:3},
+    listItemImage:{position:"absolute",top:0,left:0,flex:1,height:90,width:windowSize.width-30,opacity:1}
 });
 
 class Suitecase extends React.Component {
@@ -78,7 +97,6 @@ class Suitecase extends React.Component {
     }
 
     showTripDetail(trip) {
-        //console.log('trip data suitcase',trip);
         this.props.navigator.push({
             id: "destination",
             trip
@@ -87,8 +105,8 @@ class Suitecase extends React.Component {
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            <View style={styles.loaderContainer}>
+                <Image style={styles.loaderImage} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
             </View>
         )
     }
@@ -115,31 +133,30 @@ class Suitecase extends React.Component {
                     paginationFetchingView={this._renderEmpty.bind(this)}
 
                     onScroll={(event)=>{
-                     var currentOffset = event.nativeEvent.contentOffset.y;
-                     var direction = currentOffset > this.offset ? 'down' : 'up';
-                     this.offset = currentOffset;
-                     if(direction=='down'||currentOffset<100){
-                        this.refs.stickyHeader._setAnimation(false);
-                     }else{
-                        this.refs.stickyHeader._setAnimation(true);
-                     }
+                         var currentOffset = event.nativeEvent.contentOffset.y;
+                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         this.offset = currentOffset;
+                         if(direction=='down'||currentOffset<100){
+                            this.refs.stickyHeader._setAnimation(false);
+                         }else{
+                            this.refs.stickyHeader._setAnimation(true);
+                         }
                     }}
                     headerView={this._renderHeader.bind(this)}
                     customStyles={{
                         contentContainerStyle:styles.listView,
-                        actionsLabel:{fontSize:12}
+                        actionsLabel:styles.listViewLabel
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-
             </View>
         )
     }
 
     _emptyView(){
         return(
-            <View style={{flex:1,justifyContent: 'center', height:400,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
+            <View style={styles.emptyContainer}>
+                <Text style={styles.emptyCopy}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
             </View>
         )
     }
@@ -159,13 +176,13 @@ class Suitecase extends React.Component {
         var photoOrPhotos=moments>1?"LOCATIONS":"LOCATION";
 
         return (
-            <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:150}}>
-                <View style={{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
-                    <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {citieS}</Text>
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
+            <View style={styles.suitcaseHeaderContainer}>
+                <View style={styles.suitcaseHeaderInfo}>
+                    <Image source={require('image!icon-countries-negative')} style={styles.iconCountries} resizeMode="contain"></Image>
+                    <Text style={styles.suitcaseHeaderInfoCopy}>{tripDuration} {citieS}</Text>
+                    <Image source={require('image!icon-divider')} style={styles.iconDivider} resizeMode="contain"></Image>
+                    <Image source={require('image!icon-images-negative')} style={styles.iconImages} resizeMode="contain"></Image>
+                    <Text style={styles.suitcaseHeaderInfoCopy}>{moments} {photoOrPhotos}</Text>
                 </View>
                 {this.props.navigation.default}
             </View>
@@ -173,12 +190,10 @@ class Suitecase extends React.Component {
     }
 
     _renderRow(tripData) {
-        //tripData.name="";
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;
         })[0];
 
-        //if country code not in ISO, don't resolve country. i.e. Kosovo uses XK but is not in ISO yet
         if(!country)country={name:tripData.name};
         var countryOrState=(tripData.name.toUpperCase()==="US")?tripData.state:country.name;
 
@@ -186,15 +201,15 @@ class Suitecase extends React.Component {
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:90,width:windowSize.width-30,opacity:1}}
+                        style={styles.listItemImage}
                         resizeMode="cover"
                         source={{uri:tripData.moments[0].mediaUrl}}
                     >
                         <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
 
                     </Image>
-                    <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5}}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
-                    <Text style={{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
+                    <Text style={styles.suitcaseCopySmall}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
+                    <Text style={styles.suitcaseCopyLarge}>{countryOrState.toUpperCase()}</Text>
                 </View>
             </TouchableHighlight>
         );

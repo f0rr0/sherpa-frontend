@@ -1,5 +1,6 @@
-import {Animated} from 'react-native';
-import React, { Component } from 'react';
+import {Animated,StyleSheet} from 'react-native';
+import React, {
+    Component} from 'react';
 
 var styles=StyleSheet.create({
     headerContainer:{height:70,top: this.topOffset,position:'absolute',backgroundColor:'transparent'}

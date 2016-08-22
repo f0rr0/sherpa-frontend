@@ -3,18 +3,14 @@
 import {
     Image,
     View,
-    TouchableHighlight
+    TouchableHighlight,
+    StyleSheet
 } from 'react-native';
 
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
-import React, { Component } from 'react';
-
+import React, {Component} from 'react';
 const {sherpa}=config.auth[config.environment];
-
-var styles=StyleSheet.create({
-    userImage:{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}
-});
 
 class UserImage extends Component {
     constructor(props){
@@ -69,7 +65,7 @@ class UserImage extends Component {
         return(
             <TouchableHighlight onPress={()=>{this.props.onPress()}}>
                 <Image
-                    style={styles.userImage}
+                    style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
                     resizeMode="cover"
                     source={{uri:imageURL}}
                 />

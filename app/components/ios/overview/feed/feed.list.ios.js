@@ -73,7 +73,6 @@ class FeedList extends React.Component{
     }
 
     showTripDetail(trip) {
-        //console.log('navigator push',this.props.navigator);
         this.props.navigator.push({
             id: "trip",
             trip

@@ -1,11 +1,11 @@
 import TripSubtitle from '../components/tripSubtitle'
 import countries from '../../../data/countries'
-
+import React, {Component} from 'react';
 import {
     View,
-    Text
+    Text,
+    StyleSheet
 } from 'react-native';
-import React, { Component } from 'react';
 
 var styles=StyleSheet.create({
     tripTitleContainer:{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0},

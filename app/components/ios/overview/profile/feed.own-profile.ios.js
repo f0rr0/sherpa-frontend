@@ -12,7 +12,6 @@ import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import config from '../../../../data/config';
-
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
@@ -62,7 +61,8 @@ var styles = StyleSheet.create({
         flex:1,
         justifyContent:'center',
         alignItems:'center'
-    }
+    },
+    listViewLabel:{fontSize:12}
 });
 
 class OwnUserProfile extends React.Component {
@@ -129,7 +129,7 @@ class OwnUserProfile extends React.Component {
                 headerView={this._renderHeader.bind(this)}
                 customStyles={{
                     contentContainerStyle:styles.listView,
-                    actionsLabel:{fontSize:12}
+                    actionsLabel:styles.listViewLabel
                 }}
             />
 
@@ -141,13 +141,9 @@ class OwnUserProfile extends React.Component {
     }
 
     resetProfile(){
-        //console.log('reset profile')
-        const {endpoint,version,feed_uri,user_uri} = sherpa;
+        const {endpoint,version} = sherpa;
         let feedRequestURI;
         feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
-        //console.log('reset call',feedRequestURI);
-
-        let sherpaResponse;
         let sherpaHeaders = new Headers();
         sherpaHeaders.append("token", this.props.user.sherpaToken);
         var me = this;
@@ -158,7 +154,6 @@ class OwnUserProfile extends React.Component {
             mode: 'cors'
         })
             .then((rawSherpaResponse)=> {
-                //console.log(rawSherpaResponse)
                 switch (rawSherpaResponse.status) {
                     case 200:
                         return rawSherpaResponse.text()
@@ -197,7 +192,7 @@ class OwnUserProfile extends React.Component {
                 moments+=trips[i].moments.length;
             }
         }
-        var hasDescriptionCopy=true;//this.props.user.serviceObject.profile&&this.props.user.serviceObject.profile.serviceBio.length>0;
+        var hasDescriptionCopy=true;
 
         return (
             <View>
@@ -226,7 +221,7 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderRow(tripData) {
-        if(!tripData.country || !tripData.continent || !tripData.name)return <View/>;
+        if(!tripData.country || !tripData.continent || !tripData.name)return null;
         var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         return (
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>

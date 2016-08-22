@@ -6,9 +6,11 @@ import {
     View,
     Text,
     Linking,
-    TouchableHighlight
+    TouchableHighlight,
+    StyleSheet
 } from 'react-native';
-import React, { Component } from 'react';
+import React, {
+    Component} from 'react';
 import {removeDiacritics} from '../utils/stringUtils';
 
 
