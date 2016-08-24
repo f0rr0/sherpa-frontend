@@ -41,6 +41,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             }
 
             console.log(feedRequestURI,'feed request uri');
+            console.log(sherpaToken,'token');
 
 
 

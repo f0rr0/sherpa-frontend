@@ -117,66 +117,69 @@ class TripDetail extends React.Component{
 
         var country=this.getTripLocation(this.props.tripDetails.trip);
         return (
-            <ScrollView style={{flex:1,backgroundColor:'white'}}>
+            <View style={{flex:1}}>
+                <ScrollView style={{flex:1,backgroundColor:'white'}}>
 
-                <Image
-                    style={{marginTop:70,marginLeft:15,height:windowSize.width-30,width:windowSize.width-30 }}
-                    resizeMode="cover"
-                    source={{uri:this.props.tripDetails.trip.mediaUrl}}
-                />
-
-
-                {profilePic}
-
-                <MaskedView maskImage='mask-bottom' style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10}} >
-
-                    <Mapbox
-                        style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
-                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                        centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
-                        zoomLevel={8}
-                        onScroll={(event)=>{
-                             var currentOffset = event.nativeEvent.contentOffset.y;
-                             var direction = currentOffset > this.offset ? 'down' : 'up';
-                             this.offset = currentOffset;
-                             if(direction=='down'||currentOffset<30){
-                                this.refs.stickyHeader._setAnimation(false);
-                             }else{
-                                this.refs.stickyHeader._setAnimation(true);
-                             }
-                        }}
-                        annotations={[
-                            {
-                                coordinates: [this.props.tripDetails.trip.lat, this.props.tripDetails.trip.lng],
-                                type: 'point',
-                                title:this.props.tripDetails.trip.venue,
-                                annotationImage: {
-                                    url: 'image!icon-pin',
-                                    height: 7,
-                                    width: 7
-                                },
-                                id:"markers1"
-                            }
-                        ]}
-                        scrollEnabled={true}
-                        zoomEnabled={true}
+                    <Image
+                        style={{marginTop:70,marginLeft:15,height:windowSize.width-30,width:windowSize.width-30 }}
+                        resizeMode="cover"
+                        source={{uri:this.props.tripDetails.trip.mediaUrl}}
                     />
 
-                </MaskedView>
-                <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
-                <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
 
-                <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
-                    <View>
-                        <Text style={styles.copyLarge}>{this.state.suitcased?"SAVED TO SUITCASE":"SAVE TO SUITCASE"}</Text>
-                    </View>
-                </TouchableHighlight>
+                    {profilePic}
+
+                    <MaskedView maskImage='mask-bottom' style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10}} >
+
+                        <Mapbox
+                            style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
+                            styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                            accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                            centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
+                            zoomLevel={8}
+                            onScroll={(event)=>{
+                                 var currentOffset = event.nativeEvent.contentOffset.y;
+                                 var direction = currentOffset > this.offset ? 'down' : 'up';
+                                 this.offset = currentOffset;
+                                 if(direction=='down'||currentOffset<30){
+                                    this.refs.stickyHeader._setAnimation(false);
+                                 }else{
+                                    this.refs.stickyHeader._setAnimation(true);
+                                 }
+                            }}
+                            annotations={[
+                                {
+                                    coordinates: [this.props.tripDetails.trip.lat, this.props.tripDetails.trip.lng],
+                                    type: 'point',
+                                    title:this.props.tripDetails.trip.venue,
+                                    annotationImage: {
+                                        url: 'image!icon-pin',
+                                        height: 7,
+                                        width: 7
+                                    },
+                                    id:"markers1"
+                                }
+                            ]}
+                            scrollEnabled={true}
+                            zoomEnabled={true}
+                        />
+
+                    </MaskedView>
+                    <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
+                    <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
+
+                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
+                        <View>
+                            <Text style={styles.copyLarge}>{this.state.suitcased?"SAVED TO SUITCASE":"SAVE TO SUITCASE"}</Text>
+                        </View>
+                    </TouchableHighlight>
 
 
-                {this.props.navigation.default}
-                <PopOver ref="popover"></PopOver>
-            </ScrollView>
+                    {this.props.navigation.default}
+                </ScrollView>
+                <PopOver ref="popover" showShare={false} reportPhoto={true} momentID={this.props.tripDetails.trip.id}></PopOver>
+
+            </View>
         )
     }
 }

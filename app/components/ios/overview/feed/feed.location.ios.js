@@ -52,8 +52,6 @@ class FeedLocation extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(this.props.feed.locationResults,'search results')
-        //console.log(prevProps.feed.feedState,'prevprops feed state',this.props.feed.locationResults[this.props.feed.feedPage],this.props.feed.feedPage);
         if(this.props.feed.feedState==='ready'&&this.props.feed.locationResults[this.props.feed.feedPage]){
 
             var unpackedResults=this.props.feed.locationResults[this.props.feed.feedPage];
@@ -147,7 +145,6 @@ class FeedLocation extends Component {
 
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
-                         //console.log("++ paginate ++");
                     }}
                     onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;

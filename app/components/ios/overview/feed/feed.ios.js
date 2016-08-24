@@ -35,6 +35,7 @@ class Feed extends Component {
     }
 
     componentDidMount(){
+        this.setView.bind(this)({'type':'TRIP',id:23673})
     }
 
     setView(deepLinkObject){
@@ -124,7 +125,7 @@ class Feed extends Component {
                 break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,true)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,false)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
                 break;
         }
 

@@ -21,6 +21,9 @@ var styles = StyleSheet.create({
         flex:1,
         justifyContent:"center"
     },
+    buttonRed:{
+        backgroundColor:'white'
+    },
     buttonCopy:{
         fontFamily:"TSTAR",
         letterSpacing:1,
@@ -105,9 +108,15 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>FEEDBACK</Text>
             </TouchableHighlight>;
 
+        var reportPhotoButton=this.props.reportPhoto?
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={()=>{Communications.email(['support@trysherpa.com'], null, null, "Report Abuse", 'Photos ID: '+this.props.momentID+'\n Description: Please tell us why you feel this content is inappropriate.')}}>
+                <Text style={[styles.buttonCopy]}>REPORT ABUSE</Text>
+            </TouchableHighlight>:null;
+
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {shareButton}
+                {reportPhotoButton}
                 {resetProfileButton}
                 {logoutButton}
                 {deleteButton}
@@ -124,7 +133,8 @@ PopOver.defaultProps = {
     showDelete:false,
     showReset:false,
     shareURL:"http://trysherpa.com/",
-    shareCopy:"SHARE"
+    shareCopy:"SHARE",
+    reportPhoto:false
 };
 
 export default PopOver;

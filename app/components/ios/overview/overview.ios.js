@@ -71,9 +71,12 @@ class Overview extends React.Component {
 
     componentDidMount(){
         this.props.dispatch(updateTab(this.state.selectedTab));
+
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
+
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
+
         NetInfo.fetch().done(this.handleFirstConnectivityChange);
         NetInfo.addEventListener(
             'change',
