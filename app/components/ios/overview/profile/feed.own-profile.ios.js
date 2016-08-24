@@ -185,7 +185,6 @@ class OwnUserProfile extends React.Component {
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
 
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
-        var tripDuration=trips.length;
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){
@@ -204,8 +203,6 @@ class OwnUserProfile extends React.Component {
                             source={{uri:this.props.user.profilePicture}}
                         />
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
-                        {/*<Text style={{color:"#282b33",fontSize:10,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.hometown.toUpperCase()}</Text>*/}
-                        {/*<Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{hasDescriptionCopy?this.props.user.serviceObject.profile.serviceBio:""}</Text>*/}
                         <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your photos on Instagram to update your profile.</Text>
                     </View>
                     <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>

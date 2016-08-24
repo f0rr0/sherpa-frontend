@@ -35,97 +35,122 @@ class WikpediaInfoBox extends Component {
 
     getWikipediaData(query){
         var dbpediaHeaders = new Headers();
+        //add json response type for dbpedia query
         dbpediaHeaders.append("accept", "application/json");
+
+        //if the query has multiple words separated by the comma, take the first word, otherwise just use the query
         query=query.indexOf(",")>0?query.split(',')[0]:query;
+
+        //if we know the query is a country, only look for countries
         var featureType=this.props.type=='country'?"&feature=country":"";
-        fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows=5&username=travelsherpa"+featureType+"&q="+query, {
+
+        //maximum listings to look through
+        var maxRows=5;
+
+        //query geonames to get likely results that include location data
+        fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows="+maxRows+"&username=travelsherpa"+featureType+"&q="+query, {
             method: 'get'
         }).then((rawServiceResponse)=> {
             return rawServiceResponse.text();
         }).then((response)=> {
+
             var wikiResponse=JSON.parse(response).geonames;
             if(wikiResponse.length==0)return;
 
+            //if all checks below fail, we'll just use the first result and check for lat/lng
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
-            for(var i=0;i<5;i++){
+            for(var i=0;i<maxRows;i++){
+                //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiResponse[i].title.toLowerCase());
+
+                // name matching::compare if we have :
+                // a perfect match on the regular query
+                // a partial match on the regular query or
+                // a perfect match on the normalized query
 
                 if(wikiResponse[i].title.toLowerCase()==query.toLowerCase()|| wikiResponse[i].title.toLowerCase().indexOf(query.toLowerCase())>-1 || cleardQuery==cleardResponse){
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
                     break;
                 }
+                //if we have no name match, check if at least the feature-type matches, so we received a country when looking for one
+                //best for populated places
                 else if(wikiResponse[i].feature==this.props.type){
                     wikiResult=wikiResponse[i];
                     break;
-                }else if(this.props.country&&wikiResponse[i].countryCode==this.props.country.countryCode){
+                }
+                //add another check if we at least have a result with the same countryCode
+                //best for populated places
+                else if(this.props.country&&wikiResponse[i].countryCode==this.props.country.countryCode){
                     wikiResult=wikiResponse[i];
                     break;
                 }
             }
 
+
+
+            //no that we have the best likely result, we'll do another check if its withing a certain lat/lng range from our query
+
+            //if we requested a location, it will likely not have coordinates attached by geonames for some reason
+            //but also likely already passed one of the earlier tests, so we'll give it a shot without lat/lng matching.
+
+            var latLngRange=1;
+
             var locationCheck=this.props.type=='default'?
             this.props.coordinates&&
-            (Math.floor(this.props.coordinates.lat)<=Math.floor(wikiResult.lat)+1)&&
-            (Math.floor(this.props.coordinates.lat)>=Math.floor(wikiResult.lat)-1)&&
-            (Math.floor(this.props.coordinates.lng)<=Math.floor(wikiResult.lng+1))&&
-            (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResult.lng-1)):
+            (Math.floor(this.props.coordinates.lat)<=Math.floor(wikiResult.lat)+latLngRange)&&
+            (Math.floor(this.props.coordinates.lat)>=Math.floor(wikiResult.lat)-latLngRange)&&
+            (Math.floor(this.props.coordinates.lng)<=Math.floor(wikiResult.lng+latLngRange))&&
+            (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResult.lng-latLngRange)):
                 true;
 
             if(
                 locationCheck&&
-                (wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1||titleMatch)
+                titleMatch
             ){
 
-                if(this.props.type!="default"){
-                    var finalDescription;
-                    fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryClass=PopulatedPlace&QueryString="+cleardQuery, {
-                        method: 'get',
-                        headers:dbpediaHeaders
-                    }).then((rawServiceResponse)=> {
-                        return rawServiceResponse.text();
-                    }).then((response)=> {
+                //to get better description copy, now query dbpedia and lets hope we get the same result as from geonames
+                var dbpediaQuery="";
+                switch(this.props.type){
+                    case 'default':
+                        dbpediaQuery="QueryString="+cleardQuery;
+                    break;
+                    case 'location':
+                    default:
+                        dbpediaQuery="QueryClass=PopulatedPlace&QueryString="+cleardQuery;
+                }
 
-                        var results=JSON.parse(response).results;
-                        if(results.length){
-                            for(var i=0;i<results.length;i++){
-                                if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
-                                        finalDescription=results[i].description;
-                                        if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
-                                    break;
-                                }
-                            }
-                        }
-                        finalDescription=finalDescription || wikiResult.summary.replace(" (...)","...");
-                        this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
+                var finalDescription;
+                fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?"+dbpediaQuery, {
+                    method: 'get',
+                    headers:dbpediaHeaders
+                }).then((rawServiceResponse)=> {
+                    return rawServiceResponse.text();
+                }).then((response)=> {
 
-                    })
-                }else{
-                    var finalDescription;
-                    fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?QueryString="+cleardQuery, {
-                        method: 'get',
-                        headers:dbpediaHeaders
-                    }).then((rawServiceResponse)=> {
-                        return rawServiceResponse.text();
-                    }).then((response)=> {
-                        var results=JSON.parse(response).results;
+                    var results=JSON.parse(response).results;
+                    if(results.length){
                         for(var i=0;i<results.length;i++){
+                            //another round of name matching, remove spaces from results because there were some anomalies
                             if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
-                                finalDescription=results[i].description;
-                                if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
+                                    //get the final description
+                                    finalDescription=results[i].description;
+
+                                    //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
+                                    if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
                                 break;
                             }
                         }
+                    }
+                    //if we didn't get a good description from dbpedia, lets use the geonames one
+                    finalDescription=finalDescription || wikiResult.summary.replace(" (...)","...");
 
-                        finalDescription=finalDescription || wikiResult.summary.replace(" (...)","...");
-                        this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
-                    })
-
-                }
-
+                    //finally update state
+                    this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
+                })
 
             }
         }).catch(err=>console.log('device token err',err));
