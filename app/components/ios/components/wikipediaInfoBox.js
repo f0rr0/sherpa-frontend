@@ -32,7 +32,6 @@ class WikpediaInfoBox extends Component {
         this.getWikipediaData(this.props.location);
     }
 
-
     getWikipediaData(query){
         var dbpediaHeaders = new Headers();
         //add json response type for dbpedia query
@@ -68,10 +67,9 @@ class WikpediaInfoBox extends Component {
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
-                // a partial match on the regular query or
                 // a perfect match on the normalized query
 
-                if(wikiResponse[i].title.toLowerCase()==query.toLowerCase()|| wikiResponse[i].title.toLowerCase().indexOf(query.toLowerCase())>-1 || cleardQuery==cleardResponse){
+                if(wikiResponse[i].title.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
                     break;
@@ -92,7 +90,7 @@ class WikpediaInfoBox extends Component {
 
 
 
-            //no that we have the best likely result, we'll do another check if its withing a certain lat/lng range from our query
+            //now that we have the best likely result, we'll do another check if its withing a certain lat/lng range from our query
 
             //if we requested a location, it will likely not have coordinates attached by geonames for some reason
             //but also likely already passed one of the earlier tests, so we'll give it a shot without lat/lng matching.
@@ -107,9 +105,12 @@ class WikpediaInfoBox extends Component {
             (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResult.lng-latLngRange)):
                 true;
 
+            var partialTitleMatch=wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1;
+
+
             if(
                 locationCheck&&
-                titleMatch
+                (titleMatch || partialTitleMatch)
             ){
 
                 //to get better description copy, now query dbpedia and lets hope we get the same result as from geonames
@@ -117,7 +118,7 @@ class WikpediaInfoBox extends Component {
                 switch(this.props.type){
                     case 'default':
                         dbpediaQuery="QueryString="+cleardQuery;
-                    break;
+                        break;
                     case 'location':
                     default:
                         dbpediaQuery="QueryClass=PopulatedPlace&QueryString="+cleardQuery;
@@ -136,11 +137,11 @@ class WikpediaInfoBox extends Component {
                         for(var i=0;i<results.length;i++){
                             //another round of name matching, remove spaces from results because there were some anomalies
                             if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
-                                    //get the final description
-                                    finalDescription=results[i].description;
+                                //get the final description
+                                finalDescription=results[i].description;
 
-                                    //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
-                                    if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
+                                //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
+                                if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
                                 break;
                             }
                         }
@@ -153,7 +154,7 @@ class WikpediaInfoBox extends Component {
                 })
 
             }
-        }).catch(err=>console.log('device token err',err));
+        }).catch(err=>console.log('fetch err',err));
     }
 
     openWikipedia(){
