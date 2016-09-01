@@ -3,6 +3,8 @@
 import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
+import SimpleButton from '../components/simpleButton';
+import SimpleInput from '../components/simpleInput';
 var windowSize=Dimensions.get('window');
 
 
@@ -47,9 +49,8 @@ var styles = StyleSheet.create({
     },
     login:{
         flex:1,
-        padding:40,
+        padding:15,
         justifyContent:'center',
-        marginTop:80
     },
     textInput:{
         height: 50,
@@ -146,14 +147,13 @@ class Login extends Component {
             <View style={styles.container}>
                 <Image
                     style={styles.bg}
-                    source={require('./../../../images/sherpa-home.png')}
+                    source={require('./../../../Images/sherpa-home.png')}
                     resizeMode="cover"
                 />
 
                 <View style={styles.login}>
-                    <TouchableHighlight style={styles.button} underlayColor="white" onPress={this.connectWithService.bind(this)}>
-                            <Text style={styles.copyLarge}>CONNECT WITH INSTAGRAM</Text>
-                    </TouchableHighlight>
+                    <SimpleInput></SimpleInput>
+                    <SimpleButton icon="instagram" text="Connect with instagram"></SimpleButton>
                 </View>
             </View>
         );

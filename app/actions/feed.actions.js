@@ -40,11 +40,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 break;
             }
 
-            console.log(feedRequestURI,'feed request uri');
-            console.log(sherpaToken,'token');
-
-
-
             var sherpaResponse;
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", sherpaToken);
@@ -60,9 +55,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 method:'get',
                 headers:sherpaHeaders,
             };
-
-
-
 
             fetch(feedRequestURI,reqBody)
             .then((rawSherpaResponse)=>{

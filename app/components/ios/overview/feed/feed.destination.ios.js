@@ -10,11 +10,10 @@ import {loadFeed} from '../../../../actions/feed.actions';
 import {addMomentToSuitcase} from '../../../../actions/user.actions';
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
+import TripTitle from '../../components/tripTitle';
 import config from '../../../../data/config';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
-
-
 
 import {
     StyleSheet,
@@ -27,7 +26,49 @@ import {
 import React, { Component } from 'react';
 
 
-
+var styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+    listItem:{
+        flex:1,
+        backgroundColor:"black",
+        justifyContent:"center",
+        alignItems:'center',
+        paddingBottom:10,
+    },
+    listView:{
+        alignItems:'center',
+        justifyContent:"center",
+        paddingBottom:20
+    },
+    listItemContainer:{
+        flex:1,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
+        marginBottom:30
+    },
+    button:{
+        backgroundColor:'#001545',
+        height:50,
+        marginTop:-15,
+        marginBottom:13,
+        marginLeft:15,
+        marginRight:15,
+        width:windowSize.width-30,
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    copyLarge:{
+        color:'white',
+        fontFamily:"TSTAR-bold",
+        fontSize:12
+    },
+    mapMaskedView:{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1},
+    blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 },
+});
 
 class FeedDestination extends Component {
     constructor(){
@@ -89,7 +130,6 @@ class FeedDestination extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/suitcase/"+this.props.trip.id+"-"+this.props.user.sherpaID+"/"+this.props.user.sherpaToken}></PopOver>
 
             </View>
@@ -110,56 +150,25 @@ class FeedDestination extends Component {
         });
     }
 
-    showTripLocation(trip){
-        var tripData=this.props.trip;
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.name;
-        })[0];
-        var countryOrState=country ? country.name : tripData.name;
-
-        var tripLocation=tripData.name;
-        trip.name=countryOrState;
-
-        this.props.navigator.push({
-            id: "location",
-            trip,
-            location:tripLocation,
-            isCountry:country?true:false
-        });
-    }
-
     _renderHeader(){
         var tripData=this.props.trip;
-
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.name;
-        })[0];
-
-
-
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
-        var countryOrState=country ? country.name : tripData.name;
         var mapURI=this.props.trip.moments[0].mediaUrl;
+
         return (
             <View style={{flex:1}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1}} >
+                <MaskedView maskImage='mask-test' style={styles.mapMaskedView} >
 
                     <View
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' }}
+                        style={styles.blackOverlay}
                     />
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 }}
+                        style={styles.maskedViewImage}
                         source={{uri:mapURI}}
                     >
-
                     </Image>
 
-
-                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}}>
-                        <TouchableHighlight style={{height:30}} onPress={() => this.showTripLocation(this.props.trip)}>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{countryOrState.toUpperCase()}</Text>
-                        </TouchableHighlight>
-                    </View>
+                    <TripTitle type="destination" showSubtitle={false} standalone={true} tripData={tripData}></TripTitle>
                 </MaskedView>
                 <Mapbox
                     style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
@@ -215,45 +224,5 @@ class FeedDestination extends Component {
     }
 }
 
-var styles = StyleSheet.create({
-    container: {
-        flex: 1,
-    },
-    listItem:{
-        flex:1,
-        backgroundColor:"black",
-        justifyContent:"center",
-        alignItems:'center',
-        paddingBottom:10,
-    },
-    listView:{
-        alignItems:'center',
-        justifyContent:"center",
-        paddingBottom:20
-    },
-    listItemContainer:{
-        flex:1,
-        width:windowSize.width-30,
-        height:windowSize.width-30,
-        marginBottom:30
-    },
-    button:{
-        backgroundColor:'#001545',
-        height:50,
-        marginTop:-15,
-        marginBottom:13,
-        marginLeft:15,
-        marginRight:15,
-        width:windowSize.width-30,
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center'
-    },
-    copyLarge:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:12
-    }
-});
 
 export default FeedDestination;

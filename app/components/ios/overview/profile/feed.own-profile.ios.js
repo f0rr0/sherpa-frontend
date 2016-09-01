@@ -210,8 +210,6 @@ class OwnUserProfile extends React.Component {
                     </View>
                 </MaskedView>
 
-
-
                 {this.props.navigation.default}
             </View>
         )
@@ -237,6 +235,7 @@ class OwnUserProfile extends React.Component {
                         <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
                     </View>
+
                 </View>
             </TouchableHighlight>
         );

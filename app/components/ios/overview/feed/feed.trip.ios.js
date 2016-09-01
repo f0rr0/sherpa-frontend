@@ -18,6 +18,7 @@ import TripSubtitle from '../../components/tripSubtitle'
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
+import UserImage from '../../components/userImage'
 
 
 import {
@@ -32,6 +33,55 @@ import React, { Component } from 'react';
 
 
 
+var styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    listItem:{
+        flex:1,
+        backgroundColor:"black",
+        justifyContent:"center",
+        alignItems:'center',
+        paddingBottom:10,
+    },
+    listView:{
+        alignItems:'center',
+        justifyContent:"center",
+        paddingBottom:20
+    },
+    listItemContainer:{
+        flex:1,
+        width:windowSize.width-30,
+        height:windowSize.width-30,
+        marginBottom:30
+    },
+    button:{
+        backgroundColor:'#001545',
+        height:50,
+        marginTop:-15,
+        marginBottom:13,
+        marginLeft:15,
+        marginRight:15,
+        width:windowSize.width-30,
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    copyLarge:{
+        color:'white',
+        fontFamily:"TSTAR-bold",
+        fontSize:12
+    },
+    listViewContainer:{flex:1,backgroundColor:'white'},
+    headerContainer:{flex:1,backgroundColor:'white', height:600},
+    headerMaskedView:{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1},
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 },
+    headerTripTo:{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
+    headerTripName:{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"},
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}
+});
+
 class FeedTrip extends Component {
     constructor(props){
         super(props);
@@ -43,10 +93,6 @@ class FeedTrip extends Component {
             shouldUpdate:true,
             isCurrentUsersTrip:false
         };
-    }
-
-    componentDidUpdate(){
-        //console.log('component did update');
     }
 
     toggleNav(){
@@ -114,7 +160,7 @@ class FeedTrip extends Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
+            <View style={styles.listViewContainer}>
                 <ListView
                     enableEmptySections={false}
                    dataSource={this.state.dataSource}
@@ -194,36 +240,32 @@ class FeedTrip extends Component {
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
 
         return (
-            <View style={{flex:1,backgroundColor:'white', height:600}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1}} >
+            <View style={styles.headerContainer}>
+                <MaskedView maskImage='mask-test' style={styles.headerMaskedView} >
                     <View
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' }}
+                        style={styles.headerDarkBG}
                     />
 
                     <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 }}
+                        style={styles.headerImage}
                         resizeMode="cover"
                         source={{uri:this.state.moments[0].mediaUrl}}
                     />
 
-                        <Text style={{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800",}}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
+                        <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
                         <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
+                            <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                         </TouchableHighlight>
 
                         {/*wikipedia*/}
 
-                        <TouchableHighlight underlayColor="rgba(0,0,0,.1)" style={{height:50,width:50}}  onPress={() => this.showUserProfile(this.props.trip)}>
-                            <Image
-                                style={{height:50,width:50,opacity:1,borderRadius:25}}
-                                resizeMode="cover"
-                                source={{uri:this.props.trip.owner.serviceProfilePicture}}
-                            />
-                        </TouchableHighlight>
+                        <View style={styles.userImageContainer}>
+                            <UserImage radius={50} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+                        </View>
 
-                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}}>
-                        <TripSubtitle tripData={this.props.trip}></TripSubtitle>
-                    </View>
+                        <View style={styles.subTitleContainer}>
+                            <TripSubtitle tripData={this.props.trip}></TripSubtitle>
+                        </View>
                 </MaskedView>
                 <View style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>
                     <Mapbox
@@ -294,12 +336,12 @@ class FeedTrip extends Component {
                             <Image
                                 style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
                                 resizeMode="contain"
-                                source={require('./../../../../images/suitcase.png')}
+                                source={require('./../../../../Images/suitcase.png')}
                             />
                             <Image
                                 style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
                                 resizeMode="contain"
-                                source={require('./../../../../images/suitcase-check.png')}
+                                source={require('./../../../../Images/suitcase-check.png')}
                             />
                         </View>
                     </TouchableHighlight>
@@ -309,45 +351,5 @@ class FeedTrip extends Component {
     }
 }
 
-var styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    listItem:{
-        flex:1,
-        backgroundColor:"black",
-        justifyContent:"center",
-        alignItems:'center',
-        paddingBottom:10,
-    },
-    listView:{
-        alignItems:'center',
-        justifyContent:"center",
-        paddingBottom:20
-    },
-    listItemContainer:{
-        flex:1,
-        width:windowSize.width-30,
-        height:windowSize.width-30,
-        marginBottom:30
-    },
-    button:{
-        backgroundColor:'#001545',
-        height:50,
-        marginTop:-15,
-        marginBottom:13,
-        marginLeft:15,
-        marginRight:15,
-        width:windowSize.width-30,
-        flex:1,
-        justifyContent:'center',
-        alignItems:'center'
-    },
-    copyLarge:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:12
-    }
-});
 
 export default FeedTrip;

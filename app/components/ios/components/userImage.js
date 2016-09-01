@@ -77,7 +77,8 @@ class UserImage extends Component {
 UserImage.defaultProps={
     radius:50,
     imageURL:"",
-    userID:""
+    userID:"",
+    onPress:function(){return}
 }
 
 export default UserImage

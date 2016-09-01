@@ -108,7 +108,7 @@ class NotWhitelisted extends Component {
             <View style={styles.container}>
                 <Image
                     style={styles.bg}
-                    source={require('./../../../images/sherpa-nowhitelist.png')}
+                    source={require('./../../../Images/sherpa-nowhitelist.png')}
                     resizeMode="cover"
                 />
 

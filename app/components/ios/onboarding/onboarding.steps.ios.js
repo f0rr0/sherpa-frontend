@@ -142,8 +142,8 @@ class OnboardingSteps extends Component {
     render() {
         return (
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
-                {/*<OnboardingScreen
-                        backgroundImage={require('./../../../images/onboarding_1.png')}
+                {<OnboardingScreen
+                        backgroundImage={require('./../../../Images/onboarding_1.png')}
                         headline="WHERE DO YOU LIVE?"
                         description="This will help our algorithms determine when you are traveling."
                         continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>OK LET'S GO</Text></TouchableHighlight>}
@@ -228,21 +228,21 @@ class OnboardingSteps extends Component {
                          />
                         }
 
-                    />*/}
+                    />}
                     <OnboardingScreen
-                        middleImage={require('./../../../images/onboarding_2.png')}
+                        middleImage={require('./../../../Images/onboarding_2.png')}
                         headline="TAG YOUR TRIPS"
                         description="Location tag your travel photos on Instagram and we’ll automatically turn them into sharable trip summaries."
                         continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>OK NICE!</Text></TouchableHighlight>}
                     />
                     <OnboardingScreen
-                        middleImage={require('./../../../images/onboarding_3.png')}
+                        middleImage={require('./../../../Images/onboarding_3.png')}
                         headline="SAVE PLACES"
                         description="Tap the suitcase button anytime you see a place you’d like to visit."
                         continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>GOT IT!</Text></TouchableHighlight>}
                     />
                     <OnboardingScreen
-                        middleImage={require('./../../../images/onboarding_4.png')}
+                        middleImage={require('./../../../Images/onboarding_4.png')}
                         headline="STAY CONNECTED"
                         description="Get notified when people save your trips and when new photos are shared from places you want to go."
                         continueButton={

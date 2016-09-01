@@ -26,6 +26,17 @@ import {
 import React, { Component } from 'react';
 
 
+var styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    centeredContainer:{
+        flex: 1,
+        justifyContent:'center',
+        alignItems:'center'
+    }
+});
+
 
 class Feed extends Component {
 
@@ -35,7 +46,6 @@ class Feed extends Component {
     }
 
     componentDidMount(){
-        this.setView.bind(this)({'type':'TRIP',id:23673})
     }
 
     setView(deepLinkObject){
@@ -187,15 +197,6 @@ class Feed extends Component {
     }
 }
 
-var styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
-    centeredContainer:{
-        flex: 1,
-        justifyContent:'center',
-        alignItems:'center'
-    }
-});
+
 
 export default Feed;

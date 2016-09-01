@@ -236,12 +236,12 @@ class FeedLocation extends Component {
                             <Image
                                 style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
                                 resizeMode="contain"
-                                source={require('./../../../../images/suitcase.png')}
+                                source={require('./../../../../Images/suitcase.png')}
                             />
                             <Image
                                 style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
                                 resizeMode="contain"
-                                source={require('./../../../../images/suitcase-check.png')}
+                                source={require('./../../../../Images/suitcase-check.png')}
                             />
                         </View>
                     </TouchableHighlight>

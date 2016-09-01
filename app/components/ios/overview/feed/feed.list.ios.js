@@ -47,7 +47,6 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-        console.log(prevProps,this.props)
         if(
             prevProps.feed.feedState!='ready'&& this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
         ){

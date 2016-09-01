@@ -78,12 +78,12 @@ class PopOver extends Component {
         var shareButton=this.props.showShare?
             <TouchableHighlight onPress={this.openShare.bind(this)} underlayColor="#ececec" style={styles.button}>
                 <Text style={styles.buttonCopy}>{this.props.shareCopy}</Text>
-            </TouchableHighlight>:<View></View>;
+            </TouchableHighlight>:null;
 
         var logoutButton=this.props.showLogout?
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
                 <Text style={styles.buttonCopy}>LOGOUT</Text>
-            </TouchableHighlight>:<View></View>;
+            </TouchableHighlight>:null;
 
         var resetProfileButton=this.props.showReset?
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
@@ -91,12 +91,12 @@ class PopOver extends Component {
                         this._setAnimation(false)
                 }}>
                 <Text style={styles.buttonCopy}>RESET PROFILE</Text>
-            </TouchableHighlight>:<View></View>;
+            </TouchableHighlight>:null;
 
         var deleteButton=this.props.showDelete?
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
                 <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
-            </TouchableHighlight>:<View></View>;
+            </TouchableHighlight>:null;
 
         var cancelButton=
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this._setAnimation(false)}}>
@@ -109,7 +109,7 @@ class PopOver extends Component {
             </TouchableHighlight>;
 
         var reportPhotoButton=this.props.reportPhoto?
-            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={()=>{Communications.email(['support@trysherpa.com'], null, null, "Report Abuse", 'Photos ID: '+this.props.momentID+'\n Description: Please tell us why you feel this content is inappropriate.')}}>
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={()=>{Communications.email(['support@trysherpa.com'], null, null, "Report Abuse", 'Photos ID: '+this.props.momentID+'\n\n Description: Please tell us why you feel this content is inappropriate.')}}>
                 <Text style={[styles.buttonCopy]}>REPORT ABUSE</Text>
             </TouchableHighlight>:null;
 

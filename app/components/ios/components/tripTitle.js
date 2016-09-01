@@ -10,24 +10,53 @@ import {
 var styles=StyleSheet.create({
     tripTitleContainer:{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0},
     tripTitleLarge: {color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"},
-    tripTitleSmall:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"}
+    tripTitleSmall:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"},
+    tripTitleStandaloneContainer:{position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}
 });
 
 class TripTitle extends Component {
     constructor(props) {
         super(props);
+
+        //define title
+        let tripTitle="";
+        switch(props.type){
+            case 'trip':
+                tripTitle="TRIP TO";
+            break;
+        }
+
+        //define styling
+        let containerStyle=styles.tripTitleContainer;
+        if(props.standalone)containerStyle=[styles.tripTitleContainer,styles.tripTitleStandaloneContainer];
+
+
+        this.state={
+            tripTitle,
+            containerStyle
+        }
     }
+
 
     render() {
         var tripData=this.props.tripData;
-        var tripName=tripData.name.trim();
-        if(tripName.toLowerCase()=="united states of america")tripName="united states";
+
+        var country = countries.filter(function(country) {
+            return country["alpha-2"] === tripData.name;
+        })[0];
+
+        var tripName=country ? country.name : tripData.name.trim();
+
+        var subTitle=this.props.showSubtitle?<TripSubtitle tripData={this.props.tripData}></TripSubtitle>:null;
+        switch(this.props.type){
+
+        }
 
         return (
-            <View style={styles.tripTitleContainer}>
-                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()} TRIP TO</Text>
+            <View style={this.state.containerStyle}>
+                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.state.tripTitle}</Text>
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
-                <TripSubtitle tripData={this.props.tripData}></TripSubtitle>
+                {subTitle}
             </View>
         );
     }
@@ -35,7 +64,10 @@ class TripTitle extends Component {
 
 TripTitle.defaultProps = {
     tripData:{},
-    tripOwner:""
+    tripOwner:"",
+    showSubtitle:true,
+    standalone:false,
+    type:'trip'
 };
 
 export default TripTitle;

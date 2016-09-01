@@ -71,17 +71,15 @@ class Overview extends React.Component {
 
     componentDidMount(){
         this.props.dispatch(updateTab(this.state.selectedTab));
-
         NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
-
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
-
         NetInfo.fetch().done(this.handleFirstConnectivityChange);
         NetInfo.addEventListener(
             'change',
             this.handleFirstConnectivityChange
         );
+        this.refs[this.state.selectedTab].setView({type:'TRIP',id:1231})
     }
 
     handleFirstConnectivityChange(reach) {
@@ -124,25 +122,25 @@ class Overview extends React.Component {
         var tabBar =    <TabNavigator  tabBarStyle={styles.tabBarHeight} container={styles.tabBarHeight}>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === FEED}
-                                renderIcon={() => <Image source={require('./../../../images/icon-feed.png')} />}
+                                renderIcon={() => <Image source={require('./../../../Images/icon-feed.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>
                                 <Feed initial={FEED} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === EXPLORE}
-                                renderIcon={() => <Image source={require('./../../../images/icon-explore.png')} />}
+                                renderIcon={() => <Image source={require('./../../../Images/icon-explore.png')} />}
                                 onPress={()=>this.updateTabTo(EXPLORE)}>
                                 <Feed initial={EXPLORE} ref={EXPLORE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === PROFILE}
-                                renderIcon={() => <Image source={require('./../../../images/icon-profil.png')} />}
+                                renderIcon={() => <Image source={require('./../../../Images/icon-profil.png')} />}
                                 onPress={()=>this.updateTabTo(PROFILE)}>
                                 <Feed initial={PROFILE} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === SUITCASE}
-                                renderIcon={() => <Image source={require('./../../../images/icon-suitcase.png')} />}
+                                renderIcon={() => <Image source={require('./../../../Images/icon-suitcase.png')} />}
                                 onPress={()=>this.updateTabTo(SUITCASE)}>
                                 <Feed initial={SUITCASE} ref={SUITCASE} {...this.props}/>
                             </TabNavigator.Item>
@@ -152,7 +150,7 @@ class Overview extends React.Component {
 
             <View style={{flex:1}}>
                 {tabBar}
-                <Image source={require('./../../../images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
+                <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
             </View>
         );
     }

@@ -8,12 +8,12 @@ import {
 import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 import moment from 'moment';
+
 import TripTitle from "./tripTitle";
 import UserImage from "./userImage";
 var windowSize=Dimensions.get('window');
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
-
 
 var styles=StyleSheet.create({
     listItem: {
@@ -37,6 +37,7 @@ var styles=StyleSheet.create({
 
     darkener:{flex:1, backgroundColor:"rgba(0,0,0,.2)"},
     userImageContainer:{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'},
+
     imageProgressBar:{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}
 });
 
