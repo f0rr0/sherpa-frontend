@@ -49,7 +49,7 @@ module.exports = {
                     response_type_web:"token"
                 },
                 sherpa: {
-                    endpoint:"http://api.trysherpa.com/api/",
+                    endpoint:"http://sherpa-api-staging.us-east-1.elasticbeanstalk.com/api/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",
@@ -58,6 +58,11 @@ module.exports = {
                 }
             },
             live:{
+                foursquare:{
+                    client_id:"FXV0BDXP5FOLFJKKPXYD1QPPHQF1RFKOADFMIYH2W54P5AEO",
+                    client_secret:"SPB1E1WKWXKWEDRW3IP3IUQWB0LOBWFKOZI1JXGNFNRYC4SX",
+                    version:"20130815"
+                },
                 instagram: {
                     endpoint:"https://api.instagram.com/",
                     client_id:"610a4a6a16bc40ec95f749e95c48087a",
@@ -67,11 +72,11 @@ module.exports = {
                     token_uri:"oauth/access_token",
                     response_type:"code",
                     grant_type:"authorization_code",
-                    redirect_uri_web:"http://www.trysherpa.com/auth",
+                    redirect_uri_web:"http://web.trysherpa.com/callback",
                     response_type_web:"token"
                 },
                 sherpa: {
-                    endpoint:"http://sherpa.wild.as/api/",
+                    endpoint:"http://api.trysherpa.com/api/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",

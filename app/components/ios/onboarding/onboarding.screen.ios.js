@@ -65,15 +65,16 @@ var styles = StyleSheet.create({
         width:windowSize.width*.8
     },
     mainComponent:{
-        padding:40,
-        marginTop:80,
-        position:'absolute',
-        top:180,
-        width:windowSize.width
+        position:"absolute",
+        top:0,
+        left:0,
+        width:windowSize.width,
+        height:windowSize.height
     },
 
     backgroundImage:{width:windowSize.width,height:windowSize.height,position:"absolute",top:0,left:0},
-    middleImage:{width:windowSize.width,height:windowSize.height*.5}
+    middleImage:{width:windowSize.width,height:windowSize.height*.5},
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height,opacity:.4,width:windowSize.width,backgroundColor:'black'}
 });
 
 class OnboardingScreen extends Component {
@@ -82,9 +83,17 @@ class OnboardingScreen extends Component {
     }
 
     render() {
+        var darkener=this.props.darken?<View style={styles.headerDarkBG}></View>:null;
+
         return (
             <View>
-                {(()=>{if(this.props.backgroundImage){return(<Image source={this.props.backgroundImage} style={styles.backgroundImage} resizeMode="cover"></Image>)}})()}
+                {(()=>{if(this.props.backgroundImage){return(
+                    <View>
+                        <Image source={this.props.backgroundImage} style={styles.backgroundImage} resizeMode="cover"></Image>
+                        {darkener}
+                    </View>
+                )
+                }})()}
 
                 <View style={styles.topArea}>
                     <Text style={[styles.baseText,styles.headline]}>{this.props.headline}</Text>
@@ -95,12 +104,12 @@ class OnboardingScreen extends Component {
                     {(()=>{if(this.props.middleImage){return(<Image source={this.props.middleImage} style={styles.middleImage} resizeMode="contain"></Image>)}})()}
                 </View>
 
-                <View style={styles.bottomArea}>
-                    {this.props.continueButton}
-                </View>
 
                 <View style={styles.mainComponent}>
                     {this.props.mainComponent}
+                </View>
+                <View style={styles.bottomArea}>
+                    {this.props.continueButton}
                 </View>
             </View>
         );

@@ -53,7 +53,6 @@ class Feed extends Component {
             case "TRIP":
                 this.getTrip(deepLinkObject.id)
             break;
-
         }
     }
 
@@ -111,11 +110,11 @@ class Feed extends Component {
             case "trip":
                 showNav=true;
                 //route.id+" TO "+route.trip.name
-                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",false,false,true,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "profile":
                 showNav=true;
@@ -135,7 +134,7 @@ class Feed extends Component {
                 break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.tripDetails.trip.venue,false,false,true,false)} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("white",route.tripDetails.trip.venue,false,false,true,false,true)} user={this.props.user} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
                 break;
         }
 
@@ -158,14 +157,15 @@ class Feed extends Component {
     }
 
 
-    _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav){
+    _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav,topShadow){
+        var defaultNav=<Navigation hideNav={hideNav} topShadow={topShadow} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Navigation>;
         if(fixedHeader){
             return{
-                'default': <Navigation hideNav={hideNav} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Navigation>,
+                'default': defaultNav,
                 'fixed': <Navigation hideNav={hideNav} type="fixed" ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Navigation>
             }
         }else{
-            return <Navigation hideNav={hideNav} ref="nav-static" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Navigation>
+            return defaultNav
         }
     }
 

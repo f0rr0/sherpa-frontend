@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import GiftedListView from 'react-native-gifted-listview';
-import {loadFeed} from '../../../../actions/feed.actions';
+import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import ImageRow from '../../components/imageRow'
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
@@ -47,15 +47,6 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(
-            prevProps.feed.feedState!='ready'&& this.props.feed.feedState==='ready'&&this.props.feed.userTrips[this.props.feed.userTripsPage]
-        ){
-            this.props.feed.userTrips[this.props.feed.userTripsPage].shift();
-            this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
-        }else if(this.props.feed.feedState==='reset'){
-            this.itemsLoadedCallback(this.props.feed.userTrips[this.props.feed.userTripsPage]);
-        }
-
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            this.refs.listview._refresh();
         }
@@ -81,8 +72,10 @@ class FeedList extends React.Component{
     }
 
     _onFetch(page=1,callback){
-        this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.props.user.sherpaID,this.props.user.sherpaToken,page));
+
+            getFeed(this.props.user.sherpaID,page,'',this.props.user.sherpaToken).then(function(response){
+            callback(response.trips.trips);
+        })
     }
 
     _renderHeader(){
@@ -96,10 +89,11 @@ class FeedList extends React.Component{
     _renderEmpty(){
         return (
             <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
     }
+
 
     render(){
         return(

@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text } from 'react-native'
+import { TouchableHighlight, Text,StyleSheet,View,TouchableWithoutFeedback } from 'react-native'
 import styles from './styles/simpleButtonStyle'
 
 import {
@@ -11,7 +11,6 @@ export default class SimpleButton extends React.Component {
     static propTypes = {
         text: React.PropTypes.string,
         onPress: React.PropTypes.func,
-        styles: React.PropTypes.object,
         icon: React.PropTypes.string
     }
 
@@ -23,12 +22,25 @@ export default class SimpleButton extends React.Component {
     _renderIcon(){
         if(this.props.icon){
             let image;
+            let customStyle=StyleSheet.create({});
             switch(this.props.icon){
                 case "instagram":
                     image=require('./../../../Images/icon-insta.png');
                 break;
+                case "is-suitcased-button":
+                    image=require('./../../../Images/icon-suitcased-button.png');
+                    customStyle.height=25;
+                break;
+                case "suitcase-button":
+                    image=require('./../../../Images/icon-suitcase-button.png');
+                    customStyle.height=25;
+                break;
+                case "twitter":
+                    image=require('./../../../Images/icon-twitter.png');
+                    customStyle.height=12;
+                break;
             }
-            return <Image style={[styles.buttonIcon]} resizeMode="contain" source={image} />
+            return <Image style={[styles.buttonIcon,customStyle]} resizeMode="contain" source={image} />
         }
 
         return null;
@@ -36,10 +48,12 @@ export default class SimpleButton extends React.Component {
 
     render () {
         return (
-            <TouchableOpacity style={[styles.button, this.props.styles]} onPress={this.props.onPress}>
-                {this._renderIcon()}
-                <Text style={styles.buttonText}>{this.props.text && this.props.text.toUpperCase()}</Text>
-            </TouchableOpacity>
+                <TouchableWithoutFeedback style={this.props.stateStyle} onPress={this.props.onPress}>
+                    <View style={[styles.button, this.props.style]} >
+                        {this._renderIcon()}
+                        <Text style={[styles.buttonText,this.props.textStyle]}>{this.props.text && this.props.text.toUpperCase()}</Text>
+                    </View>
+                </TouchableWithoutFeedback>
         )
     }
 }

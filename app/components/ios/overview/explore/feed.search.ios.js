@@ -81,7 +81,7 @@ var styles = StyleSheet.create({
     copyEmpty:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}
 });
 const msg_empty=<Text style={styles.copyEmpty}>Search for countries, cities or continents. We'll display the photos that match your result.</Text>;
-const msg_noresults=<Text style={styles.copyEmpty}>No results found for this search query</Text>;
+const msg_noresults=<Text style={styles.copyEmpty}>No results found for this location</Text>;
 const msg_loading=<Text style={styles.copyEmpty}>Loading</Text>;
 
 
@@ -166,7 +166,6 @@ class Search extends React.Component {
 
 
     _onFetch(page=1,callback){
-        console.log('initial fetch')
         this.itemsLoadedCallback=callback;
         if(this.state.backendSearchQuery)this.state.backendSearchQuery['page']=page;
         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
@@ -175,7 +174,7 @@ class Search extends React.Component {
     _renderEmpty(){
         return (
             <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
     }
@@ -244,8 +243,7 @@ class Search extends React.Component {
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
-            console.log('location search',{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state})
-            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'location',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
+            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'state',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
         }else if(!standalone&&searchQuery.country){
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'country',country:searchQuery.country}});
         }else{
@@ -280,7 +278,6 @@ class Search extends React.Component {
                                     me.setState({"searchEmptyMessage":this._renderEmpty()});
                                     me.refs.listview._postRefresh([]);
                                     me._onFetch(1, me.refs.listview._postRefresh);
-                                    //console.log('fetch:::')
                                }
                             }}
 
@@ -289,7 +286,6 @@ class Search extends React.Component {
                             fetchDetails={true}
                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                                 var result=details.address_components;
-                                console.log(result);
                                 var info=[];
                                 for(var i= 0;i<result.length;++i){
                                     if(result[i].types[0]=="administrative_area_level_1"){info.state=result[i].long_name}

@@ -48,11 +48,14 @@ class ImageRow extends Component {
             imageLoaded:false,
             userImageRadius:50
         }
+
     }
 
     render() {
         var tripData=this.props.tripData;
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
+
+        if(!tripData.moments[0])return null;
 
         return(
         <TouchableHighlight style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
@@ -73,7 +76,6 @@ class ImageRow extends Component {
                 >
                     <View style={styles.darkener}></View>
                 </ImageProgress>
-
 
                 <View style={[styles.imageRowContainer,{opacity:this.state.imageLoaded?1:0}]}>
                     <View style={styles.userImageContainer}>

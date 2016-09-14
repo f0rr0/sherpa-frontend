@@ -1,6 +1,7 @@
 'use strict';
 
 import {loadUser} from '../../actions/user.actions';
+import {getFeed} from '../../actions/feed.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
 import Overview from './overview/overview.ios';
@@ -76,8 +77,11 @@ class Root extends Component {
 
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+            //getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
+            //    console.log('user',result)
+            //})
            if(this.props.user.userDBState=="not-whitelisted"){
-               this.navigator.replace({id:"login"});
+               this.navigator.replace({id:"overview"});
            }
         }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});
@@ -96,7 +100,7 @@ class Root extends Component {
                 return <Login navigator={navigator} {...this.props}/>;
             break;
             case "not-whitelisted":
-                return <NotWhitelisted navigator={navigator} />;
+                return <NotWhitelisted navigator={navigator} {...this.props} />;
             break;
             case "overview":
                 return <Overview navigator={navigator} {...this.props}/>;

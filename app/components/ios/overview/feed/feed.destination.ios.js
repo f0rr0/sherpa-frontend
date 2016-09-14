@@ -65,9 +65,9 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
-    mapMaskedView:{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1},
-    blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' },
-    maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 },
+    mapMaskedView:{backgroundColor:'#FAFAFA', justifyContent:'center', height:670, width:windowSize.width,alignItems:'center',flex:1},
+    blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.5 },
 });
 
 class FeedDestination extends Component {
@@ -156,8 +156,8 @@ class FeedDestination extends Component {
         var mapURI=this.props.trip.moments[0].mediaUrl;
 
         return (
-            <View style={{flex:1}}>
-                <MaskedView maskImage='mask-test' style={styles.mapMaskedView} >
+            <View style={{flex:1,height:830}}>
+                <View maskImage='mask-test' style={styles.mapMaskedView} >
 
                     <View
                         style={styles.blackOverlay}
@@ -167,28 +167,16 @@ class FeedDestination extends Component {
                         source={{uri:mapURI}}
                     >
                     </Image>
-
-                    <TripTitle type="destination" showSubtitle={false} standalone={true} tripData={tripData}></TripTitle>
-                </MaskedView>
+                    <TripTitle style={{marginTop:100}} type="destination" showSubtitle={false} standalone={true} tripData={tripData}></TripTitle>
+                </View>
                 <Mapbox
-                    style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                    style={{height:250,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:570,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                     centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
-                    zoomLevel={8}
+                    zoomLevel={6}
                     annotations={this.state.annotations}
                     scrollEnabled={false}
                     zoomEnabled={false}
-                />
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
-                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
-                </View>
-
-                <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width-30,left:15,backgroundColor:'transparent'}}
-                    resizeMode="cover"
-                    source={require('image!shadow')}
                 />
 
                 {this.props.navigation.default}

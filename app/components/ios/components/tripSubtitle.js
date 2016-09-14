@@ -7,7 +7,7 @@ import React, {Component} from 'react';
 import countries from '../../../data/countries'
 
 var styles=StyleSheet.create({
-        subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}
+        subtitle:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}
 });
 
 class TripSubtitle extends Component {
@@ -39,15 +39,20 @@ class TripSubtitle extends Component {
             if(tripName.toLowerCase()==continents[i].toLowerCase())isTripNameContinent=true;
         }
 
-        var isState=(country["alpha-2"].toUpperCase()==="US"||tripData.name.toUpperCase().indexOf("UNITED STATES OF AMERICA")>-1);
-        var isInAmerica=((country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")||country.name.toLowerCase()=='united states');
+        var isState=tripData.type=='state';
+        var isInAmerica=tripData.country=="US"||((country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")||country.name.toLowerCase()=='united states'||country.name.toLowerCase()=='america'||tripData.name.toUpperCase().indexOf("AMERICA")>-1);
         var countryOrState=isState?tripData.state:country.name;
+
+        if(tripData.type=='location')countryOrState=tripData.state;
+        if(tripData.type=='state')countryOrState=country.name;
+
+
 
         var subTitle="";
         if(isTripNameContinent){
             subTitle="";
         }
-        else if(isInAmerica&&isState&&countryOrState!=tripData.continent){
+        else if(((tripData.type=='state'&&!isInAmerica) || tripData.type=='region' || tripData.type=='location' )&&countryOrState!=tripData.continent){
             subTitle=countryOrState+"/"+tripData.continent
         }
         else if(isTripNameCountry||isState||countryOrState===tripData.continent){

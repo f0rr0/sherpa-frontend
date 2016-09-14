@@ -1,10 +1,20 @@
 'use strict';
 
+import {addNotificationsDeviceToken} from '../../../actions/user.actions';
+import {getFeed} from '../../../actions/feed.actions';
 import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import SafariView from "react-native-safari-view";
+import SimpleButton from '../components/simpleButton';
+import Swiper from 'react-native-swiper';
+import { Fonts, Colors } from '../../../Themes/'
+var KDSocialShare = require('NativeModules').KDSocialShare;
+import NotificationsIOS from 'react-native-notifications';
+import moment from 'moment';
+import UserImage from '../components/userImage';
+
 
 import {
     StyleSheet,
@@ -13,6 +23,8 @@ import {
     TouchableHighlight,
     Image,
     Linking,
+    TouchableOpacity,
+Animated
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -22,11 +34,12 @@ var styles = StyleSheet.create({
     container: {
         flexDirection:'row',
         flex:1,
-        backgroundColor:'blue',
         position:'absolute',
         alignItems:"flex-end",
         height:windowSize.height,
-        width:windowSize.width
+        width:windowSize.width,
+        top:0,
+        left:0
     },
     copy:{
         color:'white',
@@ -48,9 +61,9 @@ var styles = StyleSheet.create({
     },
     login:{
         flex:1,
-        padding:40,
+        padding:20,
         justifyContent:'center',
-        marginTop:80
+        marginTop:60
     },
     textInput:{
         height: 50,
@@ -83,41 +96,173 @@ var styles = StyleSheet.create({
         height:50,
         justifyContent:'center',
         alignItems:'center'
-    }
+    },
+    tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3},
+
 });
 
 class NotWhitelisted extends Component {
     constructor(props){
         super(props);
+        //populate later
+        this.state={featuredMoments:[],barProgress:new Animated.Value(0),slideshowTitleOpacity:new Animated.Value(1)}
     }
 
-    connectWithService(){
-        //console.log('connect with service');
-        SafariView.isAvailable()
-            .then(SafariView.show({
-                url: "http://www.trysherpa.com"
-            }))
-            .catch(error => {
-                // Fallback WebView code for iOS 8 and earlier
-                Linking.openURL("http://www.trysherpa.com");
-            });
+    componentDidMount(){
+        this._requestFeaturedMoments();
+
+    }
+
+
+    allowNotifications() {
+        NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
+        NotificationsIOS.requestPermissions();
+    }
+
+    _onRegister(deviceToken){
+        if(deviceToken){
+            this.props.dispatch(addNotificationsDeviceToken(deviceToken))
+        }
+
+        this.refs.onboardingSlider.scrollBy(1)
+    }
+
+    _requestFeaturedMoments(){
+
+        getFeed(this.props.user.sherpaID,1,'',this.props.user.sherpaToken).then((result)=>{
+            //result verarbeiten
+            var maxMoments=5;
+            var featuredMoments=[];
+            for(var tripIndex in result.trips.trips){
+                var currTrip=result.trips.trips[tripIndex];
+                if(currTrip.featured==true&&currTrip.moments[0].type!=='video'){
+                    featuredMoments.push(currTrip);
+                }
+
+                if(featuredMoments.length==maxMoments)break;
+            }
+            this.setState({featuredMoments})
+        }).catch((err)=>{
+            //error logging
+        });
+
+    }
+
+    cycleAnimation() {
+        Animated.sequence([
+            Animated.timing(this.state.barProgress, {
+                toValue: windowSize.width,
+                duration: 4000,
+                delay: 1000
+            }),
+            Animated.timing(this.state.barProgress, {
+                toValue: 0,
+                duration: 0
+            })
+        ]).start(() => {
+            this.cycleAnimation();
+            if(this.refs.featuredMomentsGallery)this.refs.featuredMomentsGallery.scrollBy(1)
+        });
+    }
+
+    startSlideshow(){
+        Animated.timing(this.state.slideshowTitleOpacity, {
+            toValue: .1,
+            duration: 30000
+        }).start();
+        this.cycleAnimation();
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <Image
-                    style={styles.bg}
-                    source={require('./../../../Images/sherpa-nowhitelist.png')}
-                    resizeMode="cover"
-                />
+            <Swiper ref="onboardingSlider" showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+                <View style={styles.container}>
+                    <Image
+                        style={styles.bg}
+                        source={require('./../../../Images/onboarding-req-1.png')}
+                        resizeMode="cover"
+                    />
 
-                <View style={styles.login}>
-                    <TouchableHighlight style={styles.button} underlayColor="white" onPress={this.connectWithService.bind(this)}>
-                        <Text style={styles.copyLarge}>APPLY AT TRYSHERPA.COM</Text>
-                    </TouchableHighlight>
+                    <View style={styles.login}>
+                        <SimpleButton onPress={()=>{this.allowNotifications()}} text="Enable notifications"></SimpleButton>
+                        <TouchableOpacity onPress={()=>{this.refs.onboardingSlider.scrollBy(1)}}>
+                            <Text style={{fontFamily:"TSTAR-bold",fontSize:10,letterSpacing:1,fontWeight:"600",marginTop:10,textAlign:'center',color:'white',backgroundColor:'transparent'}}>SKIP NOTIFICATIONS</Text>
+                        </TouchableOpacity>
+                    </View>
+
                 </View>
-            </View>
+                <View style={styles.container}>
+                    <Image
+                        style={styles.bg}
+                        source={require('./../../../Images/onboarding-req-2.png')}
+                        resizeMode="cover"
+                    />
+
+                    <View style={styles.login}>
+                        <SimpleButton icon="twitter" style={{backgroundColor:Colors.white}} textStyle={{color:Colors.twitterBlue}} onPress={()=>{
+                               KDSocialShare.tweet({
+                                    'text':'@travelshrpa can I get an invite?',
+                                  }
+                                ,()=>{
+                                    this.startSlideshow()
+                                });
+                        }} text="REQUEST ON TWITTER"></SimpleButton>
+                        <TouchableOpacity onPress={()=>{this.refs.onboardingSlider.scrollBy(1);this.startSlideshow()}}>
+                            <Text style={{fontFamily:"TSTAR-bold",fontSize:10,letterSpacing:1,fontWeight:"600",marginTop:10,textAlign:'center',color:'white',backgroundColor:'transparent'}}>SKIP THIS STEP</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                <View style={styles.container}>
+
+                    <Swiper ref="featuredMomentsGallery" automaticallyAdjustContentInsets={true} style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={true} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+
+                        {this.state.featuredMoments.map(function(trip){
+                            var timeAgo=moment(new Date(trip.dateStart*1000)).fromNow();
+                            var description=trip.moments[0].caption&&trip.moments[0].caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.moments[0].caption}</Text>:null;
+
+                            return(
+                                <View style={styles.container} key={trip.id}>
+                                    <Image
+                                        style={styles.bg}
+                                        source={{uri:trip.moments[0].mediaUrl}}
+                                        resizeMode="cover"
+                                    />
+                                    <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
+
+
+                                    <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
+                                        <UserImage radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
+                                        <View style={{marginLeft:20,}}>
+                                            <TouchableOpacity onPress={()=>{
+                            Linking.openURL(trip.serviceJson.link)
+                        }}>
+
+                                                <Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.owner.serviceUsername}</Text>
+                                                {description}
+                                            </TouchableOpacity>
+                                            <View style={{flexDirection:'row',alignItems:'center'}}>
+                                                <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                                                <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
+
+
+
+                                </View>)
+                        })}
+
+
+                    </Swiper>
+
+                    <Animated.View style={[styles.container,{alignItems:"center",justifyContent:"center",opacity:this.state.slideshowTitleOpacity}]}>
+                        <Text style={{fontSize:30,fontFamily:"TSTAR-bold",width:windowSize.width*.7,textAlign:"center",color:"white"}}>YOUR INVITATION IS PENDING</Text>
+                    </Animated.View>
+
+                    <Animated.View ref="progressLine" style={{width:this.state.barProgress,position:"absolute",bottom:0,left:0,height:3,backgroundColor:"white"}}></Animated.View>
+
+                </View>
+            </Swiper>
         );
     }
 }

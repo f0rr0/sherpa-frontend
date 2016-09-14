@@ -53,7 +53,7 @@ class TripTitle extends Component {
         }
 
         return (
-            <View style={this.state.containerStyle}>
+            <View style={[this.state.containerStyle,this.props.style]}>
                 <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.state.tripTitle}</Text>
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
                 {subTitle}

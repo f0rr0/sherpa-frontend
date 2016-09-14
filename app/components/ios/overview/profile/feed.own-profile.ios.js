@@ -11,9 +11,11 @@ import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
-import config from '../../../../data/config';
 import Dimensions from 'Dimensions';
+import UserImage from '../../components/userImage'
 var windowSize=Dimensions.get('window');
+import config from '../../../../data/config';
+import store from 'react-native-simple-store';
 const {sherpa}=config.auth[config.environment];
 
 
@@ -22,10 +24,11 @@ import {
     View,
     Text,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+    Linking,
+TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
-
 
 var styles = StyleSheet.create({
     container: {
@@ -73,14 +76,41 @@ class OwnUserProfile extends React.Component {
         this.state= {
             annotations:[],
             trips:[],
-            ready:false
+            ready:false,
+            isRescraping:false
         };
+    }
 
+    componentDidMount(){
+        this.checkScrapeStatus();
+    }
+
+    checkScrapeStatus(){
+        store.get('user').then((user) => {
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            const {endpoint} = sherpa;
+
+            fetch(endpoint+"v1/profile/"+user.serviceID+"/lastscrape/",{
+                method:'get',
+                headers:sherpaHeaders
+            }).then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=>{
+                var parsedResponse=JSON.parse(rawSherpaResponse);
+                if(parsedResponse.scrapeState!=='completed'){
+                    setTimeout(this.checkScrapeStatus,1000);
+                    this.setState({isRescraping:true});
+                }else if(parsedResponse.scrapeState!=='completed'){
+                    this.setState({isRescraping:false})
+                }
+            });
+        })
     }
 
     componentDidUpdate(prevProps,prevState){
         if(!this.state.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
-            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
+            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage]);
             this.setState({ready:true})
         }
     }
@@ -104,15 +134,14 @@ class OwnUserProfile extends React.Component {
     render(){
         return(
         <View style={{flex:1,backgroundColor:'white'}}>
-
             <GiftedListView
                 enableEmptySections={true}
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
-                firstLoader={true} // display a loader for the first fetching
-                pagination={false} // enable infinite scrolling using touch to load more
+                firstLoader={true}  // display a loader for the first fetching
+                pagination={false}  // enable infinite scrolling using touch to load more
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
-                withSections={false} // enable sections
+                withSections={false}// enable sections
                 ref="listview"
                 paginationFetchingView={this._renderEmpty.bind(this)}
 
@@ -176,7 +205,7 @@ class OwnUserProfile extends React.Component {
     _renderEmpty(){
         return (
             <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
     }
@@ -193,22 +222,27 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
+        var status=this.state.isRescraping?
+            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
+                <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
+            </View>:
+            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
+                <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
+            </View>;
+
+
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?550:500, width:windowSize.width,marginBottom:-290,marginTop:70}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width}}>
-                        <Image
-                            style={{height:80,width:80,opacity:1,borderRadius:40}}
-                            resizeMode="cover"
-                            source={{uri:this.props.user.profilePicture}}
-                        />
+                <View style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?300:250, width:windowSize.width,marginBottom:0,marginTop:70}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width,zIndex:1}}>
+                        <UserImage onPress={()=>{
+                            Linking.openURL("https://www.instagram.com/"+this.props.user.username);
+                        }} radius={80} userID={this.props.user.id} imageURL={this.props.user.profilePicture}></UserImage>
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your photos on Instagram to update your profile.</Text>
+                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your travel photos on Instagram to update your profile.</Text>
                     </View>
-                    <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                        <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
-                    </View>
-                </MaskedView>
+                    {status}
+                </View>
 
                 {this.props.navigation.default}
             </View>

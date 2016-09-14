@@ -3,6 +3,7 @@ import config from '../data/config';
 const {sherpa}=config.auth[config.environment];
 const {parser}=config.settings;
 import {getQueryString,encodeQueryData} from '../utils/query.utils';
+import store from 'react-native-simple-store';
 
 
 export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
@@ -60,7 +61,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             .then((rawSherpaResponse)=>{
                 switch(rawSherpaResponse.status){
                     case 200:
-                        return rawSherpaResponse.text()
+                        return rawSherpaResponse.text();
                     break;
                     case 400:
                         return '{}';
@@ -70,7 +71,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             .then((rawSherpaResponseFinal)=>{
                 if(!rawSherpaResponseFinal)return;
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
-                console.log('response',sherpaResponse);
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
@@ -90,6 +90,81 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
         });
     }
 }
+
+
+export function getFeed(query,page=1,type='',sherpaToken='') {
+        return new Promise((fulfill,reject)=>{
+            store.get('user').then((user) => {
+
+                var searchBody = undefined;
+                const {endpoint,version,feed_uri,user_uri} = sherpa;
+                var feedRequestURI;
+                console.log("TYPE::",type);
+                switch (type) {
+                    case "location":
+                        feedRequestURI = endpoint + version + "/search";
+                        searchBody = query;
+                        break;
+                    case "profile":
+                        feedRequestURI = endpoint + version + "/profile/" + query + "/trips?page=" + page;
+                        break;
+                    case "suitcase-list":
+                        feedRequestURI = endpoint + version + "/user/" + query + "/suitcases?page=" + page;
+                        break;
+                    case "single-suitcase-feed":
+                        feedRequestURI = endpoint + version + "/suitcase/" + query;
+                        break;
+                    case "search-places":
+                        feedRequestURI = endpoint + version + "/search";
+                        searchBody = query;
+                        break;
+                    case "search-people":
+                        feedRequestURI = endpoint + version + "/search/users?text=" + query;
+                        break;
+                    case "user":
+                        console.log("USERUSERUSER");
+                        feedRequestURI = endpoint + version + user_uri + "/" + query;
+                        console.log(feedRequestURI)
+                    break;
+                    default:
+                        feedRequestURI = endpoint + version + user_uri + "/" + query + feed_uri + "?page=" + page;
+                    break;
+                }
+
+                var sherpaHeaders = new Headers();
+                console.log('token',user?user.sherpaToken:sherpaToken)
+                sherpaHeaders.append("token", user?user.sherpaToken:sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                var reqBody = searchBody ? {
+                    method: 'post',
+                    headers: sherpaHeaders,
+                    body: encodeQueryData(searchBody)
+                } : {
+                    method: 'get',
+                    headers: sherpaHeaders
+                };
+
+                fetch(feedRequestURI, reqBody)
+                    .then((rawSherpaResponse)=> {
+                        switch (rawSherpaResponse.status) {
+                            case 200:
+                                return rawSherpaResponse.text()
+                                break;
+                            case 400:
+                                return '{}';
+                                break;
+                        }
+                    })
+                    .then((rawSherpaResponseFinal)=> {
+                        if (!rawSherpaResponseFinal)return;
+                        var trips = JSON.parse(rawSherpaResponseFinal);
+                        fulfill({trips, page, type});
+                    }).catch((err)=>console.log(err))
+            })
+    });
+}
+
 
 export function udpateFeedState(feedState){
     return{

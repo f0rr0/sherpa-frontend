@@ -3,8 +3,10 @@
 import {
     Image,
     View,
-    TouchableHighlight,
-    StyleSheet
+    TouchableOpacity,
+    StyleSheet,
+TouchableHighlight,
+Linking
 } from 'react-native';
 
 import store from 'react-native-simple-store';
@@ -44,6 +46,7 @@ class UserImage extends Component {
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
                 fetch(endpoint + version + "/profile/"+this.props.userID+"/refreshuserimage", {
                     method: 'post',
                     headers: sherpaHeaders
@@ -52,7 +55,7 @@ class UserImage extends Component {
                         return rawServiceResponse.text();
                     }).then((response)=> {
 
-                    if(this.mounted){
+                    if(this.mounted&&response.length>2){
                         this.setState({imageURL:response});
                     }
                 }).catch(err=>console.log('device token err',err));
@@ -63,13 +66,13 @@ class UserImage extends Component {
     render() {
         var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
         return(
-            <TouchableHighlight onPress={()=>{this.props.onPress()}}>
+            <TouchableOpacity onPress={()=>{this.props.onPress()}}>
                 <Image
                     style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
                     resizeMode="cover"
                     source={{uri:imageURL}}
                 />
-            </TouchableHighlight>
+            </TouchableOpacity>
         )
     }
 }

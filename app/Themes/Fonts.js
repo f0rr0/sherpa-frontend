@@ -1,5 +1,6 @@
 const type = {
-    headline: "TSTAR-bold"
+    headline: "TSTAR-bold",
+    bodyCopy:"Akkurat"
 }
 
 const size = {
@@ -9,12 +10,12 @@ const size = {
     h4: 26,
     h5: 20,
     h6: 19,
-    input: 18,
     regular: 17,
     medium: 14,
     small: 12,
-    tiny: 8.5,
-    button:11
+    tiny: 11,
+    button:11,
+    input:12
 }
 
 const letterSpacing={

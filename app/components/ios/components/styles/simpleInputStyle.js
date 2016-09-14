@@ -6,11 +6,13 @@ export default StyleSheet.create({
         backgroundColor: Colors.white,
         alignItems:"flex-start",
         flexDirection:"column",
-        justifyContent:"flex-start",
+        justifyContent:"flex-start"
     },
     inputText: {
         margin: 0,
         color: Colors.darkPlaceholder,
-        marginLeft:0
+        marginLeft:0,
+        fontFamily:Fonts.type.bodyCopy,
+        fontSize:Fonts.size.input
     }
 })

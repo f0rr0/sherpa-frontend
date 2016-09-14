@@ -27,7 +27,7 @@ var styles=StyleSheet.create({
     pricingContainer:{marginLeft:8,flex:1,justifyContent:'center'},
 
 
-    infoBoxContainer:{paddingTop:20,paddingBottom:20,paddingLeft:5,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'},
+    infoBoxContainer:{paddingTop:20,paddingBottom:20,paddingLeft:20,paddingRight:25,backgroundColor:'white'},
     infoBoxTitle:{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"},
 
     venueContainer:{flex:1,flexDirection:'row',justifyContent:'space-between'},

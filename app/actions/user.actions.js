@@ -152,7 +152,6 @@ export function setUserHometown(hometown){
                     userid:user.sherpaID
                 });
 
-
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -165,6 +164,7 @@ export function setUserHometown(hometown){
                     .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
+                    console.log('update hometown',response);
                 }).catch(err=>console.log('hometown  err',err));
             }
         });
@@ -184,17 +184,13 @@ export function loadUser() {
                 var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
                 var sherpaHeaders = new Headers();
-                //console.log('sherpa token',user.sherpaToken)
                 sherpaHeaders.append("token", user.sherpaToken);
-
-                //console.log(endpoint+version+user_uri+"/"+user.sherpaID)
 
                 fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
                     method:'get',
                     headers:sherpaHeaders
                 }).
                 then((rawServiceResponse)=>{
-                    //console.log('raw response',rawServiceResponse)
                     responseStatus=rawServiceResponse.status;
                     return rawServiceResponse.text();
                 }).then((rawSherpaResponse)=>{
@@ -233,7 +229,6 @@ export function storeUser() {
         const { userReducer } = getState();
         store.save('user', userReducer).then(()=>{
             dispatch(updateUserDBState("available-new"));
-            //dispatch(watchJob(userReducer.jobID));
         })
     }
 }
@@ -251,7 +246,6 @@ export function signupUser(){
             const queryData = encodeQueryData({response_type, client_id, redirect_uri});
 
             dispatch(updateUserSignupState("service_code_request"));
-            //console.log('call ',endpoint+code_uri + "/?" +queryData)
             SafariView.isAvailable()
                 .then(()=>{
                     SafariView.show({
@@ -259,29 +253,37 @@ export function signupUser(){
                     });
 
                     SafariView.addEventListener(
+                        "onDismiss",
+                        updateState
+                    );
+
+                    SafariView.addEventListener(
                         "onCode",
                         instagramAuthCallback
                     );
                 })
                 .catch(error => {
-                    //console.log(error,'error');
+                    console.log(error,'error');
                     instagramSimpleAuthWithWebview();
                 });
 
         }
 
+        function updateState(){
+            dispatch(updateUserDBState("empty"))
+        }
+
         function instagramAuthCallback(event) {
+            SafariView.removeEventListener("onDismiss",updateState);
             dispatch(updateUserSignupState("service_code_complete"));
 
             const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
             SafariView.removeEventListener('onCode', instagramAuthCallback);
-            //console.log(event,'response onCode');
 
             let code = event.code;
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
 
             dispatch(updateUserSignupState("service_token_request"));
-            //console.log('fetch ',queryData);
             fetch(endpoint+token_uri, {
                 method: 'post',
                 headers: {
@@ -294,7 +296,7 @@ export function signupUser(){
                 var info=JSON.parse(rawSherpaResponse);
                 signupWithSherpa(info.access_token,info.user);
             }).catch(error => {
-                //console.log(error,'error');
+                console.log(error,'error');
                 dispatch(updateUserDBState("empty"));
             });
         }
@@ -358,22 +360,23 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
+                dispatch(updateUserData({
+                    sherpaID:id,
+                    serviceID:profile,
+                    sherpaToken:sherpaResponse.token,
+                    jobID:sherpaResponse.jobId,
+                    email,
+                    fullName,
+                    username,
+                    profilePicture,
+                    hometown,
+                    serviceObject:userData
+                }));
+                console.log('sherpa response');
                 if(!sherpaResponse.whitelisted){
                     dispatch(updateUserDBState("not-whitelisted"));
                 }else{
                     dispatch(updateUserSignupState("sherpa_token_complete"));
-                    dispatch(updateUserData({
-                        sherpaID:id,
-                        serviceID:profile,
-                        sherpaToken:sherpaResponse.token,
-                        jobID:sherpaResponse.jobId,
-                        email,
-                        fullName,
-                        username,
-                        profilePicture,
-                        hometown,
-                        serviceObject:userData
-                    }));
                     dispatch(storeUser());
                 }
 

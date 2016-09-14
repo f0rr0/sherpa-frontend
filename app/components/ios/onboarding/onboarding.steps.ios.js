@@ -5,9 +5,15 @@ import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Swiper from 'react-native-swiper';
-import OnboardingScreen from './onboarding.screen.ios'
+import OnboardingScreen from './onboarding.screen.ios';
+import SimpleButton from '../components/simpleButton';
 import React, { Component } from 'react';
 import NotificationsIOS from 'react-native-notifications';
+import { Fonts, Colors } from '../../../Themes/'
+import store from 'react-native-simple-store';
+import config from '../../../data/config';
+const {instagram,sherpa}=config.auth[config.environment];
+
 import {
     StyleSheet,
     View,
@@ -100,10 +106,10 @@ var styles = StyleSheet.create({
         marginRight: 2,
         marginTop: 2,
         marginBottom: 2,
-        backgroundColor:'#c1c1c1'
+        backgroundColor:Colors.white
     },
     dotHover:{
-        backgroundColor: '#001645'
+        backgroundColor: Colors.highlight
     },
     baseText:{
         color:"#011e5c",
@@ -112,6 +118,16 @@ var styles = StyleSheet.create({
     buttonText:{
         fontFamily:"TSTAR-bold",
         color:"#FFFFFF"
+    },
+    textStyleNormal:{
+        fontSize:30,
+        letterSpacing:2,
+        fontFamily:"TSTAR-bold",
+        color:'white',
+        textAlign:'center'
+    },
+    textStyleHighlight:{
+        color:Colors.highlight
     }
 });
 
@@ -119,11 +135,27 @@ class OnboardingSteps extends Component {
     constructor(props){
         super(props);
         this.state={
-            hometown:this.props.user.hometown
+            hometown:{'name':this.props.user.hometown},
+            hometownBG:{uri:""}
         }
     }
 
     componentDidMount(){
+        store.get('user').then((user) => {
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            const {endpoint,version,user_uri} = sherpa;
+
+            fetch(endpoint+"v1/profile/"+user.serviceID+"/moments/lasthometownmoment/",{
+                method:'get',
+                headers:sherpaHeaders
+            }).then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=>{
+                var parsedResponse=JSON.parse(rawSherpaResponse);
+                this.setState({hometownBG:{uri:parsedResponse.mediaUrl}})
+            });
+        })
     }
 
     allowNotifications() {
@@ -141,120 +173,128 @@ class OnboardingSteps extends Component {
 
     render() {
         return (
-            <Swiper ref="onboardingSlider" style={styles.wrapper} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
-                {<OnboardingScreen
-                        backgroundImage={require('./../../../Images/onboarding_1.png')}
-                        headline="WHERE DO YOU LIVE?"
-                        description="This will help our algorithms determine when you are traveling."
-                        continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>OK LET'S GO</Text></TouchableHighlight>}
+            <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+                <OnboardingScreen
+                    darken={true}
+                    backgroundImage={this.state.hometownBG}
+                        continueButton={<SimpleButton style={{width:windowSize.width*.8}} onPress={()=>{this.refs.onboardingSlider.scrollBy(1)}} text="ok let's go"></SimpleButton>}
                         mainComponent={
-                         <GooglePlacesAutocomplete
-                             placeholder='Search'
-                             minLength={2} // minimum length of text to search
-                             autoFocus={false}
-                             fetchDetails={true}
-                             onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
+                        <View>
+                            <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
+                                 <GooglePlacesAutocomplete
+                                     placeholder='Search'
+                                     ref="googlesearch"
+                                     minLength={2} // minimum length of text to search
+                                     autoFocus={false}
 
-                                var hometownObject={
-                                    lat:details.geometry.location.lat,
-                                    lng:details.geometry.location.lng,
-                                    name:details.name
-                                }
-                                this.setState({hometown:hometownObject});
 
-                                this.props.dispatch(setUserHometown(hometownObject));
-                                this.props.dispatch(updateUserData({hometown:hometownObject.name}));
-                             }}
-                             getDefaultValue={() => {
-                                return this.state.hometown; // text input default value
-                             }}
-                             query={{
-                                 key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
-                                 language: 'en', // language of the results
-                                 types: '(cities)', // default: 'geocode'
-                             }}
-                             styles={{
-                                 description: {
-                                     fontWeight: 'normal',
-                                     fontFamily:"TSTAR-bold"
-                                 },
-                                     predefinedPlacesDescription: {
-                                     color: '#FFFFFF',
-                                 },
-                                     poweredContainer: {
-                                     justifyContent: 'center',
-                                     alignItems: 'center',
-                                     opacity:0
-                                 },
-                                 textInput: {
-                                     backgroundColor: '#FFFFFF',
-                                     height: 50,
-                                     borderRadius: 0,
-                                     paddingTop:0,
-                                     paddingBottom:0,
-                                     fontSize: 20,
-                                     color:'#001645',
-                                     fontFamily:"TSTAR-bold"
-                                 },
-                                 textInputContainer: {
-                                     backgroundColor: '#FFFFFF',
-                                     height:66,
-                                     borderTopColor: '#d1d1d1',
-                                     borderBottomColor: '#d1d1d1',
-                                     borderLeftColor:"#d1d1d1",
-                                     borderRightColor:"#d1d1d1",
-                                     borderTopWidth: 1,
-                                     borderLeftWidth:1,
-                                     borderRightWidth:1,
-                                     borderBottomWidth: 1
-                                 },
-                                 separator: {
-                                     height: 0,
-                                     backgroundColor: '#FFFFFF'
-                                 }
-                             }}
+                                     textInputProps={{
+                                        //onEndEditing:()=>{
+                                        //    console.log("BLURBLURBLUR");
+                                        //    this.refs.googlesearch.setAddressText("BLABLA")
+                                        //},
+                                        onBlur:(e)=>{
+                                        e.preventDefault();
+                                           //console.log("BLURBLURBLUR");
+                                           //this.refs.googlesearch.setAddressText(this.state.hometown.name)
+                                        }
+                                     }}
 
-                             currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-                             currentLocationLabel="Current location"
-                             nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                             GoogleReverseGeocodingQuery={{
-                             }}
-                             GooglePlacesSearchQuery={{
-                                rankby: 'distance'
-                             }}
+                                     fetchDetails={true}
+                                     onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
 
-                             filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                                        var hometownObject={
+                                            lat:details.geometry.location.lat,
+                                            lng:details.geometry.location.lng,
+                                            name:details.name
+                                        }
 
-                         />
+                                        this.setState({hometown:hometownObject});
+
+                                        this.props.dispatch(setUserHometown(hometownObject));
+                                        this.props.dispatch(updateUserData({hometown:hometownObject.name}));
+                                     }}
+                                     getDefaultValue={() => {
+                                        return this.state.hometown.name; // text input default value
+                                     }}
+                                     query={{
+                                         key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
+                                         language: 'en', // language of the results
+                                         types: '(cities)', // default: 'geocode'
+                                     }}
+                                     styles={{
+                                         description: {
+                                             fontFamily: Fonts.type.bodyCopy,
+                                             fontSize: Fonts.size.input,
+                                             letterSpacing:Fonts.letterSpacing.small,
+                                             color:'white'
+                                         },
+                                             predefinedPlacesDescription: {
+                                             color: '#FFFFFF',
+                                         },
+                                             poweredContainer: {
+                                             justifyContent: 'center',
+                                             alignItems: 'center',
+                                             opacity:0
+                                         },
+                                         textInput: {
+                                             backgroundColor: '#FFFFFF',
+                                             height: 42,
+                                             borderRadius: 0,
+                                             paddingTop:0,
+                                             paddingBottom:0,
+                                             fontWeight:'normal',
+                                             fontFamily: Fonts.type.bodyCopy,
+                                             fontSize: Fonts.size.input,
+                                             letterSpacing:Fonts.letterSpacing.small
+                                         },
+                                         textInputContainer: {
+                                             backgroundColor: '#FFFFFF',
+                                             height:55,
+                                             borderRadius:2,
+                                             borderTopWidth: 0,
+                                             borderLeftWidth:0,
+                                             borderRightWidth:0,
+                                             borderBottomWidth: 0
+                                         },
+                                         separator: {
+                                             height: 0,
+                                             backgroundColor: '#FFFFFF'
+                                         }
+                                     }}
+
+                                     currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
+                                     currentLocationLabel="Current location"
+                                     nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                                     GoogleReverseGeocodingQuery={{
+                                     }}
+                                     GooglePlacesSearchQuery={{
+                                        rankby: 'distance'
+                                     }}
+
+                                     filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+
+                                 />
+                             </View>
+                             <View style={{position:"absolute",top:130,flex:1,width:windowSize.width*.8,left:windowSize.width*.1}}>
+                                <Text style={styles.textStyleNormal}>IS THIS YOUR HOMETOWN?</Text>
+                                <Text style={[styles.textStyleNormal,{fontSize:9,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
+                             </View>
+                         </View>
                         }
 
-                    />}
-                    <OnboardingScreen
-                        middleImage={require('./../../../Images/onboarding_2.png')}
-                        headline="TAG YOUR TRIPS"
-                        description="Location tag your travel photos on Instagram and we’ll automatically turn them into sharable trip summaries."
-                        continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>OK NICE!</Text></TouchableHighlight>}
                     />
+
+
                     <OnboardingScreen
-                        middleImage={require('./../../../Images/onboarding_3.png')}
-                        headline="SAVE PLACES"
-                        description="Tap the suitcase button anytime you see a place you’d like to visit."
-                        continueButton={<TouchableHighlight style={styles.button} underlayColor="white" onPress={()=>this.refs.onboardingSlider.scrollBy(1)}><Text style={[styles.baseText,styles.buttonText]}>GOT IT!</Text></TouchableHighlight>}
-                    />
-                    <OnboardingScreen
-                        middleImage={require('./../../../Images/onboarding_4.png')}
-                        headline="STAY CONNECTED"
-                        description="Get notified when people save your trips and when new photos are shared from places you want to go."
+                        backgroundImage={require('./../../../Images/onboarding-notification.png')}
                         continueButton={
                             <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
-                                <TouchableHighlight style={[styles.button,styles.buttonHalf,{marginRight:10,backgroundColor:"#bcbec4"}]} underlayColor="white" onPress={this._onRegister.bind(this)}>
-                                    <Text style={[styles.baseText,styles.buttonText]}>MAYBE LATER</Text>
-                                </TouchableHighlight>
-                                 <TouchableHighlight style={[styles.button,styles.buttonHalf]} underlayColor="white" onPress={this.allowNotifications.bind(this)}>
-                                    <Text style={[styles.baseText,styles.buttonText]}>OK, GOT IT!</Text>
-                                </TouchableHighlight>
+                                <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#bcbec4'}]} onPress={this._onRegister.bind(this)} text="maybe later"></SimpleButton>
+                                <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(this)} text="ok got it"></SimpleButton>
                             </View>
                         }
+
                     />
                 </Swiper>
 

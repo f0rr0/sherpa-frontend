@@ -12,6 +12,9 @@ import UserImage from '../../components/userImage';
 import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import FoursquareInfoBox from '../../components/foursquareInfoBox';
+import SimpleButton from '../../components/simpleButton';
+import config from '../../../../data/config';
+import { Fonts, Colors } from '../../../../Themes/'
 
 
 import {
@@ -20,7 +23,9 @@ import {
     Text,
     Image,
     ScrollView,
-    TouchableHighlight
+    TouchableHighlight,
+Linking,
+TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -50,10 +55,7 @@ var styles = StyleSheet.create({
         backgroundColor:'#001545',
         height:50,
         marginTop:-5,
-        marginBottom:215,
-        marginLeft:15,
-        marginRight:15,
-        width:windowSize.width-30,
+        marginBottom:0,
         justifyContent:'center',
         alignItems:'center'
     },
@@ -61,7 +63,8 @@ var styles = StyleSheet.create({
         color:'white',
         fontFamily:"TSTAR-bold",
         fontSize:12
-    }
+    },
+    tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3},
 });
 
 class TripDetail extends React.Component{
@@ -109,34 +112,63 @@ class TripDetail extends React.Component{
         return {location:tripLocation,country:country,countryCode:tripData.country};
     }
 
-    render(){
-        var profilePic= this.props.tripDetails.owner?
-            <View style={{height:30,width:30,top:80,right:20,position:'absolute'}}>
-                <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
-            </View>:<View></View>
 
-        var country=this.getTripLocation(this.props.tripDetails.trip);
+    _renderSuitcaseButton(){
+        return(
+            <View>
+                <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip(this.props.tripDetails.trip)}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
+                <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip(this.props.tripDetails.trip)}} text="ADD TO YOUR SUITCASE"></SimpleButton>
+            </View>
+        )
+    }
+
+
+    render(){
+
+        var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
+        var description=this.props.tripDetails.trip.caption&&this.props.tripDetails.trip.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{this.props.tripDetails.trip.caption}</Text>:null;
+
+        var profilePic= this.props.tripDetails.owner?
+            <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
+                    <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
+                <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
+                    <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
+                    <View style={{marginLeft:20,}}>
+                        <TouchableOpacity onPress={()=>{
+                            Linking.openURL(this.props.tripDetails.trip.serviceJson.link)
+                        }}>
+                            {description}
+                        </TouchableOpacity>
+                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                            <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                            <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
+                        </View>
+                    </View>
+                </View>
+            </View>:null;
+
         return (
             <View style={{flex:1}}>
                 <ScrollView style={{flex:1,backgroundColor:'white'}}>
 
                     <Image
-                        style={{marginTop:70,marginLeft:15,height:windowSize.width-30,width:windowSize.width-30 }}
+                        style={{height:windowSize.width,width:windowSize.width }}
                         resizeMode="cover"
                         source={{uri:this.props.tripDetails.trip.mediaUrl}}
                     />
 
 
                     {profilePic}
+                    {this._renderSuitcaseButton()}
+                    <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
+                    <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
 
-                    <MaskedView maskImage='mask-bottom' style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10}} >
-
+                    <View style={{height:250,width:windowSize.width,left:0,flex:1}} >
                         <Mapbox
                             style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                            styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
                             accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                             centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
-                            zoomLevel={8}
+                            zoomLevel={16}
                             onScroll={(event)=>{
                                  var currentOffset = event.nativeEvent.contentOffset.y;
                                  var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -164,20 +196,10 @@ class TripDetail extends React.Component{
                             zoomEnabled={true}
                         />
 
-                    </MaskedView>
-                    <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
-                    <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
-
-                    <TouchableHighlight underlayColor="#011e5f" style={[styles.button,{backgroundColor:this.state.suitcased?'#8ad78d':'#001545'}]} onPress={() => this.suiteCaseTrip(this.props.tripDetails.trip)}>
-                        <View>
-                            <Text style={styles.copyLarge}>{this.state.suitcased?"SAVED TO SUITCASE":"SAVE TO SUITCASE"}</Text>
-                        </View>
-                    </TouchableHighlight>
-
-
+                    </View>
                     {this.props.navigation.default}
                 </ScrollView>
-                <PopOver ref="popover" showShare={false} reportPhoto={true} momentID={this.props.tripDetails.trip.id}></PopOver>
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.tripDetails.trip.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={this.props.tripDetails.trip.id}></PopOver>
 
             </View>
         )

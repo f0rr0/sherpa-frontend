@@ -15,8 +15,8 @@ import {removeDiacritics} from '../utils/stringUtils';
 
 
 var styles=StyleSheet.create({
-    infoBoxContainer:{paddingTop:28,paddingBottom:20,paddingLeft:20,paddingRight:20,marginLeft:10,marginRight:10,backgroundColor:'white'},
-    infoBoxTitle:{position:'absolute',left:8,top:8,fontSize:10,color:"#999999"},
+    infoBoxContainer:{paddingTop:48,paddingBottom:20,paddingLeft:20,paddingRight:20,backgroundColor:'white'},
+    infoBoxTitle:{position:'absolute',left:20,top:28,fontSize:10,color:"#999999"},
     infoBoxCopy:{fontSize:13}
 })
 
@@ -46,8 +46,13 @@ class WikpediaInfoBox extends Component {
         //maximum listings to look through
         var maxRows=5;
 
+        var cleardQuery=removeDiacritics(query.toLowerCase());
+
+
+        console.log("query",cleardQuery);
+
         //query geonames to get likely results that include location data
-        fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows="+maxRows+"&username=travelsherpa"+featureType+"&q="+query, {
+        fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows="+maxRows+"&username=travelsherpa"+featureType+"&q="+cleardQuery, {
             method: 'get'
         }).then((rawServiceResponse)=> {
             return rawServiceResponse.text();
@@ -141,7 +146,7 @@ class WikpediaInfoBox extends Component {
                                 finalDescription=results[i].description;
 
                                 //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
-                                if(finalDescription.indexOf(results[i].label)==-1)finalDescription=results[i].label+" "+finalDescription;
+                                if(finalDescription.indexOf(results[i].label)!==0)finalDescription=results[i].label+""+finalDescription;
                                 break;
                             }
                         }

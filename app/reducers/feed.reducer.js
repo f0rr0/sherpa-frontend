@@ -20,7 +20,6 @@ export default function feedReducer(state=initialState,action){
         break;
         case types.UPDATE_FEED:
             if(action.feedData.type!='search'&&action.feedData.type!='location-search'){
-                console.log('regular search',action.feedData.type);
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
                     var moments=action.feedData.trips[index].moments.reverse();
@@ -31,12 +30,13 @@ export default function feedReducer(state=initialState,action){
                         for(var i=0;i<moments.length;i++){
                             if(moments[i].type==='image')action.feedData.trips[index].moments.push(moments[i]);
                         }
-                        if(moments[0].type==='image')cleanTrips.push(action.feedData.trips[index]);
+                        cleanTrips.push(action.feedData.trips[index]);
                     }
                 }
                 var newPage={};
                 newPage[action.feedData.page]=cleanTrips || state.trips;
                 var newTrips=Object.assign({},{},newPage);
+                console.log(newTrips);
                 newTrips['country']=newTrips['name'];
             }else{
                 var cleanMoments=[];

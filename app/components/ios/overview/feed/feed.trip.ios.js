@@ -19,6 +19,8 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
 import UserImage from '../../components/userImage'
+import SimpleButton from '../../components/simpleButton'
+
 
 
 import {
@@ -47,13 +49,13 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:20
+        paddingBottom:20,
     },
     listItemContainer:{
         flex:1,
         width:windowSize.width-30,
         height:windowSize.width-30,
-        marginBottom:30
+        marginBottom:38,
     },
     button:{
         backgroundColor:'#001545',
@@ -73,13 +75,13 @@ var styles = StyleSheet.create({
         fontSize:12
     },
     listViewContainer:{flex:1,backgroundColor:'white'},
-    headerContainer:{flex:1,backgroundColor:'white', height:600},
-    headerMaskedView:{backgroundColor:'#FAFAFA', height:550, width:windowSize.width,alignItems:'center',flex:1},
-    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:1,backgroundColor:'black' },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:602,width:windowSize.width,opacity:.5 },
-    headerTripTo:{color:"#FFFFFF",fontSize:14,marginTop:80,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"},
-    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:260,left:0,right:0,height:20,marginTop:-5}
+    headerContainer:{flex:1,height:900},
+    headerMaskedView:{height:660, width:windowSize.width,alignItems:'center',flex:1},
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.6 },
+    headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
+    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',bottom:260,left:0,right:0,height:20,marginTop:-5}
 });
 
 class FeedTrip extends Component {
@@ -103,6 +105,7 @@ class FeedTrip extends Component {
         var markers=[];
         var momentIDs=[];
 
+
         for (var i=0;i<this.state.moments.length;i++){
 
             markers.push({
@@ -119,7 +122,6 @@ class FeedTrip extends Component {
 
             momentIDs.push(this.state.moments[i].id);
         }
-
 
         store.get('user').then((user) => {
             if (user) {
@@ -214,17 +216,14 @@ class FeedTrip extends Component {
     }
 
     showTripLocation(trip){
-        var tripLocation=this.getTripLocation(trip);
-        //console.log(tripLocation,'get trip location',trip);
         this.props.navigator.push({
             id: "location",
-            trip,
-            location:tripLocation.location,
-            isCountry:tripLocation.country?true:false
+            trip
         });
     }
 
     getTripLocation(tripData){
+
         var country = countries.filter(function(country) {
             return country["name"].toLowerCase() === tripData.name.toLowerCase();
         })[0];
@@ -239,66 +238,56 @@ class FeedTrip extends Component {
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
 
+        var tripLocation=this.props.trip[this.props.trip.type];
+
+        var country = countries.filter(function(country) {
+            return country["alpha-2"].toLowerCase() === tripLocation.toLowerCase();
+        })[0];
+
+        if(country)tripLocation=country.name;
+
         return (
             <View style={styles.headerContainer}>
-                <MaskedView maskImage='mask-test' style={styles.headerMaskedView} >
+                <View maskImage='mask-test' style={[styles.headerMaskedView,{height:windowSize.height}]} >
                     <View
                         style={styles.headerDarkBG}
                     />
 
-                    <Image
-                        style={styles.headerImage}
-                        resizeMode="cover"
-                        source={{uri:this.state.moments[0].mediaUrl}}
-                    />
+                        <Image
+                            style={styles.headerImage}
+                            resizeMode="cover"
+                            source={{uri:this.state.moments[0].mediaUrl}}
+                        />
 
-                        <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
-                        <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
-                            <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                        </TouchableHighlight>
+                        <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                        {/*wikipedia*/}
-
-                        <View style={styles.userImageContainer}>
-                            <UserImage radius={50} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                        </View>
+                            <UserImage radius={40} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>
+                            <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
+                                <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
+                            </TouchableHighlight>
+                            </View>
 
                         <View style={styles.subTitleContainer}>
                             <TripSubtitle tripData={this.props.trip}></TripSubtitle>
                         </View>
-                </MaskedView>
-                <View style={{height:200,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:335}}>
+                </View>
+                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height-90}}>
                     <Mapbox
-                        style={{flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy'}
+                        style={{borderRadius:2,flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
+                        styleURL={'mapbox://styles/mapbox/streets-v9'}
                         accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                         centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
-                        zoomLevel={5}
+                        zoomLevel={6}
                         annotations={this.state.annotations}
                         scrollEnabled={false}
                         zoomEnabled={false}
                     />
                     <View style={{flex:1,top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></View>
                 </View>
-                <View style={{bottom:20,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:50,left:15,top:285}}>
-                    <Image source={require('image!icon-duration-negative')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-                    <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                    <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length} {photoOrPhotos}</Text>
-                </View>
 
-                <Image
-                    style={{flex:1,height:60,top:335,position:"absolute",width:windowSize.width-30,left:15,right:0,backgroundColor:'transparent'}}
-                    resizeMode="cover"
-                    source={require('image!shadow')}
-                />
+                <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
-                <TouchableHighlight underlayColor="#011e5f" style={styles.button} onPress={() => this.showTripLocation(this.props.trip)}>
-                    <View>
-                        <Text style={styles.copyLarge}>EXPLORE THIS AREA</Text>
-                    </View>
-                </TouchableHighlight>
                 {this.props.navigation.default}
             </View>
         )
@@ -317,9 +306,9 @@ class FeedTrip extends Component {
                         source={{uri:tripData.mediaUrl}}
                     />
                     </TouchableHighlight>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
+                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                         <TouchableHighlight>
-                            <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
+                            <Text style={{color:"#282b33",fontSize:12,fontFamily:"Akkurat", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="rgba(0,0,0,0)" style={{width:18,height:18}} onPress={()=>{
                             tripData.suitcased=!tripData.suitcased;

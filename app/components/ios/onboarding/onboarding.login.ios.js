@@ -5,14 +5,17 @@ import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 import SimpleButton from '../components/simpleButton';
 import SimpleInput from '../components/simpleInput';
+import SimpleError from '../components/simpleError';
 var windowSize=Dimensions.get('window');
+import dismissKeyboard from 'react-native-dismiss-keyboard';
+import { Fonts, Colors } from '../../../Themes/'
 
 
 import {
     StyleSheet,
     View,
     Text,
-    TouchableHighlight,
+    TouchableOpacity,
     AlertIOS,
     Image,
     Animated
@@ -29,17 +32,6 @@ var styles = StyleSheet.create({
         height:windowSize.height,
         width:windowSize.width
     },
-    copy:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:10
-    },
-    copyCenter:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:9,
-        textAlign:'center'
-    },
     bg:{
         position:'absolute',
         left:0,
@@ -50,38 +42,26 @@ var styles = StyleSheet.create({
     login:{
         flex:1,
         padding:15,
-        justifyContent:'center',
+        justifyContent:'center'
     },
-    textInput:{
-        height: 50,
-        marginTop:3,
-        marginBottom:10,
-        backgroundColor:'white',
-        padding:10,
-        borderWidth: 0,
-        fontSize:11,
-        fontFamily:"TSTAR-bold"
+    overlay:{
+        flex:1,
+        top:0,
+        bottom:0,
+        left:0,
+        right:0,
+        position:'absolute'
     },
+    logo:{
 
-    imageContainer:{
-        flex: 1,
-        alignItems: 'stretch'
+        width:80,
     },
-    bgImage:{
-        flex:1
-    },
-    copyLarge:{
-        color:'white',
-        fontFamily:"TSTAR-bold",
-        fontSize:12
-    },
-    copyButton:{
-        marginTop:12
-    },
-    button:{
-        backgroundColor:'#8ad78d',
-        height:50,
-        justifyContent:'center',
+    logoContainer:{
+        position:'absolute',
+        top:0,
+        flex:1,
+        right:0,
+        left:0,
         alignItems:'center'
     }
 });
@@ -89,72 +69,84 @@ var styles = StyleSheet.create({
 class Login extends Component {
     constructor(props){
         super(props);
-        this.state={email:"",inviteCode:"EVEREST",inputBottomMargin: new Animated.Value(0),copyOpacity:new Animated.Value(1)};
+        this.state={showError:false,isValid:false,inviteCode:"everest",email:"",inputBottomMargin: new Animated.Value(0),overlayOpacity:new Animated.Value(0),headlineOpacity:new Animated.Value(1)};
     }
-    componentDidMount(){
 
+    onSubmit = () => {
+        if(this.state.isValid){
+            this.connectWithService.bind(this)();
+            this.refs.emailError.hide();
+        }else{
+            this.setState({showError:true})
+            this.refs.emailError.show();
+        }
+    }
+
+    validate = (email) =>{
+        if (this.validateEmail(email)) {
+            this.setState({email,isValid:true,showError:false})
+        }else{
+            this.setState({email,isValid:false,showError:false})
+        }
     }
 
     connectWithService(){
-        //console.log('connect with service');
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode}));
         this.props.dispatch(signupUser());
     }
 
-    requestInvite(){
-        AlertIOS.alert("you can't request invites yet");
-    }
-
     moveUp(){
-        Animated.spring(
-            this.state.inputBottomMargin,
-            {
-                toValue: 308,
-                friction:6
-            }
-        ).start();
-
-        Animated.spring(
-            this.state.copyOpacity,
-            {
-                toValue:0,
-                friction:6
-            }
-        ).start();
+        Animated.spring(this.state.inputBottomMargin, {toValue: 310, friction:8}).start();
+        Animated.spring(this.state.overlayOpacity, {toValue: .5,friction:8}).start();
+        Animated.spring(this.state.headlineOpacity, {toValue: 0,friction:8}).start();
     }
 
     moveDown(){
-        Animated.spring(
-            this.state.inputBottomMargin,
-            {
-                toValue: 50,
-                friction:6
-            }
-        ).start();
-
-        Animated.spring(
-            this.state.copyOpacity,
-            {
-                toValue:1,
-                friction:6
-            }
-        ).start();
+        dismissKeyboard();
+        Animated.spring(this.state.inputBottomMargin, {toValue: 0,friction:8}).start();
+        Animated.spring(this.state.overlayOpacity, {toValue: 0,friction:8}).start();
+        Animated.spring(this.state.headlineOpacity, {toValue: 1,friction:8}).start();
     }
+
+    validateEmail = (email) => {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(email);
+    };
 
     render() {
         return (
             <View style={styles.container}>
                 <Image
                     style={styles.bg}
-                    source={require('./../../../Images/sherpa-home.png')}
+                    source={require('./../../../Images/intro_bg.png')}
                     resizeMode="cover"
                 />
 
-                <View style={styles.login}>
-                    <SimpleInput></SimpleInput>
-                    <SimpleButton icon="instagram" text="Connect with instagram"></SimpleButton>
+                <Animated.Image
+                    style={[styles.bg,{opacity:this.state.headlineOpacity}]}
+                    source={require('./../../../Images/intro_title.png')}
+                    resizeMode="contain"
+                />
+
+                <TouchableOpacity onPress={this.moveDown.bind(this)} style={styles.overlay}>
+                    <Animated.View style={[styles.overlay,{opacity:this.state.overlayOpacity,backgroundColor:'black'}]}></Animated.View>
+                </TouchableOpacity>
+
+                <View style={styles.logoContainer}>
+                    <Image
+                        style={styles.logo}
+                        source={require('./../../../Images/intro_logo.png')}
+                        resizeMode="contain"
+                    />
                 </View>
+
+                <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin}]}>
+                    <SimpleInput ref="emailInput" onStart={this.moveUp.bind(this)} onEnd={this.moveDown.bind(this)} onChange={(text)=>{this.validate(text)}} placeholder="Enter your email" style={{color:this.state.showError?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
+                    <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Request an invite"></SimpleButton>
+                </Animated.View>
+
+                <SimpleError ref="emailError" errorMessage="Valid email address is required"></SimpleError>
             </View>
         );
     }

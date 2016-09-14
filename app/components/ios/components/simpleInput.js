@@ -7,17 +7,44 @@ export default class SimpleInput extends React.Component {
 
     static propTypes = {
         placeholder: React.PropTypes.string,
-        styles: React.PropTypes.object
+        styles: React.PropTypes.object,
+        text: React.PropTypes.string
     }
 
     static defaultProps={
         onPress:function(){},
-        placeholder:"please add button copy"
+        onStart:function(){},
+        onEnd:function(){},
+        onChange:function(){},
+        placeholder:"please add placeholder copy"
+    }
+
+    constructor(props){
+        super(props);
+        this.state={text:props.placeholder};
+    }
+
+    text(){
+        return this.state.text;
     }
 
     render () {
         return (
-            <TextInput style={[buttonStyles.button,inputStyles.inputField,buttonStyles.buttonText,inputStyles.inputText]} defaultValue="Your E-Mail address">{this.props.text && this.props.text.toUpperCase()}</TextInput>
+            <TextInput clearTextOnFocus={true}
+                       clearButtonMode="while-editing"
+                       style={[
+                            buttonStyles.button,
+                            inputStyles.inputField,
+                            buttonStyles.buttonText,
+                            inputStyles.inputText,
+                            this.props.style
+                       ]}
+                       onFocus={this.props.onStart}
+                       onBlur={this.props.onEnd}
+                       onChangeText={(text) =>{this.setState({text});this.props.onChange(text)}}
+                       value={this.state.text}
+            >
+            </TextInput>
         )
     }
 }
