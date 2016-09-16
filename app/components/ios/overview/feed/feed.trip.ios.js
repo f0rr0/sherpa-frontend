@@ -7,7 +7,6 @@ import Mapbox from "react-native-mapbox-gl";
 import MaskedView from "react-native-masked-view";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
-import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
@@ -19,6 +18,7 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
 import UserImage from '../../components/userImage'
+import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
 
 
@@ -101,6 +101,9 @@ class FeedTrip extends Component {
        this.refs.popover._setAnimation("toggle");
     }
 
+    componentDidUpdate(){
+    }
+
     componentDidMount(){
         var markers=[];
         var momentIDs=[];
@@ -122,42 +125,6 @@ class FeedTrip extends Component {
 
             momentIDs.push(this.state.moments[i].id);
         }
-
-        store.get('user').then((user) => {
-            if (user) {
-                var newMoments = this.state.moments.slice();
-                var sherpaHeaders = new Headers();
-                sherpaHeaders.append("token", user.sherpaToken);
-                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-                const {endpoint,version} = sherpa;
-
-                this.setState({isCurrentUsersTrip:this.props.trip.owner.id===user.sherpaID,sherpaToken:user.sherpaToken})
-
-
-                fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.serviceID, {
-                    method: 'post',
-                    headers: sherpaHeaders,
-                    body: encodeQueryData({
-                        moments: JSON.stringify(momentIDs)
-                    })
-                }).then((rawServiceResponse)=> {
-                    return rawServiceResponse.text();
-                }).then((response)=> {
-                    //console.log('feed trip')
-                    var suitcaseInfo = JSON.parse(response);
-                    for (var i = 0; i < suitcaseInfo.length; i++) {
-                        newMoments[i].suitcased = suitcaseInfo[i].suitcased;
-                    }
-
-                    this.setState({
-                        momentIDs,
-                        annotations: markers,
-                        moments: newMoments,
-                        dataSource: this.ds.cloneWithRows(newMoments)
-                    });
-                }).catch(err=>console.log(err));
-            }
-        })
     }
 
     render(){
@@ -188,30 +155,11 @@ class FeedTrip extends Component {
     }
 
 
-    suiteCaseTrip(trip){
-        addMomentToSuitcase(trip.id);
-    }
-
-    unSuiteCaseTrip(trip){
-        removeMomentFromSuitcase(trip.id);
-    }
-
     showUserProfile(trip){
         this.props.dispatch(udpateFeedState("reset"));
-
         this.props.navigator.push({
             id: "profile",
             trip
-        });
-    }
-
-    showTripDetail(trip,owner){
-        this.props.dispatch(udpateFeedState("reset"));
-
-        var tripDetails={trip,owner,group:this.props.trip};
-        this.props.navigator.push({
-            id: "tripDetail",
-            tripDetails
         });
     }
 
@@ -223,7 +171,6 @@ class FeedTrip extends Component {
     }
 
     getTripLocation(tripData){
-
         var country = countries.filter(function(country) {
             return country["name"].toLowerCase() === tripData.name.toLowerCase();
         })[0];
@@ -235,9 +182,6 @@ class FeedTrip extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
-        var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
-
         var tripLocation=this.props.trip[this.props.trip.type];
 
         var country = countries.filter(function(country) {
@@ -296,46 +240,7 @@ class FeedTrip extends Component {
     _renderRow(tripData,sectionID,rowID) {
         if(tripData.type!=='image')return(<View></View>);
         return (
-            <View style={styles.listItem} style={styles.listItemContainer}>
-                    <TouchableHighlight onPress={()=>{
-                        this.showTripDetail(tripData,this.props.trip.owner);
-                    }}>
-                    <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
-                        resizeMode="cover"
-                        source={{uri:tripData.mediaUrl}}
-                    />
-                    </TouchableHighlight>
-                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
-                        <TouchableHighlight>
-                            <Text style={{color:"#282b33",fontSize:12,fontFamily:"Akkurat", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight underlayColor="rgba(0,0,0,0)" style={{width:18,height:18}} onPress={()=>{
-                            tripData.suitcased=!tripData.suitcased;
-                            if(tripData.suitcased){
-                                this.suiteCaseTrip(tripData);
-                            }else{
-                                this.unSuiteCaseTrip(tripData);
-                            }
-                            var newMoments=this.state.moments.slice();
-                            newMoments[rowID].suitCased=tripData.suitcased;
-                            this.setState({moments:newMoments,dataSource:this.ds.cloneWithRows(newMoments)})
-                        }}>
-                        <View>
-                            <Image
-                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
-                                resizeMode="contain"
-                                source={require('./../../../../Images/suitcase.png')}
-                            />
-                            <Image
-                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
-                                resizeMode="contain"
-                                source={require('./../../../../Images/suitcase-check.png')}
-                            />
-                        </View>
-                    </TouchableHighlight>
-                </View>
-            </View>
+           <MomentRow tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         );
     }
 }

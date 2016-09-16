@@ -89,13 +89,13 @@ class TripDetail extends React.Component{
         this.refs.popover._setAnimation("toggle");
     }
 
-    suiteCaseTrip(trip){
-        trip.suitcased=!trip.suitcased;
-        this.setState({suitcased:trip.suitcased});
-        if(trip.suitcased){
-            addMomentToSuitcase(trip.id);
+    suiteCaseTrip(){
+
+        this.setState({suitcased:!this.state.suitcased});
+        if(!this.state.suitcased){
+            this.props.tripDetails.row.suiteCaseTrip();
         }else{
-            removeMomentFromSuitcase(trip.id);
+            this.props.tripDetails.row.unSuiteCaseTrip();
         }
     }
 
@@ -116,8 +116,8 @@ class TripDetail extends React.Component{
     _renderSuitcaseButton(){
         return(
             <View>
-                <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip(this.props.tripDetails.trip)}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
-                <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip(this.props.tripDetails.trip)}} text="ADD TO YOUR SUITCASE"></SimpleButton>
+                <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
+                <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip()}} text="ADD TO YOUR SUITCASE"></SimpleButton>
             </View>
         )
     }

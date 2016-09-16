@@ -99,7 +99,6 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                 var searchBody = undefined;
                 const {endpoint,version,feed_uri,user_uri} = sherpa;
                 var feedRequestURI;
-                console.log("TYPE::",type);
                 switch (type) {
                     case "location":
                         feedRequestURI = endpoint + version + "/search";
@@ -122,17 +121,21 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                         feedRequestURI = endpoint + version + "/search/users?text=" + query;
                         break;
                     case "user":
-                        console.log("USERUSERUSER");
                         feedRequestURI = endpoint + version + user_uri + "/" + query;
-                        console.log(feedRequestURI)
                     break;
+                    case "moment":
+                        feedRequestURI=endpoint+version+"/moment/"+query;
+                    break;
+                    case "trip":
+                        feedRequestURI=endpoint+version+"/trip/"+query;
+                    break;
+                    case "feed":
                     default:
                         feedRequestURI = endpoint + version + user_uri + "/" + query + feed_uri + "?page=" + page;
                     break;
                 }
 
                 var sherpaHeaders = new Headers();
-                console.log('token',user?user.sherpaToken:sherpaToken)
                 sherpaHeaders.append("token", user?user.sherpaToken:sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
@@ -158,8 +161,53 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                     })
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
-                        var trips = JSON.parse(rawSherpaResponseFinal);
-                        fulfill({trips, page, type});
+                        var parsedResponse=JSON.parse(rawSherpaResponseFinal);
+                        var trips = parsedResponse.trips;
+
+                        switch(type){
+                            case "user":
+                            case "moment":
+                            case "trip":
+                                fulfill({data:parsedResponse, page, type});
+                            break;
+
+                            case "profile":
+                            case "suitcase-list":
+                            case "single-suitcase-feed":
+                            case "search-places":
+                            case "search-people":
+                            case "feed":
+                                var cleanTrips=[];
+                                for(var index in trips){
+                                    var moments=trips[index].moments.reverse();
+                                    var name=trips[index].name;
+                                    if(name.indexOf("Trip to ")>-1)trips[index].name= name.split("Trip to ")[1];
+                                    if(moments.length>0){
+                                        trips[index].moments=[];
+                                        for(var i=0;i<moments.length;i++){
+                                            if(moments[i].type==='image')trips[index].moments.push(moments[i]);
+                                        }
+                                        cleanTrips.push(trips[index]);
+                                    }
+                                }
+
+                                fulfill({trips:cleanTrips, page, type});
+                            break;
+                            case "search":
+                            case "location-search":
+                            case "location":
+                                var cleanMoments=[];
+                                var moments=trips;
+                                if(moments.length>0){
+                                    for(var i=0;i<moments.length;i++){
+                                        if(moments[i].type==='image')cleanMoments.push(moments[i]);
+                                    }
+                                }
+
+                                fulfill({moments:cleanTrips, page, type});
+                            break;
+
+                        }
                     }).catch((err)=>console.log(err))
             })
     });

@@ -98,7 +98,7 @@ class FoursquareInfoBox extends Component {
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     var venueInfo=JSON.parse(response).response.venue;
-                    if(venueInfo.name.toLowerCase()!=query.toLowerCase())return;
+                    if(venueInfo.name.toLowerCase()!=query.toLowerCase()||venueInfo=={})return;
                     var venueObject={
                         category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
                         rating:venueInfo.rating||undefined,

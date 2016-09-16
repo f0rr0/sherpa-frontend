@@ -79,26 +79,30 @@ export function removeMomentFromSuitcase(momentID){
 }
 
 
-export function addNotificationsDeviceToken(deviceToken){
+export function addNotificationsDeviceToken(deviceToken,sherpaToken){
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
-            if (user) {
+            //if (user) {
+                dispatch(updateUserData({notificationToken:deviceToken}));
+
                 const {endpoint,version,user_uri} = sherpa;
+                let token=user?user.sherpaToken:sherpaToken;
 
                 var sherpaHeaders = new Headers();
-                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("token", token);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-                fetch(endpoint + version + "/user/adddevicetoken/" + user.sherpaToken + "/" + deviceToken, {
+                fetch(endpoint + version + "/user/adddevicetoken/" + token + "/" + deviceToken, {
                     method: 'post',
                     headers: sherpaHeaders
                 })
                 .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    dispatch(updateUserDBState("available-existing"));
+                    if(!sherpaToken)dispatch(updateUserDBState("available-existing"));
+
                 }).catch(err=>console.log('device token err',err));
-            }
+            //}
         });
     }
 }
@@ -136,6 +140,9 @@ export function logoutUser(){
     return function (dispatch, getState) {
         store.delete('user').then(()=> {
             dispatch(updateUserDBState("empty"));
+            dispatch(updateUserData({
+                whiteListed:false
+            }));
         })
     }
 }
@@ -164,7 +171,6 @@ export function setUserHometown(hometown){
                     .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    console.log('update hometown',response);
                 }).catch(err=>console.log('hometown  err',err));
             }
         });
@@ -179,7 +185,7 @@ export function loadUser() {
 
 
         return store.get('user').then((user) => {
-            if(user&&!config.resetUser){
+            if(user&&!config.resetUser&&user.whiteListed){
                 dispatch(updateUserData(user));
                 var responseStatus=400;
                 const {endpoint,version,user_uri} = sherpa;
@@ -227,9 +233,7 @@ export function storeUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
         const { userReducer } = getState();
-        store.save('user', userReducer).then(()=>{
-            dispatch(updateUserDBState("available-new"));
-        })
+        store.save('user', userReducer);
     }
 }
 
@@ -370,16 +374,18 @@ export function signupUser(){
                     username,
                     profilePicture,
                     hometown,
-                    serviceObject:userData
+                    serviceObject:userData,
+                    whiteListed:sherpaResponse.whitelisted
                 }));
-                console.log('sherpa response');
+
                 if(!sherpaResponse.whitelisted){
                     dispatch(updateUserDBState("not-whitelisted"));
                 }else{
                     dispatch(updateUserSignupState("sherpa_token_complete"));
-                    dispatch(storeUser());
+                    dispatch(updateUserDBState("available-new"));
                 }
 
+                dispatch(storeUser());
             })
         }
     };

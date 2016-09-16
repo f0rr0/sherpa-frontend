@@ -141,8 +141,9 @@ class FeedProfile extends React.Component {
     _renderEmpty(){
         return (
             <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
             </View>
+
         )
     }
 
@@ -230,6 +231,7 @@ class FeedProfile extends React.Component {
                     </View>
 
                 </View>
+
             </TouchableHighlight>
         );
     }

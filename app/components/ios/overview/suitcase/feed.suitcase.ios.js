@@ -79,13 +79,6 @@ class Suitecase extends React.Component {
         this.itemsLoadedCallback=null;
     }
 
-    componentDidUpdate(){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
-            this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
-        }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
-        }
-    }
 
     reset(){
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
@@ -106,9 +99,17 @@ class Suitecase extends React.Component {
     _renderEmpty(){
         return (
             <View style={styles.loaderContainer}>
-                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                <Image style={styles.loaderImage} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
             </View>
         )
+    }
+
+    componentDidUpdate(){
+        if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
+            this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
+        }else if(this.props.feed.feedState==='reset'){
+            this.refs.listview._refresh()
+        }
     }
 
     _onFetch(page=1,callback){

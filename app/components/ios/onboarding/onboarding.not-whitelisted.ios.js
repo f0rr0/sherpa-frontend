@@ -105,7 +105,7 @@ class NotWhitelisted extends Component {
     constructor(props){
         super(props);
         //populate later
-        this.state={featuredMoments:[],barProgress:new Animated.Value(0),slideshowTitleOpacity:new Animated.Value(1)}
+        this.state={featuredMoments:[],barProgress:new Animated.Value(0),slideshowTitleOpacity:new Animated.Value(1),slideshowStarted:false}
     }
 
     componentDidMount(){
@@ -113,15 +113,14 @@ class NotWhitelisted extends Component {
 
     }
 
-
     allowNotifications() {
         NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
         NotificationsIOS.requestPermissions();
     }
 
     _onRegister(deviceToken){
-        if(deviceToken){
-            this.props.dispatch(addNotificationsDeviceToken(deviceToken))
+        if(deviceToken&&typeof deviceToken==='string'){
+            this.props.dispatch(addNotificationsDeviceToken(deviceToken,this.props.user.sherpaToken))
         }
 
         this.refs.onboardingSlider.scrollBy(1)
@@ -129,16 +128,13 @@ class NotWhitelisted extends Component {
 
     _requestFeaturedMoments(){
 
-        getFeed(this.props.user.sherpaID,1,'',this.props.user.sherpaToken).then((result)=>{
+        getFeed(this.props.user.sherpaID,1,'feed',this.props.user.sherpaToken).then((result)=>{
             //result verarbeiten
             var maxMoments=5;
             var featuredMoments=[];
-            for(var tripIndex in result.trips.trips){
-                var currTrip=result.trips.trips[tripIndex];
-                if(currTrip.featured==true&&currTrip.moments[0].type!=='video'){
+            for(var tripIndex in result.trips){
+                var currTrip=result.trips[tripIndex];
                     featuredMoments.push(currTrip);
-                }
-
                 if(featuredMoments.length==maxMoments)break;
             }
             this.setState({featuredMoments})
@@ -166,11 +162,14 @@ class NotWhitelisted extends Component {
     }
 
     startSlideshow(){
-        Animated.timing(this.state.slideshowTitleOpacity, {
-            toValue: .1,
-            duration: 30000
-        }).start();
-        this.cycleAnimation();
+        if(!this.state.slideshowStarted){
+            this.setState({slideshowStarted:true});
+            Animated.timing(this.state.slideshowTitleOpacity, {
+                toValue: .1,
+                duration: 30000
+            }).start();
+            this.cycleAnimation();
+        }
     }
 
     render() {
@@ -203,8 +202,11 @@ class NotWhitelisted extends Component {
                                KDSocialShare.tweet({
                                     'text':'@travelshrpa can I get an invite?',
                                   }
-                                ,()=>{
-                                    this.startSlideshow()
+                                ,(res)=>{
+                                    if(res=='success'){
+                                        this.refs.onboardingSlider.scrollBy(1);
+                                        this.startSlideshow()
+                                    }
                                 });
                         }} text="REQUEST ON TWITTER"></SimpleButton>
                         <TouchableOpacity onPress={()=>{this.refs.onboardingSlider.scrollBy(1);this.startSlideshow()}}>
@@ -218,7 +220,8 @@ class NotWhitelisted extends Component {
 
                         {this.state.featuredMoments.map(function(trip){
                             var timeAgo=moment(new Date(trip.dateStart*1000)).fromNow();
-                            var description=trip.moments[0].caption&&trip.moments[0].caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.moments[0].caption}</Text>:null;
+                            console.log(trip.moments[0])
+                            var description=<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:10,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>TOOK A TRIP TO {trip.moments[0].location.toUpperCase()+", "+trip.moments[0].continent.toUpperCase()}</Text>;
 
                             return(
                                 <View style={styles.container} key={trip.id}>
@@ -234,8 +237,8 @@ class NotWhitelisted extends Component {
                                         <UserImage radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
                                         <View style={{marginLeft:20,}}>
                                             <TouchableOpacity onPress={()=>{
-                            Linking.openURL(trip.serviceJson.link)
-                        }}>
+                                                Linking.openURL(trip.serviceJson.link)
+                                            }}>
 
                                                 <Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.owner.serviceUsername}</Text>
                                                 {description}

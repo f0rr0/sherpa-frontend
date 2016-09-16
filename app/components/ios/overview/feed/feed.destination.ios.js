@@ -14,6 +14,7 @@ import TripTitle from '../../components/tripTitle';
 import config from '../../../../data/config';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+import MomentRow from '../../components/momentRow'
 
 import {
     StyleSheet,
@@ -186,28 +187,9 @@ class FeedDestination extends Component {
     }
 
     _renderRow(tripData) {
-        if(tripData.type!=='image')return(<View></View>);
         tripData.suitcased=true;
         return (
-            <TouchableHighlight  onPress={()=>{
-                        this.showTripDetail(tripData);
-                    }}>
-                <View style={styles.listItemContainer}>
-                    <View style={styles.listItem}>
-                        <Image
-                            style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
-                            resizeMode="cover"
-                            source={{uri:tripData.mediaUrl}}
-                        />
-                    </View>
-                    <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
-                        <TouchableHighlight>
-                            <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
-                        </TouchableHighlight>
-
-                    </View>
-                </View>
-            </TouchableHighlight>
+            <MomentRow tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         );
     }
 }

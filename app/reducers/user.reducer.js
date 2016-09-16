@@ -15,7 +15,9 @@ const initialState={
     serviceObject:"",
     service:"instagram",
     signupState:"",
-    userDBState:"none" //none, empty, available
+    userDBState:"none", //none, empty, available,
+    whiteListed:false,
+    notificationToken:""
 };
 
 export default function userReducer(state=initialState,action){
@@ -33,7 +35,9 @@ export default function userReducer(state=initialState,action){
                 username:           action.userData.username || state.username,
                 jobID:              action.userData.jobID || state.jobID,
                 hometown:           action.userData.hometown || state.hometown,
-                serviceObject:      action.userData.serviceObject || state.serviceObject
+                whiteListed:        action.userData.whiteListed || state.whiteListed,
+                serviceObject:      action.userData.serviceObject || state.serviceObject,
+                notificationToken:  action.userData.notificationToken || state.notificationToken
             });
         break;
         case types.USER_SIGNUP_UPDATE_STATE:

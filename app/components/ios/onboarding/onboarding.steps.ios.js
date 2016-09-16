@@ -141,12 +141,11 @@ class OnboardingSteps extends Component {
     }
 
     componentDidMount(){
-        store.get('user').then((user) => {
             var sherpaHeaders = new Headers();
-            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("token", this.props.user.sherpaToken);
             const {endpoint,version,user_uri} = sherpa;
 
-            fetch(endpoint+"v1/profile/"+user.serviceID+"/moments/lasthometownmoment/",{
+            fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/lasthometownmoment/",{
                 method:'get',
                 headers:sherpaHeaders
             }).then((rawServiceResponse)=>{
@@ -155,16 +154,19 @@ class OnboardingSteps extends Component {
                 var parsedResponse=JSON.parse(rawSherpaResponse);
                 this.setState({hometownBG:{uri:parsedResponse.mediaUrl}})
             });
-        })
     }
 
     allowNotifications() {
-        NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
-        NotificationsIOS.requestPermissions();
+        if(this.props.user.notificationToken==""){
+            NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
+            NotificationsIOS.requestPermissions();
+        }else{
+            this._onRegister();
+        }
     }
 
     _onRegister(deviceToken){
-        if(deviceToken){
+        if(deviceToken&&typeof deviceToken==='string'){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{
             this.props.dispatch(updateUserDBState("available-existing"));
@@ -172,6 +174,7 @@ class OnboardingSteps extends Component {
     }
 
     render() {
+        var me=this;
         return (
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
                 <OnboardingScreen
@@ -290,8 +293,8 @@ class OnboardingSteps extends Component {
                         backgroundImage={require('./../../../Images/onboarding-notification.png')}
                         continueButton={
                             <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
-                                <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#bcbec4'}]} onPress={this._onRegister.bind(this)} text="maybe later"></SimpleButton>
-                                <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(this)} text="ok got it"></SimpleButton>
+                                <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#bcbec4'}]} onPress={this._onRegister.bind(me)} text="maybe later"></SimpleButton>
+                                <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(me)} text="ok got it"></SimpleButton>
                             </View>
                         }
 

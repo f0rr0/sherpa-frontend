@@ -43,7 +43,6 @@ class FeedList extends React.Component{
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -72,9 +71,8 @@ class FeedList extends React.Component{
     }
 
     _onFetch(page=1,callback){
-
-            getFeed(this.props.user.sherpaID,page,'',this.props.user.sherpaToken).then(function(response){
-            callback(response.trips.trips);
+        getFeed(this.props.user.sherpaID,page,'feed',this.props.user.sherpaToken).then(function(response){
+            callback(response.trips);
         })
     }
 

@@ -19,6 +19,7 @@ import StickyHeader from '../../components/stickyHeader';
 
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
+import MomentRow from '../../components/momentRow'
 
 
 const {sherpa}=config.auth[config.environment];
@@ -120,39 +121,11 @@ class Search extends React.Component {
         if( prevProps.feed.feedState!='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
             //strip moments out of trips :: unpacking start
             var searchResults=this.props.feed.searchResults[this.props.feed.feedPage];
-            var momentIDs=[];
-            for(var i=0;i<searchResults.length;i++){
-                momentIDs.push(searchResults[i].id);
-            }
-
-            return store.get('user').then((user) => {
-                if (user) {
-                    var sherpaHeaders = new Headers();
-                    sherpaHeaders.append("token", user.sherpaToken);
-                    sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
-                    const {endpoint,version} = sherpa;
-                    fetch(endpoint + version + "/moment/batchsuitcasedby/" + this.props.user.sherpaID, {
-                        method: 'post',
-                        headers: sherpaHeaders,
-                        body: encodeQueryData({
-                            moments: JSON.stringify(momentIDs)
-                        })
-                    }).then((rawServiceResponse)=> {
-                        return rawServiceResponse.text();
-                    }).then((response)=> {
-                        var suitcaseInfo = JSON.parse(response);
-                        for (var i = 0; i < suitcaseInfo.length; i++) {
-                            searchResults[i].suitcased = suitcaseInfo[i].suitcased;
-                        }
-
-                        this.itemsLoadedCallback(searchResults);
-                        if(searchResults.length==0)this.setState({"searchEmptyMessage":msg_noresults})
-                    }).catch(err=>console.log(err));
-                }
-            })
+            this.itemsLoadedCallback(searchResults);
+            if(searchResults.length==0)this.setState({"searchEmptyMessage":msg_noresults})
 
         }else if(this.props.feed.feedState==='reset'){
-            //this.refs.listview._refresh()
+            this.refs.listview._refresh()
         }
     }
 
@@ -376,50 +349,7 @@ class Search extends React.Component {
 
     _renderRow(tripData) {
         return (
-            <View style={styles.listItem} style={styles.listItemContainer}>
-                <TouchableHighlight onPress={()=>{
-                        this.showTripDetail(tripData,tripData.profile);
-                    }}>
-                    <ImageProgress
-                        style={{position:"absolute",top:0,left:0,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
-                        resizeMode="cover"
-                        source={{uri:tripData.mediaUrl}}
-                        indicator={Progress.Circle}
-                        indicatorProps={{
-                            color: 'rgba(150, 150, 150, 1)',
-                            unfilledColor: 'rgba(200, 200, 200, 0.2)'
-                        }}
-                    />
-                </TouchableHighlight>
-                <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
-                    <TouchableHighlight>
-                        <Text style={{color:"#282b33",fontSize:10,fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.venue}</Text>
-                    </TouchableHighlight>
-                    <TouchableHighlight style={{width:18,height:18}} onPress={()=>{
-                        tripData.suitcased=!tripData.suitcased;
-                        if(tripData.suitcased){
-                            this.suiteCaseTrip(tripData);
-                        }else{
-                            this.unSuiteCaseTrip(tripData);
-                        }
-
-                        this.refs.listview._refresh()
-                    }}>
-                        <View>
-                            <Image
-                                style={{width:18,height:18,top:0,position:"absolute",opacity:tripData.suitcased?.5:1}}
-                                resizeMode="contain"
-                                source={require('./../../../../Images/suitcase.png')}
-                            />
-                            <Image
-                                style={{width:10,height:10,left:5,top:5,opacity:tripData.suitcased?1:0,position:"absolute"}}
-                                resizeMode="contain"
-                                source={require('./../../../../Images/suitcase-check.png')}
-                            />
-                        </View>
-                    </TouchableHighlight>
-                </View>
-            </View>
+            <MomentRow tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         );
     }
 }

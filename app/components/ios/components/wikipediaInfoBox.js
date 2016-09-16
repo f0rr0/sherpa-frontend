@@ -49,7 +49,7 @@ class WikpediaInfoBox extends Component {
         var cleardQuery=removeDiacritics(query.toLowerCase());
 
 
-        console.log("query",cleardQuery);
+        //console.log("query",cleardQuery);
 
         //query geonames to get likely results that include location data
         fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows="+maxRows+"&username=travelsherpa"+featureType+"&q="+cleardQuery, {
@@ -146,7 +146,7 @@ class WikpediaInfoBox extends Component {
                                 finalDescription=results[i].description;
 
                                 //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
-                                if(finalDescription.indexOf(results[i].label)!==0)finalDescription=results[i].label+""+finalDescription;
+                                //if(finalDescription.indexOf(results[i].label)!==0)finalDescription=results[i].label+""+finalDescription;
                                 break;
                             }
                         }

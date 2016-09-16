@@ -1,6 +1,6 @@
 'use strict';
 
-import {loadUser} from '../../actions/user.actions';
+import {loadUser,updateUserData,storeUser} from '../../actions/user.actions';
 import {getFeed} from '../../actions/feed.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
@@ -50,7 +50,6 @@ class Root extends Component {
 
     _handleAppStateChange(currentAppState) {
         this.setState({ currentAppState })
-        //console.log('update state');
     }
 
     componentWillReceiveProps(nextProps){
@@ -77,17 +76,21 @@ class Root extends Component {
 
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
-            //getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
-            //    console.log('user',result)
-            //})
-           if(this.props.user.userDBState=="not-whitelisted"){
-               this.navigator.replace({id:"overview"});
-           }
+            if(this.props.user.whiteListed)return;
+            getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
+                console.log('white listing state',result.data.whitelisted,this.props.user.whiteListed)
+                if(result.data.whitelisted){
+                    this.navigator.replace({id:"onboarding-steps"});
+                }
+                console.log('dispatch whitelisted',result.data.whitelisted);
+                this.props.dispatch(updateUserData({
+                    whiteListed:result.data.whitelisted
+                }));
+                this.props.dispatch(storeUser());
+            })
         }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});
         }
-
-
     }
 
     renderScene(route, navigator) {
