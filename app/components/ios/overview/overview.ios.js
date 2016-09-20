@@ -80,6 +80,7 @@ class Overview extends React.Component {
             this.handleFirstConnectivityChange
         );
         //this.refs[this.state.selectedTab].setView({type:'TRIP',id:1231})
+        //this.refs[this.state.selectedTab].setView({type:'MOMENT',id:133276})
     }
 
     handleFirstConnectivityChange(reach) {

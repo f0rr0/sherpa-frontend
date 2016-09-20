@@ -99,7 +99,7 @@ class Suitecase extends React.Component {
     _renderEmpty(){
         return (
             <View style={styles.loaderContainer}>
-                <Image style={styles.loaderImage} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
     }

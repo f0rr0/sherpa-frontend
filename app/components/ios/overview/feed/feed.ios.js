@@ -53,6 +53,12 @@ class Feed extends Component {
             case "TRIP":
                 this.getTrip(deepLinkObject.id)
             break;
+            case "MOMENT":
+                this.navigator.push({
+                    id: "tripDetail",
+                    momentID:deepLinkObject.id
+                });
+            break;
         }
     }
 
@@ -134,8 +140,9 @@ class Feed extends Component {
                 break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("white",route.tripDetails.trip.venue,false,false,true,false,true)} user={this.props.user} tripDetails={route.tripDetails} dispatch={this.props.dispatch} />;
-                break;
+                console.log('route:: ',route);
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true,false,true)} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
+            break;
         }
 
         //console.log('this current renderScene',this.currentRenderScene);
@@ -171,7 +178,6 @@ class Feed extends Component {
 
     _goBack(){
         this.navigator.pop();
-        this.props.dispatch(udpateFeedState("reset"));
     }
 
 

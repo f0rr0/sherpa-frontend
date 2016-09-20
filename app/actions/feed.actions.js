@@ -41,6 +41,8 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 break;
             }
 
+        //http://sherpa-api-staging.us-east-1.elasticbeanstalk.com/api/v1/moment/:moment/suitcasedby/:user
+
             var sherpaResponse;
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", sherpaToken);
@@ -148,6 +150,7 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                     headers: sherpaHeaders
                 };
 
+
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         switch (rawSherpaResponse.status) {
@@ -168,6 +171,7 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                             case "user":
                             case "moment":
                             case "trip":
+                            case "location":
                                 fulfill({data:parsedResponse, page, type});
                             break;
 
@@ -195,7 +199,6 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                             break;
                             case "search":
                             case "location-search":
-                            case "location":
                                 var cleanMoments=[];
                                 var moments=trips;
                                 if(moments.length>0){

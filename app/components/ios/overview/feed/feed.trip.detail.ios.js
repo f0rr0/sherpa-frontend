@@ -4,7 +4,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import Mapbox from "react-native-mapbox-gl";
 import MaskedView from "react-native-masked-view";
-import {removeMomentFromSuitcase,addMomentToSuitcase} from '../../../../actions/user.actions';
+import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
@@ -15,7 +15,7 @@ import FoursquareInfoBox from '../../components/foursquareInfoBox';
 import SimpleButton from '../../components/simpleButton';
 import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
-
+import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 
 import {
     StyleSheet,
@@ -70,12 +70,26 @@ var styles = StyleSheet.create({
 class TripDetail extends React.Component{
     constructor(props){
         super();
-        this.state={
-            suitcased:props.tripDetails.trip.suitcased
+        this.state= {
+            suitcased: props.trip?props.trip.suitcased:false,
+            momentData: null
         }
+
+
+
+        getFeed(props.momentID,1,'moment').then((res)=>{
+            this.setState({
+                momentData:res.data
+            })
+        })
     }
 
     componentDidMount(){
+        //checkSuitcased(this.props.momentID).then((res)=>{
+        //    this.setState({
+        //        suitcased:res
+        //    })
+        //})
     }
 
     showUserProfile(trip){
@@ -89,27 +103,29 @@ class TripDetail extends React.Component{
         this.refs.popover._setAnimation("toggle");
     }
 
+    suitecaseMoment(){
+        this.setState({suitcased:true});
+        addMomentToSuitcase(this.props.momentID);
+    }
+
+    unsuitecaseMoment(){
+        this.setState({suitcased:false});
+        removeMomentFromSuitcase(this.props.momentID);
+    }
+
+
     suiteCaseTrip(){
 
         this.setState({suitcased:!this.state.suitcased});
         if(!this.state.suitcased){
-            this.props.tripDetails.row.suiteCaseTrip();
+            this.props.suitcase?this.props.suitcase():this.suitecaseMoment();
         }else{
-            this.props.tripDetails.row.unSuiteCaseTrip();
+            this.props.unsuitcase?this.props.unsuitcase():this.unsuitecaseMoment();
         }
     }
 
     reset(){
         return true;
-    }
-
-    getTripLocation(tripData){
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.name;
-        })[0];
-
-        var tripLocation=tripData.name;
-        return {location:tripLocation,country:country,countryCode:tripData.country};
     }
 
 
@@ -124,18 +140,20 @@ class TripDetail extends React.Component{
 
 
     render(){
+        var momentData=this.state.momentData;
+        if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
 
-        var timeAgo=moment(new Date(this.props.tripDetails.trip.date*1000)).fromNow();
-        var description=this.props.tripDetails.trip.caption&&this.props.tripDetails.trip.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{this.props.tripDetails.trip.caption}</Text>:null;
+        var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
+        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{momentData.caption}</Text>:null;
 
-        var profilePic= this.props.tripDetails.owner?
+        var profilePic= momentData.serviceJson?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                     <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
                 <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-                    <UserImage onPress={()=>{this.showUserProfile(this.props.tripDetails)}} radius={30} userID={this.props.tripDetails.owner.id} imageURL={this.props.tripDetails.owner.serviceProfilePicture}></UserImage>
+                    <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} userID={momentData.profile.id} imageURL={momentData.serviceJson.user['profile_picture']}></UserImage>
                     <View style={{marginLeft:20,}}>
                         <TouchableOpacity onPress={()=>{
-                            Linking.openURL(this.props.tripDetails.trip.serviceJson.link)
+                            Linking.openURL(momentData.serviceJson.link)
                         }}>
                             {description}
                         </TouchableOpacity>
@@ -154,20 +172,20 @@ class TripDetail extends React.Component{
                     <Image
                         style={{height:windowSize.width,width:windowSize.width }}
                         resizeMode="cover"
-                        source={{uri:this.props.tripDetails.trip.mediaUrl}}
+                        source={{uri:momentData.mediaUrl}}
                     />
 
 
                     {profilePic}
                     {this._renderSuitcaseButton()}
-                    <WikipediaInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></WikipediaInfoBox>
-                    <FoursquareInfoBox location={this.props.tripDetails.trip.venue} coordinates={{lat:this.props.tripDetails.trip.lat,lng:this.props.tripDetails.trip.lng}}></FoursquareInfoBox>
+                    <WikipediaInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
+                    <FoursquareInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
                     <View style={{height:250,width:windowSize.width,left:0,flex:1}} >
                         <Mapbox
                             style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                             accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
-                            centerCoordinate={{latitude:this.props.tripDetails.trip.lat,longitude: this.props.tripDetails.trip.lng}}
+                            centerCoordinate={{latitude:momentData.lat,longitude: momentData.lng}}
                             zoomLevel={16}
                             onScroll={(event)=>{
                                  var currentOffset = event.nativeEvent.contentOffset.y;
@@ -181,9 +199,9 @@ class TripDetail extends React.Component{
                             }}
                             annotations={[
                                 {
-                                    coordinates: [this.props.tripDetails.trip.lat, this.props.tripDetails.trip.lng],
+                                    coordinates: [momentData.lat, momentData.lng],
                                     type: 'point',
-                                    title:this.props.tripDetails.trip.venue,
+                                    title:momentData.venue,
                                     annotationImage: {
                                         url: 'image!icon-pin',
                                         height: 7,
@@ -199,7 +217,7 @@ class TripDetail extends React.Component{
                     </View>
                     {this.props.navigation.default}
                 </ScrollView>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.tripDetails.trip.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={this.props.tripDetails.trip.id}></PopOver>
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
 
             </View>
         )

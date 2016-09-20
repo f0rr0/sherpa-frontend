@@ -2,6 +2,7 @@ import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../actions/use
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import {udpateFeedState} from '../../../actions/feed.actions';
+import {checkSuitcased} from '../../../actions/user.actions';
 
 import {
     StyleSheet,
@@ -38,6 +39,7 @@ class MomentRow extends Component{
     }
 
     componentDidMount(){
+        //console.log('did mount',this.props.feed);
     }
 
     suiteCaseTrip(){
@@ -50,28 +52,34 @@ class MomentRow extends Component{
         removeMomentFromSuitcase(this.props.tripData.id);
     }
 
-    showTripDetail(trip,owner){
-        this.props.dispatch(udpateFeedState("reset"));
+    showTripDetail(momentID){
 
-        trip.suitcased=this.state.suitcased;
+        this.props.tripData.suitcased=this.state.suitcased;
 
-        var tripDetails={trip,owner,group:this.props.trip,row:this};
+        //console.log(this.props.tripData);
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails
+            momentID,
+            trip:this.props.tripData,
+            suitcase:this.suiteCaseTrip.bind(this),
+            unsuitcase:this.unSuiteCaseTrip.bind(this)
         });
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps,prevState){
+            //console.log('did update');
+            //checkSuitcased(this.props.tripData.id).then((res)=>{
+            //    if(res!=this.state.suitcased)this.setState({suitcased:res})
+            //});
     }
 
     render(){
-
+        //console.log('render moment row')
         var tripData = this.props.tripData;
         return(
             <View style={styles.listItem} style={styles.listItemContainer}>
                 <TouchableHighlight onPress={()=>{
-                            this.showTripDetail(tripData,this.props.trip.owner);
+                            this.showTripDetail(tripData.id);
                         }}>
                     <Image
                         style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}

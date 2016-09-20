@@ -92,6 +92,10 @@ class FeedList extends React.Component{
         )
     }
 
+    update(){
+
+    }
+
 
     render(){
         return(

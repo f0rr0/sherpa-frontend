@@ -61,13 +61,13 @@ class FeedLocation extends Component {
     }
 
     _onFetch(page=1,callback){
-        var req={type:this.props.trip.type}
+        var req={type:this.props.trip.type,page}
         req[this.props.trip.type]=this.props.trip[this.props.trip.type];
         if(req.type=='location')req={needle:req.location}
 
-        getFeed(req,page,'location',this.props.user.sherpaToken).then(function(response){
-            console.log('response',response);
-            callback(response.moments);
+        getFeed(req,page,'location',this.props.user.sherpaToken).then((response)=>{
+            if(page==1)this.setState({moments:response.data})
+            callback(response.data);
         })
     }
 
@@ -133,7 +133,7 @@ class FeedLocation extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        var moments=this.props.feed.locationResults[1];
+        var moments=this.state.moments;
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
         var country=this.getTripLocation(tripData);
 
@@ -157,7 +157,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.props.feed.locationResults[1][0].lat,lng:this.props.feed.locationResults[1][0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

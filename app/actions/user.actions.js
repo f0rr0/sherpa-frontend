@@ -58,6 +58,31 @@ export function addMomentToSuitcase(momentID){
     });
 }
 
+export function checkSuitcased(momentID){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                fetch(endpoint + version + "/moment/" + momentID + "/suitcasedby/" + user.sherpaID, {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        console.log('raw response',rawServiceResponse)
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(response);
+                }).catch(err=>console.log(err));
+            }
+        });
+    })
+}
+
+
+
 export function removeMomentFromSuitcase(momentID){
     return store.get('user').then((user) => {
         if(user){

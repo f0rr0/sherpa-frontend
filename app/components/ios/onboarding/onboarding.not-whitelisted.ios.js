@@ -219,8 +219,7 @@ class NotWhitelisted extends Component {
                     <Swiper ref="featuredMomentsGallery" automaticallyAdjustContentInsets={true} style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={true} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
 
                         {this.state.featuredMoments.map(function(trip){
-                            var timeAgo=moment(new Date(trip.dateStart*1000)).fromNow();
-                            console.log(trip.moments[0])
+                            var timeAgo=moment(new Date(trip.dateEnd*1000)).fromNow();
                             var description=<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:10,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>TOOK A TRIP TO {trip.moments[0].location.toUpperCase()+", "+trip.moments[0].continent.toUpperCase()}</Text>;
 
                             return(

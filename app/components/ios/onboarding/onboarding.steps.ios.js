@@ -166,6 +166,7 @@ class OnboardingSteps extends Component {
     }
 
     _onRegister(deviceToken){
+        console.log(deviceToken,' device token', typeof deviceToken);
         if(deviceToken&&typeof deviceToken==='string'){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{
@@ -180,7 +181,7 @@ class OnboardingSteps extends Component {
                 <OnboardingScreen
                     darken={true}
                     backgroundImage={this.state.hometownBG}
-                        continueButton={<SimpleButton style={{width:windowSize.width*.8}} onPress={()=>{this.refs.onboardingSlider.scrollBy(1)}} text="ok let's go"></SimpleButton>}
+                        continueButton={<SimpleButton style={{width:windowSize.width*.8}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
                         <View>
                             <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
@@ -193,12 +194,9 @@ class OnboardingSteps extends Component {
 
                                      textInputProps={{
                                         //onEndEditing:()=>{
-                                        //    console.log("BLURBLURBLUR");
-                                        //    this.refs.googlesearch.setAddressText("BLABLA")
                                         //},
                                         onBlur:(e)=>{
                                         e.preventDefault();
-                                           //console.log("BLURBLURBLUR");
                                            //this.refs.googlesearch.setAddressText(this.state.hometown.name)
                                         }
                                      }}

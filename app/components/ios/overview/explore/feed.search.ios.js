@@ -124,8 +124,6 @@ class Search extends React.Component {
             this.itemsLoadedCallback(searchResults);
             if(searchResults.length==0)this.setState({"searchEmptyMessage":msg_noresults})
 
-        }else if(this.props.feed.feedState==='reset'){
-            this.refs.listview._refresh()
         }
     }
 
@@ -140,6 +138,7 @@ class Search extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
+        console.log('backend search query',this.state.backendSearchQuery);
         if(this.state.backendSearchQuery)this.state.backendSearchQuery['page']=page;
         this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
     }
@@ -207,17 +206,35 @@ class Search extends React.Component {
         var standalone=!detailed;
         var country;
 
-        if(standalone){
-            country = countries.filter(function(country) {
-                return searchQuery.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
-            })[0];
+        var isLocationCountry=false;
+
+        if(standalone||searchQuery.country){
+            var location=standalone?searchQuery:searchQuery.location;
+            var countryQuery = countries.filter(function(country) {
+                return location.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
+            });
+
+            isLocationCountry=countryQuery.length>0;
+            if(isLocationCountry)country=countryQuery[0];
+
+        }
+
+
+        var isLocationState=false;
+        if(searchQuery.state){
+            isLocationState=states.filter(function(state) {
+                return searchQuery.location.toLowerCase().indexOf(state["name"].toLowerCase())>-1;
+            }).length>0;
+
+            console.log(isLocationState,' is location state');
         }
 
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
-            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'state',location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
-        }else if(!standalone&&searchQuery.country){
+            var localType=isLocationState?'state':'location';
+            this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:localType,location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
+        }else if(!standalone&&searchQuery.country&&isLocationCountry){
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'country',country:searchQuery.country}});
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});

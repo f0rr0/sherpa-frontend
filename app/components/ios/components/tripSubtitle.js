@@ -26,8 +26,16 @@ class TripSubtitle extends Component {
         })[0];
 
 
+        var tripCountry=tripData.country;
+        if(tripData.country.length==2){
+            tripCountry=country.name=countries.filter(function(country) {
+                return country["alpha-2"].toLowerCase() === tripData.country.toLowerCase();
+            })[0].name;
+        }
 
-        if(!country)country={name:tripData.country||""};
+
+        if(!country)country={name:tripCountry||""};
+
 
         var isTripNameCountry = countries.filter(function(country) {
             return country["name"].toLowerCase() === tripName.toLowerCase();
@@ -39,13 +47,14 @@ class TripSubtitle extends Component {
             if(tripName.toLowerCase()==continents[i].toLowerCase())isTripNameContinent=true;
         }
 
+
+
         var isState=tripData.type=='state';
         var isInAmerica=tripData.country=="US"||((country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")||country.name.toLowerCase()=='united states'||country.name.toLowerCase()=='america'||tripData.name.toUpperCase().indexOf("AMERICA")>-1);
         var countryOrState=isState?tripData.state:country.name;
 
-        if(tripData.type=='location')countryOrState=tripData.state;
+        if(tripData.type=='location')countryOrState=isInAmerica?tripData.state:country.name;
         if(tripData.type=='state')countryOrState=country.name;
-
 
 
         var subTitle="";

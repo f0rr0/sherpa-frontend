@@ -78,11 +78,9 @@ class Root extends Component {
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
             if(this.props.user.whiteListed)return;
             getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
-                console.log('white listing state',result.data.whitelisted,this.props.user.whiteListed)
                 if(result.data.whitelisted){
                     this.navigator.replace({id:"onboarding-steps"});
                 }
-                console.log('dispatch whitelisted',result.data.whitelisted);
                 this.props.dispatch(updateUserData({
                     whiteListed:result.data.whitelisted
                 }));
