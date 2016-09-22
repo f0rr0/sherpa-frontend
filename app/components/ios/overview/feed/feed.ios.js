@@ -163,7 +163,7 @@ class Feed extends Component {
 
 
     _updateRouteName(routeName){
-        console.log(this.refs);
+        //console.log(this.refs);
         if(this.refs.navFixed)this.refs.navFixed.updateRouteName(routeName);
         if(this.refs.navStatic)this.refs.navStatic.updateRouteName(routeName);
     }

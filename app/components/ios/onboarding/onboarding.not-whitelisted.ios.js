@@ -136,7 +136,7 @@ class NotWhitelisted extends Component {
                     featuredMoments.push(currTrip);
                     if(featuredMoments.length==maxMoments)break;
             }
-            console.log('featured moments',featuredMoments);
+            //console.log('featured moments',featuredMoments);
             this.setState({featuredMoments})
         }).catch((err)=>{
             //error logging
@@ -234,10 +234,10 @@ class NotWhitelisted extends Component {
                                         style={styles.bg}
                                         source={{uri:trip.moments[0].mediaUrl}}
                                         onLoad={() => {
-                                        console.log("ERROR LOADING IMAGE");
+                                        //console.log("ERROR LOADING IMAGE");
                         }}
                                         onError={()=>{
-                                        console.log("ERROR LOADING IMAGE");
+                                        //console.log("ERROR LOADING IMAGE");
                         }}
 
                                     />

@@ -362,6 +362,7 @@ export function signupUser(){
             };
 
 
+
             const queryData = encodeQueryData({
                 email:userReducer.email,
                 inviteCode:userReducer.inviteCode,
@@ -369,6 +370,15 @@ export function signupUser(){
                 token:instagramToken,
                 serviceData:JSON.stringify(userData),
                 deviceData:JSON.stringify(deviceData)
+            });
+
+            console.log('query data',{
+                email:userReducer.email,
+                inviteCode:userReducer.inviteCode,
+                service:userReducer.service,
+                token:instagramToken,
+                serviceData:userData,
+                deviceData:deviceData
             });
 
 
@@ -387,6 +397,7 @@ export function signupUser(){
             }).then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
+                console.log('raw response',rawSherpaResponse)
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
                 dispatch(updateUserData({

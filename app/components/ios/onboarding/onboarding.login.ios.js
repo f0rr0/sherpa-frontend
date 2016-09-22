@@ -118,7 +118,7 @@ class Login extends Component {
 
 
     componentDidMount(){
-        console.log("user:: ",this.props.user);
+        //console.log("user:: ",this.props.user);
         if(this.props.denied)this.refs.notInvitedError.show();
     }
 

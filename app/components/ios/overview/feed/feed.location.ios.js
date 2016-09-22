@@ -66,7 +66,10 @@ class FeedLocation extends Component {
 
         getFeed(req,page,'search-places').then((response)=>{
             if(page==1)this.setState({moments:response.moments});
-            callback(response.moments);
+            var settings=response.moments.length==0?{
+                allLoaded: true, // the end of the list is reached
+            }:{};
+            callback(response.moments,settings);
         })
     }
 

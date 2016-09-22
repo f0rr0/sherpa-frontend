@@ -86,6 +86,7 @@ class OwnUserProfile extends React.Component {
     }
 
     checkScrapeStatus(){
+        var me=this;
         store.get('user').then((user) => {
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", user.sherpaToken);
@@ -101,8 +102,9 @@ class OwnUserProfile extends React.Component {
                 if(parsedResponse.scrapeState!=='completed'){
                     setTimeout(this.checkScrapeStatus,1000);
                     this.setState({isRescraping:true});
-                }else if(parsedResponse.scrapeState!=='completed'){
+                }else if(parsedResponse.scrapeState=='completed'){
                     this.setState({isRescraping:false})
+                    me.refs.listview._refresh();
                 }
             });
         })
@@ -222,12 +224,15 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
-        var status=this.state.isRescraping?
+        var status=!this.state.isRescraping?
             <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
                 <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
             </View>:
             <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
+                <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:100,width:windowSize.width,alignItems:'center'}}>
+                    <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                </View>
+                <Text style={{color:"#bcbec4",width:250,marginTop:300,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
             </View>;
 
 

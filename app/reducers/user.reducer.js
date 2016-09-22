@@ -8,7 +8,7 @@ const initialState={
     email:"",
     serviceToken:"",
     sherpaToken:"",
-    inviteCode:"",
+    inviteCode:"xxx",
     username:"",
     jobID:"",
     hometown:"",

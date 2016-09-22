@@ -81,7 +81,7 @@ class TripDetail extends React.Component{
         getFeed(props.momentID,1,'moment').then((moment)=>{
             this.setState({
                 momentData: moment.data,
-                routeName: moment.data.location
+                routeName: moment.data.venue
             })
         })
 
@@ -184,7 +184,6 @@ class TripDetail extends React.Component{
 
                     {profilePic}
                     {this._renderSuitcaseButton()}
-                    {console.log(momentData)}
                     <WikipediaInfoBox countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
@@ -193,7 +192,7 @@ class TripDetail extends React.Component{
                             style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                             accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
                             centerCoordinate={{latitude:momentData.lat,longitude: momentData.lng}}
-                            zoomLevel={16}
+                            zoomLevel={12}
                             onScroll={(event)=>{
                                  var currentOffset = event.nativeEvent.contentOffset.y;
                                  var direction = currentOffset > this.offset ? 'down' : 'up';

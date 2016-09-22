@@ -66,19 +66,19 @@ class WikpediaInfoBox extends Component {
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
-            console.log(wikiResponse)
+            //console.log(wikiResponse)
             for(var i=0;i<maxRows;i++){
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
                 var wikiTitle=wikiResponse[i].title.split(",")[0];
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
-
+                //console.log('loop max rows');
                 //console.log(wikiTitle,query);
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
-
+                //console.log(wikiTitle,'::',query,'==')
                 if(wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
                     //console.log('title match');
                     wikiResult=wikiResponse[i];
@@ -108,7 +108,7 @@ class WikpediaInfoBox extends Component {
             //but also likely already passed one of the earlier tests, so we'll give it a shot without lat/lng matching.
 
             var latLngRange=1;
-
+            //console.log(this.props.coordinates,"::",wikiResult)
             var locationCheck=this.props.type=='default'?
             this.props.coordinates&&
             (Math.floor(this.props.coordinates.lat)<=Math.floor(wikiResult.lat)+latLngRange)&&
@@ -118,7 +118,7 @@ class WikpediaInfoBox extends Component {
                 true;
 
             var partialTitleMatch=wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1;
-
+            //console.log('locatio check',locationCheck)
 
             if(
                 locationCheck&&
@@ -162,6 +162,8 @@ class WikpediaInfoBox extends Component {
                     if(!finalDescription)finalDescription=wikiResult.summary.replace("(...)","...");
 
                     //finally update state
+                    //console.log('geonames result',wikiResult);
+                    //console.log('dbpedia result',finalDescription);
                     this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
                 })
 
