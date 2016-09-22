@@ -14,7 +14,7 @@ import config from '../../../../data/config';
 import store from 'react-native-simple-store';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
-import {loadFeed} from '../../../../actions/feed.actions';
+import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import StickyHeader from '../../components/stickyHeader';
 
 import ImageProgress from 'react-native-image-progress';
@@ -117,16 +117,6 @@ class Search extends React.Component {
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }
 
-    componentDidUpdate(prevProps){
-        if( prevProps.feed.feedState!='ready'&&this.props.feed.feedState==='ready'&&this.props.feed.searchResults[this.props.feed.feedPage]){
-            //strip moments out of trips :: unpacking start
-            var searchResults=this.props.feed.searchResults[this.props.feed.feedPage];
-            this.itemsLoadedCallback(searchResults);
-            if(searchResults.length==0)this.setState({"searchEmptyMessage":msg_noresults})
-
-        }
-    }
-
     showTripDetail(trip,owner){
         var tripDetails={trip,owner};
         this.props.navigator.push({
@@ -138,9 +128,10 @@ class Search extends React.Component {
 
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
-        console.log('backend search query',this.state.backendSearchQuery);
-        if(this.state.backendSearchQuery)this.state.backendSearchQuery['page']=page;
-        this.props.dispatch(loadFeed(this.state.backendSearchQuery,this.props.user.sherpaToken,page,"search-"+this.state.searchType));
+        getFeed(this.state.backendSearchQuery,page,"search-"+this.state.searchType).then(function(response){
+            callback(response.moments);
+            if(response.moments.length==0)this.setState({"searchEmptyMessage":msg_noresults})
+        })
     }
 
     _renderEmpty(){
@@ -209,36 +200,32 @@ class Search extends React.Component {
         var isLocationCountry=false;
 
         if(standalone||searchQuery.country){
-            var location=standalone?searchQuery:searchQuery.location;
+            var location=standalone?searchQuery:searchQuery.location || searchQuery.country;
+
             var countryQuery = countries.filter(function(country) {
-                return location.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
+                if(searchQuery.location){
+                    return location.toLowerCase().indexOf(country["name"].toLowerCase())>-1;
+                }
             });
 
-            isLocationCountry=countryQuery.length>0;
-            if(isLocationCountry)country=countryQuery[0];
-
+            isLocationCountry=countryQuery.length>0 || searchQuery.country;
+            if(isLocationCountry)country=countryQuery?countryQuery:searchQuery.country;
         }
 
 
-        var isLocationState=false;
-        if(searchQuery.state){
-            isLocationState=states.filter(function(state) {
-                return searchQuery.location.toLowerCase().indexOf(state["name"].toLowerCase())>-1;
-            }).length>0;
-
-            console.log(isLocationState,' is location state');
-        }
 
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
-            var localType=isLocationState?'state':'location';
+            var localType=searchQuery.location?'location':'state';
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:localType,location:searchQuery.location,country:searchQuery.country,state:searchQuery.state}});
         }else if(!standalone&&searchQuery.country&&isLocationCountry){
             this.setState({searchQuery:searchQuery.query,backendSearchQuery:{type:'country',country:searchQuery.country}});
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
+
+
 
 
     }

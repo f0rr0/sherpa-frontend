@@ -63,11 +63,12 @@ class FeedLocation extends Component {
     _onFetch(page=1,callback){
         var req={type:this.props.trip.type,page}
         req[this.props.trip.type]=this.props.trip[this.props.trip.type];
-        if(req.type=='location')req={needle:req.location}
 
-        getFeed(req,page,'location',this.props.user.sherpaToken).then((response)=>{
-            if(page==1)this.setState({moments:response.data})
-            callback(response.data);
+        console.log('get page',page);
+        getFeed(req,page,'search-places').then((response)=>{
+            console.log('explore response',response)
+            if(page==1)this.setState({moments:response.moments});
+            callback(response.moments);
         })
     }
 

@@ -10,13 +10,15 @@ import OnboardingSteps from './onboarding/onboarding.steps.ios';
 import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 import React, { Component } from 'react';
+import NotificationsIOS from 'react-native-notifications';
 
 
 import {
     StyleSheet,
     Navigator,
     View,
-    AppState
+    AppState,
+    PushNotificationIOS
     } from 'react-native';
 
 
@@ -42,6 +44,9 @@ class Root extends Component {
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+        NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
+        NotificationsIOS.consumeBackgroundQueue();
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
     }
 
     componentWillUnmount(){
@@ -74,18 +79,30 @@ class Root extends Component {
     }
 
 
+    _onNotificationOpened(notification) {
+        PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        var deepLinkObject=notification.getData();
+        if(deepLinkObject.type=='WHITELISTED'){
+            this.navigator.replace({id:"onboarding-steps"});
+        }
+    }
+
+    feedStuff(){
+        getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
+            if(result.data.whitelisted){
+                this.navigator.replace({id:"onboarding-steps"});
+            }
+            this.props.dispatch(updateUserData({
+                whiteListed:result.data.whitelisted
+            }));
+            this.props.dispatch(storeUser());
+        })
+    }
+
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
             if(this.props.user.whiteListed)return;
-            getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
-                if(result.data.whitelisted){
-                    this.navigator.replace({id:"onboarding-steps"});
-                }
-                this.props.dispatch(updateUserData({
-                    whiteListed:result.data.whitelisted
-                }));
-                this.props.dispatch(storeUser());
-            })
+            this.feedStuff();
         }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});
         }

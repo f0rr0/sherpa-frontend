@@ -103,6 +103,7 @@ class Feed extends Component {
         GoogleAnalytics.trackScreenView(route.id);
 
         //console.log('go to ',route);
+        this.currentRenderScene=route.id;
 
         switch (route.id) {
             case 'feed':
@@ -116,7 +117,7 @@ class Feed extends Component {
             case "trip":
                 showNav=true;
                 //route.id+" TO "+route.trip.name
-                sceneContent = <FeedTrip ref={route.id}  navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "destination":
                 showNav=true;
@@ -141,12 +142,11 @@ class Feed extends Component {
             case "tripDetail":
                 showNav=true;
                 console.log('route:: ',route);
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} navigation={this._getNavigation("white","TRIP",false,false,true,false,true)} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
             break;
         }
 
         //console.log('this current renderScene',this.currentRenderScene);
-        this.currentRenderScene=route.id;
         return sceneContent;
     }
 
@@ -164,6 +164,12 @@ class Feed extends Component {
     }
 
 
+    _updateRouteName(routeName){
+        console.log(this.refs);
+        if(this.refs.navFixed)this.refs.navFixed.updateRouteName(routeName);
+        if(this.refs.navStatic)this.refs.navStatic.updateRouteName(routeName);
+    }
+
     _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav,topShadow){
         var defaultNav=<Navigation hideNav={hideNav} topShadow={topShadow} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Navigation>;
         if(fixedHeader){
@@ -174,6 +180,7 @@ class Feed extends Component {
         }else{
             return defaultNav
         }
+
     }
 
     _goBack(){

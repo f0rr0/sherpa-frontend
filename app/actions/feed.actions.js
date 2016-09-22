@@ -4,7 +4,8 @@ const {sherpa}=config.auth[config.environment];
 const {parser}=config.settings;
 import {getQueryString,encodeQueryData} from '../utils/query.utils';
 import store from 'react-native-simple-store';
-
+import {updateUserDBState} from "./user.actions"
+import {reduxStore} from '../../index.ios'
 
 export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
     return function (dispatch, getState) {
@@ -68,6 +69,11 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                     case 400:
                         return '{}';
                     break;
+                    case 401:
+                        store.delete('user').then(()=>{
+                            dispatch(updateUserDBState("empty"));
+                        })
+                    break;
                 }
             })
             .then((rawSherpaResponseFinal)=>{
@@ -93,8 +99,47 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
     }
 }
 
+export function deleteMoment(momentID){
+        return new Promise((fulfill,reject)=> {
+            store.get('user').then((user) => {
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                const {endpoint,version} = sherpa;
+                var requestURI = endpoint + version + "/moment/"+momentID;
 
-export function getFeed(query,page=1,type='',sherpaToken='') {
+
+                var reqBody = {
+                    method: 'delete',
+                    headers: sherpaHeaders,
+                    body: encodeQueryData({reason: "image-not-found"})
+                };
+
+
+                fetch(requestURI, reqBody)
+                    .then((rawSherpaResponse)=> {
+                        switch (rawSherpaResponse.status) {
+                            case 200:
+                                return rawSherpaResponse.text()
+                                break;
+                            case 400:
+                                return '{}';
+                            break;
+                            case 401:
+                                store.delete('user').then(()=>{
+                                    reduxStore.dispatch(updateUserDBState("empty"));
+                                })
+                            break;
+                        }
+                    })
+                    .then((response)=> {
+                        fulfill();
+                    }).catch((err)=>reject(err))
+            })
+        })
+}
+
+export function getFeed(query,page=1,type='') {
         return new Promise((fulfill,reject)=>{
             store.get('user').then((user) => {
 
@@ -138,7 +183,8 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                 }
 
                 var sherpaHeaders = new Headers();
-                sherpaHeaders.append("token", user?user.sherpaToken:sherpaToken);
+                var finalToken=user?user.sherpaToken:sherpaToken;
+                sherpaHeaders.append("token", finalToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
                 var reqBody = searchBody ? {
@@ -151,6 +197,7 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                 };
 
 
+
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         switch (rawSherpaResponse.status) {
@@ -159,14 +206,18 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                                 break;
                             case 400:
                                 return '{}';
-                                break;
+                            break;
+                            case 401:
+                                store.delete('user').then(()=>{
+                                    reduxStore.dispatch(updateUserDBState("empty"));
+                                });
+                            break;
                         }
                     })
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
                         var parsedResponse=JSON.parse(rawSherpaResponseFinal);
                         var trips = parsedResponse.trips;
-
                         switch(type){
                             case "user":
                             case "moment":
@@ -178,8 +229,6 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                             case "profile":
                             case "suitcase-list":
                             case "single-suitcase-feed":
-                            case "search-places":
-                            case "search-people":
                             case "feed":
                                 var cleanTrips=[];
                                 for(var index in trips){
@@ -198,16 +247,18 @@ export function getFeed(query,page=1,type='',sherpaToken='') {
                                 fulfill({trips:cleanTrips, page, type});
                             break;
                             case "search":
+                            case "search-places":
+                            case "search-people":
                             case "location-search":
                                 var cleanMoments=[];
-                                var moments=trips;
+                                var moments=parsedResponse;
                                 if(moments.length>0){
                                     for(var i=0;i<moments.length;i++){
                                         if(moments[i].type==='image')cleanMoments.push(moments[i]);
                                     }
                                 }
 
-                                fulfill({moments:cleanTrips, page, type});
+                                fulfill({moments:cleanMoments, page, type});
                             break;
 
                         }

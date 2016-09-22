@@ -136,7 +136,8 @@ class OnboardingSteps extends Component {
         super(props);
         this.state={
             hometown:{'name':this.props.user.hometown},
-            hometownBG:{uri:""}
+            hometownBG:{uri:"http://www.thomasragger.com/fallback.png"},
+            darken:false
         }
     }
 
@@ -152,7 +153,7 @@ class OnboardingSteps extends Component {
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
-                this.setState({hometownBG:{uri:parsedResponse.mediaUrl}})
+                this.setState({hometownBG:{uri:parsedResponse.mediaUrl},darken:true})
             });
     }
 
@@ -179,7 +180,7 @@ class OnboardingSteps extends Component {
         return (
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
                 <OnboardingScreen
-                    darken={true}
+                    darken={this.state.darken}
                     backgroundImage={this.state.hometownBG}
                         continueButton={<SimpleButton style={{width:windowSize.width*.8}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={

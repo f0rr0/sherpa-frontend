@@ -82,7 +82,7 @@ class ImageRow extends Component {
                         <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
                     </View>
 
-                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s"}></TripTitle>
+                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s "}></TripTitle>
 
                     <View style={styles.tripDataFootnoteContainer}>
                         <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>

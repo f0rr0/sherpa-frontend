@@ -71,7 +71,8 @@ class FeedList extends React.Component{
     }
 
     _onFetch(page=1,callback){
-        getFeed(this.props.user.sherpaID,page,'feed',this.props.user.sherpaToken).then(function(response){
+        console.log('get feed::feed list',this.props.user.sherpaID,page,'feed',this.props.user.sherpaToken)
+        getFeed(this.props.user.sherpaID,page,'feed').then(function(response){
             callback(response.trips);
         })
     }

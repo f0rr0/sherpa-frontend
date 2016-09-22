@@ -30,6 +30,10 @@ class Navigation extends Component {
         }
     }
 
+    updateRouteName(routeName){
+        this.setState({routeName});
+    }
+
     render() {
 
         var title=this.state.routeName.substring(0,30);

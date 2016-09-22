@@ -16,6 +16,7 @@ import SimpleButton from '../../components/simpleButton';
 import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
+import Navigation from '../../components/navigation'
 
 import {
     StyleSheet,
@@ -72,16 +73,19 @@ class TripDetail extends React.Component{
         super();
         this.state= {
             suitcased: props.trip?props.trip.suitcased:false,
-            momentData: null
+            momentData: null,
+            routeName:"TRIP"
         }
 
 
-
-        getFeed(props.momentID,1,'moment').then((res)=>{
+        getFeed(props.momentID,1,'moment').then((moment)=>{
             this.setState({
-                momentData:res.data
+                momentData: moment.data,
+                routeName: moment.data.location
             })
         })
+
+
     }
 
     componentDidMount(){
@@ -90,6 +94,7 @@ class TripDetail extends React.Component{
         //        suitcased:res
         //    })
         //})
+
     }
 
     showUserProfile(trip){
@@ -127,6 +132,7 @@ class TripDetail extends React.Component{
     reset(){
         return true;
     }
+
 
 
     _renderSuitcaseButton(){
@@ -215,7 +221,7 @@ class TripDetail extends React.Component{
                         />
 
                     </View>
-                    {this.props.navigation.default}
+                    <Navigation hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Navigation>
                 </ScrollView>
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
 

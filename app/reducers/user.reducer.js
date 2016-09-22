@@ -23,6 +23,7 @@ const initialState={
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
+            console.log('update user data',action.userData.whiteListed);
             return Object.assign({}, state, {
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,
@@ -35,7 +36,7 @@ export default function userReducer(state=initialState,action){
                 username:           action.userData.username || state.username,
                 jobID:              action.userData.jobID || state.jobID,
                 hometown:           action.userData.hometown || state.hometown,
-                whiteListed:        action.userData.whiteListed || state.whiteListed,
+                whiteListed:        action.userData.whiteListed == undefined ?state.whiteListed:action.userData.whiteListed,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
                 notificationToken:  action.userData.notificationToken || state.notificationToken
             });

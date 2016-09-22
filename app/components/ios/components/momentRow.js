@@ -1,7 +1,7 @@
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
-import {udpateFeedState} from '../../../actions/feed.actions';
+import {udpateFeedState,deleteMoment} from '../../../actions/feed.actions';
 import {checkSuitcased} from '../../../actions/user.actions';
 
 import {
@@ -13,6 +13,8 @@ import {
     TouchableHighlight
 } from 'react-native';
 import React, { Component } from 'react';
+import ImageProgress from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 
 var styles = StyleSheet.create({
@@ -34,12 +36,11 @@ var styles = StyleSheet.create({
 class MomentRow extends Component{
     constructor(props){
         super();
-        this.state={suitcased:props.tripData.suitcased}
+        this.state={suitcased:props.tripData.suitcased,available:true}
 
     }
 
     componentDidMount(){
-        //console.log('did mount',this.props.feed);
     }
 
     suiteCaseTrip(){
@@ -56,7 +57,6 @@ class MomentRow extends Component{
 
         this.props.tripData.suitcased=this.state.suitcased;
 
-        //console.log(this.props.tripData);
         this.props.navigator.push({
             id: "tripDetail",
             momentID,
@@ -67,25 +67,35 @@ class MomentRow extends Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-            //console.log('did update');
-            //checkSuitcased(this.props.tripData.id).then((res)=>{
-            //    if(res!=this.state.suitcased)this.setState({suitcased:res})
-            //});
     }
 
     render(){
-        //console.log('render moment row')
         var tripData = this.props.tripData;
         return(
-            <View style={styles.listItem} style={styles.listItemContainer}>
+            this.state.available?<View style={styles.listItem} style={styles.listItemContainer}>
                 <TouchableHighlight onPress={()=>{
                             this.showTripDetail(tripData.id);
                         }}>
-                    <Image
+
+                    <ImageProgress
                         style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}}
                         resizeMode="cover"
+                        indicator={Progress.Circle}
+                        indicatorProps={{
+                        color: 'rgba(150, 150, 150, 1)',
+                        unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                    }}
                         source={{uri:tripData.mediaUrl}}
-                    />
+                        onLoad={() => {
+                        }}
+                        onError={()=>{
+                            this.setState({available:false})
+                            deleteMoment(tripData.id);
+                        }}
+
+                    >
+                        <View style={styles.darkener}></View>
+                    </ImageProgress>
                 </TouchableHighlight>
                 <View style={{position:"absolute",bottom:-30,left:0,flex:1,width:windowSize.width-30,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>
                     <TouchableHighlight>
@@ -112,7 +122,7 @@ class MomentRow extends Component{
                         </View>
                     </TouchableHighlight>
                 </View>
-            </View>
+            </View>:<View></View>
         )
     }
 }

@@ -1,6 +1,7 @@
 'use strict';
 
-import {updateUserData,signupUser,updateUserDBState} from '../../../actions/user.actions';
+import {updateUserData,signupUser,updateUserDBState,storeUser} from '../../../actions/user.actions';
+import {getFeed} from '../../../actions/feed.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 import SimpleButton from '../components/simpleButton';
@@ -114,15 +115,24 @@ class Login extends Component {
         return re.test(email);
     };
 
+
+    componentDidMount(){
+        console.log("user:: ",this.props.user);
+    }
+
     alreadyInvited(){
-        console.log('invited');
-        if(this.state.isValid){
-            this.refs.emailError.hide();
-            this.refs.notInvitedError.show();
-        }else{
-            this.setState({showError:true})
-            this.refs.emailError.show();
-        }
+        getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
+            console.log('check already invited',result)
+            if(result.data.whitelisted){
+                this.props.navigator.replace({id:"onboarding-steps"});
+            }else{
+                this.refs.notInvitedError.show();
+            }
+            this.props.dispatch(updateUserData({
+                whiteListed:result.data.whitelisted
+            }));
+            this.props.dispatch(storeUser());
+        })
     }
 
     render() {

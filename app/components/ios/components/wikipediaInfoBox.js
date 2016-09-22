@@ -65,16 +65,21 @@ class WikpediaInfoBox extends Component {
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
+            console.log(wikiResponse)
             for(var i=0;i<maxRows;i++){
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
+                var wikiTitle=wikiResponse[i].title.split(",")[0];
                 var cleardQuery=removeDiacritics(query.toLowerCase());
-                var cleardResponse=removeDiacritics(wikiResponse[i].title.toLowerCase());
+                var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
+
+                console.log(wikiTitle,query);
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
 
-                if(wikiResponse[i].title.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
+                if(wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
+                    console.log('title match');
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
                     break;
@@ -93,6 +98,7 @@ class WikpediaInfoBox extends Component {
                 }
             }
 
+            console.log('wiki result',wikiResult)
 
 
             //now that we have the best likely result, we'll do another check if its withing a certain lat/lng range from our query
@@ -152,7 +158,7 @@ class WikpediaInfoBox extends Component {
                         }
                     }
                     //if we didn't get a good description from dbpedia, lets use the geonames one
-                    finalDescription=finalDescription || wikiResult.summary.replace(" (...)","...");
+                    finalDescription=wikiResult.summary.replace(" (...)","...");
 
                     //finally update state
                     this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})

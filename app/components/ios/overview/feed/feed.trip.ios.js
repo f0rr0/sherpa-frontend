@@ -20,6 +20,7 @@ const {sherpa}=config.auth[config.environment];
 import UserImage from '../../components/userImage'
 import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
+import Navigation from '../../components/navigation'
 
 
 
@@ -93,7 +94,8 @@ class FeedTrip extends Component {
             annotations:[],
             moments:props.trip.moments,
             shouldUpdate:true,
-            isCurrentUsersTrip:false
+            isCurrentUsersTrip:false,
+            routeName:"TRIP"
         };
     }
 
@@ -125,9 +127,12 @@ class FeedTrip extends Component {
 
             momentIDs.push(this.state.moments[i].id);
         }
+
+        this.setState({annotations:markers})
     }
 
     render(){
+        var stickyNav=<Navigation hideNav={this.props.navSettings.hideNav} type="fixed" ref="navFixed" color="black" routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={true}  goBack={this.props.navigator.pop} toggleNav={this.props.navSettings.toggleNav}></Navigation>;
         return(
             <View style={styles.listViewContainer}>
                 <ListView
@@ -148,7 +153,7 @@ class FeedTrip extends Component {
                          }
                     }}
                 />
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={stickyNav}></StickyHeader>
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.state.sherpaToken}></PopOver>
             </View>
         )
@@ -206,7 +211,7 @@ class FeedTrip extends Component {
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
                             <UserImage radius={40} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>
+                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
                             <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                             </TouchableHighlight>
@@ -232,7 +237,7 @@ class FeedTrip extends Component {
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
-                {this.props.navigation.default}
+                <Navigation hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Navigation>
             </View>
         )
     }

@@ -261,7 +261,7 @@ class OwnUserProfile extends React.Component {
                         source={{uri:tripData.moments[0].mediaUrl}}
                     />
 
-                    <TripTitle tripData={tripData} tripOwner="YOUR"></TripTitle>
+                    <TripTitle tripData={tripData} tripOwner="YOUR "></TripTitle>
 
                     <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
                         <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>

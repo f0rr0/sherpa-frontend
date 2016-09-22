@@ -14,7 +14,8 @@ var KDSocialShare = require('NativeModules').KDSocialShare;
 import NotificationsIOS from 'react-native-notifications';
 import moment from 'moment';
 import UserImage from '../components/userImage';
-
+import ImageProgress from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 import {
     StyleSheet,
@@ -33,13 +34,12 @@ import React, { Component } from 'react';
 var styles = StyleSheet.create({
     container: {
         flexDirection:'row',
-        flex:1,
         position:'absolute',
         alignItems:"flex-end",
         height:windowSize.height,
         width:windowSize.width,
         top:0,
-        left:0
+        left:0,
     },
     copy:{
         color:'white',
@@ -110,7 +110,6 @@ class NotWhitelisted extends Component {
 
     componentDidMount(){
         this._requestFeaturedMoments();
-
     }
 
     allowNotifications() {
@@ -128,15 +127,16 @@ class NotWhitelisted extends Component {
 
     _requestFeaturedMoments(){
 
-        getFeed(this.props.user.sherpaID,1,'feed',this.props.user.sherpaToken).then((result)=>{
+        getFeed(this.props.user.sherpaID,1,'feed').then((result)=>{
             //result verarbeiten
             var maxMoments=5;
             var featuredMoments=[];
             for(var tripIndex in result.trips){
                 var currTrip=result.trips[tripIndex];
                     featuredMoments.push(currTrip);
-                if(featuredMoments.length==maxMoments)break;
+                    if(featuredMoments.length==maxMoments)break;
             }
+            console.log('featured moments',featuredMoments);
             this.setState({featuredMoments})
         }).catch((err)=>{
             //error logging
@@ -164,10 +164,10 @@ class NotWhitelisted extends Component {
     startSlideshow(){
         if(!this.state.slideshowStarted){
             this.setState({slideshowStarted:true});
-            Animated.timing(this.state.slideshowTitleOpacity, {
-                toValue: .1,
-                duration: 30000
-            }).start();
+            //Animated.timing(this.state.slideshowTitleOpacity, {
+            //    toValue: .1,
+            //    duration: 30000
+            //}).start();
             this.cycleAnimation();
         }
     }
@@ -214,7 +214,7 @@ class NotWhitelisted extends Component {
                         </TouchableOpacity>
                     </View>
                 </View>
-                <View style={styles.container}>
+                <View style={[styles.container]}>
 
                     <Swiper ref="featuredMomentsGallery" automaticallyAdjustContentInsets={true} style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={true} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
 
@@ -224,10 +224,22 @@ class NotWhitelisted extends Component {
 
                             return(
                                 <View style={styles.container} key={trip.id}>
-                                    <Image
+                                    <ImageProgress
+                                        resizeMode="cover"
+                                        indicator={Progress.Circle}
+                                        indicatorProps={{
+                        color: 'rgba(150, 150, 150, 1)',
+                        unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                    }}
                                         style={styles.bg}
                                         source={{uri:trip.moments[0].mediaUrl}}
-                                        resizeMode="cover"
+                                        onLoad={() => {
+                                        console.log("ERROR LOADING IMAGE");
+                        }}
+                                        onError={()=>{
+                                        console.log("ERROR LOADING IMAGE");
+                        }}
+
                                     />
                                     <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
 
