@@ -167,7 +167,6 @@ class OnboardingSteps extends Component {
     }
 
     _onRegister(deviceToken){
-        console.log(deviceToken,' device token', typeof deviceToken);
         if(deviceToken&&typeof deviceToken==='string'){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{

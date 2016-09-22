@@ -50,6 +50,7 @@ class WikpediaInfoBox extends Component {
 
 
         //console.log("query",cleardQuery);
+        var me=this;
 
         //query geonames to get likely results that include location data
         fetch("http://api.geonames.org/wikipediaSearchJSON?maxRows="+maxRows+"&username=travelsherpa"+featureType+"&q="+cleardQuery, {
@@ -72,14 +73,14 @@ class WikpediaInfoBox extends Component {
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
 
-                console.log(wikiTitle,query);
+                //console.log(wikiTitle,query);
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
 
                 if(wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
-                    console.log('title match');
+                    //console.log('title match');
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
                     break;
@@ -98,7 +99,7 @@ class WikpediaInfoBox extends Component {
                 }
             }
 
-            console.log('wiki result',wikiResult)
+            //console.log('wiki result',wikiResult)
 
 
             //now that we have the best likely result, we'll do another check if its withing a certain lat/lng range from our query
@@ -147,7 +148,7 @@ class WikpediaInfoBox extends Component {
                     if(results.length){
                         for(var i=0;i<results.length;i++){
                             //another round of name matching, remove spaces from results because there were some anomalies
-                            if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
+                            if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1&&results[i].countryCode==me.props.countryCode){
                                 //get the final description
                                 finalDescription=results[i].description;
 
@@ -158,7 +159,7 @@ class WikpediaInfoBox extends Component {
                         }
                     }
                     //if we didn't get a good description from dbpedia, lets use the geonames one
-                    finalDescription=wikiResult.summary.replace(" (...)","...");
+                    if(!finalDescription)finalDescription=wikiResult.summary.replace("(...)","...");
 
                     //finally update state
                     this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})

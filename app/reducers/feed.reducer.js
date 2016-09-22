@@ -36,7 +36,6 @@ export default function feedReducer(state=initialState,action){
                 var newPage={};
                 newPage[action.feedData.page]=cleanTrips || state.trips;
                 var newTrips=Object.assign({},{},newPage);
-                console.log(newTrips);
                 newTrips['country']=newTrips['name'];
             }else{
                 var cleanMoments=[];

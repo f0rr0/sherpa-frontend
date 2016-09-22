@@ -200,7 +200,7 @@ class NotWhitelisted extends Component {
                     <View style={styles.login}>
                         <SimpleButton icon="twitter" style={{backgroundColor:Colors.white}} textStyle={{color:Colors.twitterBlue}} onPress={()=>{
                                KDSocialShare.tweet({
-                                    'text':'@travelshrpa can I get an invite?',
+                                    'text':'Can I get an invite to @trysherpa? #Instagram #TravelGuide http://www.trysherpa.com',
                                   }
                                 ,(res)=>{
                                     if(res=='success'){

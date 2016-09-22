@@ -5,7 +5,7 @@ const initialState={
     sherpaID:-1,
     fullName:"",
     profilePicture:"",
-    email:"test@test.test",
+    email:"",
     serviceToken:"",
     sherpaToken:"",
     inviteCode:"",
@@ -17,13 +17,13 @@ const initialState={
     signupState:"",
     userDBState:"none", //none, empty, available,
     whiteListed:false,
-    notificationToken:""
+    notificationToken:"",
+    isExistingLogin:false
 };
 
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
-            console.log('update user data',action.userData.whiteListed);
             return Object.assign({}, state, {
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,
@@ -37,6 +37,7 @@ export default function userReducer(state=initialState,action){
                 jobID:              action.userData.jobID || state.jobID,
                 hometown:           action.userData.hometown || state.hometown,
                 whiteListed:        action.userData.whiteListed == undefined ?state.whiteListed:action.userData.whiteListed,
+                isExistingLogin:    action.userData.isExistingLogin == undefined ?state.isExistingLogin:action.userData.isExistingLogin,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
                 notificationToken:  action.userData.notificationToken || state.notificationToken
             });

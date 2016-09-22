@@ -167,7 +167,6 @@ export function logoutUser(){
                 whiteListed:false
             }));
             dispatch(updateUserDBState("empty"));
-            console.log('deleted user')
         })
     }
 }
@@ -207,10 +206,7 @@ export function loadUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
 
-
-
         return store.get('user').then((user) => {
-            console.log('user from store',user);
             if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
                 var responseStatus=400;
@@ -230,7 +226,6 @@ export function loadUser() {
 
                         case 200:
                             var responseJSON = JSON.parse(rawSherpaResponse);
-                        console.log('loaded user',responseJSON)
                             dispatch(updateUserData({
                                 serviceObject:responseJSON,
                                 bio:responseJSON.profile.serviceBio,
@@ -265,7 +260,6 @@ export function storeUser() {
     return function (dispatch, getState) {
         dispatch(updateUserDBState("process"));
         const { userReducer } = getState();
-        console.log('store user',userReducer)
         store.save('user', userReducer);
     }
 }
@@ -395,21 +389,6 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
-                console.log('++update user data',
-                    {
-                        sherpaID:id,
-                        serviceID:profile,
-                        sherpaToken:sherpaResponse.token,
-                        jobID:sherpaResponse.jobId,
-                        email,
-                        fullName,
-                        username,
-                        profilePicture,
-                        hometown,
-                        serviceObject:userData,
-                        whiteListed:sherpaResponse.whitelisted
-                    }
-                )
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,
@@ -427,7 +406,14 @@ export function signupUser(){
                 dispatch(storeUser());
 
                 if(!sherpaResponse.whitelisted){
-                    dispatch(updateUserDBState("not-whitelisted"));
+                    store.get('user').then((user) => {
+                        if(user.isExistingLogin){
+                            dispatch(updateUserDBState("login-denied"));
+                            dispatch(updateUserData({isExistingLogin:false}))
+                        }else{
+                            dispatch(updateUserDBState("not-whitelisted"));
+                        }
+                    })
                 }else{
                     dispatch(updateUserSignupState("sherpa_token_complete"));
                     dispatch(updateUserDBState("available-new"));

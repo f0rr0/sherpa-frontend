@@ -72,6 +72,9 @@ class Root extends Component {
             case "empty":
                 this.setState({currentView:"login"});
             break;
+            case "login-denied":
+                this.setState({currentView:"login-denied"});
+            break;
             case "waiting":
                 this.setState({currentView:"loading"});
             break;
@@ -115,7 +118,8 @@ class Root extends Component {
                 return <Loading navigator={navigator} {...this.props}/>;
             break;
             case "login":
-                return <Login navigator={navigator} {...this.props}/>;
+            case "login-denied":
+                return <Login denied={route.id=='login-denied'} navigator={navigator} {...this.props}/>;
             break;
             case "not-whitelisted":
                 return <NotWhitelisted navigator={navigator} {...this.props} />;

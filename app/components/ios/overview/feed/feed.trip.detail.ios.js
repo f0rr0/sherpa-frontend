@@ -184,7 +184,8 @@ class TripDetail extends React.Component{
 
                     {profilePic}
                     {this._renderSuitcaseButton()}
-                    <WikipediaInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
+                    {console.log(momentData)}
+                    <WikipediaInfoBox countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
                     <View style={{height:250,width:windowSize.width,left:0,flex:1}} >

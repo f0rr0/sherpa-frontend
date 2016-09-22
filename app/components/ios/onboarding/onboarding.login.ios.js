@@ -116,23 +116,17 @@ class Login extends Component {
     };
 
 
+
     componentDidMount(){
         console.log("user:: ",this.props.user);
+        if(this.props.denied)this.refs.notInvitedError.show();
     }
 
     alreadyInvited(){
-        getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
-            console.log('check already invited',result)
-            if(result.data.whitelisted){
-                this.props.navigator.replace({id:"onboarding-steps"});
-            }else{
-                this.refs.notInvitedError.show();
-            }
-            this.props.dispatch(updateUserData({
-                whiteListed:result.data.whitelisted
-            }));
-            this.props.dispatch(storeUser());
-        })
+            //this.refs.notInvitedError.show();
+        this.props.dispatch(updateUserData({isExistingLogin:true}));
+        this.props.dispatch(updateUserDBState("waiting"));
+        this.props.dispatch(signupUser());
     }
 
     render() {

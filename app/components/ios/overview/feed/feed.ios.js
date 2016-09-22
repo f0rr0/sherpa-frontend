@@ -141,12 +141,10 @@ class Feed extends Component {
                 break;
             case "tripDetail":
                 showNav=true;
-                console.log('route:: ',route);
                 sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
             break;
         }
 
-        //console.log('this current renderScene',this.currentRenderScene);
         return sceneContent;
     }
 

@@ -64,9 +64,7 @@ class FeedLocation extends Component {
         var req={type:this.props.trip.type,page}
         req[this.props.trip.type]=this.props.trip[this.props.trip.type];
 
-        console.log('get page',page);
         getFeed(req,page,'search-places').then((response)=>{
-            console.log('explore response',response)
             if(page==1)this.setState({moments:response.moments});
             callback(response.moments);
         })
@@ -158,7 +156,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </MaskedView>
-                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>
