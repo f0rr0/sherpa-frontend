@@ -129,7 +129,11 @@ class Search extends React.Component {
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         var me=this;
-        getFeed(this.state.backendSearchQuery,page,"search-"+this.state.searchType).then(function(response){
+
+        var query=this.state.backendSearchQuery;
+        query.page=page;
+
+        getFeed(query,page,"search-"+this.state.searchType).then(function(response){
             callback(response.moments);
             if(response.moments.length==0)me.setState({"searchEmptyMessage":msg_noresults})
         })
