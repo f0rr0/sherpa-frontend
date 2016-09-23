@@ -102,6 +102,9 @@ class FeedList extends React.Component{
         return(
             <View style={{flex:1}}>
                 <GiftedListView
+                    // Fixes feed-rendering anomaly, issue #3 but may cause performance issues w/ memory usage
+                    removeClippedSubviews={false}
+                    //
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
