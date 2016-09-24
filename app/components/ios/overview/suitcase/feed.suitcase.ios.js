@@ -64,7 +64,7 @@ var styles = StyleSheet.create({
     listViewLabel:{fontSize:12},
 
     suitcaseHeaderContainer:{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:150},
-    suitcaseHeaderInfo:{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"},
+    suitcaseHeaderInfo:{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"},
     suitcaseHeaderInfoCopy:{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
 
     iconCountries:{height:8,marginBottom:3},

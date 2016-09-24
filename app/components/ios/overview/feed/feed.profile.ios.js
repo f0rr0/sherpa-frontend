@@ -191,7 +191,7 @@ class FeedProfile extends React.Component {
                     </View>
                 </MaskedView>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:365,borderColor:"#cccccc",borderWidth:.5,borderStyle:"solid"}}>
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:365,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:4}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>

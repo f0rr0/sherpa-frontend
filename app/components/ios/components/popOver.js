@@ -14,7 +14,7 @@ import { deleteUser,logoutUser } from '../../../actions/user.actions';
 var styles = StyleSheet.create({
     button:{
         borderStyle:"solid",
-        borderTopWidth:.5,
+        borderTopWidth:1,
         borderColor:"#d8d8d8",
         paddingLeft:20,
         height:70,

@@ -76,7 +76,7 @@ var styles = StyleSheet.create({
         fontSize:12
     },
     listViewContainer:{flex:1,backgroundColor:'white'},
-    headerContainer:{flex:1,height:900},
+    headerContainer:{flex:1,height:windowSize.height+190},
     headerMaskedView:{height:660, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.6 },
@@ -221,7 +221,7 @@ class FeedTrip extends Component {
                             <TripSubtitle tripData={this.props.trip}></TripSubtitle>
                         </View>
                 </View>
-                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height-90}}>
+                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
                     <Mapbox
                         style={{borderRadius:2,flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
                         styleURL={'mapbox://styles/mapbox/streets-v9'}
@@ -235,7 +235,7 @@ class FeedTrip extends Component {
                     <View style={{flex:1,top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></View>
                 </View>
 
-                <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
+                <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
                 <Navigation hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Navigation>
             </View>
