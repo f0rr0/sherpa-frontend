@@ -42,7 +42,6 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 break;
             }
 
-        //http://sherpa-api-staging.us-east-1.elasticbeanstalk.com/api/v1/moment/:moment/suitcasedby/:user
 
             var sherpaResponse;
             var sherpaHeaders = new Headers();

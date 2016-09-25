@@ -104,7 +104,7 @@ class OwnUserProfile extends React.Component {
                     this.setState({isRescraping:true});
                 }else if(parsedResponse.scrapeState=='completed'){
                     this.setState({isRescraping:false})
-                    me.refs.listview._refresh();
+                    this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,1,"profile"));
                 }
             });
         })

@@ -1,6 +1,6 @@
 module.exports = {
     resetUser:false,
-    environment:'dev',
+    environment:'live',
     settings:{
         parser:{
             minTripCount:10
@@ -76,7 +76,7 @@ module.exports = {
                     response_type_web:"token"
                 },
                 sherpa: {
-                    endpoint:"http://api.trysherpa.com/api/",
+                    endpoint:"https://api.trysherpa.com/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",

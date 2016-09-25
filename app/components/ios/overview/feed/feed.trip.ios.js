@@ -77,12 +77,12 @@ var styles = StyleSheet.create({
     },
     listViewContainer:{flex:1,backgroundColor:'white'},
     headerContainer:{flex:1,height:windowSize.height+190},
-    headerMaskedView:{height:660, width:windowSize.width,alignItems:'center',flex:1},
-    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.6 },
+    headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
     headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
-    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',bottom:260,left:0,right:0,height:20,marginTop:-5}
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:0,right:0,height:20,marginTop:-5}
 });
 
 class FeedTrip extends Component {
