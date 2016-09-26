@@ -38,14 +38,6 @@ class FeedLocation extends Component {
         this.state={moments:[]}
     }
 
-    suiteCaseTrip(trip){
-        addMomentToSuitcase(trip.id);
-    }
-
-    unSuiteCaseTrip(trip){
-        removeMomentFromSuitcase(trip.id);
-    }
-
     componentDidMount(){
     }
     toggleNav(){

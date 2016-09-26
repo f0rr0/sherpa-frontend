@@ -66,12 +66,17 @@ class WikpediaInfoBox extends Component {
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
+
             //console.log(wikiResponse)
             for(var i=0;i<maxRows;i++){
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
                 var wikiTitle=wikiResponse[i].title.split(",")[0];
+                var targetCountry=me.props.countryCode||me.props.country.countryCode;
+                var countryMatch=wikiResponse[i].countryCode==targetCountry;
+                //console.log(wikiResponse[i].countryCode," :: ",me.props.country.countryCode);
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
+                //console.log('country match',countryMatch)
                 //console.log('loop max rows');
                 //console.log(wikiTitle,query);
 
@@ -79,7 +84,7 @@ class WikpediaInfoBox extends Component {
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
                 //console.log(wikiTitle,'::',query,'==')
-                if(wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse){
+                if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch){
                     //console.log('title match');
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
@@ -87,13 +92,13 @@ class WikpediaInfoBox extends Component {
                 }
                 //if we have no name match, check if at least the feature-type matches, so we received a country when looking for one
                 //best for populated places
-                else if(wikiResponse[i].feature==this.props.type){
+                else if(wikiResponse[i].feature==this.props.type&&countryMatch){
                     wikiResult=wikiResponse[i];
                     break;
                 }
                 //add another check if we at least have a result with the same countryCode
                 //best for populated places
-                else if(this.props.country&&wikiResponse[i].countryCode==this.props.country.countryCode){
+                else if(this.props.country&&countryMatch){
                     wikiResult=wikiResponse[i];
                     break;
                 }
@@ -148,9 +153,17 @@ class WikpediaInfoBox extends Component {
                     if(results.length){
                         for(var i=0;i<results.length;i++){
                             //another round of name matching, remove spaces from results because there were some anomalies
-                            if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1&&results[i].countryCode==me.props.countryCode){
+                            //console.log('cleard label',results[i].label.toLowerCase().replace(/\s/g, ''));
+                            //console.log('cleared query',cleardQuery.replace(/\s/g, '').toLowerCase());
+                            //console.log('country code',results[i].countryCode);
+                            //console.log('query country code',me.props.countryCode);
+                            //console.log(results[i],':: result');
+
+                            if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
                                 //get the final description
                                 finalDescription=results[i].description;
+
+                                //console.log('found dbpedia description',finalDescription);
 
                                 //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
                                 //if(finalDescription.indexOf(results[i].label)!==0)finalDescription=results[i].label+""+finalDescription;

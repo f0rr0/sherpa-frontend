@@ -170,7 +170,6 @@ class TripDetail extends React.Component{
                     </View>
                 </View>
             </View>:null;
-
         return (
             <View style={{flex:1}}>
                 <ScrollView style={{flex:1,backgroundColor:'white'}}>

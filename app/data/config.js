@@ -76,7 +76,7 @@ module.exports = {
                     response_type_web:"token"
                 },
                 sherpa: {
-                    endpoint:"https://api.trysherpa.com/",
+                    endpoint:"https://api.trysherpa.com/api/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",
