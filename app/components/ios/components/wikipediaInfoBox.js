@@ -66,39 +66,60 @@ class WikpediaInfoBox extends Component {
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
-
+            console.log('cc',me.props.countryCode)
             //console.log(wikiResponse)
+            var targetCountry=me.props.country?me.props.country.countryCode:me.props.countryCode;
+            console.log('target country',targetCountry);
             for(var i=0;i<maxRows;i++){
+
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
                 var wikiTitle=wikiResponse[i].title.split(",")[0];
-                var targetCountry=me.props.countryCode||me.props.country.countryCode;
                 var countryMatch=wikiResponse[i].countryCode==targetCountry;
-                //console.log(wikiResponse[i].countryCode," :: ",me.props.country.countryCode);
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
-                //console.log('country match',countryMatch)
                 //console.log('loop max rows');
                 //console.log(wikiTitle,query);
+                //console.log(wikiResponse[i]);
+                //console.log('target country',targetCountry,' match country',wikiResponse[i].countryCode,'match',wikiResponse[i].countryCode==targetCountry);
+
+
+                var latLngRange=1;
+                var locationCheck=this.props.type=='default'?
+                this.props.coordinates&&
+                (Math.floor(this.props.coordinates.lat)<=Math.floor(wikiResponse[i].lat)+latLngRange)&&
+                (Math.floor(this.props.coordinates.lat)>=Math.floor(wikiResponse[i].lat)-latLngRange)&&
+                (Math.floor(this.props.coordinates.lng)<=Math.floor(wikiResponse[i].lng+latLngRange))&&
+                (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResponse[i].lng-latLngRange)):
+                    true;
+
+                //console.log(wikiResponse[i].lat,wikiResponse[i].lng)
+                //console.log(this.props.coordinates.lat,this.props.coordinates.lng)
+                //console.log(countryMatch,locationCheck);
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
+                    //console.log('match',wikiResponse[i]);
+                    //console.log('name match',wikiTitle.toLowerCase()==query.toLowerCase());
+                    //console.log('country match',countryMatch);
+                    //console.log('location match',locationCheck);
                 //console.log(wikiTitle,'::',query,'==')
-                if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch){
+                if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch&&locationCheck){
                     //console.log('title match');
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
+                    //console.log('matched +++',i);
                     break;
                 }
                 //if we have no name match, check if at least the feature-type matches, so we received a country when looking for one
                 //best for populated places
-                else if(wikiResponse[i].feature==this.props.type&&countryMatch){
+                else if(wikiResponse[i].feature==this.props.type&&countryMatch&&locationCheck){
                     wikiResult=wikiResponse[i];
                     break;
                 }
                 //add another check if we at least have a result with the same countryCode
                 //best for populated places
-                else if(this.props.country&&countryMatch){
+                else if(this.props.country&&countryMatch&&locationCheck){
                     wikiResult=wikiResponse[i];
                     break;
                 }
@@ -112,16 +133,8 @@ class WikpediaInfoBox extends Component {
             //if we requested a location, it will likely not have coordinates attached by geonames for some reason
             //but also likely already passed one of the earlier tests, so we'll give it a shot without lat/lng matching.
 
-            var latLngRange=1;
-            //console.log(this.props.coordinates,"::",wikiResult)
-            var locationCheck=this.props.type=='default'?
-            this.props.coordinates&&
-            (Math.floor(this.props.coordinates.lat)<=Math.floor(wikiResult.lat)+latLngRange)&&
-            (Math.floor(this.props.coordinates.lat)>=Math.floor(wikiResult.lat)-latLngRange)&&
-            (Math.floor(this.props.coordinates.lng)<=Math.floor(wikiResult.lng+latLngRange))&&
-            (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResult.lng-latLngRange)):
-                true;
 
+            //console.log('location check',locationCheck);
             var partialTitleMatch=wikiResult.title.toLowerCase().indexOf(query.toLowerCase())>-1;
             //console.log('locatio check',locationCheck)
 
@@ -134,12 +147,14 @@ class WikpediaInfoBox extends Component {
                 var dbpediaQuery="";
                 switch(this.props.type){
                     case 'default':
-                        dbpediaQuery="QueryString="+cleardQuery;
+                        dbpediaQuery="QueryString="+wikiResult.title;
                         break;
                     case 'location':
                     default:
-                        dbpediaQuery="QueryClass=PopulatedPlace&QueryString="+cleardQuery;
+                        dbpediaQuery="QueryClass=PopulatedPlace&QueryString="+wikiResult.title;
                 }
+
+                //console.log(dbpediaQuery)
 
                 var finalDescription;
                 fetch("http://lookup.dbpedia.org/api/search/KeywordSearch?"+dbpediaQuery, {
@@ -159,6 +174,7 @@ class WikpediaInfoBox extends Component {
                             //console.log('query country code',me.props.countryCode);
                             //console.log(results[i],':: result');
 
+                                //console.log('result',results[i])
                             if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
                                 //get the final description
                                 finalDescription=results[i].description;
@@ -177,6 +193,7 @@ class WikpediaInfoBox extends Component {
                     //finally update state
                     //console.log('geonames result',wikiResult);
                     //console.log('dbpedia result',finalDescription);
+                    //console.log('result',wikiResult.summary)
                     this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
                 })
 

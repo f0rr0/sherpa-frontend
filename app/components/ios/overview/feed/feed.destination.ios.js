@@ -172,7 +172,7 @@ class FeedDestination extends Component {
                 </View>
                 <Mapbox
                     style={{height:250,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:570,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                    accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
                     centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
                     zoomLevel={6}
                     annotations={this.state.annotations}

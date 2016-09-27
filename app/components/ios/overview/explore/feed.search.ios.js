@@ -283,7 +283,7 @@ class Search extends React.Component {
                                 me._onFetch(1, me.refs.listview._postRefresh);
                             }}
                             query={{
-                                 key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
+                                 key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',
                                  language: 'en', // language of the results
                                  types: '(regions)', // default: 'geocode'
                              }}

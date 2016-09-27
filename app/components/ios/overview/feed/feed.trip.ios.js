@@ -225,7 +225,7 @@ class FeedTrip extends Component {
                     <Mapbox
                         style={{borderRadius:2,flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
                         styleURL={'mapbox://styles/mapbox/streets-v9'}
-                        accessToken={'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw'}
+                        accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
                         centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
                         zoomLevel={6}
                         annotations={this.state.annotations}

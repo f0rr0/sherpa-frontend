@@ -219,7 +219,7 @@ class OnboardingSteps extends Component {
                                         return this.state.hometown.name; // text input default value
                                      }}
                                      query={{
-                                         key: 'AIzaSyAyiaituPu_vKF5CB50o3XrQw8PLy1QFMY',
+                                         key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',
                                          language: 'en', // language of the results
                                          types: '(cities)', // default: 'geocode'
                                      }}
