@@ -210,7 +210,6 @@ class Search extends React.Component {
         }
 
 
-
         if(standalone&&country){
             this.setState({searchQuery,backendSearchQuery:{type:'country',country:country['alpha-2']}});
         }else if(!standalone&&searchQuery.state){
@@ -221,10 +220,6 @@ class Search extends React.Component {
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
-
-
-
-
     }
 
     _renderHeader(){

@@ -54,7 +54,7 @@ class Header extends Component {
     }
 }
 
-Navigation.defaultProps = {
+Header.defaultProps = {
     color:"white",
     routeName:"",
     goBack:function(){},
