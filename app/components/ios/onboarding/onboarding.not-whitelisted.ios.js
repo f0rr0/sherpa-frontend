@@ -172,6 +172,19 @@ class NotWhitelisted extends Component {
         }
     }
 
+    _tweet(){
+        KDSocialShare.tweet({
+            'text':'Can I get an invite to @trysherpa? #Instagram #TravelGuide http://www.trysherpa.com'},
+            (res)=>{
+                if(res=='success'){
+                    this.refs.onboardingSlider.scrollBy(1);
+                    this.startSlideshow();
+                }
+            }
+        );
+    }
+
+
     render() {
         return (
             <Swiper ref="onboardingSlider" showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
@@ -198,17 +211,7 @@ class NotWhitelisted extends Component {
                     />
 
                     <View style={styles.login}>
-                        <SimpleButton icon="twitter" style={{backgroundColor:Colors.white}} textStyle={{color:Colors.twitterBlue}} onPress={()=>{
-                               KDSocialShare.tweet({
-                                    'text':'Can I get an invite to @trysherpa? #Instagram #TravelGuide http://www.trysherpa.com',
-                                  }
-                                ,(res)=>{
-                                    if(res=='success'){
-                                        this.refs.onboardingSlider.scrollBy(1);
-                                        this.startSlideshow()
-                                    }
-                                });
-                        }} text="REQUEST ON TWITTER"></SimpleButton>
+                        <SimpleButton icon="twitter" style={{backgroundColor:Colors.white}} textStyle={{color:Colors.twitterBlue}} onPress={this._tweet.bind(this)} text="REQUEST ON TWITTER"></SimpleButton>
                         <TouchableOpacity onPress={()=>{this.refs.onboardingSlider.scrollBy(1);this.startSlideshow()}}>
                             <Text style={{fontFamily:"TSTAR-bold",fontSize:10,letterSpacing:1,fontWeight:"600",marginTop:10,textAlign:'center',color:'white',backgroundColor:'transparent'}}>SKIP THIS STEP</Text>
                         </TouchableOpacity>
@@ -228,18 +231,13 @@ class NotWhitelisted extends Component {
                                         resizeMode="cover"
                                         indicator={Progress.Circle}
                                         indicatorProps={{
-                        color: 'rgba(150, 150, 150, 1)',
-                        unfilledColor: 'rgba(200, 200, 200, 0.2)'
-                    }}
+                                            color: 'rgba(150, 150, 150, 1)',
+                                            unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                                        }}
                                         style={styles.bg}
                                         source={{uri:trip.moments[0].mediaUrl}}
-                                        onLoad={() => {
-                                        //console.log("ERROR LOADING IMAGE");
-                        }}
-                                        onError={()=>{
-                                        //console.log("ERROR LOADING IMAGE");
-                        }}
-
+                                        onLoad={() => {}}
+                                        onError={()=>{}}
                                     />
                                     <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
 
@@ -260,13 +258,8 @@ class NotWhitelisted extends Component {
                                             </View>
                                         </View>
                                     </View>
-
-
-
                                 </View>)
                         })}
-
-
                     </Swiper>
 
                     <Animated.View style={[styles.container,{alignItems:"center",justifyContent:"center",opacity:this.state.slideshowTitleOpacity}]}>

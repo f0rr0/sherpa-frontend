@@ -17,6 +17,7 @@ var windowSize=Dimensions.get('window');
 import config from '../../../../data/config';
 import store from 'react-native-simple-store';
 const {sherpa}=config.auth[config.environment];
+import TripRow from '../../components/tripRow'
 
 
 import {
@@ -255,28 +256,8 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderRow(tripData) {
-        if(!tripData.country || !tripData.continent || !tripData.name)return null;
-        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
         return (
-            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
-                <View style={styles.listItem}>
-                    <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:.7}}
-                        resizeMode="cover"
-                        source={{uri:tripData.moments[0].mediaUrl}}
-                    />
-
-                    <TripTitle tripData={tripData} tripOwner="YOUR "></TripTitle>
-
-                    <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
-                        <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
-                        <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
-                    </View>
-
-                </View>
-            </TouchableHighlight>
+            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
         );
     }
 }

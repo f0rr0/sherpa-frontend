@@ -41,7 +41,7 @@ var styles=StyleSheet.create({
     imageProgressBar:{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}
 });
 
-class ImageRow extends Component {
+class TripRow extends Component {
     constructor(props) {
         super(props);
         this.state={
@@ -56,6 +56,8 @@ class ImageRow extends Component {
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
 
         if(!tripData.moments[0])return null;
+        if(!tripData.country || !tripData.continent || !tripData.name)return null;
+
 
         return(
         <TouchableHighlight style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
@@ -78,7 +80,7 @@ class ImageRow extends Component {
                 </ImageProgress>
 
                 <View style={[styles.imageRowContainer,{opacity:this.state.imageLoaded?1:0}]}>
-                    <View style={styles.userImageContainer}>
+                    <View style={[styles.userImageContainer,{opacity:this.props.hideProfileImage?0:1}]}>
                         <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
                     </View>
 
@@ -99,5 +101,5 @@ class ImageRow extends Component {
 
 
 
-export default ImageRow;
+export default TripRow;
 

@@ -14,6 +14,7 @@ import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import UserImage from '../../components/userImage';
+import TripRow from '../../components/tripRow'
 
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -209,30 +210,8 @@ class FeedProfile extends React.Component {
     }
 
     _renderRow(tripData) {
-        var timeAgo=moment(new Date(tripData.dateStart*1000)).fromNow();
-        tripData.owner=this.props.trip.owner;
         return (
-            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
-                <View style={styles.listItem}>
-                    <Image
-                        style={{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:.7}}
-                        resizeMode="cover"
-                        source={{uri:tripData.moments[0].mediaUrl}}
-                    />
-
-                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s"}></TripTitle>
-
-
-                    <View style={{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0}}>
-                        <Image source={require('image!icon-images')} style={{height:7,marginBottom:3}} resizeMode="contain"></Image>
-                        <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripData.moments.length}</Text>
-                         <Image source={require('image!icon-watch')} style={{height:8,marginBottom:3}} resizeMode="contain"></Image>
-                         <Text style={{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{timeAgo.toUpperCase()}</Text>
-                    </View>
-
-                </View>
-
-            </TouchableHighlight>
+            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
         );
     }
 }

@@ -20,7 +20,7 @@ const {sherpa}=config.auth[config.environment];
 import UserImage from '../../components/userImage'
 import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
-import Navigation from '../../components/navigation'
+import Header from '../../components/header'
 
 
 
@@ -132,7 +132,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        var stickyNav=<Navigation hideNav={this.props.navSettings.hideNav} type="fixed" ref="navFixed" color="black" routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={true}  goBack={this.props.navigator.pop} toggleNav={this.props.navSettings.toggleNav}></Navigation>;
+        var header=<Header hideNav={this.props.navSettings.hideNav} type="fixed" ref="navFixed" color="black" routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={true}  goBack={this.props.navigator.pop} toggleNav={this.props.navSettings.toggleNav}></Header>;
         return(
             <View style={styles.listViewContainer}>
                 <ListView
@@ -153,7 +153,7 @@ class FeedTrip extends Component {
                          }
                     }}
                 />
-                <StickyHeader ref="stickyHeader" navigation={stickyNav}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.state.sherpaToken}></PopOver>
             </View>
         )
@@ -237,7 +237,7 @@ class FeedTrip extends Component {
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
-                <Navigation hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Navigation>
+                <Header hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Header>
             </View>
         )
     }

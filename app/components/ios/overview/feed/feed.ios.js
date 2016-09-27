@@ -9,7 +9,7 @@ import TripDetail from './feed.trip.detail.ios';
 import OwnUserProfile from './../profile/feed.own-profile.ios'
 import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
-import Navigation from '../../components/navigation'
+import Header from '../../components/header'
 
 import { connect } from 'react-redux';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
@@ -169,11 +169,11 @@ class Feed extends Component {
     }
 
     _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav,topShadow){
-        var defaultNav=<Navigation hideNav={hideNav} topShadow={topShadow} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Navigation>;
+        var defaultNav=<Header hideNav={hideNav} topShadow={topShadow} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Header>;
         if(fixedHeader){
             return{
                 'default': defaultNav,
-                'fixed': <Navigation hideNav={hideNav} type="fixed" ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Navigation>
+                'fixed': <Header hideNav={hideNav} type="fixed" ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Header>
             }
         }else{
             return defaultNav

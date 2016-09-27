@@ -1,6 +1,7 @@
 'use strict';
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
+import styles from './styles/infoBoxStyle';
 
 import {
     View,
@@ -13,12 +14,6 @@ import React, {
     Component} from 'react';
 import {removeDiacritics} from '../utils/stringUtils';
 
-
-var styles=StyleSheet.create({
-    infoBoxContainer:{paddingTop:48,paddingBottom:20,paddingLeft:20,paddingRight:20,backgroundColor:'white'},
-    infoBoxTitle:{position:'absolute',left:20,top:28,fontSize:10,color:"#999999"},
-    infoBoxCopy:{fontSize:13}
-})
 
 class WikpediaInfoBox extends Component {
     constructor(props){
@@ -68,7 +63,8 @@ class WikpediaInfoBox extends Component {
 
             //console.log(wikiResponse)
             var targetCountry=me.props.country?me.props.country.countryCode:me.props.countryCode;
-            for(var i=0;i<maxRows;i++){
+            //console.log(wikiResponse);
+            for(var i=0;i<wikiResponse.length;i++){
 
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
                 var wikiTitle=wikiResponse[i].title.split(",")[0];
@@ -89,9 +85,11 @@ class WikpediaInfoBox extends Component {
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
+                //console.log(cleardQuery,'+++',cleardResponse)
                 if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch&&locationCheck){
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
+                    //console.log('title match')
                     break;
                 }
                 //if we have no name match, check if at least the feature-type matches, so we received a country when looking for one

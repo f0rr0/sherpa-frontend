@@ -16,7 +16,7 @@ import SimpleButton from '../../components/simpleButton';
 import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
-import Navigation from '../../components/navigation'
+import Header from '../../components/header'
 
 import {
     StyleSheet,
@@ -220,7 +220,7 @@ class TripDetail extends React.Component{
                         />
 
                     </View>
-                    <Navigation hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Navigation>
+                    <Header hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Header>
                 </ScrollView>
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
 

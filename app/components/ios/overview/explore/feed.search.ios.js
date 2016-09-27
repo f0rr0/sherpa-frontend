@@ -105,14 +105,6 @@ class Search extends React.Component {
         this.props.feed.searchResults=[];
     }
 
-    suiteCaseTrip(trip){
-        addMomentToSuitcase(trip.id);
-    }
-
-    unSuiteCaseTrip(trip){
-        removeMomentFromSuitcase(trip.id);
-    }
-
     reset(){
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }

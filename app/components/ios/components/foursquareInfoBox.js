@@ -3,7 +3,9 @@
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
 import _ from 'underscore';
-const {instagram,sherpa,foursquare}=config.auth[config.environment];
+const {foursquare}=config.auth[config.environment];
+import foursquareStyle from './styles/foursquareInfoBoxStyle'
+import boxStyle from './styles/infoBoxStyle'
 
 
 import {
@@ -16,24 +18,6 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 
-
-var styles=StyleSheet.create({
-    ratingContainer:{flex:1,flexDirection:'row',alignItems:'flex-start',justifyContent:'flex-end'},
-    ratingNumber:{fontSize:8,marginTop:1,marginLeft:1},
-    ratingCount:{fontSize:10,color:"#999"},
-
-    pricingLight:{fontSize:12,color:"#333"},
-    pricingDark:{fontSize:12,color:"#999"},
-    pricingContainer:{marginLeft:8,flex:1,justifyContent:'center'},
-
-
-    infoBoxContainer:{paddingTop:20,paddingBottom:20,paddingLeft:20,paddingRight:25,backgroundColor:'white'},
-    infoBoxTitle:{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"},
-
-    venueContainer:{flex:1,flexDirection:'row',justifyContent:'space-between'},
-    venueIconContainer:{width:30,height:30,backgroundColor:"#8ad78d",flex:1,alignItems:'center',justifyContent:'center',borderRadius:3},
-    venueIcon:{height:16,width:16}
-});
 
 class FoursquareInfoBox extends Component {
     constructor(props){
@@ -69,7 +53,7 @@ class FoursquareInfoBox extends Component {
             var venueResult=JSON.parse(response).response.venues;
             if(venueResult.length==0)return;
 
-            var targetIndex=-1;
+            var targetIndex=0;
 
             var s1 = query.toLowerCase();
             for(var i=0;i<venueResult.length;i++){
@@ -122,12 +106,12 @@ class FoursquareInfoBox extends Component {
         if(!this.state.venue)return(<View></View>);
         var ratings=this.state.venue.rating?
                     <View>
-                        <View style={styles.ratingContainer}>
+                        <View style={foursquareStyle.ratingContainer}>
                             <Text>{this.state.venue.rating}/</Text>
-                            <Text style={styles.ratingNumber}>10</Text>
+                            <Text style={foursquareStyle.ratingNumber}>10</Text>
                         </View>
                         <View>
-                            <Text style={styles.ratingCount}>{this.state.venue.ratingCount} Ratings</Text>
+                            <Text style={foursquareStyle.ratingCount}>{this.state.venue.ratingCount} Ratings</Text>
                         </View>
                     </View>
                 :<View></View>
@@ -146,30 +130,30 @@ class FoursquareInfoBox extends Component {
                 }
                 pricing=
                     <View style={{flex:1,flexDirection:'row'}}>
-                        <Text style={styles.pricingLight}>{dollarsStart}</Text>
-                        <Text style={styles.pricingDark}>{dollarsEnd}</Text>
+                        <Text style={foursquareStyle.pricingLight}>{dollarsStart}</Text>
+                        <Text style={foursquareStyle.pricingDark}>{dollarsEnd}</Text>
                     </View>
             }else{
                 pricing=<View></View>
             }
 
         return(
-                <View style={styles.infoBoxContainer} >
+                <View style={boxStyle.infoBoxContainer} >
                     <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openFoursquare()}}>
                         <View>
-                            <Text style={styles.infoBoxTitle}>FOURSQUARE</Text>
-                            <View style={styles.venueContainer}>
+                            <Text style={foursquareStyle.foursquareTitle}>FOURSQUARE</Text>
+                            <View style={foursquareStyle.venueContainer}>
                                 <View>
-                                    <View style={styles.venueIconContainer}>
+                                    <View style={foursquareStyle.venueIconContainer}>
                                         <Image
-                                            style={styles.venueIcon}
+                                            style={foursquareStyle.venueIcon}
                                             resizeMode="contain"
                                             source={{uri:this.state.venue.icon}}
                                         />
                                     </View>
                                 </View>
-                                <View style={styles.pricingContainer}>
-                                    <Text style={styles.pricingDark}>{this.state.venue.category}</Text>
+                                <View style={foursquareStyle.pricingContainer}>
+                                    <Text style={foursquareStyle.pricingDark}>{this.state.venue.category}</Text>
                                     {pricing}
                                 </View>
                                 {ratings}

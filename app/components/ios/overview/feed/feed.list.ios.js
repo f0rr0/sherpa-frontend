@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
-import ImageRow from '../../components/imageRow'
+import TripRow from '../../components/tripRow'
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
 var windowSize=Dimensions.get('window');
@@ -144,7 +144,7 @@ class FeedList extends React.Component{
 
     _renderRow(tripData) {
         return (
-            <ImageRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></ImageRow>
+            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></TripRow>
         );
     }
 }
