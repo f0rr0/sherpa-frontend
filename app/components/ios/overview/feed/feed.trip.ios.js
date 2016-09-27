@@ -4,7 +4,6 @@ import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
 import Mapbox from "react-native-mapbox-gl";
-import MaskedView from "react-native-masked-view";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';

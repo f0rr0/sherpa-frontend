@@ -1,6 +1,5 @@
 'use strict';
 
-import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 import countries from './../../../../data/countries'

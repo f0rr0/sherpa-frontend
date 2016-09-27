@@ -1,6 +1,5 @@
 'use strict';
 
-import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
@@ -133,7 +132,7 @@ class FeedLocation extends Component {
 
         return (
             <View>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
+                <View style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
 
                     <Image
                         style={{height:602,width:windowSize.width,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
@@ -150,7 +149,7 @@ class FeedLocation extends Component {
                         <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
                         </View>
                     </View>
-                </MaskedView>
+                </View>
                 <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 

@@ -1,6 +1,5 @@
 'use strict';
 
-import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";

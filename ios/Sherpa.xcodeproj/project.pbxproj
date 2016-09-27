@@ -53,7 +53,6 @@
 		F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A612B21D897378002A3AF7 /* Social.framework */; };
 		F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */; };
 		F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */; };
-		F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */; };
 		F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A542111D512B6000CC10F2 /* libART.a */; };
 		F3CDFF621BFBD6D100CE9567 /* CoreTelephony.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF611BFBD6D000CE9567 /* CoreTelephony.framework */; };
 		F3CDFF641BFBD6D800CE9567 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF631BFBD6D700CE9567 /* GLKit.framework */; };
@@ -357,7 +356,6 @@
 				F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */,
 				F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */,
 				F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */,
-				F3B727711BFF6C58006A33CA /* libRNMaskedView.a in Frameworks */,
 				F3CDFF721BFBD70900CE9567 /* libz.tbd in Frameworks */,
 				F36471AC1D5B775100CB5E40 /* Crashlytics.framework in Frameworks */,
 				F3CDFF701BFBD70300CE9567 /* libsqlite3.tbd in Frameworks */,
@@ -1272,7 +1270,6 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
-					"$(SRCROOT)/../node_modules/react-native-masked-view/RNMaskedView",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
 				);
@@ -1309,7 +1306,6 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/LinkingIOS",
 					"$(SRCROOT)/../node_modules/react-native-device-info/RNDeviceInfo",
-					"$(SRCROOT)/../node_modules/react-native-masked-view/RNMaskedView",
 					"$(SRCROOT)/../node_modules/react-native/Libraries/PushNotificationIOS/**",
 					"$(SRCROOT)/../node_modules/react-native-notifications/RNNotifications",
 				);

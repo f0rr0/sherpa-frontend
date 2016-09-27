@@ -3,7 +3,6 @@ import FeedTrip from './feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import Mapbox from "react-native-mapbox-gl";
-import MaskedView from "react-native-masked-view";
 import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');

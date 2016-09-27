@@ -1,6 +1,5 @@
 'use strict';
 
-import MaskedView from "react-native-masked-view";
 import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 import config from '../../../../data/config';
@@ -182,7 +181,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View style={{marginBottom:15}}>
-                <MaskedView maskImage='mask-test' style={{backgroundColor:'#FFFFFF', height:640, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                <View style={{backgroundColor:'#FFFFFF', height:640, width:windowSize.width,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
                         <UserImage onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
@@ -190,7 +189,7 @@ class FeedProfile extends React.Component {
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
                     </View>
-                </MaskedView>
+                </View>
 
                 <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:365,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
