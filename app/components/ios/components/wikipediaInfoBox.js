@@ -66,10 +66,8 @@ class WikpediaInfoBox extends Component {
             var wikiResult=wikiResponse[0];
             var titleMatch=false;
 
-            console.log('cc',me.props.countryCode)
             //console.log(wikiResponse)
             var targetCountry=me.props.country?me.props.country.countryCode:me.props.countryCode;
-            console.log('target country',targetCountry);
             for(var i=0;i<maxRows;i++){
 
                 //normalize results and query by converting special characters into regular characters, i.e. "á" to "a"
@@ -77,11 +75,6 @@ class WikpediaInfoBox extends Component {
                 var countryMatch=wikiResponse[i].countryCode==targetCountry;
                 var cleardQuery=removeDiacritics(query.toLowerCase());
                 var cleardResponse=removeDiacritics(wikiTitle.toLowerCase());
-                //console.log('loop max rows');
-                //console.log(wikiTitle,query);
-                //console.log(wikiResponse[i]);
-                //console.log('target country',targetCountry,' match country',wikiResponse[i].countryCode,'match',wikiResponse[i].countryCode==targetCountry);
-
 
                 var latLngRange=1;
                 var locationCheck=this.props.type=='default'?
@@ -92,23 +85,13 @@ class WikpediaInfoBox extends Component {
                 (Math.floor(this.props.coordinates.lng)>=Math.floor(wikiResponse[i].lng-latLngRange)):
                     true;
 
-                //console.log(wikiResponse[i].lat,wikiResponse[i].lng)
-                //console.log(this.props.coordinates.lat,this.props.coordinates.lng)
-                //console.log(countryMatch,locationCheck);
 
                 // name matching::compare if we have :
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
-                    //console.log('match',wikiResponse[i]);
-                    //console.log('name match',wikiTitle.toLowerCase()==query.toLowerCase());
-                    //console.log('country match',countryMatch);
-                    //console.log('location match',locationCheck);
-                //console.log(wikiTitle,'::',query,'==')
                 if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch&&locationCheck){
-                    //console.log('title match');
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
-                    //console.log('matched +++',i);
                     break;
                 }
                 //if we have no name match, check if at least the feature-type matches, so we received a country when looking for one
@@ -167,22 +150,9 @@ class WikpediaInfoBox extends Component {
                     var results=JSON.parse(response).results;
                     if(results.length){
                         for(var i=0;i<results.length;i++){
-                            //another round of name matching, remove spaces from results because there were some anomalies
-                            //console.log('cleard label',results[i].label.toLowerCase().replace(/\s/g, ''));
-                            //console.log('cleared query',cleardQuery.replace(/\s/g, '').toLowerCase());
-                            //console.log('country code',results[i].countryCode);
-                            //console.log('query country code',me.props.countryCode);
-                            //console.log(results[i],':: result');
-
-                                //console.log('result',results[i])
                             if(results[i].label&&results[i].label.toLowerCase().replace(/\s/g, '').indexOf(cleardQuery.replace(/\s/g, '').toLowerCase())>-1){
                                 //get the final description
                                 finalDescription=results[i].description;
-
-                                //console.log('found dbpedia description',finalDescription);
-
-                                //sometimes dbpedia returns result with the label missing from the first sentence, if thats the case, lets add it
-                                //if(finalDescription.indexOf(results[i].label)!==0)finalDescription=results[i].label+""+finalDescription;
                                 break;
                             }
                         }
@@ -191,9 +161,6 @@ class WikpediaInfoBox extends Component {
                     if(!finalDescription)finalDescription=wikiResult.summary.replace("(...)","...");
 
                     //finally update state
-                    //console.log('geonames result',wikiResult);
-                    //console.log('dbpedia result',finalDescription);
-                    //console.log('result',wikiResult.summary)
                     this.setState({"wikipediaDescription":finalDescription,"wikiURL":wikiResult.wikipediaUrl})
                 })
 
