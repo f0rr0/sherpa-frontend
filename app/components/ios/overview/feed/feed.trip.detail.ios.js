@@ -224,6 +224,7 @@ class TripDetail extends React.Component{
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
 
             </View>
+
         )
     }
 }
