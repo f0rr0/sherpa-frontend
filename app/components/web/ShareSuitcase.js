@@ -138,7 +138,7 @@ class ShareSuitcase extends Component{
             <div className="sherpa-share">
                 <div className="share-container">
                     <div className="logo-header">
-                        <a href="http://www.trysherpa.com" target="_blank"><img src="Images/logo-sherpa-2.png" height="50" alt="" /></a>
+                        <a href="http://www.trysherpa.com" target="_blank"><img src="images/logo-sherpa-2.png" height="50" alt="" /></a>
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
                         <div className="trip-title">

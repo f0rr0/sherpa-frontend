@@ -1,3 +1,5 @@
+@import "base/colors";
+
 .sherpa-share{
   background-color:#e6e6e6;
   .trip-title{
@@ -206,4 +208,12 @@
       }
     }
   }
+}
+
+.my-icon{
+  width:10px;
+  height:10px;
+  border-radius:100%;
+  background: $dark-blue;
+  display: inline-block;
 }

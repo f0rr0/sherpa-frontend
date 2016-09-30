@@ -43,7 +43,6 @@ class ShareTrip extends Component{
                     title:moment.venue,
                     "icon": {
                         "className": "my-icon", // class name to style
-                        "html": "&#9647;", // add content inside the marker
                         "iconSize": null // size of icon, use null to set the size in CSS
                     }
                 }
@@ -65,7 +64,6 @@ class ShareTrip extends Component{
         });
         myLayer.setGeoJSON(markers);
         this.map.fitBounds(bounds);
-        this.map.setZoom(10);
         this.map.scrollWheelZoom.disable()
     }
 
@@ -121,7 +119,7 @@ class ShareTrip extends Component{
             <div className="sherpa-share">
                 <div className="share-container">
                     <div className="logo-header">
-                        <a href="http://www.trysherpa.com"><img src="Images/logo-sherpa-2.png" height="50" alt="" /></a>
+                        <a href="http://www.trysherpa.com"><img src="images/logo-sherpa-2.png" height="50" alt="" /></a>
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
                         <TripTitle tripData={tripData} owner={tripData.owner} sherpaToken={this.props.routeParams.sherpaToken}></TripTitle>
