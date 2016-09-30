@@ -6,7 +6,7 @@ import FeedDestination from './feed.destination.ios';
 import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
 import TripDetail from './feed.trip.detail.ios';
-import OwnUserProfile from './../profile/feed.own-profile.ios'
+import OwnUserProfile from './../profile/profile.ios'
 import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
@@ -17,6 +17,8 @@ import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 import config from "../../../../data/config"
 const {sherpa}=config.auth[config.environment];
+const SCREEN_WIDTH = require('Dimensions').get('window').width;
+
 
 import {
     StyleSheet,
@@ -37,6 +39,16 @@ var styles = StyleSheet.create({
     }
 });
 
+
+const FloatFromRight = {
+    ...Navigator.SceneConfigs.FloatFromRight,
+    gestures: {
+        pop: {
+            ...Navigator.SceneConfigs.FloatFromRight.gestures.pop,
+            edgeHitWidth: SCREEN_WIDTH,
+        },
+    },
+};
 
 class Feed extends Component {
 
@@ -195,9 +207,10 @@ class Feed extends Component {
                     sceneStyle={styles.container}
                     ref={(navigator) => { this.navigator = navigator; }}
                     renderScene={this.renderScene.bind(this)}
-                    configureScene={(route) => ({
-                      ...Navigator.SceneConfigs.PushFromRight
-                    })}
+                    //configureScene={(route) => ({
+                    //  ...Navigator.SceneConfigs.PushFromRight
+                    //})}
+                    configureScene={() => FloatFromRight}
                     initialRoute={{
                       id:this.props.initial,
                       index:0

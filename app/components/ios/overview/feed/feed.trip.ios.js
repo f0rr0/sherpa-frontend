@@ -153,7 +153,7 @@ class FeedTrip extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.state.sherpaToken}></PopOver>
+                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )
     }

@@ -60,7 +60,7 @@ share-button{
 }
 
 
-p{
+p,h1{
   color:$dark-blue;
   font-size:2vw;
 }
@@ -170,6 +170,7 @@ img{
         }
       }
     }
+    
     .description{
       position: absolute;
       top:50%;
@@ -186,12 +187,20 @@ img{
       }
 
       .sub-copy{
-        p{
+        h1{
           text-transform:uppercase;
           font-size:2.1vw;
           line-height:3.3vw;
           letter-spacing:.22em;
           width:85%;
+          margin-bottom:2vh;
+        }
+        p{
+          text-transform:uppercase;
+          margin-bottom:8vh;
+          font-size:10px;
+          margin-top:0;
+          letter-spacing:.2em;
         }
         .apply{
           margin-top:1.3vw;
@@ -202,6 +211,9 @@ img{
     
   }
 
+  .trip-title h1{
+    color:white;
+  }
   .page-signup{
     height:25vh;
     position: absolute;
@@ -377,7 +389,7 @@ img{
     }
     .sub-copy{
       width:70%;
-      p{
+      h1{
         font-size: 5.2vw;
         text-align: center;
       }
@@ -438,7 +450,7 @@ img{
         .header img{
           width:25vw;
         }
-        .sub-copy p{
+        .sub-copy h1{
           width:100%;
           font-size: 4.1vw;
           line-height: 6.3vw;
