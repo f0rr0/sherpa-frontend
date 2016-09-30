@@ -49,7 +49,8 @@ class TripTitle extends Component {
             subTitle=countryOrState+"/"+tripData.continent
         }
 
-        var profilePic=this.props.owner.serviceProfilePicture? <a href={"#/profile/"+this.props.owner.id+"/"+this.props.sherpaToken}><img className="profile-picture" src={this.props.owner.serviceProfilePicture} alt=""/></a>:<span></span>;
+        //<a href={"#/profile/"+this.props.owner.id+"/"+this.props.sherpaToken}></a>
+        var profilePic=this.props.owner.serviceProfilePicture? <img className="profile-picture" src={this.props.owner.serviceProfilePicture} alt=""/>:<span></span>;
 
         return (
             <div className="trip-title">

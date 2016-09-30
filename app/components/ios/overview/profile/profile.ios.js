@@ -17,6 +17,8 @@ import config from '../../../../data/config';
 import store from 'react-native-simple-store';
 const {sherpa}=config.auth[config.environment];
 import TripRow from '../../components/tripRow'
+import SimpleButton from '../../components/simpleButton'
+import CameraRollPicker from 'react-native-camera-roll-picker';
 
 
 import {
@@ -131,6 +133,10 @@ class OwnUserProfile extends React.Component {
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
+    }
+
+    getSelectedImages(){
+
     }
 
     render(){

@@ -44,6 +44,7 @@
 		F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */; };
 		F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */; };
 		F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */; };
+		F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */; };
 		F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F386799C1D184F11002DBE52 /* SimpleAuth.framework */; };
 		F38679B31D1851C4002DBE52 /* SimpleAuthWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */; };
 		F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
@@ -199,6 +200,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNNotifications;
 		};
+		F37482511D9BD65600D953B1 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
+			remoteInfo = RCTCameraRoll;
+		};
 		F3A542101D512B6000CC10F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */;
@@ -310,6 +318,7 @@
 		F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
 		F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNNotifications.xcodeproj; path = "../node_modules/react-native-notifications/RNNotifications/RNNotifications.xcodeproj"; sourceTree = "<group>"; };
+		F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		F386799C1D184F11002DBE52 /* SimpleAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleAuth.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Sherpa-crsigiawhdrczddfiqcpyecxabqn/Build/Products/Debug-iphonesimulator/SimpleAuth.framework"; sourceTree = "<group>"; };
 		F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleAuthWrapper.h; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.h"; sourceTree = "<group>"; };
 		F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthWrapper.m; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.m"; sourceTree = "<group>"; };
@@ -346,6 +355,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */,
 				F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */,
 				F311811C1D6705130016C988 /* libSafariViewManager.a in Frameworks */,
 				F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */,
@@ -511,6 +521,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */,
 				F3A612AF1D897378002A3AF7 /* KDSocialShare.h */,
 				F3A612B01D897378002A3AF7 /* KDSocialShare.m */,
 				F3A612AC1D897378002A3AF7 /* ReactNativeSocialShare.xcodeproj */,
@@ -662,6 +673,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F374824B1D9BD65500D953B1 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F3A5420D1D512B6000CC10F2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -788,6 +807,10 @@
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
+				},
+				{
+					ProductGroup = F374824B1D9BD65500D953B1 /* Products */;
+					ProjectRef = F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */;
 				},
 				{
 					ProductGroup = 00C302B61ABCB90400DB3ED1 /* Products */;
@@ -995,6 +1018,13 @@
 			fileType = archive.ar;
 			path = libRNNotifications.a;
 			remoteRef = F371BA9D1D417C7C00FAD5D1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCameraRoll.a;
+			remoteRef = F37482511D9BD65600D953B1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F3A542111D512B6000CC10F2 /* libART.a */ = {
