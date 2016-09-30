@@ -23,12 +23,12 @@ class ShareLocation extends Component{
     }
 
     initMap(coords){
-        L.mapbox.accessToken = 'pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImRhckc5UlkifQ.f8vV1-k3KEZKVhZxiXhq0w';
+        L.mapbox.accessToken = 'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg';
         if(!this.map)this.map = L.mapbox.map('mapInfo')
 
         this.map.setView([this.state.moments[0].lat, this.state.moments[0].lng], 9);
 
-        L.mapbox.styleLayer('mapbox://styles/thomasragger/cih7wtnk6007ybkkojobxerdy')
+        L.mapbox.styleLayer('mapbox://styles/mapbox/streets-v8')
             .addTo(this.map);
 
         var markers=[];
@@ -156,7 +156,7 @@ class ShareLocation extends Component{
             <div className="sherpa-share">
                 <div className="share-container">
                     <div className="logo-header">
-                        <img src="Images/logo-sherpa-2.png" height="50" alt="" />
+                        <a href="http://www.trysherpa.com" target="_blank"><img src="Images/logo-sherpa-2.png" height="50" alt="" /></a>
                     </div>
                     <div className="main-header" style={{backgroundImage:'url('+firstMoment.mediaUrl+')'}}>
                         <div className="trip-title">
