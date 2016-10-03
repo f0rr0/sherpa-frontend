@@ -6,7 +6,7 @@ import FeedDestination from './feed.destination.ios';
 import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
 import TripDetail from './feed.trip.detail.ios';
-import OwnUserProfile from './../profile/profile.ios'
+import OwnUserProfile from './../profile/feed.own-profile.ios'
 import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
