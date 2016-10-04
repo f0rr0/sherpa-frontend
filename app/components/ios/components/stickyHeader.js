@@ -3,21 +3,21 @@ import React, {
     Component} from 'react';
 
 var styles=StyleSheet.create({
-    headerContainer:{height:70,top: this.topOffset,position:'absolute',backgroundColor:'transparent'}
+    headerContainer:{height:70,position:'absolute'}
 });
 
 class StickyHeader extends Component {
 
     constructor(props) {
         super(props);
-        this.topOffset = new Animated.Value(-100);
         this.enabled=false;
+        this.state={topOffset:new Animated.Value(-100)}
     }
 
     _setAnimation(enable) {
         if(this.enabled!=enable){
             this.enabled=enable;
-            Animated.timing(this.topOffset, {
+            Animated.timing(this.state.topOffset, {
                 duration: 400,
                 toValue: enable? 0 : -100
             }).start()
@@ -30,7 +30,7 @@ class StickyHeader extends Component {
 
     render() {
         return (
-            <Animated.View style={styles.headerContainer}>
+            <Animated.View style={[styles.headerContainer,{top: this.state.topOffset}]}>
                     {this.props.navigation}
             </Animated.View>
         );

@@ -120,40 +120,39 @@ class Feed extends Component {
         switch (route.id) {
             case 'feed':
                 showNav=false;
-                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation("black","LATEST TRIPS",true,true,true,true)}/>;
+                sceneContent = <FeedList ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation({routeName:"LATEST TRIPS",hideBack:true,fixedHeader:true,hideNav:true})}/>;
                 break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation("black",route.id,false,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({routeName:route.id,fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "trip":
                 showNav=true;
-                //route.id+" TO "+route.trip.name
-                sceneContent = <FeedTrip navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip navSettings={{toggleNav:this._toggleNav.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation("white","suitcase",false,false,true,false,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({navColor:'white',routeName:'suitcase',fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,false,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.id,fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation("black","YOUR PROFILE",true,true,true)}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"your profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:8},topRightImage:require('./../../../../Images/icon-settings.png')})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
                 break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation("black","YOUR SUITCASE",true,true,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"your suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
                 break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation("black",route.id,true,false,true,true)} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.id,hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
                 break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
             break;
         }
 
@@ -173,19 +172,13 @@ class Feed extends Component {
         if(this.navigator.refs[this.currentRenderScene].toggleNav)this.navigator.refs[this.currentRenderScene].toggleNav();
     }
 
+    _getNavigation(settings){
 
-    _updateRouteName(routeName){
-        //console.log(this.refs);
-        if(this.refs.navFixed)this.refs.navFixed.updateRouteName(routeName);
-        if(this.refs.navStatic)this.refs.navStatic.updateRouteName(routeName);
-    }
-
-    _getNavigation(color,routeName,hideBack,opaque,fixedHeader,hideNav,topShadow){
-        var defaultNav=<Header hideNav={hideNav} topShadow={topShadow} ref="navStatic" color={color} routeName={routeName} hideBack={hideBack} opaque={opaque} goBack={this._goBack.bind(this)}  toggleNav={this._toggleNav.bind(this)}></Header>;
-        if(fixedHeader){
+        var defaultNav=<Header ref="navStatic" goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)} settings={settings}></Header>;
+        if(settings.fixedHeader){
             return{
                 'default': defaultNav,
-                'fixed': <Header hideNav={hideNav} type="fixed" ref="navFixed" color="black" routeName={routeName} hideBack={hideBack} opaque={true}  goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)}></Header>
+                'fixed': <Header type="fixed" ref="navFixed" goBack={this._goBack.bind(this)} toggleNav={this._toggleNav.bind(this)} settings={settings}></Header>
             }
         }else{
             return defaultNav
@@ -199,7 +192,6 @@ class Feed extends Component {
 
 
     render() {
-        //console.log('render route',this.props.initial);
         return (
             <View style={{flex:1}}>
 

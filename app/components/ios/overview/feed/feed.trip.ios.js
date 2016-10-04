@@ -131,7 +131,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        var header=<Header hideNav={this.props.navSettings.hideNav} type="fixed" ref="navFixed" color="black" routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={true}  goBack={this.props.navigator.pop} toggleNav={this.props.navSettings.toggleNav}></Header>;
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} toggleNav={this.toggleNav.bind(this)}></Header>;
         return(
             <View style={styles.listViewContainer}>
                 <ListView
@@ -236,7 +236,7 @@ class FeedTrip extends Component {
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
-                <Header hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Header>
+                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.props.navigator.pop}  toggleNav={this.toggleNav.bind(this)}></Header>
             </View>
         )
     }

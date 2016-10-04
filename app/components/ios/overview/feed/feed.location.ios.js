@@ -150,7 +150,7 @@ class FeedLocation extends Component {
                         </View>
                     </View>
                 </View>
-                <WikipediaInfoBox type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
+                <WikipediaInfoBox isLocation={true} type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
 
             </View>

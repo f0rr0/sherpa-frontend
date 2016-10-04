@@ -219,7 +219,7 @@ class TripDetail extends React.Component{
                         />
 
                     </View>
-                    <Header hideNav={this.props.navSettings.hideNav} topShadow={this.props.navSettings.topShadow} ref="navStatic" color={this.props.navSettings.color} routeName={this.state.routeName} hideBack={this.props.navSettings.hideBack} opaque={this.props.navSettings.opaque} goBack={this.props.navigator.pop}  toggleNav={this.props.navSettings.toggleNav}></Header>
+                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:true}} ref="navStatic" goBack={this.props.navigator.pop}  toggleNav={this.props.toggleNav}></Header>
                 </ScrollView>
                 <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
 

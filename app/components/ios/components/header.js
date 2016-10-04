@@ -13,12 +13,36 @@ import styles from './styles/headerStyle'
 class Header extends Component {
     constructor(props) {
         super(props);
+        var navSettings={
+            color:this.props.type=='fixed'?'black':(this.props.settings.navColor||'black'),
+            routeName:this.props.settings.routeName || '',
+            hideBack:this.props.settings.hideBack,
+            opaque:this.props.type=='fixed'?true:this.props.settings.opaque,
+            fixedHeader:this.props.settings.fixedHeader,
+            hideNav:this.props.settings.hideNav,
+            topShadow:this.props.settings.topShadow,
+            topLeftImage:this.props.settings.topLeftImage,
+            topRightImage:this.props.settings.topRightImage,
+            topLeftImageStyle:this.props.settings.topLeftImageStyle,
+            topRightImageStyle:this.props.settings.topRightImageStyle
+        };
+
+        //console.log('nav settings',navSettings)
+
+        let topLeftImage=navSettings.color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
+        let topRightImage=navSettings.color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
+
+        if(navSettings.topLeftImage)topLeftImage=navSettings.topLeftImage;
+        if(navSettings.topRightImage)topRightImage=navSettings.topRightImage;
 
         this.state={
-            "arrowImage":this.props.color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white"),
-            "dotsImage":this.props.color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white'),
-            "routeName":this.props.routeName
+            topLeftImage,
+            topRightImage,
+            "routeName":navSettings.routeName,
+            "settings":navSettings
         }
+
+        console.log('state',this.state);
     }
 
     updateRouteName(routeName){
@@ -31,23 +55,23 @@ class Header extends Component {
         if(this.state.routeName.length>30)title+="...";
         title=title.trim().toUpperCase();
 
-        var backButton=this.props.hideBack?null:
+        var backButton=this.state.settings.hideBack?null:
             <TouchableOpacity underlayColor="#ececec" style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>
-                <Image style={styles.navigationBackImage} source={this.state.arrowImage} resizeMode="contain" />
+                <Image style={[styles.navigationBackImage,this.state.topLeftImageStyle]} source={this.state.topLeftImage} resizeMode="contain" />
             </TouchableOpacity>;
 
-        var navButton=this.props.hideNav?null:
+        var navButton=this.state.settings.hideNav?null:
             <TouchableOpacity  underlayColor="#ececec" onPress={()=>{this.props.toggleNav()}} style={[styles.dotsMoreContainer]}>
-                <Image style={styles.dotsMoreImage} source={this.state.dotsImage} resizeMode="contain" />
+                <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle]} source={this.state.topRightImage} resizeMode="contain" />
             </TouchableOpacity>;
 
-        var topShadow=this.props.topShadow?<Image style={{position:'absolute',top:0,left:0,width:windowSize.width,height:140}} resizeMode="cover" source={require('../../../Images/shadow-top.png')}></Image>:null;
+        var topShadow=this.state.settings.topShadow?<Image style={{position:'absolute',top:0,left:0,width:windowSize.width,height:140}} resizeMode="cover" source={require('../../../Images/shadow-top.png')}></Image>:null;
 
         return (
-            <View ref="navigation" style={[styles.navigationContainer,{backgroundColor:this.props.opaque?'white':'transparent'}]}>
+            <View ref="navigation" style={[styles.navigationContainer,{backgroundColor:this.state.settings.opaque?'white':'transparent'}]}>
                 {topShadow}
                 {backButton}
-                <Text style={[{color:this.props.color},styles.navigationTitle]}>{title}</Text>
+                <Text style={[{color:this.state.settings.color},styles.navigationTitle]}>{title}</Text>
                 {navButton}
             </View>
         );
@@ -58,10 +82,7 @@ Header.defaultProps = {
     color:"white",
     routeName:"",
     goBack:function(){},
-    hideBack:false,
-    hideNav:false,
-    opaque:false,
-    topShadow:false
+    settings:{}
 };
 
 
