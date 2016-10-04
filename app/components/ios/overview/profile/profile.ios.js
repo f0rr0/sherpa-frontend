@@ -74,13 +74,14 @@ class OwnUserProfile extends React.Component {
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+        this.ready=false;
 
         this.state= {
             annotations:[],
             trips:[],
-            ready:false,
             isRescraping:false
         };
+        this.isScraping=false;
     }
 
     componentDidMount(){
@@ -88,11 +89,11 @@ class OwnUserProfile extends React.Component {
     }
 
     checkScrapeStatus(){
-        var me=this;
         store.get('user').then((user) => {
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token", user.sherpaToken);
             const {endpoint} = sherpa;
+            this.isRescraping=true;
 
             fetch(endpoint+"v1/profile/"+user.serviceID+"/lastscrape/",{
                 method:'get',
@@ -102,20 +103,24 @@ class OwnUserProfile extends React.Component {
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
                 if(parsedResponse.scrapeState!=='completed'){
-                    setTimeout(this.checkScrapeStatus,1000);
-                    this.setState({isRescraping:true});
+                    this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
                 }else if(parsedResponse.scrapeState=='completed'){
-                    this.setState({isRescraping:false})
-                    this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,1,"profile"));
+                    clearTimeout(this.checkScrapeTimeout);
+                    setTimeout(()=> {
+                        this.ready=false
+                        this.props.dispatch(loadFeed(this.props.user.serviceID, this.props.user.sherpaToken, 1, "profile"));
+                    },3000)
                 }
             });
         })
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(!this.state.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
+        if(!this.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
+            this.ready=true;
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage]);
-            this.setState({ready:true})
+            this.refs.listview._refresh();
+            this.isScraping=false;
         }
     }
 
@@ -220,7 +225,6 @@ class OwnUserProfile extends React.Component {
 
     _renderHeader(){
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
-
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var moments=0;
         if(trips){
@@ -230,15 +234,15 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
-        var status=!this.state.isRescraping?
+        var status=!this.isRescraping?
             <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
                 <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
             </View>:
-            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:100,width:windowSize.width,alignItems:'center'}}>
+            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
+                <View style={{flex:1,justifyContent:'center',height:50,marginTop:300,width:50,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
-                <Text style={{color:"#bcbec4",width:250,marginTop:300,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
+                <Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
             </View>;
 
 
