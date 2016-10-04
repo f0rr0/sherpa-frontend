@@ -86,6 +86,16 @@ class WikpediaInfoBox extends Component {
                 // a perfect match on the regular query
                 // a perfect match on the normalized query
                 //console.log(cleardQuery,'+++',cleardResponse)
+
+                if(this.props.isLocationView){
+                    if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch&&locationCheck){
+                        wikiResult=wikiResponse[i];
+                        titleMatch=true;
+                        //console.log('title match')
+                        break;
+                    }
+                }
+
                 if((wikiTitle.toLowerCase()==query.toLowerCase() || cleardQuery==cleardResponse)&&countryMatch&&locationCheck){
                     wikiResult=wikiResponse[i];
                     titleMatch=true;
@@ -189,7 +199,8 @@ class WikpediaInfoBox extends Component {
 
 WikpediaInfoBox.defaultProps={
     location:"",
-    type:"default"
+    type:"default",
+    isLocationView:false
 };
 
 export default WikpediaInfoBox
