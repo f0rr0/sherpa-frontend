@@ -39,7 +39,7 @@ class FeedLocation extends Component {
 
     componentDidMount(){
     }
-    toggleNav(){
+    navActionRight(){
         this.refs.popover._setAnimation("toggle");
     }
 
@@ -160,7 +160,6 @@ class FeedLocation extends Component {
     _renderRow(tripData,sectionID,rowID){
         return (
             <MomentRow tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
-
         );
     }
 }

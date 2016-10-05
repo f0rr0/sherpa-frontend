@@ -18,7 +18,6 @@ import store from 'react-native-simple-store';
 const {sherpa}=config.auth[config.environment];
 import TripRow from '../../components/tripRow'
 import SimpleButton from '../../components/simpleButton'
-import CameraRollPicker from 'react-native-camera-roll-picker';
 
 
 import {
@@ -176,7 +175,6 @@ class OwnUserProfile extends React.Component {
             />
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
-            <PopOver ref="popover" showReset={false} resetProfileCallback={this.resetProfile.bind(this)} showShare={false} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
 
         </View>
         )
@@ -210,8 +208,18 @@ class OwnUserProfile extends React.Component {
             });
     }
 
-    toggleNav(){
-        this.refs.popover._setAnimation("toggle");
+    navActionRight(){
+        this.props.navigator.push({
+            id: "settings",
+            sceneConfig:"bottom"
+        });
+    }
+
+    navActionLeft(){
+        this.props.navigator.push({
+            id: "addTrip",
+            sceneConfig:"bottom"
+        });
     }
 
 

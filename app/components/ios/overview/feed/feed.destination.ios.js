@@ -84,7 +84,7 @@ class FeedDestination extends Component {
     componentDidUpdate(){
     }
 
-    toggleNav(){
+    navActionRight(){
         this.refs.popover._setAnimation("toggle");
     }
 

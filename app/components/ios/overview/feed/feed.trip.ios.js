@@ -98,7 +98,7 @@ class FeedTrip extends Component {
         };
     }
 
-    toggleNav(){
+    navActionRight(){
        this.refs.popover._setAnimation("toggle");
     }
 
@@ -131,7 +131,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} toggleNav={this.toggleNav.bind(this)}></Header>;
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
         return(
             <View style={styles.listViewContainer}>
                 <ListView
@@ -236,7 +236,7 @@ class FeedTrip extends Component {
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
 
-                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.props.navigator.pop}  toggleNav={this.toggleNav.bind(this)}></Header>
+                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
             </View>
         )
     }

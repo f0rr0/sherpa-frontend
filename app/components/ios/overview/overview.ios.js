@@ -12,7 +12,9 @@ import { connect } from 'react-redux';
 import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
 import React, { Component } from 'react';
+const SCREEN_WIDTH = require('Dimensions').get('window').width;
 import {
+    Animated,
     StyleSheet,
     View,
     StatusBar,
@@ -52,7 +54,8 @@ var styles=StyleSheet.create({
         marginBottom:30
     },
     tabBarHeight:{height: 60},
-    tabBarShadow:{width:375,height:30,left:0,bottom:55,position:'absolute'}
+    tabBarShadow:{width:SCREEN_WIDTH,height:30,left:0,marginBottom:55}
+
 });
 
 StatusBar.setHidden(true);
@@ -63,10 +66,9 @@ class Overview extends React.Component {
         this.state = {
             selectedTab: FEED,
             notifCount: 0,
-            presses: 0
+            presses: 0,
+            bottomOffset:new Animated.Value(0)
         };
-
-        this.myFeed=null;
     }
 
     componentDidMount(){
@@ -119,39 +121,48 @@ class Overview extends React.Component {
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
     }
 
+    toggleTabBar(enable){
+        Animated.timing(this.state.bottomOffset, {
+            duration: 400,
+            toValue: enable? 0 : -100
+        }).start()
+    }
+
     render() {
-        var tabBar =    <TabNavigator  tabBarStyle={styles.tabBarHeight} container={styles.tabBarHeight}>
+        var tabBar =    <TabNavigator tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset}]} container={{}}>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-feed.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>
-                                <Feed initial={FEED} ref={FEED} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={FEED} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === EXPLORE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-explore.png')} />}
                                 onPress={()=>this.updateTabTo(EXPLORE)}>
-                                <Feed initial={EXPLORE} ref={EXPLORE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={EXPLORE} ref={EXPLORE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === PROFILE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-profil.png')} />}
                                 onPress={()=>this.updateTabTo(PROFILE)}>
-                                <Feed initial={PROFILE} ref={PROFILE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === SUITCASE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-suitcase.png')} />}
                                 onPress={()=>this.updateTabTo(SUITCASE)}>
-                                <Feed initial={SUITCASE} ref={SUITCASE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={SUITCASE} ref={SUITCASE} {...this.props}/>
                             </TabNavigator.Item>
                         </TabNavigator>
 
         return (
 
             <View style={{flex:1}}>
+                <Animated.View style={{position:'absolute',bottom:this.state.bottomOffset,zIndex:0}}>
+                    <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
+                </Animated.View>
                 {tabBar}
-                <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
             </View>
         );
     }

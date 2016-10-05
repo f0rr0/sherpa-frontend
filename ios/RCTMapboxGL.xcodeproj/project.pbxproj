@@ -5,12 +5,12 @@
 	};
 	objectVersion = 46;
 	objects = {
-
 /* Begin PBXBuildFile section */
 		C5DBB3441AF2EF2B00E611A9 /* RCTMapboxGL.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = C5DBB3431AF2EF2B00E611A9 /* RCTMapboxGL.h */; };
 		C5DBB3461AF2EF2B00E611A9 /* RCTMapboxGL.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB3451AF2EF2B00E611A9 /* RCTMapboxGL.m */; };
 		C5DBB34C1AF2EF2B00E611A9 /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = C5DBB3401AF2EF2B00E611A9 /* libRCTMapboxGL.a */; };
 		C5DBB3661AF2EFB500E611A9 /* RCTMapboxGLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = C5DBB3651AF2EFB500E611A9 /* RCTMapboxGLManager.m */; };
+		7D9BB84C8BF14BE2AB456644 /* libActivityView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 30072DD34D604D44A36CA5B7 /* libActivityView.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +44,8 @@
 		C5DBB3511AF2EF2B00E611A9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		C5DBB3641AF2EFB500E611A9 /* RCTMapboxGLManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RCTMapboxGLManager.h; sourceTree = "<group>"; };
 		C5DBB3651AF2EFB500E611A9 /* RCTMapboxGLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RCTMapboxGLManager.m; sourceTree = "<group>"; };
+		3C47D26FDA554F5191714EA3 /* ActivityView.xcodeproj */ = {isa = PBXFileReference; name = "ActivityView.xcodeproj"; path = "../node_modules/react-native-activity-view/ActivityView.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		30072DD34D604D44A36CA5B7 /* libActivityView.a */ = {isa = PBXFileReference; name = "libActivityView.a"; path = "libActivityView.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7D9BB84C8BF14BE2AB456644 /* libActivityView.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -71,6 +74,7 @@
 				C5DBB3421AF2EF2B00E611A9 /* RCTMapboxGL */,
 				C5DBB34F1AF2EF2B00E611A9 /* RCTMapboxGLTests */,
 				C5DBB3411AF2EF2B00E611A9 /* Products */,
+				474E92608F974E2594CC8FEF /* Libraries */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +112,15 @@
 				C5DBB3511AF2EF2B00E611A9 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		474E92608F974E2594CC8FEF /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				3C47D26FDA554F5191714EA3 /* ActivityView.xcodeproj */,
+			);
+			name = Libraries;
+			path = "";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -154,7 +167,7 @@
 		C5DBB3381AF2EF2B00E611A9 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0630;
+				LastUpgradeCheck = 630;
 				ORGANIZATIONNAME = Mapbox;
 				TargetAttributes = {
 					C5DBB33F1AF2EF2B00E611A9 = {
@@ -314,11 +327,13 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-activity-view",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/bobby/Downloads/mapbox-gl-ios-0.2.17",
 					"$(PROJECT_DIR)/RCTMapboxGL",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -339,11 +354,13 @@
 					"$(SRCROOT)/../node_modules/react-native/React/**",
 					"$(SRCROOT)/../../../React/**",
 					"$(SRCROOT)/../../react-native/React/**",
+					"$(SRCROOT)/../node_modules/react-native-activity-view",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/bobby/Downloads/mapbox-gl-ios-0.2.17",
 					"$(PROJECT_DIR)/RCTMapboxGL",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -366,6 +383,10 @@
 				INFOPLIST_FILE = RCTMapboxGLTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 			};
 			name = Debug;
 		};
@@ -380,6 +401,10 @@
 				INFOPLIST_FILE = RCTMapboxGLTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+				);
 			};
 			name = Release;
 		};

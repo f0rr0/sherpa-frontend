@@ -85,7 +85,7 @@ class FeedProfile extends React.Component {
         });
     }
 
-    toggleNav(){
+    navActionRight(){
         this.refs.popover._setAnimation("toggle");
     }
 

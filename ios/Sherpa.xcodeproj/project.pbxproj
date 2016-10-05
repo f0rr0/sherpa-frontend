@@ -34,6 +34,7 @@
 		F321A5891BDA9A040014AA18 /* TSTAR-MediumItalic.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5801BDA9A040014AA18 /* TSTAR-MediumItalic.otf */; };
 		F321A58A1BDA9A040014AA18 /* TSTAR-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */; };
 		F32D8FAA1CAD892E00E58DA1 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F32D8FA91CAD891200E58DA1 /* libRCTPushNotification.a */; };
+		F3306DFD1DA53C2500E687BC /* libRNFetchBlob.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3306DFC1DA53C1900E687BC /* libRNFetchBlob.a */; };
 		F3470F921D78359900BFA659 /* Akkurat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F8F1D78349F00BFA659 /* Akkurat-Bold.ttf */; };
 		F3470F931D78359B00BFA659 /* Akkurat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F901D78349F00BFA659 /* Akkurat-Light.ttf */; };
 		F3470F941D78359E00BFA659 /* Akkurat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F911D78349F00BFA659 /* Akkurat.ttf */; };
@@ -172,6 +173,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RCTPushNotification;
 		};
+		F3306DFB1DA53C1900E687BC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = A15C300E1CD25C330074CB35;
+			remoteInfo = RNFetchBlob;
+		};
 		F35D9AE31D394F1500D768A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */;
@@ -242,20 +250,6 @@
 			remoteGlobalIDString = 00E356EE1AD99517003FC87E;
 			remoteInfo = ReactNativeSocialShareTests;
 		};
-		F3B7276C1BFF68AC006A33CA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 465C8B5D1AFBCD9E003B5C69;
-			remoteInfo = RNMaskedView;
-		};
-		F3B7276E1BFF68AC006A33CA /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 465C8B681AFBCD9E003B5C69;
-			remoteInfo = RNMaskedViewTests;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -308,6 +302,7 @@
 		F321A5801BDA9A040014AA18 /* TSTAR-MediumItalic.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-MediumItalic.otf"; sourceTree = "<group>"; };
 		F321A5811BDA9A040014AA18 /* TSTAR-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "TSTAR-Regular.otf"; sourceTree = "<group>"; };
 		F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
+		F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNFetchBlob.xcodeproj; path = "../node_modules/react-native-fetch-blob/ios/RNFetchBlob.xcodeproj"; sourceTree = "<group>"; };
 		F3470F8F1D78349F00BFA659 /* Akkurat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Akkurat-Bold.ttf"; sourceTree = "<group>"; };
 		F3470F901D78349F00BFA659 /* Akkurat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Akkurat-Light.ttf"; sourceTree = "<group>"; };
 		F3470F911D78349F00BFA659 /* Akkurat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Akkurat.ttf; sourceTree = "<group>"; };
@@ -331,7 +326,6 @@
 		F3A612B21D897378002A3AF7 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Light.otf"; sourceTree = "<group>"; };
 		F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Regular.otf"; sourceTree = "<group>"; };
-		F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNMaskedView.xcodeproj; path = "../node_modules/react-native-masked-view/RNMaskedView.xcodeproj"; sourceTree = "<group>"; };
 		F3CDFF611BFBD6D000CE9567 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
 		F3CDFF631BFBD6D700CE9567 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		F3CDFF651BFBD6DF00CE9567 /* ImageIO.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ImageIO.framework; path = System/Library/Frameworks/ImageIO.framework; sourceTree = SDKROOT; };
@@ -355,6 +349,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3306DFD1DA53C2500E687BC /* libRNFetchBlob.a in Frameworks */,
 				F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */,
 				F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */,
 				F311811C1D6705130016C988 /* libSafariViewManager.a in Frameworks */,
@@ -521,6 +516,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */,
 				F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */,
 				F3A612AF1D897378002A3AF7 /* KDSocialShare.h */,
 				F3A612B01D897378002A3AF7 /* KDSocialShare.m */,
@@ -537,7 +533,6 @@
 				F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */,
 				F3100A4E1CAD971D006A7AB9 /* RCTMapboxGL.xcodeproj */,
 				F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */,
-				F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */,
 				F3CDFF711BFBD70900CE9567 /* libz.tbd */,
 				F3CDFF6F1BFBD70300CE9567 /* libsqlite3.tbd */,
 				F3CDFF6D1BFBD6FB00CE9567 /* libc++.tbd */,
@@ -641,6 +636,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F3306DF81DA53C1900E687BC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3306DFC1DA53C1900E687BC /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F35D9AE01D394F1500D768A3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -703,15 +706,6 @@
 			children = (
 				F3A612BD1D89737A002A3AF7 /* ReactNativeSocialShare.app */,
 				F3A612BF1D89737A002A3AF7 /* ReactNativeSocialShareTests.xctest */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
-		F3B727681BFF68AB006A33CA /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */,
-				F3B7276F1BFF68AC006A33CA /* RNMaskedViewTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -873,8 +867,8 @@
 					ProjectRef = F36A33191BDF8F7D00970476 /* RNDeviceInfo.xcodeproj */;
 				},
 				{
-					ProductGroup = F3B727681BFF68AB006A33CA /* Products */;
-					ProjectRef = F3B727671BFF68AB006A33CA /* RNMaskedView.xcodeproj */;
+					ProductGroup = F3306DF81DA53C1900E687BC /* Products */;
+					ProjectRef = F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */;
 				},
 				{
 					ProductGroup = F371BA9A1D417C7C00FAD5D1 /* Products */;
@@ -992,6 +986,13 @@
 			remoteRef = F32D8FA81CAD891200E58DA1 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F3306DFC1DA53C1900E687BC /* libRNFetchBlob.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNFetchBlob.a;
+			remoteRef = F3306DFB1DA53C1900E687BC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F35D9AE41D394F1500D768A3 /* libActivityView.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1060,20 +1061,6 @@
 			fileType = wrapper.cfbundle;
 			path = ReactNativeSocialShareTests.xctest;
 			remoteRef = F3A612BE1D89737A002A3AF7 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F3B7276D1BFF68AC006A33CA /* libRNMaskedView.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRNMaskedView.a;
-			remoteRef = F3B7276C1BFF68AC006A33CA /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F3B7276F1BFF68AC006A33CA /* RNMaskedViewTests.xctest */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.cfbundle;
-			path = RNMaskedViewTests.xctest;
-			remoteRef = F3B7276E1BFF68AC006A33CA /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

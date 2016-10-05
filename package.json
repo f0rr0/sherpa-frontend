@@ -18,6 +18,7 @@
     "react-native-device-info": "^0.9.3",
     "react-native-dismiss-keyboard": "^1.0.0",
     "react-native-enhanced-listview": "^0.10.1",
+    "react-native-fetch-blob": "^0.9.6",
     "react-native-gifted-listview": "^0.0.15",
     "react-native-gifted-spinner": "^0.1.0",
     "react-native-google-analytics-bridge": "^2.1.0",
@@ -43,9 +44,7 @@
     "underscore": "^1.8.3",
     "whatwg-fetch": "^1.0.0"
   },
-  "devDependencies": {
-
-  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

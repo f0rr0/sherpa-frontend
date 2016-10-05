@@ -57,11 +57,11 @@ class Header extends Component {
 
         var backButton=this.state.settings.hideBack?null:
             <TouchableOpacity underlayColor="#ececec" style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>
-                <Image style={[styles.navigationBackImage,this.state.topLeftImageStyle]} source={this.state.topLeftImage} resizeMode="contain" />
+                <Image style={[styles.navigationBackImage,this.state.settings.topLeftImageStyle]} source={this.state.topLeftImage} resizeMode="contain" />
             </TouchableOpacity>;
 
         var navButton=this.state.settings.hideNav?null:
-            <TouchableOpacity  underlayColor="#ececec" onPress={()=>{this.props.toggleNav()}} style={[styles.dotsMoreContainer]}>
+            <TouchableOpacity  underlayColor="#ececec" onPress={()=>{this.props.navActionRight()}} style={[styles.dotsMoreContainer]}>
                 <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle]} source={this.state.topRightImage} resizeMode="contain" />
             </TouchableOpacity>;
 
