@@ -11,6 +11,7 @@ import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
 import AddTrip from '../profile/profile.add-trip'
+import EditTripGrid from '../profile/profile.edit-trip-grid'
 import Settings from '../profile/profile.settings'
 
 import { connect } from 'react-redux';
@@ -130,7 +131,7 @@ class Feed extends Component {
         //console.log('go to ',route);
         this.currentRenderScene=route.id;
 
-        this.props.toggleTabBar(route.sceneConfig!="bottom");
+        this.props.toggleTabBar(!route.hideNav);
 
         switch (route.id) {
             case 'feed':
@@ -169,13 +170,17 @@ class Feed extends Component {
                 showNav=true;
                 sceneContent = <OwnUserProfile ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"your profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9},topRightImage:require('./../../../../Images/icon-settings.png')})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
+            case "settings":
+                showNav=true;
+                sceneContent = <Settings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Settings",hideNav:true,fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
             case "addTrip":
                 showNav=true;
                 sceneContent = <AddTrip ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
-            case "settings":
+            case "editTripGrid":
                 showNav=true;
-                sceneContent = <Settings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Settings",hideNav:true,fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),hideNav:true,fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
 
@@ -192,6 +197,7 @@ class Feed extends Component {
     }
 
     _navActionRight(){
+        console.log(this.currentRenderScene,'current render scene',this.navigator.refs);
         if(this.navigator.refs[this.currentRenderScene].navActionRight)this.navigator.refs[this.currentRenderScene].navActionRight();
     }
 

@@ -46,6 +46,7 @@
 		F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F36CD9E51CE3DD5E00E3AFFB /* libRCTGoogleAnalyticsBridge.a */; };
 		F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */; };
 		F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */; };
+		F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F379100A1DA69D9100FEF138 /* libRNUploader.a */; };
 		F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F386799C1D184F11002DBE52 /* SimpleAuth.framework */; };
 		F38679B31D1851C4002DBE52 /* SimpleAuthWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */; };
 		F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
@@ -215,6 +216,13 @@
 			remoteGlobalIDString = 58B5115D1A9E6B3D00147676;
 			remoteInfo = RCTCameraRoll;
 		};
+		F37910091DA69D9100FEF138 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RNUploader;
+		};
 		F3A542101D512B6000CC10F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */;
@@ -314,6 +322,7 @@
 		F36CD9F61CE3DDBD00E3AFFB /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = System/Library/Frameworks/CoreData.framework; sourceTree = SDKROOT; };
 		F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNNotifications.xcodeproj; path = "../node_modules/react-native-notifications/RNNotifications/RNNotifications.xcodeproj"; sourceTree = "<group>"; };
 		F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
+		F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNUploader.xcodeproj; path = "../node_modules/react-native-uploader/RNUploader/RNUploader.xcodeproj"; sourceTree = "<group>"; };
 		F386799C1D184F11002DBE52 /* SimpleAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleAuth.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Sherpa-crsigiawhdrczddfiqcpyecxabqn/Build/Products/Debug-iphonesimulator/SimpleAuth.framework"; sourceTree = "<group>"; };
 		F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleAuthWrapper.h; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.h"; sourceTree = "<group>"; };
 		F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthWrapper.m; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.m"; sourceTree = "<group>"; };
@@ -349,6 +358,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */,
 				F3306DFD1DA53C2500E687BC /* libRNFetchBlob.a in Frameworks */,
 				F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */,
 				F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */,
@@ -516,6 +526,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */,
 				F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */,
 				F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */,
 				F3A612AF1D897378002A3AF7 /* KDSocialShare.h */,
@@ -680,6 +691,14 @@
 			isa = PBXGroup;
 			children = (
 				F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F3790FEE1DA69D9100FEF138 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F379100A1DA69D9100FEF138 /* libRNUploader.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -875,6 +894,10 @@
 					ProjectRef = F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */;
 				},
 				{
+					ProductGroup = F3790FEE1DA69D9100FEF138 /* Products */;
+					ProjectRef = F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */;
+				},
+				{
 					ProductGroup = F31181031D6704B50016C988 /* Products */;
 					ProjectRef = F31181021D6704B50016C988 /* SafariViewManager.xcodeproj */;
 				},
@@ -1026,6 +1049,13 @@
 			fileType = archive.ar;
 			path = libRCTCameraRoll.a;
 			remoteRef = F37482511D9BD65600D953B1 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F379100A1DA69D9100FEF138 /* libRNUploader.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNUploader.a;
+			remoteRef = F37910091DA69D9100FEF138 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F3A542111D512B6000CC10F2 /* libART.a */ = {
