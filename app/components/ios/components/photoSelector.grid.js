@@ -37,6 +37,7 @@ class PhotoSelectorGrid extends React.Component {
             <ListView contentContainerStyle={[styles.list,this.props.wrapper]}
                       dataSource={this.state.dataSource}
                       renderRow={this._renderRow.bind(this)}
+                      removeClippedSubviews={false}
             />
         );
     }
@@ -45,17 +46,21 @@ class PhotoSelectorGrid extends React.Component {
         return (
             <TouchableOpacity style={styles.row} onPress={() => this._pressRow(rowID)} >
                         <Text style={styles.text}>
-                            {rowData}
+                            {rowData.description}
                         </Text>
+                        <Image  style={styles.row} source={{uri: rowData.moment.image.uri}}></Image>
             </TouchableOpacity>
         );
     }
 
     _genRows(pressData){
         var dataBlob = [];
-        for (var ii = 0; ii < 100; ii++) {
+        for (var ii = 0; ii < this.props.data.length; ii++) {
             var pressedText = pressData[ii] ? ' (X)' : '';
-            dataBlob.push('Cell ' + ii + pressedText);
+            dataBlob.push({
+                description:'Cell ' + ii + pressedText,
+                moment:this.props.data[ii]
+            });
         }
         return dataBlob;
     }
@@ -71,7 +76,6 @@ class PhotoSelectorGrid extends React.Component {
 
 const styles = StyleSheet.create({
     list: {
-        justifyContent: 'center',
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems:"center",
@@ -82,10 +86,7 @@ const styles = StyleSheet.create({
         margin: 7,
         width: SCREEN_WIDTH/2-21,
         height: SCREEN_WIDTH/2-14,
-        backgroundColor: '#F6F6F6',
         alignItems: 'center',
-        borderWidth: 1,
-        borderColor: '#CCC'
     },
     thumb: {
         width: 64,

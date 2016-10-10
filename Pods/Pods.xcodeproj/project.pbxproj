@@ -7,14 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		00DB159AF2CCAC91DDADE4AE22947BE4 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F80E59B7E2FFB4D21B011559165ADC11 /* Social.framework */; };
 		0193C82C8136238D79CE59998F3A8916 /* RACSubscriber.h in Headers */ = {isa = PBXBuildFile; fileRef = 527B3738BF75C5AA5CDBDDBBDFBBA8E7 /* RACSubscriber.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		024B53B8D6B120678DB190ADBC3BD1F6 /* RACScopedDisposable.m in Sources */ = {isa = PBXBuildFile; fileRef = EDC2BD016BF319EF41F2F7C44D2CE691 /* RACScopedDisposable.m */; };
 		03B9B3952C01A26220B273E096DF953E /* RACDisposable.h in Headers */ = {isa = PBXBuildFile; fileRef = D29B4C044E1AF4D5FF2EF742E66DED31 /* RACDisposable.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		03C8523FEDB076B62BC866DF0C11A639 /* NSString+RACSequenceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = DCEB3FEC10135293155C2E1976887B77 /* NSString+RACSequenceAdditions.m */; };
 		05F11CFAB40E057D30FC4F2FDEF49AAA /* RACScheduler+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AD2F7B2851C03A4CB77E9511CE3286B /* RACScheduler+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		0608FB57D7193FA1EAA010B6B70AFBD4 /* UIButton+RACCommandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = EBB39B0EE56CDF7E20684B9B158CC024 /* UIButton+RACCommandSupport.m */; };
-		0650416D56521CB737A7A1EFE977ABB2 /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3F0871919192170F36EBA739EE1C25FC /* ReactiveCocoa.framework */; };
 		08A766CE2150A6F77ECDECEE99527652 /* RACEmptySignal.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C532287A2920EE391E1BC52A3D9DDDE /* RACEmptySignal.m */; };
 		0A79737C05CD3F8E604174E03FCC8C1F /* NSURL+CMDQueryStringSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = F5256E52AB06D8A5F826E0AAF3254AC5 /* NSURL+CMDQueryStringSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0A7CEE5CA667FB56774E1FE875E192D6 /* UIControl+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 816EE8168D6BB7E9258DE8905F38BECC /* UIControl+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -25,27 +23,18 @@
 		13B5E53590AB9358B5252858E1ECD190 /* RACStream.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C922D8B4992C4F131D565621F4CCD1D /* RACStream.m */; };
 		14D94AF34467DF1E69B3CA0F965EB5BF /* MKAnnotationView+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 1018AE5174F9F689E8256571CFDF0263 /* MKAnnotationView+RACSignalSupport.m */; };
 		15AAAEE1353424456EB0C527606BD324 /* RACImmediateScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 703ABFAB056D1318F722EE594B0E30F2 /* RACImmediateScheduler.m */; };
-		15B0E395261DE3E4231861DC089C6047 /* SimpleAuthInstagramLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6DE4B407AFFB0A2F3D99A9E9106672DA /* SimpleAuthInstagramLoginViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1663143E1CFBA1E645B8D22EED70C6CA /* UISwitch+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = F870736320DB41B5E8EDAD02730F3E8F /* UISwitch+RACSignalSupport.m */; };
-		1786287A7F353E70CC451C93CBC6775E /* UIViewController+SimpleAuthAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3477EAF92594100B12A8E3085665DB7D /* UIViewController+SimpleAuthAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
-		17EBAE75D51EFF28FCA0A36686D1E919 /* SimpleAuthInstagramLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 384DF32FCC3B651BFBF620378F810206 /* SimpleAuthInstagramLoginViewController.m */; };
 		185DBDCF239FAC9775019F6BE8374BCA /* RACTupleSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = D117DBAD14FDDFBE460942441C4EBCD3 /* RACTupleSequence.m */; };
-		1B223E744D96C8311D437729E7225B6C /* SimpleAuthGoogleWebLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 898BC6E0808601B763D9A8D7BB3B1D49 /* SimpleAuthGoogleWebLoginViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		1BE72A181AD953A277A6E8B15ACF83AB /* UIButton+RACCommandSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 110A000B1EA7DFA4CBB9F6D13D4FFBE2 /* UIButton+RACCommandSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1BEE5E600D40998BF0D74E0B55FCBA16 /* Pods-Sherpa-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 53B761C14FB763A6CFB0957E41AEBFB0 /* Pods-Sherpa-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1C1484B11C00FA150503184E66C4AA3C /* RACUnit.h in Headers */ = {isa = PBXBuildFile; fileRef = 4F36E0DE337A19CD209EB4A2A3D25447 /* RACUnit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		1D1187C6D33A303B581AF4513C4C0C83 /* NSObject+RACDescription.m in Sources */ = {isa = PBXBuildFile; fileRef = C2DD8DE9D399F81B4B682AA5D72B8CDD /* NSObject+RACDescription.m */; };
-		205620AA090D27B4252A07C4AC760089 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
 		2257598BBA200CF4922563215CFB73A1 /* RACSubscriber+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 8C8F41C2EC01DBA5661D29AB483C3412 /* RACSubscriber+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		22F832AC25946A62A269A37FD8736C42 /* Result-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = FE98D131DC509F52777ED8903FE2FA4B /* Result-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		233097B666A152496E7EAEA11D1E0547 /* CMDQueryStringSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = B6E28230CBF1C3ED97330472287BBE80 /* CMDQueryStringSerialization.m */; };
 		25A572A0E18F8C686210531FFDDD6026 /* UIBarButtonItem+RACCommandSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8BC8DA65EE038855A2517CD34AF7E62B /* UIBarButtonItem+RACCommandSupport.m */; };
-		25FCE34AEE79D1294D6836E2E69EB438 /* SimpleAuthTwitterProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 270F89E8F4FA394FD8A05F908355BC54 /* SimpleAuthTwitterProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		2643CA82FE330352DA972B5A24A74BBB /* RACDynamicPropertySuperclass.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EF518CFA542D0CFD261AB98DB812B12 /* RACDynamicPropertySuperclass.m */; };
-		2681FD2D49C5A65A7418B0C63065A20A /* SimpleAuthProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E313C887904DCB5A3AFCA9B44FF011F /* SimpleAuthProvider.m */; };
-		26CE3272F809197CEC4EBCED86AA9FCD /* en.lproj in Resources */ = {isa = PBXBuildFile; fileRef = A1F1BEF3C5253E86B510385E88151DE0 /* en.lproj */; };
 		277ED949DDDA4E2622650D143CB4310A /* UITableViewHeaderFooterView+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 44C4A4776790171ECD0A8394FFF4F0A3 /* UITableViewHeaderFooterView+RACSignalSupport.m */; };
-		27911249193148A734EDA36E23ECDAC8 /* SimpleAuthFacebookProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 704D9E3830C07D386249A6233B16F5E8 /* SimpleAuthFacebookProvider.m */; };
 		28DF2AD76833D873A13C0C42A240FE54 /* UISegmentedControl+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 11C48D6C2F1EE28AA87205195A6EEBBC /* UISegmentedControl+RACSignalSupport.m */; };
 		29574F9C48BE77BF5E9A57F3EF3FC172 /* RACEagerSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 130384C8D960C4151DE0AD961B3A042D /* RACEagerSequence.m */; };
 		2979465DD25C40B448B24A920A38FD72 /* RACCommand.m in Sources */ = {isa = PBXBuildFile; fileRef = A349522827ED6ADB7353B059B0953EAF /* RACCommand.m */; };
@@ -54,12 +43,10 @@
 		2D72F2A896D4F8554D3D0C34DC8D645D /* RACScheduler+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = FBE5168E3490AEFF7AE673DC0070CF89 /* RACScheduler+Subclass.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2DB0B171014E350E95D8A4A46196D135 /* NSIndexSet+RACSequenceAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 5356BCCA6A5F75C7E5890E7E38BFB278 /* NSIndexSet+RACSequenceAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		2F0782F07184CAB19544981897E43C05 /* RACPassthroughSubscriber.m in Sources */ = {isa = PBXBuildFile; fileRef = 8592B5728C2B96F64F597A9FE38FA102 /* RACPassthroughSubscriber.m */; };
-		2F2C8FA4C475C9B85A1EE713AA651E3F /* SimpleAuthInstagramProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 1C8B6D8D45F419A91715BA5124F089A9 /* SimpleAuthInstagramProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		303F2E06C88AF63EC7C976DF9F89453D /* RACReplaySubject.m in Sources */ = {isa = PBXBuildFile; fileRef = E8CC3C381C948CF71BB40F381A825A64 /* RACReplaySubject.m */; };
 		3044D24E67E5BB176D715774067109BD /* CMDQueryStringReader.m in Sources */ = {isa = PBXBuildFile; fileRef = 64434D4027BFEA64134441579888D847 /* CMDQueryStringReader.m */; };
 		321BDA56B7E51CB34D2EF91D502687C5 /* RACDynamicSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 83C4320BD319E1D478251B64E74FE16F /* RACDynamicSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		33CE43F56741BE4EFD08821BC429FC19 /* NSObject+RACKVOWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = 1AE821460B5F61E16C79CFE49D888524 /* NSObject+RACKVOWrapper.m */; };
-		350EF8096F1ADDFFBCF7D6E0B4484AA1 /* SimpleAuthTumblrProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = B153BFB69913BA87DDFBA73408B721FB /* SimpleAuthTumblrProvider.m */; };
 		35EC32EE4247D6141BA6CCABD664B879 /* RACKVOTrampoline.h in Headers */ = {isa = PBXBuildFile; fileRef = F49B21C6A59A37CC920C0C22DBDA0AA3 /* RACKVOTrampoline.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36CC4581E0FA074E5CEE8A2C9B91C57C /* UITextView+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 3639B6B46926F616F32B6773E6D9231E /* UITextView+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		36F1B2C47B4DAE3DC8900123C557DD10 /* RACTupleSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 14317938C225BE9C2828C327D9A7F256 /* RACTupleSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -71,16 +58,13 @@
 		3B18AD1E73593419CADAE44F4639BF4B /* NSString+RACKeyPathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = F78FFF703ADCA5D332D269580A544AA6 /* NSString+RACKeyPathUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3C795D5141F79C408C57FDCB27EFE3F3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
 		3CBAD4D3BC0FDB538D0EA81499F4A907 /* NSData+Base64.h in Headers */ = {isa = PBXBuildFile; fileRef = 75090AB056BDE64FB69746FC7CE6CE96 /* NSData+Base64.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		3D65D28A0CBA45B3CDE5C616D403099C /* UIWindow+SimpleAuthAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 0E688408657157AD9463EE1F61F5DFE2 /* UIWindow+SimpleAuthAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		3F7D1A97E67EEDCE88C014C0ECF3C724 /* RACScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 5431E7ED9B9C2FCD8CC87475BA94CAF4 /* RACScheduler.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3F917F374C61F89B16278497F70CFB73 /* RACArraySequence.m in Sources */ = {isa = PBXBuildFile; fileRef = E0C95036ACCC3B309D334FFE6839ACF9 /* RACArraySequence.m */; };
 		3FA14CBA49DCD5F4855E4E5C1AB8A3CE /* RACTargetQueueScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 76611210D89BCF38F7EDD4DE47F620F1 /* RACTargetQueueScheduler.m */; };
 		3FCEAE6003E1FE871FE80A2C75DF0540 /* NSString+RACSequenceAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = FCDA9846E6A1C0EF555C2FEDB79326B2 /* NSString+RACSequenceAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3FDF176C01FE12B6871605924C37FD94 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
 		400D60AC08850B0844684D37CAB65029 /* RACIndexSetSequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 091C5D0663907E6FF2057A45DDACEE15 /* RACIndexSetSequence.m */; };
-		412E6736E520DA4C309400CCD75E40DC /* ACAccountStore+SimpleAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = 4AC7326385AA5E960487860E305F1EC2 /* ACAccountStore+SimpleAuth.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		4157A764C91879B46CF061F314FD42DE /* NSObject+RACPropertySubscribing.h in Headers */ = {isa = PBXBuildFile; fileRef = 2FD8C51E52C9E6D563D1A4381150F979 /* NSObject+RACPropertySubscribing.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		41F042D0157418AB59F96AC81FC25E70 /* UIWindow+SimpleAuthAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CB8998DDBC64C21B8A9C1A9973CE759 /* UIWindow+SimpleAuthAdditions.m */; };
 		465DCBC09331CD1ECA3B1F103B33CA35 /* EXTScope.h in Headers */ = {isa = PBXBuildFile; fileRef = CA4A3B8F0D27E1A683A8CC4D3C11CCBB /* EXTScope.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		478E360B1E88F4CD2FDFF52CBA8578EB /* UITextField+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = AA7BBF87F25798AA86E2C23850EBCEE7 /* UITextField+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		49E4956D32685EB84AA0F1A1FA0BD15C /* RACReplaySubject.h in Headers */ = {isa = PBXBuildFile; fileRef = BEC5639FE4101D822FD2679A49929E3D /* RACReplaySubject.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -90,8 +74,6 @@
 		4E130D00343B433FFAFC7D49DEC793A7 /* NSFileHandle+RACSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = CE4A2214A15BB10BC350D8A581BB8660 /* NSFileHandle+RACSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4EB87628BB11F27F12F4A02F9285D9F4 /* RACChannel.h in Headers */ = {isa = PBXBuildFile; fileRef = 72F9CCAD8EC0AB0C44CD99F29BB31808 /* RACChannel.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4F9588CD09DB24C80BCA02511243BFED /* NSData+Base64.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B1EE62E75F6AA85FABF21FC758ACB5C /* NSData+Base64.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
-		500DF831208B98E38D2D337502428133 /* SimpleAuthDefines.m in Sources */ = {isa = PBXBuildFile; fileRef = 43E56A66692C6A8C98B62ED02E6F7A05 /* SimpleAuthDefines.m */; };
-		50AAA99E86BF642264F060BC0F55E193 /* SimpleAuth.bundle in Resources */ = {isa = PBXBuildFile; fileRef = B928AA07538F7C09FBFE62CE4E8A04FF /* SimpleAuth.bundle */; };
 		50BE6325293F582E8111F46A8BD38132 /* NSIndexSet+RACSequenceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 79E0C18969784923DE7160423278E8FC /* NSIndexSet+RACSequenceAdditions.m */; };
 		5147DD18995BAF9CA8F7FAA0B4DE1E79 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0BA1A3BA1111063EADBA4DF59D620F /* UIKit.framework */; };
 		51F94E1298EA36E0D5B90BE6D6394D39 /* RACQueueScheduler+Subclass.h in Headers */ = {isa = PBXBuildFile; fileRef = BD60527FFBFFF5364DE05E1516D6D75F /* RACQueueScheduler+Subclass.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -113,9 +95,6 @@
 		5D53B461A7FF171E15074D633119DF8B /* CMDQueryStringValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = F3685147E8DDF92262C2B11D051BBE75 /* CMDQueryStringValueTransformer.m */; };
 		604BDF576158644DDC94788330B693A3 /* UITableViewCell+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 709632865D56E4AC3EF83CB089900AB9 /* UITableViewCell+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6065A8C635D4A685EE9100881DBF0D95 /* Bag.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFB6A63247AA755D2BF998598A9CA819 /* Bag.swift */; };
-		620FAACCD4535ECE0EF62069A295B356 /* CMDQueryStringSerialization.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F5FD4A02318029306FB13000C7A748ED /* CMDQueryStringSerialization.framework */; };
-		62EBF6463880C8085230A831B0FF09A5 /* SimpleAuth-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = A8B4E146565F1316ACC606F2F0144984 /* SimpleAuth-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		63F109129E5558EBA5C538CE03939683 /* SimpleAuthGoogleWebProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 2A39E71BAE8DCC34AE94D7B69D85AC07 /* SimpleAuthGoogleWebProvider.m */; };
 		640DE8A8B5B2707310563683D14D60D3 /* NSDate+ISO8601.h in Headers */ = {isa = PBXBuildFile; fileRef = 4764B9AA7F1E2B40381A9F1534EFDE41 /* NSDate+ISO8601.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6531EF86A7A34646ADD52C2EC635404B /* FoundationExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FEC50F71C8DFB3736B50C00A448A8E6 /* FoundationExtensions.swift */; };
 		656D81BC8E5F8112B1807E10E4541208 /* EXTRuntimeExtensions.h in Headers */ = {isa = PBXBuildFile; fileRef = 3B76E946DF1DECDF7463B01094819E9C /* EXTRuntimeExtensions.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -126,12 +105,10 @@
 		68DBAA7E59A89AF5A9B4D8E96C8B590F /* RACEmptySequence.h in Headers */ = {isa = PBXBuildFile; fileRef = C07C22B5746112FFDEA8A510DD6A79D5 /* RACEmptySequence.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		691C01FA2BAB29635A3142287CC45B44 /* UICollectionReusableView+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 7ACB418B21CE4442B96EEE00D6C4704C /* UICollectionReusableView+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6BAADDE4D1EDCA38C7A30FE7689D5AC1 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9308A46500F0FD538424CBED2B056A5 /* Action.swift */; };
-		6BAEA41811C5BF4E2B5074D7A84791EB /* SimpleAuthLinkedInWebLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E3FD260B6584F967A74C86FDA9B50975 /* SimpleAuthLinkedInWebLoginViewController.m */; };
 		6BBF1099E4CBB03631A1FB2ADF5F21DD /* RACCompoundDisposable.m in Sources */ = {isa = PBXBuildFile; fileRef = 7AA4E4AA73AA70141DA6F4B827B70D5E /* RACCompoundDisposable.m */; };
 		6C892306AA8DD7D457010FD107FFA1FF /* RACEvent.h in Headers */ = {isa = PBXBuildFile; fileRef = A80349983704827B8A139595A1A3A43F /* RACEvent.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6D64A5D056E7AC20136B5740856D2147 /* NSData+Base64-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = C01875EC35568CA14C5D9327D154D61E /* NSData+Base64-dummy.m */; };
 		6FED799AAC0956304FD78DE20B35DC74 /* RACDynamicSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 19E28AB75DEB6B48D43009270A16891A /* RACDynamicSignal.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7036FA976F391E148FAF964164682945 /* UIViewController+SimpleAuthAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 29DFFD284AD2C148664F26526DE71A81 /* UIViewController+SimpleAuthAdditions.m */; };
 		711257E7339D88BA8FDCB831E6694DD1 /* RACEagerSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = D3F3537DB905E3E7F0673458766A6E2D /* RACEagerSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		71757092BA846ED495A1381CD1724BDD /* NSString+CMDQueryStringSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = 257F2C0E0EB367E872F7B6D8D6918F8C /* NSString+CMDQueryStringSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		728B1725F0B91EAB64110F74A5B21D04 /* RACReturnSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 8DFB77C1E95D08315EC690C112352A1C /* RACReturnSignal.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -142,13 +119,11 @@
 		7675ECA4B1066009AEB76D61FE84100F /* Scheduler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9E9C8B5B1694941E52AAD4EA9998FD0C /* Scheduler.swift */; };
 		76FB69862D08A42BCAEDD1F9B91989DE /* UISlider+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 8880AA83BD4DD003F7762AAF9EF26A75 /* UISlider+RACSignalSupport.m */; };
 		77B6DAA179E4243AB8EE5E816FD86BE3 /* metamacros.h in Headers */ = {isa = PBXBuildFile; fileRef = B098E073D5988E94AD8FF2B1E6D7F4C6 /* metamacros.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		783A05293BA433E9EF383D55BCFF4E9C /* SimpleAuthSingleSignOnProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = DCDB2F2DB09C3FBAD653B3C3F230BED2 /* SimpleAuthSingleSignOnProvider.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		7B14AEBC51A88B674FB08F55172EBC49 /* CMDQueryStringWritingOptions.h in Headers */ = {isa = PBXBuildFile; fileRef = 266832920B5A094E5BEDF6FC627B4A22 /* CMDQueryStringWritingOptions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7B41CE695F7207D195A0C4D0700E1534 /* NSObject+RACLifting.m in Sources */ = {isa = PBXBuildFile; fileRef = A69C82C16361FDF4CA8E438643357559 /* NSObject+RACLifting.m */; };
 		7B6097453C7F38C2A08ACA2D8D878663 /* GCOAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 4F823B19F032F6E1CE28CF9682B0C87D /* GCOAuth.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7B7A0A12630761B3FAAFA74419178560 /* NSObject+RACDeallocating.h in Headers */ = {isa = PBXBuildFile; fileRef = D413FE2390768566616B6BA2FC2CE28B /* NSObject+RACDeallocating.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		7BEEFD72C6494EA0E433F576368F203A /* UIRefreshControl+RACCommandSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 6376FCB1DE6D1D35800701B31F024DD9 /* UIRefreshControl+RACCommandSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		7C9997CBE3B9773564DAB132AFAC39DF /* cocoa_oauth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9F8EC1136BBEF191B600D8188DE26A5F /* cocoa_oauth.framework */; };
 		7C9E79B9F71250DEDBC9F1D7AC78D717 /* RACObjCRuntime.m in Sources */ = {isa = PBXBuildFile; fileRef = 4FED17113D1D10D2A9AECD6F285FB7AE /* RACObjCRuntime.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
 		7E626DA38F1CC4E1600CA707DB1DD46C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
 		7ED397EAE0AC71E33E1CE880372A41FF /* RACValueTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = B4638A29EC05FC7417E7E40CDA4D6127 /* RACValueTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -156,7 +131,6 @@
 		7EF24B54047FB38E3BF9250A688F0848 /* Pods-Sherpa-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = DA6A155BA1776772E8C83BE4BA24FF7C /* Pods-Sherpa-dummy.m */; };
 		7FAEA8BCC091B65DE405D7E27CE20B7F /* NSString+CMDQueryStringSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 38B2B5522C5092FF58DF6EEFF7D4683F /* NSString+CMDQueryStringSerialization.m */; };
 		80D6D9C8EB397BC587EA87783C5F4E63 /* EXTRuntimeExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 425F0C4670B80A86D15BBD91441624B2 /* EXTRuntimeExtensions.m */; };
-		81653CAA3B97C7EF7D9F42C4494FFCB6 /* SimpleAuthTumblrLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B9595FEA05FF14A652024409DC7F24 /* SimpleAuthTumblrLoginViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		81C697E194942D3313CA37D4DCE2B99A /* RACUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = 1E71CE0A499CC5B65A47F9A758902A8D /* RACUnit.m */; };
 		81DE6CBF12D55535347562ED73401444 /* NSUserDefaults+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = D972086FF7CD9C3A8ADB28C08B3AF0AF /* NSUserDefaults+RACSupport.m */; };
 		826050129C644203904A6D293A6A5DFA /* TupleExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EE46F9E2EA34458E6AAF0C53BA0AAE37 /* TupleExtensions.swift */; };
@@ -164,10 +138,8 @@
 		84298E4A70F1D2A217B07742F3525982 /* ResultType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43FF48DA7C7530F202257CFBA29D4B3A /* ResultType.swift */; };
 		84B54966F8139C2B61C9D333CE0A19CC /* ISO8601.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AD2C41ABFE7A2FA9830B23C226A87C3F /* ISO8601.framework */; };
 		84DCB2F7FAF8C1D5979A41E00D18692B /* RACSubscriptionScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 29519B1A3955F439CB7112D512570FC3 /* RACSubscriptionScheduler.m */; };
-		88812DF4DC7FFA1FE592E3016A713A62 /* SimpleAuthLinkedInWebProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 06F4E951A989C548DDCDEEA14E143C85 /* SimpleAuthLinkedInWebProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8A8F6C2EC1C2C2D84EDA3F493FD90A45 /* CMDQueryStringSerialization.h in Headers */ = {isa = PBXBuildFile; fileRef = CF4BED55E11F5D61D379988BB70A82ED /* CMDQueryStringSerialization.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8AD984EEA2EFDC4CFD195B1D1A91A95D /* ISO8601-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = BF06266DB81C95526529D05408B69ADB /* ISO8601-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8B44FD33E421EAB1060F1F7535AA2D85 /* SimpleAuthTumblrProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = FCECE59B2D692E6ECA9C03D9ECB26C69 /* SimpleAuthTumblrProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		8B71203DE23C62E0F58CA6DBCC3A81DC /* NSURLConnection+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = A34AD19833689D8BD4DAA01E46F8F4C8 /* NSURLConnection+RACSupport.m */; };
 		8C6334477284C43EC4F1015DDBA7367D /* UIControl+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 05BD8835682541B78A7C321E9D509B7E /* UIControl+RACSignalSupport.m */; };
 		8DB957387D69BD5D65DC834D1B6BBFC4 /* SignalProducer.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF3BA9B28C47A69039124F61E0F908CF /* SignalProducer.swift */; };
@@ -176,9 +148,7 @@
 		90181A152358640206AC7B07DB56AA55 /* CMDQueryStringSerialization-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = A0B528C971402ABC04B8265CE1082132 /* CMDQueryStringSerialization-dummy.m */; };
 		90610DBB35526D22F3BF25B0126290C9 /* RACErrorSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 470C7ECF3B1DC4E98C156122F7F8CE2F /* RACErrorSignal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		9199EC55F5EC9951559695FF86051BDC /* UIStepper+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = C7E94E6C006418ED82098E3A316F82AD /* UIStepper+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		9239AD13E9DF981C996AD6DC99E5ECCE /* SimpleAuthLinkedInWebProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EDDA1ECA678089AC12DD05928714926 /* SimpleAuthLinkedInWebProvider.m */; };
 		93500B46F357FC7785BDBA44A896407E /* RACSerialDisposable.h in Headers */ = {isa = PBXBuildFile; fileRef = 8ECCD91B464E193148F453A2ACAF688A /* RACSerialDisposable.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		945D5D2EB4359225F3595894BF87A5DB /* ACAccountStore+SimpleAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D5EC629E6F9F873150E00DC098B5F07 /* ACAccountStore+SimpleAuth.m */; };
 		94CCF8AB49C90120B3757158693AD7D4 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
 		95660BC776714F376031011B004377D8 /* CMDQueryStringSerialization-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 7BC0077E6275128CE6DD703495C46C17 /* CMDQueryStringSerialization-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		95DBB60B2A8A8FCBDE2050C156AEDAB8 /* RACMulticastConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = D3F87D5328BA933C55B5FAD3222C299C /* RACMulticastConnection.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -208,13 +178,10 @@
 		AE34FE1D806735B6874818C2B00CFE96 /* RACSequence.h in Headers */ = {isa = PBXBuildFile; fileRef = 7FF8E7DC179B58D5569BEE9D7F4F973C /* RACSequence.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		AE7682CBEA4E5210CC1670725E5ABF39 /* RACValueTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = F1F0B95C4279339A9D128EA03B4A113A /* RACValueTransformer.m */; };
 		AFE1A12D3534D1E6C274857CFF8ECF7B /* NSArray+RACSequenceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 5C3AA4EAE4F9C68E0803457777147A10 /* NSArray+RACSequenceAdditions.m */; };
-		B07944D74B155930FB4D0F2B8C088CD2 /* SimpleAuthFacebookProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 8F9A624772A3AA90EFA7C85E31657ADD /* SimpleAuthFacebookProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		B12115619D42A30193F9F2393DD04735 /* UIControl+RACSignalSupportPrivate.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C16B6DB711EA3AF1365C6BE1A47F01A /* UIControl+RACSignalSupportPrivate.m */; };
 		B1E9C9E75414C5D8EBF2179446D13F19 /* RACObjCRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 27D0EEBC4ABB414F5C376B3768142EF4 /* RACObjCRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B3603D3BC58E28E01A8E2C7B6EA2539F /* CMDQueryStringValueTransformer.h in Headers */ = {isa = PBXBuildFile; fileRef = 13FB017D881CEB4C0C8B657E42D66B26 /* CMDQueryStringValueTransformer.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B4A35415FB44D2C36D91D2825C01E913 /* RACScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 872D3BADE1D8FCE92A26C5EEA1B379F9 /* RACScheduler.m */; };
-		B4E403E6C4391CE1F54190397D5CFB96 /* SimpleAuth.m in Sources */ = {isa = PBXBuildFile; fileRef = 02F8221A5AEF0AF39249BB5B0C20B10C /* SimpleAuth.m */; };
-		B59647C02E75CDAEDBEACBCC84051C5E /* SimpleAuth.h in Headers */ = {isa = PBXBuildFile; fileRef = D28AE0140105F8CB20E41FD019162FCE /* SimpleAuth.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B5A1916873A827DD905FB195AECD3790 /* RACSubject.h in Headers */ = {isa = PBXBuildFile; fileRef = 0C27E3A182BAB421B85852F6339A4EC3 /* RACSubject.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B73EB90ABBEDCAF6995E24D2A203C918 /* NSData+Base64-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 13C7D625CC953A178A3306519E0B0D97 /* NSData+Base64-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		B7990CF52B673023E4FC500D57F187A0 /* UITableViewHeaderFooterView+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E37DF50106B4BEF0BC3464F829A0108 /* UITableViewHeaderFooterView+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -238,20 +205,14 @@
 		C50573FC13E9822AF0A7085A40F290B7 /* UIBarButtonItem+RACCommandSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 37EA97B48664B9C8B913DFC01D1D8E90 /* UIBarButtonItem+RACCommandSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C5B0B3FAA0BD6DBCC63A1C2E2D7730D3 /* RACTestScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 96768F31392EF51D382C5F5BFE0A6F68 /* RACTestScheduler.m */; };
 		C797A0390BCC9F6AC98734864F95199E /* ISO8601Serialization.m in Sources */ = {isa = PBXBuildFile; fileRef = C6E044E130F27A1DD44C0881E1466726 /* ISO8601Serialization.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
-		C7AC08A54316EAC54621BA6CAAF46B6F /* SimpleAuthDefines.h in Headers */ = {isa = PBXBuildFile; fileRef = 74918804CF12F51CFFF53EB87699A9C0 /* SimpleAuthDefines.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C82F3CD26541103C6A608129C9E57FBC /* NSData+RACSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 9790888BF43C458A88295A567D50A555 /* NSData+RACSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C8BDDC5FF326028D6782C57598BC3F22 /* NSEnumerator+RACSequenceAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 1EF1DC9255CC74B7B8A133E7585EE53C /* NSEnumerator+RACSequenceAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		C9372C1451F1C2226E8CC7D402674C1A /* RACQueueScheduler.m in Sources */ = {isa = PBXBuildFile; fileRef = 5E6DE0DCB86979750723E24F3EF9A10D /* RACQueueScheduler.m */; };
 		C9BC18C54097BCD46B4F02444D4ECF39 /* RACKVOChannel.m in Sources */ = {isa = PBXBuildFile; fileRef = 835E01C40214F6CFBA21FC947FFB82F8 /* RACKVOChannel.m */; };
 		CA5568FDD8E23F21B8AD3345BCCFA017 /* UICollectionReusableView+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 09AAC049DFBE169D32EA2CC727E42A0B /* UICollectionReusableView+RACSignalSupport.m */; };
-		CC4F29B8D797846F461DA65EB2E029B1 /* SimpleAuth-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 8E93E34FCEFA29A34A54867431FB8B6E /* SimpleAuth-dummy.m */; };
-		CD511DF975279099B341967129F18033 /* SimpleAuthInstagramProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 36D33EA460370896766A3D2B8266B516 /* SimpleAuthInstagramProvider.m */; };
 		D002F63EAB47DEA3FDF6E6F0A2E5A11E /* NSArray+RACSequenceAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EF765791C96C06B845307C3BD1577617 /* NSArray+RACSequenceAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D024609EABD7029C1A818BC2F5B9DA9B /* NSString+RACKeyPathUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 3722440AEA1C1C17BCD32926F954CB00 /* NSString+RACKeyPathUtilities.m */; };
-		D0DA66A6958802F736603EC4A86BCD7F /* SimpleAuthUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 4718535DA0D438FADDFFAC684A78C30A /* SimpleAuthUtilities.m */; };
-		D0F6426DF0566B6B1BF34154AC295AD1 /* NSObject+SimpleAuthAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 8D14B77FE7E57DB77E9C4A5DD4F74229 /* NSObject+SimpleAuthAdditions.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		D1B261E8DA5A8E0803F4AAC33CBDF084 /* UIAlertView+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = E0E0A523993828E6D7A1271298E57466 /* UIAlertView+RACSignalSupport.m */; };
-		D2C79FD437E09F19EDB858CE9C2762AD /* SimpleAuthProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 217EC36241A31C8102DBC84506CB4ED1 /* SimpleAuthProvider.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		D4C38258F257CA77C2EF3051E9922346 /* ISO8601.h in Headers */ = {isa = PBXBuildFile; fileRef = 7AABE88551ACBA0E113929E4A378A588 /* ISO8601.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D54FBFA38067D176579BD543B9A0D642 /* ReactiveCocoa-Bridging-Header.h in Headers */ = {isa = PBXBuildFile; fileRef = 12C44B6524510A473B6296E0161E280D /* ReactiveCocoa-Bridging-Header.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D6A1A3F7AD2131E38161E6E29FF94F05 /* NSOrderedSet+RACSequenceAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 45FFCA0A4C2FAA4C1B44D6A751498F12 /* NSOrderedSet+RACSequenceAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -260,8 +221,6 @@
 		D7B7E3417A6D3EB283BEFDDC40756B33 /* UIDatePicker+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 0031C8FA3E509BB10987A754EF328B40 /* UIDatePicker+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D82FD7C2F148B2420BECFD9EB07B2524 /* RACStream+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 624260AB2C2F3FA31F7D91E9FDCF2E5F /* RACStream+Private.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		D86242EBEAC168B4BB5CEB046473205D /* RACSubscriptingAssignmentTrampoline.h in Headers */ = {isa = PBXBuildFile; fileRef = C8B53DD3D0E944DAD5317C94AC5CD096 /* RACSubscriptingAssignmentTrampoline.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		D893DF2E17769C5924E35E8F00992002 /* SimpleAuthLinkedInWebLoginViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = D8BF3BDAC7EA1BE86DB2B7C51E5FDED4 /* SimpleAuthLinkedInWebLoginViewController.h */; settings = {ATTRIBUTES = (Private, ); }; };
-		D95AFE8F3C46BBF732C930608DFD7606 /* SimpleAuthWebViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = C28FD062C78043E003524CFDA3A131EB /* SimpleAuthWebViewController.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		D9E40687C287F169CD0AFBF21DB5FF52 /* RACEmptySequence.m in Sources */ = {isa = PBXBuildFile; fileRef = 7C8B290684ECAA648C3E46CF242C6116 /* RACEmptySequence.m */; };
 		DCD38BDECEF8D03343ECC86BB92102AC /* NSDate+ISO8601.m in Sources */ = {isa = PBXBuildFile; fileRef = 21F519114BF87838A0CBF88B15E47566 /* NSDate+ISO8601.m */; settings = {COMPILER_FLAGS = "-DOS_OBJECT_USE_OBJC=0"; }; };
 		DEB967B6C125C496939400B312AF3268 /* NSNotificationCenter+RACSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = 9F3F1A532FEF50F18EE74820B1D6ED78 /* NSNotificationCenter+RACSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -270,10 +229,8 @@
 		DEF90118C76713850683278B3BC9FABF /* RACEmptySignal.h in Headers */ = {isa = PBXBuildFile; fileRef = A2737A8223AB87B90CCF85F75D8D4D3F /* RACEmptySignal.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		DFF16A269F0C6099C4EB02AB2D4F5BAF /* RACSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = B2D64A15D57C9CFB7836F2B471C58797 /* RACSignal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E04849B7EF83B03245EADCA056E5B9FE /* ReactiveCocoa-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = B50CC9F2E33BF48937B4F9CB01BB9EC5 /* ReactiveCocoa-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		E1A55C12021E4AB573510C234CFD70E8 /* NSObject+SimpleAuthAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 987485B92C5DA51DE5B565BB4FC839BC /* NSObject+SimpleAuthAdditions.m */; };
 		E2C41666A26CF9F7FE13CDDD94DE197B /* RACBehaviorSubject.m in Sources */ = {isa = PBXBuildFile; fileRef = 5EFBDA4A5F3567F5CF117DC299E236B9 /* RACBehaviorSubject.m */; };
 		E355EDDD1E6DC9C56DEB5D1A44AA1B7F /* UITextField+RACSignalSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 6B89A798ABE9C3CFDAA66B1BDF6C97B0 /* UITextField+RACSignalSupport.m */; };
-		E474D3265B931B8B50940FF4842C6F8E /* SimpleAuthWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 1C4A15E79A159B63E1F61ADEB4314224 /* SimpleAuthWebViewController.m */; };
 		E5B9CAFBF1381798EB19A7B578D37B90 /* RACErrorSignal.m in Sources */ = {isa = PBXBuildFile; fileRef = FCB0704FBFD87ADDC6FA59DBFDABAFF2 /* RACErrorSignal.m */; };
 		E5C041C105ED902940614BC37F90FACD /* RACDelegateProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = 903154888EF6F0A01C255A116EF69F08 /* RACDelegateProxy.m */; };
 		E601F24177AB056C3534F1BF0DF87CDC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
@@ -293,25 +250,18 @@
 		F1EFD861E585952B57583648C0C89952 /* RACMulticastConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3D6872E670589744ADD7FAEA1A83A6D1 /* RACMulticastConnection.m */; };
 		F2A8A69999F877F1E8A2E10D3A72AF8D /* NSString+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 0CE0D1D5B08553F58E468505AF6AAACF /* NSString+RACSupport.m */; };
 		F4625E2B5A77D3CB132039462ADEABC9 /* RACSubscriptingAssignmentTrampoline.m in Sources */ = {isa = PBXBuildFile; fileRef = 39446C0519C88C67654B543951B99FE6 /* RACSubscriptingAssignmentTrampoline.m */; };
-		F52D8DFC3CB9743AACF186F2D6284CDE /* SimpleAuthGoogleWebLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 7A9384C42B1D1255DDBA5A8D097B1871 /* SimpleAuthGoogleWebLoginViewController.m */; };
 		F61F5C0E78E3523320B1B79CD192936F /* NSOrderedSet+RACSequenceAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 7DAEFA4E1186772B4596156E85CB6C5D /* NSOrderedSet+RACSequenceAdditions.m */; };
 		F6C3885AA121FCF9169333F1C1D06CB0 /* RACReturnSignal.m in Sources */ = {isa = PBXBuildFile; fileRef = D942B343E01C5B18411169C13255AEC9 /* RACReturnSignal.m */; };
 		F6CF485401F03E72832F666D9E1012F0 /* NSNotificationCenter+RACSupport.m in Sources */ = {isa = PBXBuildFile; fileRef = 686CD1E9ECFBDC064E396DB030FED491 /* NSNotificationCenter+RACSupport.m */; };
 		F6F8653A3B249FF02577F444F136F01E /* NSObject+RACSelectorSignal.h in Headers */ = {isa = PBXBuildFile; fileRef = 4645E6B2F0C848C08928E32883E0BDBB /* NSObject+RACSelectorSignal.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		F7D2D66F477AB8C15E1AE934D606DF98 /* Result.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B259AD357FBFAF5489916FAC1B73C878 /* Result.framework */; };
 		F8022A82E568EB8F21C961FF92A3E1F0 /* RACSignal.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6174AC9553B86CFEA8818273E1959E /* RACSignal.m */; };
-		F81496818D6E1E65833200D9E772A916 /* SimpleAuthGoogleWebProvider.h in Headers */ = {isa = PBXBuildFile; fileRef = 1E7903947772A0E5105E1C23C0068CEB /* SimpleAuthGoogleWebProvider.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		F9883EF81138949CD2CFA30ADD54F0AE /* Result-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 71D63090F168784F0E91AC90E445C746 /* Result-dummy.m */; };
-		FB12E0B891B9DD84F66793F2D04AAFA2 /* SimpleAuthTumblrLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B18BC6BB5317EAA4A8AE06E0659CA42D /* SimpleAuthTumblrLoginViewController.m */; };
 		FB902D7B6F00A6DAD2700ECD31200F87 /* UIAlertView+RACSignalSupport.h in Headers */ = {isa = PBXBuildFile; fileRef = FBCEC616A03DD7D05B4C38D0C3F64206 /* UIAlertView+RACSignalSupport.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FBBC58C59CB73061780974BCE9FFFA8A /* SimpleAuthTwitterProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 5ADC9F8394FD9F85719BAA12D0D7175B /* SimpleAuthTwitterProvider.m */; };
 		FBD7BFDE0D1C7D40B9E999FF459C7158 /* ReactiveCocoa.h in Headers */ = {isa = PBXBuildFile; fileRef = F002960D4D3487FFCE43C994F28D92BC /* ReactiveCocoa.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FBE49EF2D2EF163CF21BF3397E454EA5 /* RACTestScheduler.h in Headers */ = {isa = PBXBuildFile; fileRef = 9D26DCB3E91737458E1A0E0B2640801F /* RACTestScheduler.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FC4ACEDDFB0CDC042797A6730A712EA1 /* Accounts.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D5A703022F4044869FE823B978952BE3 /* Accounts.framework */; };
 		FCC9CF0E9C479582057BEAFD4644CA9F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64555C33AA7B15410F9509C53883C33C /* Foundation.framework */; };
-		FCEE847FE592F2DDA7D7D918CD95FB9D /* SimpleAuthUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = 8A9AB6986CBC5CBDF0D8A6C54B367DCF /* SimpleAuthUtilities.h */; settings = {ATTRIBUTES = (Project, ); }; };
 		FD054B9FE34B4E1310AB96B8A7BA127A /* Flatten.swift in Sources */ = {isa = PBXBuildFile; fileRef = A419F2E23708C0AA98760AE1CBDFEC26 /* Flatten.swift */; };
-		FE5F6D130472FACCA72BB49C7EEAAE67 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA0BA1A3BA1111063EADBA4DF59D620F /* UIKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -328,27 +278,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 0EA1AF77E281BFE665CC0031A7EFE6A5;
 			remoteInfo = ISO8601;
-		};
-		12C172BF29595F0479D3CA94773B18D9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 9AF5CDE957670DCFFF410F2DBF61592C;
-			remoteInfo = CMDQueryStringSerialization;
-		};
-		36E551DAFFA1A7200390145497585FFC /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = A05CE7B8B92FC54CBE8FDB2CB68C1F7B;
-			remoteInfo = "cocoa-oauth";
-		};
-		36FB90C1026CC08B0CEBC8DC8A0B2ED7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 0CA398E4D8D4D248E2A7D56E4C24D7E4;
-			remoteInfo = ReactiveCocoa;
 		};
 		37A4803015C3150C4DECA8BC9FF49731 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -392,20 +321,6 @@
 			remoteGlobalIDString = A05CE7B8B92FC54CBE8FDB2CB68C1F7B;
 			remoteInfo = "cocoa-oauth";
 		};
-		BAA076C52F79FFB835F5B350474F81A9 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 156A8DF64ABB622FC4045E30034392C8;
-			remoteInfo = "SimpleAuth-SimpleAuth";
-		};
-		EB7CD4AA19ECD224E5B8DBC42FE70ED2 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 061D64AEE35B2118413069C8316EEE4C;
-			remoteInfo = SimpleAuth;
-		};
 		EDBC1908212D6526FEA0A40D4DCA3E90 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
@@ -417,19 +332,15 @@
 
 /* Begin PBXFileReference section */
 		0031C8FA3E509BB10987A754EF328B40 /* UIDatePicker+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIDatePicker+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UIDatePicker+RACSignalSupport.h"; sourceTree = "<group>"; };
-		02F8221A5AEF0AF39249BB5B0C20B10C /* SimpleAuth.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuth.m; path = Pod/Core/SimpleAuth.m; sourceTree = "<group>"; };
 		057742BF2F8CC7299F051775AF89B8FC /* RACQueueScheduler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACQueueScheduler.h; path = "ReactiveCocoa/Objective-C/RACQueueScheduler.h"; sourceTree = "<group>"; };
 		05BD8835682541B78A7C321E9D509B7E /* UIControl+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIControl+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIControl+RACSignalSupport.m"; sourceTree = "<group>"; };
 		05E525F2A4AE97E71DA25065ECBFA272 /* Observer.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Observer.swift; path = ReactiveCocoa/Swift/Observer.swift; sourceTree = "<group>"; };
 		05EBC006A24CE0B3009F2103E3A48E11 /* RACSubject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSubject.m; path = "ReactiveCocoa/Objective-C/RACSubject.m"; sourceTree = "<group>"; };
-		06F4E951A989C548DDCDEEA14E143C85 /* SimpleAuthLinkedInWebProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthLinkedInWebProvider.h; path = Pod/Providers/LinkedIn/SimpleAuthLinkedInWebProvider.h; sourceTree = "<group>"; };
 		079ECD773D218EA8B1358BD62FCE9B3A /* UIDatePicker+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIDatePicker+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIDatePicker+RACSignalSupport.m"; sourceTree = "<group>"; };
-		07B9595FEA05FF14A652024409DC7F24 /* SimpleAuthTumblrLoginViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthTumblrLoginViewController.h; path = Pod/Providers/Tumblr/SimpleAuthTumblrLoginViewController.h; sourceTree = "<group>"; };
 		091C5D0663907E6FF2057A45DDACEE15 /* RACIndexSetSequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACIndexSetSequence.m; path = "ReactiveCocoa/Objective-C/RACIndexSetSequence.m"; sourceTree = "<group>"; };
 		09AAC049DFBE169D32EA2CC727E42A0B /* UICollectionReusableView+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UICollectionReusableView+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UICollectionReusableView+RACSignalSupport.m"; sourceTree = "<group>"; };
 		0C27E3A182BAB421B85852F6339A4EC3 /* RACSubject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACSubject.h; path = "ReactiveCocoa/Objective-C/RACSubject.h"; sourceTree = "<group>"; };
 		0CE0D1D5B08553F58E468505AF6AAACF /* NSString+RACSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+RACSupport.m"; path = "ReactiveCocoa/Objective-C/NSString+RACSupport.m"; sourceTree = "<group>"; };
-		0E688408657157AD9463EE1F61F5DFE2 /* UIWindow+SimpleAuthAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIWindow+SimpleAuthAdditions.h"; path = "Pod/Core/ios/UIWindow+SimpleAuthAdditions.h"; sourceTree = "<group>"; };
 		0EF751AE788CCBAE007B66F8E5A9BFC5 /* NSURLConnection+RACSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSURLConnection+RACSupport.h"; path = "ReactiveCocoa/Objective-C/NSURLConnection+RACSupport.h"; sourceTree = "<group>"; };
 		1018AE5174F9F689E8256571CFDF0263 /* MKAnnotationView+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "MKAnnotationView+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/MKAnnotationView+RACSignalSupport.m"; sourceTree = "<group>"; };
 		103D55F39225898AA4F9FE0AEFA1C7C2 /* NSData_Base64.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NSData_Base64.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -449,38 +360,28 @@
 		19AF885CD8B86762B25CFA0ED2F1AA3F /* UITableViewCell+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UITableViewCell+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UITableViewCell+RACSignalSupport.m"; sourceTree = "<group>"; };
 		19E28AB75DEB6B48D43009270A16891A /* RACDynamicSignal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACDynamicSignal.h; path = "ReactiveCocoa/Objective-C/RACDynamicSignal.h"; sourceTree = "<group>"; };
 		1AE821460B5F61E16C79CFE49D888524 /* NSObject+RACKVOWrapper.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+RACKVOWrapper.m"; path = "ReactiveCocoa/Objective-C/NSObject+RACKVOWrapper.m"; sourceTree = "<group>"; };
-		1C4A15E79A159B63E1F61ADEB4314224 /* SimpleAuthWebViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthWebViewController.m; path = Pod/Core/ios/SimpleAuthWebViewController.m; sourceTree = "<group>"; };
-		1C8B6D8D45F419A91715BA5124F089A9 /* SimpleAuthInstagramProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthInstagramProvider.h; path = Pod/Providers/Instagram/SimpleAuthInstagramProvider.h; sourceTree = "<group>"; };
 		1C922D8B4992C4F131D565621F4CCD1D /* RACStream.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACStream.m; path = "ReactiveCocoa/Objective-C/RACStream.m"; sourceTree = "<group>"; };
 		1DB76B1A5F8648E8C138BE989E18D09D /* RACKVOTrampoline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACKVOTrampoline.m; path = "ReactiveCocoa/Objective-C/RACKVOTrampoline.m"; sourceTree = "<group>"; };
 		1E71CE0A499CC5B65A47F9A758902A8D /* RACUnit.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACUnit.m; path = "ReactiveCocoa/Objective-C/RACUnit.m"; sourceTree = "<group>"; };
 		1E7359673B18CCFBA62F6AAACB1A0DBE /* RACTuple.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACTuple.m; path = "ReactiveCocoa/Objective-C/RACTuple.m"; sourceTree = "<group>"; };
-		1E7903947772A0E5105E1C23C0068CEB /* SimpleAuthGoogleWebProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthGoogleWebProvider.h; path = Pod/Providers/GoogleWeb/SimpleAuthGoogleWebProvider.h; sourceTree = "<group>"; };
 		1EF1DC9255CC74B7B8A133E7585EE53C /* NSEnumerator+RACSequenceAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSEnumerator+RACSequenceAdditions.h"; path = "ReactiveCocoa/Objective-C/NSEnumerator+RACSequenceAdditions.h"; sourceTree = "<group>"; };
-		217EC36241A31C8102DBC84506CB4ED1 /* SimpleAuthProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthProvider.h; path = Pod/Core/SimpleAuthProvider.h; sourceTree = "<group>"; };
 		21F519114BF87838A0CBF88B15E47566 /* NSDate+ISO8601.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSDate+ISO8601.m"; path = "Sources/NSDate+ISO8601.m"; sourceTree = "<group>"; };
 		2460F13905952B601364F60D0783CA35 /* Pods_Sherpa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Sherpa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		257F2C0E0EB367E872F7B6D8D6918F8C /* NSString+CMDQueryStringSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+CMDQueryStringSerialization.h"; path = "CMDQueryStringSerialization/NSString+CMDQueryStringSerialization.h"; sourceTree = "<group>"; };
 		25CFA425F46064DCC2F3581781AABFDD /* ObjectiveCBridging.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ObjectiveCBridging.swift; path = ReactiveCocoa/Swift/ObjectiveCBridging.swift; sourceTree = "<group>"; };
 		266832920B5A094E5BEDF6FC627B4A22 /* CMDQueryStringWritingOptions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CMDQueryStringWritingOptions.h; path = CMDQueryStringSerialization/CMDQueryStringWritingOptions.h; sourceTree = "<group>"; };
-		270F89E8F4FA394FD8A05F908355BC54 /* SimpleAuthTwitterProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthTwitterProvider.h; path = Pod/Providers/Twitter/SimpleAuthTwitterProvider.h; sourceTree = "<group>"; };
 		27D0EEBC4ABB414F5C376B3768142EF4 /* RACObjCRuntime.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACObjCRuntime.h; path = "ReactiveCocoa/Objective-C/RACObjCRuntime.h"; sourceTree = "<group>"; };
 		28127CC96E1130C6713F411F263E7A17 /* NSObject+RACLifting.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+RACLifting.h"; path = "ReactiveCocoa/Objective-C/NSObject+RACLifting.h"; sourceTree = "<group>"; };
 		29519B1A3955F439CB7112D512570FC3 /* RACSubscriptionScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSubscriptionScheduler.m; path = "ReactiveCocoa/Objective-C/RACSubscriptionScheduler.m"; sourceTree = "<group>"; };
-		29DFFD284AD2C148664F26526DE71A81 /* UIViewController+SimpleAuthAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIViewController+SimpleAuthAdditions.m"; path = "Pod/Core/ios/UIViewController+SimpleAuthAdditions.m"; sourceTree = "<group>"; };
-		2A39E71BAE8DCC34AE94D7B69D85AC07 /* SimpleAuthGoogleWebProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthGoogleWebProvider.m; path = Pod/Providers/GoogleWeb/SimpleAuthGoogleWebProvider.m; sourceTree = "<group>"; };
 		2FD8C51E52C9E6D563D1A4381150F979 /* NSObject+RACPropertySubscribing.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+RACPropertySubscribing.h"; path = "ReactiveCocoa/Objective-C/NSObject+RACPropertySubscribing.h"; sourceTree = "<group>"; };
 		2FEC50F71C8DFB3736B50C00A448A8E6 /* FoundationExtensions.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = FoundationExtensions.swift; path = ReactiveCocoa/Swift/FoundationExtensions.swift; sourceTree = "<group>"; };
 		315405D6C63BB7459AEA2A49718F86A1 /* RACCommand.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACCommand.h; path = "ReactiveCocoa/Objective-C/RACCommand.h"; sourceTree = "<group>"; };
 		3174C5089805A1A320B6202AD2D2A849 /* UIStepper+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIStepper+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIStepper+RACSignalSupport.m"; sourceTree = "<group>"; };
-		3477EAF92594100B12A8E3085665DB7D /* UIViewController+SimpleAuthAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIViewController+SimpleAuthAdditions.h"; path = "Pod/Core/ios/UIViewController+SimpleAuthAdditions.h"; sourceTree = "<group>"; };
 		3639B6B46926F616F32B6773E6D9231E /* UITextView+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UITextView+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UITextView+RACSignalSupport.h"; sourceTree = "<group>"; };
-		36D33EA460370896766A3D2B8266B516 /* SimpleAuthInstagramProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthInstagramProvider.m; path = Pod/Providers/Instagram/SimpleAuthInstagramProvider.m; sourceTree = "<group>"; };
 		3722440AEA1C1C17BCD32926F954CB00 /* NSString+RACKeyPathUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+RACKeyPathUtilities.m"; path = "ReactiveCocoa/Objective-C/NSString+RACKeyPathUtilities.m"; sourceTree = "<group>"; };
 		3730C69D7BA3D63A169A7CB7AB5805CA /* RACEvent.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACEvent.m; path = "ReactiveCocoa/Objective-C/RACEvent.m"; sourceTree = "<group>"; };
 		37EA97B48664B9C8B913DFC01D1D8E90 /* UIBarButtonItem+RACCommandSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIBarButtonItem+RACCommandSupport.h"; path = "ReactiveCocoa/Objective-C/UIBarButtonItem+RACCommandSupport.h"; sourceTree = "<group>"; };
 		382BD1525EFEE769195A95D35EC93806 /* RACStringSequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACStringSequence.m; path = "ReactiveCocoa/Objective-C/RACStringSequence.m"; sourceTree = "<group>"; };
-		384DF32FCC3B651BFBF620378F810206 /* SimpleAuthInstagramLoginViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthInstagramLoginViewController.m; path = Pod/Providers/Instagram/SimpleAuthInstagramLoginViewController.m; sourceTree = "<group>"; };
 		38B2B5522C5092FF58DF6EEFF7D4683F /* NSString+CMDQueryStringSerialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+CMDQueryStringSerialization.m"; path = "CMDQueryStringSerialization/NSString+CMDQueryStringSerialization.m"; sourceTree = "<group>"; };
 		39446C0519C88C67654B543951B99FE6 /* RACSubscriptingAssignmentTrampoline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSubscriptingAssignmentTrampoline.m; path = "ReactiveCocoa/Objective-C/RACSubscriptingAssignmentTrampoline.m"; sourceTree = "<group>"; };
 		3B76E946DF1DECDF7463B01094819E9C /* EXTRuntimeExtensions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EXTRuntimeExtensions.h; path = "ReactiveCocoa/Objective-C/extobjc/EXTRuntimeExtensions.h"; sourceTree = "<group>"; };
@@ -489,14 +390,12 @@
 		3BFF0620F6028B90F33B6568648BA9D2 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3CE292BA01D0D721D7EC5D7DE95BC7C4 /* Pods-Sherpa-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Sherpa-resources.sh"; sourceTree = "<group>"; };
 		3CFEE43E2E1E7C4DD63F787CD5624DCC /* CMDQueryStringSerialization.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CMDQueryStringSerialization.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3D5EC629E6F9F873150E00DC098B5F07 /* ACAccountStore+SimpleAuth.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "ACAccountStore+SimpleAuth.m"; path = "Pod/Core/ACAccountStore+SimpleAuth.m"; sourceTree = "<group>"; };
 		3D6872E670589744ADD7FAEA1A83A6D1 /* RACMulticastConnection.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACMulticastConnection.m; path = "ReactiveCocoa/Objective-C/RACMulticastConnection.m"; sourceTree = "<group>"; };
 		3E5E889F26A2A9D76A2F7C1D2AA8746D /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3F0871919192170F36EBA739EE1C25FC /* ReactiveCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactiveCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		41C71B58A8C5F6089129F4D974A2487B /* UIImagePickerController+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIImagePickerController+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIImagePickerController+RACSignalSupport.m"; sourceTree = "<group>"; };
 		425F0C4670B80A86D15BBD91441624B2 /* EXTRuntimeExtensions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = EXTRuntimeExtensions.m; path = "ReactiveCocoa/Objective-C/extobjc/EXTRuntimeExtensions.m"; sourceTree = "<group>"; };
 		43042294C0462E45DBFF439985AD8008 /* ISO8601-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ISO8601-prefix.pch"; sourceTree = "<group>"; };
-		43E56A66692C6A8C98B62ED02E6F7A05 /* SimpleAuthDefines.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthDefines.m; path = Pod/Core/SimpleAuthDefines.m; sourceTree = "<group>"; };
 		43FF48DA7C7530F202257CFBA29D4B3A /* ResultType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ResultType.swift; path = Result/ResultType.swift; sourceTree = "<group>"; };
 		44C4A4776790171ECD0A8394FFF4F0A3 /* UITableViewHeaderFooterView+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UITableViewHeaderFooterView+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UITableViewHeaderFooterView+RACSignalSupport.m"; sourceTree = "<group>"; };
 		45FFCA0A4C2FAA4C1B44D6A751498F12 /* NSOrderedSet+RACSequenceAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSOrderedSet+RACSequenceAdditions.h"; path = "ReactiveCocoa/Objective-C/NSOrderedSet+RACSequenceAdditions.h"; sourceTree = "<group>"; };
@@ -504,11 +403,8 @@
 		46482753704F9B29A349BA405DE8449F /* Pods-Sherpa.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Sherpa.release.xcconfig"; sourceTree = "<group>"; };
 		46AC072694E3BE6E2A415355C09A6612 /* RACGroupedSignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACGroupedSignal.m; path = "ReactiveCocoa/Objective-C/RACGroupedSignal.m"; sourceTree = "<group>"; };
 		470C7ECF3B1DC4E98C156122F7F8CE2F /* RACErrorSignal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACErrorSignal.h; path = "ReactiveCocoa/Objective-C/RACErrorSignal.h"; sourceTree = "<group>"; };
-		4718535DA0D438FADDFFAC684A78C30A /* SimpleAuthUtilities.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthUtilities.m; path = Pod/Core/SimpleAuthUtilities.m; sourceTree = "<group>"; };
 		471A73069AC1F46BD61BBC207513D695 /* ISO8601-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ISO8601-dummy.m"; sourceTree = "<group>"; };
 		4764B9AA7F1E2B40381A9F1534EFDE41 /* NSDate+ISO8601.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSDate+ISO8601.h"; path = "Sources/NSDate+ISO8601.h"; sourceTree = "<group>"; };
-		4A3C3996A2F5908EA90378E3FB798F11 /* SimpleAuth-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SimpleAuth-prefix.pch"; sourceTree = "<group>"; };
-		4AC7326385AA5E960487860E305F1EC2 /* ACAccountStore+SimpleAuth.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "ACAccountStore+SimpleAuth.h"; path = "Pod/Core/ACAccountStore+SimpleAuth.h"; sourceTree = "<group>"; };
 		4AD2F7B2851C03A4CB77E9511CE3286B /* RACScheduler+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RACScheduler+Private.h"; path = "ReactiveCocoa/Objective-C/RACScheduler+Private.h"; sourceTree = "<group>"; };
 		4BC2FB1A7F2C0FBC1C285CFC48C1A00F /* RACStringSequence.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACStringSequence.h; path = "ReactiveCocoa/Objective-C/RACStringSequence.h"; sourceTree = "<group>"; };
 		4D2117D4505132AF90000471231832D1 /* UISegmentedControl+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UISegmentedControl+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UISegmentedControl+RACSignalSupport.h"; sourceTree = "<group>"; };
@@ -529,11 +425,9 @@
 		577F3138B3555293F78ED4E3691735C5 /* CMDQueryStringSerialization.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = CMDQueryStringSerialization.xcconfig; sourceTree = "<group>"; };
 		58A1B04B0BA1FF337D853555BEA0BD7D /* RACImmediateScheduler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACImmediateScheduler.h; path = "ReactiveCocoa/Objective-C/RACImmediateScheduler.h"; sourceTree = "<group>"; };
 		593C556F9B6B7FFF82DDD731E04B4BE8 /* Pods-Sherpa.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Sherpa.modulemap"; sourceTree = "<group>"; };
-		5ADC9F8394FD9F85719BAA12D0D7175B /* SimpleAuthTwitterProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthTwitterProvider.m; path = Pod/Providers/Twitter/SimpleAuthTwitterProvider.m; sourceTree = "<group>"; };
 		5BE5C3D260138DD6B188450F4C29EB05 /* UIGestureRecognizer+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIGestureRecognizer+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UIGestureRecognizer+RACSignalSupport.h"; sourceTree = "<group>"; };
 		5C3AA4EAE4F9C68E0803457777147A10 /* NSArray+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSArray+RACSequenceAdditions.m"; path = "ReactiveCocoa/Objective-C/NSArray+RACSequenceAdditions.m"; sourceTree = "<group>"; };
 		5E6DE0DCB86979750723E24F3EF9A10D /* RACQueueScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACQueueScheduler.m; path = "ReactiveCocoa/Objective-C/RACQueueScheduler.m"; sourceTree = "<group>"; };
-		5EDDA1ECA678089AC12DD05928714926 /* SimpleAuthLinkedInWebProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthLinkedInWebProvider.m; path = Pod/Providers/LinkedIn/SimpleAuthLinkedInWebProvider.m; sourceTree = "<group>"; };
 		5EFBDA4A5F3567F5CF117DC299E236B9 /* RACBehaviorSubject.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACBehaviorSubject.m; path = "ReactiveCocoa/Objective-C/RACBehaviorSubject.m"; sourceTree = "<group>"; };
 		624260AB2C2F3FA31F7D91E9FDCF2E5F /* RACStream+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RACStream+Private.h"; path = "ReactiveCocoa/Objective-C/RACStream+Private.h"; sourceTree = "<group>"; };
 		6376FCB1DE6D1D35800701B31F024DD9 /* UIRefreshControl+RACCommandSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIRefreshControl+RACCommandSupport.h"; path = "ReactiveCocoa/Objective-C/UIRefreshControl+RACCommandSupport.h"; sourceTree = "<group>"; };
@@ -547,12 +441,9 @@
 		6B89A798ABE9C3CFDAA66B1BDF6C97B0 /* UITextField+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UITextField+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UITextField+RACSignalSupport.m"; sourceTree = "<group>"; };
 		6C9A0A01EB424107B571373A77FB49AC /* ISO8601.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ISO8601.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		6CA855CFBF60DD4C5D2A952E8A2A24F6 /* EXTKeyPathCoding.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = EXTKeyPathCoding.h; path = "ReactiveCocoa/Objective-C/extobjc/EXTKeyPathCoding.h"; sourceTree = "<group>"; };
-		6CB8998DDBC64C21B8A9C1A9973CE759 /* UIWindow+SimpleAuthAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIWindow+SimpleAuthAdditions.m"; path = "Pod/Core/ios/UIWindow+SimpleAuthAdditions.m"; sourceTree = "<group>"; };
-		6DE4B407AFFB0A2F3D99A9E9106672DA /* SimpleAuthInstagramLoginViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthInstagramLoginViewController.h; path = Pod/Providers/Instagram/SimpleAuthInstagramLoginViewController.h; sourceTree = "<group>"; };
 		6E37DF50106B4BEF0BC3464F829A0108 /* UITableViewHeaderFooterView+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UITableViewHeaderFooterView+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UITableViewHeaderFooterView+RACSignalSupport.h"; sourceTree = "<group>"; };
 		6F6174AC9553B86CFEA8818273E1959E /* RACSignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSignal.m; path = "ReactiveCocoa/Objective-C/RACSignal.m"; sourceTree = "<group>"; };
 		703ABFAB056D1318F722EE594B0E30F2 /* RACImmediateScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACImmediateScheduler.m; path = "ReactiveCocoa/Objective-C/RACImmediateScheduler.m"; sourceTree = "<group>"; };
-		704D9E3830C07D386249A6233B16F5E8 /* SimpleAuthFacebookProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthFacebookProvider.m; path = Pod/Providers/Facebook/SimpleAuthFacebookProvider.m; sourceTree = "<group>"; };
 		709632865D56E4AC3EF83CB089900AB9 /* UITableViewCell+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UITableViewCell+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UITableViewCell+RACSignalSupport.h"; sourceTree = "<group>"; };
 		70E92FE79ADC49C8513C99A12B6FA204 /* RACKVOProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACKVOProxy.m; path = "ReactiveCocoa/Objective-C/RACKVOProxy.m"; sourceTree = "<group>"; };
 		710D2A6EC0F4375FDC9415C34BF38EBF /* NSInvocation+RACTypeParsing.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSInvocation+RACTypeParsing.h"; path = "ReactiveCocoa/Objective-C/NSInvocation+RACTypeParsing.h"; sourceTree = "<group>"; };
@@ -560,14 +451,12 @@
 		71ED02C1DAE8AD73FFB9D7454889222C /* CMDQueryStringSerialization.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = CMDQueryStringSerialization.modulemap; sourceTree = "<group>"; };
 		72F9CCAD8EC0AB0C44CD99F29BB31808 /* RACChannel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACChannel.h; path = "ReactiveCocoa/Objective-C/RACChannel.h"; sourceTree = "<group>"; };
 		7482F3550F9551650C6CCED46100DE6F /* RACSubscriber.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSubscriber.m; path = "ReactiveCocoa/Objective-C/RACSubscriber.m"; sourceTree = "<group>"; };
-		74918804CF12F51CFFF53EB87699A9C0 /* SimpleAuthDefines.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthDefines.h; path = Pod/Core/SimpleAuthDefines.h; sourceTree = "<group>"; };
 		74D6816F0CB3E75134C0B4A95D0F6BD0 /* ISO8601.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = ISO8601.modulemap; sourceTree = "<group>"; };
 		75090AB056BDE64FB69746FC7CE6CE96 /* NSData+Base64.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64.h"; sourceTree = "<group>"; };
 		758071CD4F6E60672C5C12B497FE5986 /* RACChannel.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACChannel.m; path = "ReactiveCocoa/Objective-C/RACChannel.m"; sourceTree = "<group>"; };
 		76611210D89BCF38F7EDD4DE47F620F1 /* RACTargetQueueScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACTargetQueueScheduler.m; path = "ReactiveCocoa/Objective-C/RACTargetQueueScheduler.m"; sourceTree = "<group>"; };
 		7711C186B11856BE4446C4F1D70605CA /* NSDictionary+RACSequenceAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSDictionary+RACSequenceAdditions.h"; path = "ReactiveCocoa/Objective-C/NSDictionary+RACSequenceAdditions.h"; sourceTree = "<group>"; };
 		79E0C18969784923DE7160423278E8FC /* NSIndexSet+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSIndexSet+RACSequenceAdditions.m"; path = "ReactiveCocoa/Objective-C/NSIndexSet+RACSequenceAdditions.m"; sourceTree = "<group>"; };
-		7A9384C42B1D1255DDBA5A8D097B1871 /* SimpleAuthGoogleWebLoginViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthGoogleWebLoginViewController.m; path = Pod/Providers/GoogleWeb/SimpleAuthGoogleWebLoginViewController.m; sourceTree = "<group>"; };
 		7AA4D99858AD44FF9ED35FF65A8E72D6 /* UIImagePickerController+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIImagePickerController+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UIImagePickerController+RACSignalSupport.h"; sourceTree = "<group>"; };
 		7AA4E4AA73AA70141DA6F4B827B70D5E /* RACCompoundDisposable.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACCompoundDisposable.m; path = "ReactiveCocoa/Objective-C/RACCompoundDisposable.m"; sourceTree = "<group>"; };
 		7AABE88551ACBA0E113929E4A378A588 /* ISO8601.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ISO8601.h; path = Support/ISO8601.h; sourceTree = "<group>"; };
@@ -578,7 +467,6 @@
 		7C8B290684ECAA648C3E46CF242C6116 /* RACEmptySequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACEmptySequence.m; path = "ReactiveCocoa/Objective-C/RACEmptySequence.m"; sourceTree = "<group>"; };
 		7D6627C5436C89FD7AA017336F8BDE24 /* NSData_Base64.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = NSData_Base64.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DAEFA4E1186772B4596156E85CB6C5D /* NSOrderedSet+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSOrderedSet+RACSequenceAdditions.m"; path = "ReactiveCocoa/Objective-C/NSOrderedSet+RACSequenceAdditions.m"; sourceTree = "<group>"; };
-		7E313C887904DCB5A3AFCA9B44FF011F /* SimpleAuthProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthProvider.m; path = Pod/Core/SimpleAuthProvider.m; sourceTree = "<group>"; };
 		7F70669A64E490CB2B106363034DED8E /* CMDQueryStringReader.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = CMDQueryStringReader.h; path = CMDQueryStringSerialization/CMDQueryStringReader.h; sourceTree = "<group>"; };
 		7FDD39450439BC7D7184544228C41BAF /* ReactiveCocoa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = ReactiveCocoa.xcconfig; sourceTree = "<group>"; };
 		7FF8E7DC179B58D5569BEE9D7F4F973C /* RACSequence.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACSequence.h; path = "ReactiveCocoa/Objective-C/RACSequence.h"; sourceTree = "<group>"; };
@@ -591,18 +479,13 @@
 		868BAD1DC03686309E4496ACAC5626C3 /* NSSet+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSSet+RACSequenceAdditions.m"; path = "ReactiveCocoa/Objective-C/NSSet+RACSequenceAdditions.m"; sourceTree = "<group>"; };
 		872D3BADE1D8FCE92A26C5EEA1B379F9 /* RACScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACScheduler.m; path = "ReactiveCocoa/Objective-C/RACScheduler.m"; sourceTree = "<group>"; };
 		8880AA83BD4DD003F7762AAF9EF26A75 /* UISlider+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UISlider+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UISlider+RACSignalSupport.m"; sourceTree = "<group>"; };
-		898BC6E0808601B763D9A8D7BB3B1D49 /* SimpleAuthGoogleWebLoginViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthGoogleWebLoginViewController.h; path = Pod/Providers/GoogleWeb/SimpleAuthGoogleWebLoginViewController.h; sourceTree = "<group>"; };
 		89BFDCF97400E69A2FE83B644BB3AB14 /* UIRefreshControl+RACCommandSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIRefreshControl+RACCommandSupport.m"; path = "ReactiveCocoa/Objective-C/UIRefreshControl+RACCommandSupport.m"; sourceTree = "<group>"; };
-		8A9AB6986CBC5CBDF0D8A6C54B367DCF /* SimpleAuthUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthUtilities.h; path = Pod/Core/SimpleAuthUtilities.h; sourceTree = "<group>"; };
 		8B388EA816048633F2799CC59B2259CF /* cocoa-oauth.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "cocoa-oauth.modulemap"; sourceTree = "<group>"; };
 		8BC8DA65EE038855A2517CD34AF7E62B /* UIBarButtonItem+RACCommandSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIBarButtonItem+RACCommandSupport.m"; path = "ReactiveCocoa/Objective-C/UIBarButtonItem+RACCommandSupport.m"; sourceTree = "<group>"; };
 		8C532287A2920EE391E1BC52A3D9DDDE /* RACEmptySignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACEmptySignal.m; path = "ReactiveCocoa/Objective-C/RACEmptySignal.m"; sourceTree = "<group>"; };
 		8C8F41C2EC01DBA5661D29AB483C3412 /* RACSubscriber+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RACSubscriber+Private.h"; path = "ReactiveCocoa/Objective-C/RACSubscriber+Private.h"; sourceTree = "<group>"; };
-		8D14B77FE7E57DB77E9C4A5DD4F74229 /* NSObject+SimpleAuthAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+SimpleAuthAdditions.h"; path = "Pod/Core/NSObject+SimpleAuthAdditions.h"; sourceTree = "<group>"; };
 		8DFB77C1E95D08315EC690C112352A1C /* RACReturnSignal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACReturnSignal.h; path = "ReactiveCocoa/Objective-C/RACReturnSignal.h"; sourceTree = "<group>"; };
-		8E93E34FCEFA29A34A54867431FB8B6E /* SimpleAuth-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "SimpleAuth-dummy.m"; sourceTree = "<group>"; };
 		8ECCD91B464E193148F453A2ACAF688A /* RACSerialDisposable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACSerialDisposable.h; path = "ReactiveCocoa/Objective-C/RACSerialDisposable.h"; sourceTree = "<group>"; };
-		8F9A624772A3AA90EFA7C85E31657ADD /* SimpleAuthFacebookProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthFacebookProvider.h; path = Pod/Providers/Facebook/SimpleAuthFacebookProvider.h; sourceTree = "<group>"; };
 		9028880CBA3CCB866200A71B68125CC1 /* NSInvocation+RACTypeParsing.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSInvocation+RACTypeParsing.m"; path = "ReactiveCocoa/Objective-C/NSInvocation+RACTypeParsing.m"; sourceTree = "<group>"; };
 		903154888EF6F0A01C255A116EF69F08 /* RACDelegateProxy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACDelegateProxy.m; path = "ReactiveCocoa/Objective-C/RACDelegateProxy.m"; sourceTree = "<group>"; };
 		918F839B1AA06A03F4E95A00EBD27F60 /* RACMulticastConnection+Private.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RACMulticastConnection+Private.h"; path = "ReactiveCocoa/Objective-C/RACMulticastConnection+Private.h"; sourceTree = "<group>"; };
@@ -613,7 +496,6 @@
 		96768F31392EF51D382C5F5BFE0A6F68 /* RACTestScheduler.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACTestScheduler.m; path = "ReactiveCocoa/Objective-C/RACTestScheduler.m"; sourceTree = "<group>"; };
 		9790888BF43C458A88295A567D50A555 /* NSData+RACSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSData+RACSupport.h"; path = "ReactiveCocoa/Objective-C/NSData+RACSupport.h"; sourceTree = "<group>"; };
 		984751A4B0BCCB7BDB2AA5968D53AE43 /* Event.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Event.swift; path = ReactiveCocoa/Swift/Event.swift; sourceTree = "<group>"; };
-		987485B92C5DA51DE5B565BB4FC839BC /* NSObject+SimpleAuthAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+SimpleAuthAdditions.m"; path = "Pod/Core/NSObject+SimpleAuthAdditions.m"; sourceTree = "<group>"; };
 		987CA3D6469B0026DA1169103F8B9B90 /* NSSet+RACSequenceAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSSet+RACSequenceAdditions.h"; path = "ReactiveCocoa/Objective-C/NSSet+RACSequenceAdditions.h"; sourceTree = "<group>"; };
 		99C48AF451A3C111D938CC9516AC142A /* Optional.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Optional.swift; path = ReactiveCocoa/Swift/Optional.swift; sourceTree = "<group>"; };
 		99DAE97D39066058A6D886DDF6020ACB /* RACTargetQueueScheduler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACTargetQueueScheduler.h; path = "ReactiveCocoa/Objective-C/RACTargetQueueScheduler.h"; sourceTree = "<group>"; };
@@ -628,7 +510,6 @@
 		A00C11A5FEE8694003E287E33E490928 /* RACBlockTrampoline.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACBlockTrampoline.m; path = "ReactiveCocoa/Objective-C/RACBlockTrampoline.m"; sourceTree = "<group>"; };
 		A0B528C971402ABC04B8265CE1082132 /* CMDQueryStringSerialization-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "CMDQueryStringSerialization-dummy.m"; sourceTree = "<group>"; };
 		A0F3B16804ED779AFBB1D2AEEF9B31A9 /* ReactiveCocoa-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "ReactiveCocoa-dummy.m"; sourceTree = "<group>"; };
-		A1F1BEF3C5253E86B510385E88151DE0 /* en.lproj */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder; name = en.lproj; path = Pod/Resources/en.lproj; sourceTree = "<group>"; };
 		A2737A8223AB87B90CCF85F75D8D4D3F /* RACEmptySignal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACEmptySignal.h; path = "ReactiveCocoa/Objective-C/RACEmptySignal.h"; sourceTree = "<group>"; };
 		A305AE7A9D6A55B04C272018FB599D69 /* RACStream.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACStream.h; path = "ReactiveCocoa/Objective-C/RACStream.h"; sourceTree = "<group>"; };
 		A349522827ED6ADB7353B059B0953EAF /* RACCommand.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACCommand.m; path = "ReactiveCocoa/Objective-C/RACCommand.m"; sourceTree = "<group>"; };
@@ -637,7 +518,6 @@
 		A69C82C16361FDF4CA8E438643357559 /* NSObject+RACLifting.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+RACLifting.m"; path = "ReactiveCocoa/Objective-C/NSObject+RACLifting.m"; sourceTree = "<group>"; };
 		A80349983704827B8A139595A1A3A43F /* RACEvent.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACEvent.h; path = "ReactiveCocoa/Objective-C/RACEvent.h"; sourceTree = "<group>"; };
 		A84CE6F2ADEA889CF5A99C8D7CBC8E17 /* NSData+RACSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSData+RACSupport.m"; path = "ReactiveCocoa/Objective-C/NSData+RACSupport.m"; sourceTree = "<group>"; };
-		A8B4E146565F1316ACC606F2F0144984 /* SimpleAuth-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "SimpleAuth-umbrella.h"; sourceTree = "<group>"; };
 		A904F9AFC1C84044783F07767C8C5A60 /* RACBehaviorSubject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACBehaviorSubject.h; path = "ReactiveCocoa/Objective-C/RACBehaviorSubject.h"; sourceTree = "<group>"; };
 		A9308A46500F0FD538424CBED2B056A5 /* Action.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Action.swift; path = ReactiveCocoa/Swift/Action.swift; sourceTree = "<group>"; };
 		A94303AFA597117C17D05D9B34E993C6 /* CMDQueryStringSerialization-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "CMDQueryStringSerialization-prefix.pch"; sourceTree = "<group>"; };
@@ -648,8 +528,6 @@
 		AD2C41ABFE7A2FA9830B23C226A87C3F /* ISO8601.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ISO8601.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE3C35A27C92E51934A1CDD52A66E7AF /* Result.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Result.xcconfig; sourceTree = "<group>"; };
 		B098E073D5988E94AD8FF2B1E6D7F4C6 /* metamacros.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = metamacros.h; path = "ReactiveCocoa/Objective-C/extobjc/metamacros.h"; sourceTree = "<group>"; };
-		B153BFB69913BA87DDFBA73408B721FB /* SimpleAuthTumblrProvider.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthTumblrProvider.m; path = Pod/Providers/Tumblr/SimpleAuthTumblrProvider.m; sourceTree = "<group>"; };
-		B18BC6BB5317EAA4A8AE06E0659CA42D /* SimpleAuthTumblrLoginViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthTumblrLoginViewController.m; path = Pod/Providers/Tumblr/SimpleAuthTumblrLoginViewController.m; sourceTree = "<group>"; };
 		B259AD357FBFAF5489916FAC1B73C878 /* Result.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Result.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B2D64A15D57C9CFB7836F2B471C58797 /* RACSignal.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACSignal.h; path = "ReactiveCocoa/Objective-C/RACSignal.h"; sourceTree = "<group>"; };
 		B30E1C54B67EDED0144FE46FCC6720C1 /* RACTuple.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACTuple.h; path = "ReactiveCocoa/Objective-C/RACTuple.h"; sourceTree = "<group>"; };
@@ -661,11 +539,9 @@
 		B659C2FF3209594791C3BE58AD2DBD6E /* MKAnnotationView+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "MKAnnotationView+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/MKAnnotationView+RACSignalSupport.h"; sourceTree = "<group>"; };
 		B6A8EA96A2D9D403274DBCC3A2D9850F /* GCOAuth.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = GCOAuth.h; sourceTree = "<group>"; };
 		B6E28230CBF1C3ED97330472287BBE80 /* CMDQueryStringSerialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = CMDQueryStringSerialization.m; path = CMDQueryStringSerialization/CMDQueryStringSerialization.m; sourceTree = "<group>"; };
-		B928AA07538F7C09FBFE62CE4E8A04FF /* SimpleAuth.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SimpleAuth.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		BA6428E9F66FD5A23C0A2E06ED26CD2F /* Podfile */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		BA6E6EEC3EE808874441C768823B9C3C /* Pods-Sherpa-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Sherpa-acknowledgements.markdown"; sourceTree = "<group>"; };
 		BAFB16CC4031B8DE140E9DA0EBE845FD /* UIActionSheet+RACSignalSupport.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "UIActionSheet+RACSignalSupport.h"; path = "ReactiveCocoa/Objective-C/UIActionSheet+RACSignalSupport.h"; sourceTree = "<group>"; };
-		BB5B9C5ACA5BDD095221C42765B52F28 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BD60527FFBFFF5364DE05E1516D6D75F /* RACQueueScheduler+Subclass.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "RACQueueScheduler+Subclass.h"; path = "ReactiveCocoa/Objective-C/RACQueueScheduler+Subclass.h"; sourceTree = "<group>"; };
 		BDADDA3C5E3F90CA03227C43BF30223F /* UIGestureRecognizer+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIGestureRecognizer+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIGestureRecognizer+RACSignalSupport.m"; sourceTree = "<group>"; };
 		BEC5639FE4101D822FD2679A49929E3D /* RACReplaySubject.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACReplaySubject.h; path = "ReactiveCocoa/Objective-C/RACReplaySubject.h"; sourceTree = "<group>"; };
@@ -676,7 +552,6 @@
 		C01875EC35568CA14C5D9327D154D61E /* NSData+Base64-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "NSData+Base64-dummy.m"; sourceTree = "<group>"; };
 		C02DC1AA8D1213DD97DF1DB46ECB2645 /* UIActionSheet+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIActionSheet+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIActionSheet+RACSignalSupport.m"; sourceTree = "<group>"; };
 		C07C22B5746112FFDEA8A510DD6A79D5 /* RACEmptySequence.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACEmptySequence.h; path = "ReactiveCocoa/Objective-C/RACEmptySequence.h"; sourceTree = "<group>"; };
-		C28FD062C78043E003524CFDA3A131EB /* SimpleAuthWebViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthWebViewController.h; path = Pod/Core/ios/SimpleAuthWebViewController.h; sourceTree = "<group>"; };
 		C2DD8DE9D399F81B4B682AA5D72B8CDD /* NSObject+RACDescription.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+RACDescription.m"; path = "ReactiveCocoa/Objective-C/NSObject+RACDescription.m"; sourceTree = "<group>"; };
 		C35998D46D6BF5B55EF7730C17C0D708 /* NSData+Base64.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "NSData+Base64.xcconfig"; sourceTree = "<group>"; };
 		C6E044E130F27A1DD44C0881E1466726 /* ISO8601Serialization.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = ISO8601Serialization.m; path = Sources/ISO8601Serialization.m; sourceTree = "<group>"; };
@@ -693,36 +568,30 @@
 		D117DBAD14FDDFBE460942441C4EBCD3 /* RACTupleSequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACTupleSequence.m; path = "ReactiveCocoa/Objective-C/RACTupleSequence.m"; sourceTree = "<group>"; };
 		D1946F21A139E82B92DC62E6BAC479C5 /* NSData+Base64-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "NSData+Base64-prefix.pch"; sourceTree = "<group>"; };
 		D243DC8A5158AA2FC848625A441E5586 /* Result.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = Result.modulemap; sourceTree = "<group>"; };
-		D28AE0140105F8CB20E41FD019162FCE /* SimpleAuth.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuth.h; path = Pod/Core/SimpleAuth.h; sourceTree = "<group>"; };
 		D29B4C044E1AF4D5FF2EF742E66DED31 /* RACDisposable.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACDisposable.h; path = "ReactiveCocoa/Objective-C/RACDisposable.h"; sourceTree = "<group>"; };
 		D2CA01EF94CB08F02023D975988FCA67 /* Result.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Result.swift; path = Result/Result.swift; sourceTree = "<group>"; };
 		D3F3537DB905E3E7F0673458766A6E2D /* RACEagerSequence.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACEagerSequence.h; path = "ReactiveCocoa/Objective-C/RACEagerSequence.h"; sourceTree = "<group>"; };
 		D3F87D5328BA933C55B5FAD3222C299C /* RACMulticastConnection.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACMulticastConnection.h; path = "ReactiveCocoa/Objective-C/RACMulticastConnection.h"; sourceTree = "<group>"; };
 		D413FE2390768566616B6BA2FC2CE28B /* NSObject+RACDeallocating.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+RACDeallocating.h"; path = "ReactiveCocoa/Objective-C/NSObject+RACDeallocating.h"; sourceTree = "<group>"; };
-		D4C88ECB59A2594C2D0CF1A7C8F1E149 /* SimpleAuth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SimpleAuth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D5A703022F4044869FE823B978952BE3 /* Accounts.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Accounts.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Accounts.framework; sourceTree = DEVELOPER_DIR; };
 		D5FCA94E7032FF455672A11F6967D2B5 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D74B87BAF87324BE4944CD98141D47FF /* Signal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Signal.swift; path = ReactiveCocoa/Swift/Signal.swift; sourceTree = "<group>"; };
 		D8532EB2D3CE349B50C3D88943EB9B81 /* NSObject+RACPropertySubscribing.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+RACPropertySubscribing.m"; path = "ReactiveCocoa/Objective-C/NSObject+RACPropertySubscribing.m"; sourceTree = "<group>"; };
 		D89228719E244D41D499AA02E0C4ECF7 /* RACSubscriptionScheduler.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACSubscriptionScheduler.h; path = "ReactiveCocoa/Objective-C/RACSubscriptionScheduler.h"; sourceTree = "<group>"; };
 		D8BAED672761EBBCE6CF6AA3DE174CAD /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		D8BF3BDAC7EA1BE86DB2B7C51E5FDED4 /* SimpleAuthLinkedInWebLoginViewController.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthLinkedInWebLoginViewController.h; path = Pod/Providers/LinkedIn/SimpleAuthLinkedInWebLoginViewController.h; sourceTree = "<group>"; };
 		D942B343E01C5B18411169C13255AEC9 /* RACReturnSignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACReturnSignal.m; path = "ReactiveCocoa/Objective-C/RACReturnSignal.m"; sourceTree = "<group>"; };
 		D95D192B32966025DBBCA1102E513346 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D972086FF7CD9C3A8ADB28C08B3AF0AF /* NSUserDefaults+RACSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSUserDefaults+RACSupport.m"; path = "ReactiveCocoa/Objective-C/NSUserDefaults+RACSupport.m"; sourceTree = "<group>"; };
 		D9834681D6F88EF618295549A4411F86 /* RACKVOChannel.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = RACKVOChannel.h; path = "ReactiveCocoa/Objective-C/RACKVOChannel.h"; sourceTree = "<group>"; };
 		DA6A155BA1776772E8C83BE4BA24FF7C /* Pods-Sherpa-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Sherpa-dummy.m"; sourceTree = "<group>"; };
 		DCB315A71493FEF02677FD0F1E12A716 /* NSObject+RACSelectorSignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSObject+RACSelectorSignal.m"; path = "ReactiveCocoa/Objective-C/NSObject+RACSelectorSignal.m"; sourceTree = "<group>"; };
-		DCDB2F2DB09C3FBAD653B3C3F230BED2 /* SimpleAuthSingleSignOnProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthSingleSignOnProvider.h; path = Pod/Core/SimpleAuthSingleSignOnProvider.h; sourceTree = "<group>"; };
 		DCEB3FEC10135293155C2E1976887B77 /* NSString+RACSequenceAdditions.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "NSString+RACSequenceAdditions.m"; path = "ReactiveCocoa/Objective-C/NSString+RACSequenceAdditions.m"; sourceTree = "<group>"; };
 		DDE0F392EADFB442138E52E49E65302D /* Disposable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Disposable.swift; path = ReactiveCocoa/Swift/Disposable.swift; sourceTree = "<group>"; };
 		DEF644340C26BF7914005CB8E3E6DED6 /* ISO8601Serialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = ISO8601Serialization.h; path = Sources/ISO8601Serialization.h; sourceTree = "<group>"; };
-		E053D122A7F02403AF58167550ECB48B /* SimpleAuth.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = SimpleAuth.modulemap; sourceTree = "<group>"; };
 		E0C95036ACCC3B309D334FFE6839ACF9 /* RACArraySequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACArraySequence.m; path = "ReactiveCocoa/Objective-C/RACArraySequence.m"; sourceTree = "<group>"; };
 		E0E0A523993828E6D7A1271298E57466 /* UIAlertView+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UIAlertView+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UIAlertView+RACSignalSupport.m"; sourceTree = "<group>"; };
 		E0F8DE864B5A4840E48BF5267BA69D49 /* ReactiveCocoa.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = ReactiveCocoa.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E160F71E36BD11685948EE54829F8310 /* Pods-Sherpa-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Sherpa-frameworks.sh"; sourceTree = "<group>"; };
-		E3FD260B6584F967A74C86FDA9B50975 /* SimpleAuthLinkedInWebLoginViewController.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthLinkedInWebLoginViewController.m; path = Pod/Providers/LinkedIn/SimpleAuthLinkedInWebLoginViewController.m; sourceTree = "<group>"; };
 		E5B8C5A0CC24A4E7CBA7821454E09B74 /* ReactiveCocoa-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "ReactiveCocoa-prefix.pch"; sourceTree = "<group>"; };
 		E6D6C5B3ECE2C24FEDAE0942CE9D0843 /* cocoa_oauth.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = cocoa_oauth.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E85E95175E62C6EC6EAD774B5177EC10 /* cocoa-oauth-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "cocoa-oauth-umbrella.h"; sourceTree = "<group>"; };
@@ -744,7 +613,6 @@
 		F5256E52AB06D8A5F826E0AAF3254AC5 /* NSURL+CMDQueryStringSerialization.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSURL+CMDQueryStringSerialization.h"; path = "CMDQueryStringSerialization/NSURL+CMDQueryStringSerialization.h"; sourceTree = "<group>"; };
 		F5F9BB6697D146C8EE411164D24004EB /* Property.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Property.swift; path = ReactiveCocoa/Swift/Property.swift; sourceTree = "<group>"; };
 		F5FD4A02318029306FB13000C7A748ED /* CMDQueryStringSerialization.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = CMDQueryStringSerialization.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = SimpleAuth.xcconfig; sourceTree = "<group>"; };
 		F78FFF703ADCA5D332D269580A544AA6 /* NSString+RACKeyPathUtilities.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+RACKeyPathUtilities.h"; path = "ReactiveCocoa/Objective-C/NSString+RACKeyPathUtilities.h"; sourceTree = "<group>"; };
 		F80E59B7E2FFB4D21B011559165ADC11 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS9.0.sdk/System/Library/Frameworks/Social.framework; sourceTree = DEVELOPER_DIR; };
 		F870736320DB41B5E8EDAD02730F3E8F /* UISwitch+RACSignalSupport.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = "UISwitch+RACSignalSupport.m"; path = "ReactiveCocoa/Objective-C/UISwitch+RACSignalSupport.m"; sourceTree = "<group>"; };
@@ -755,7 +623,6 @@
 		FC512B6CBBD086F71676EED4A84767DF /* RACSequence.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACSequence.m; path = "ReactiveCocoa/Objective-C/RACSequence.m"; sourceTree = "<group>"; };
 		FCB0704FBFD87ADDC6FA59DBFDABAFF2 /* RACErrorSignal.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = RACErrorSignal.m; path = "ReactiveCocoa/Objective-C/RACErrorSignal.m"; sourceTree = "<group>"; };
 		FCDA9846E6A1C0EF555C2FEDB79326B2 /* NSString+RACSequenceAdditions.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSString+RACSequenceAdditions.h"; path = "ReactiveCocoa/Objective-C/NSString+RACSequenceAdditions.h"; sourceTree = "<group>"; };
-		FCECE59B2D692E6ECA9C03D9ECB26C69 /* SimpleAuthTumblrProvider.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = SimpleAuthTumblrProvider.h; path = Pod/Providers/Tumblr/SimpleAuthTumblrProvider.h; sourceTree = "<group>"; };
 		FE98D131DC509F52777ED8903FE2FA4B /* Result-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Result-umbrella.h"; sourceTree = "<group>"; };
 		FF61393B0D62ADA342158C7F15CBA931 /* NSObject+RACDescription.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = "NSObject+RACDescription.h"; path = "ReactiveCocoa/Objective-C/NSObject+RACDescription.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -788,13 +655,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		884B9A297227AFAB2BD78BFB54551EFD /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		A80C8F1F72481BB07E216DEAE43E5452 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -816,20 +676,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				3C795D5141F79C408C57FDCB27EFE3F3 /* Foundation.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		CB6310684E94C74C7F5A3B1C13DAB6BB /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				FC4ACEDDFB0CDC042797A6730A712EA1 /* Accounts.framework in Frameworks */,
-				620FAACCD4535ECE0EF62069A295B356 /* CMDQueryStringSerialization.framework in Frameworks */,
-				7C9997CBE3B9773564DAB132AFAC39DF /* cocoa_oauth.framework in Frameworks */,
-				205620AA090D27B4252A07C4AC760089 /* Foundation.framework in Frameworks */,
-				0650416D56521CB737A7A1EFE977ABB2 /* ReactiveCocoa.framework in Frameworks */,
-				00DB159AF2CCAC91DDADE4AE22947BE4 /* Social.framework in Frameworks */,
-				FE5F6D130472FACCA72BB49C7EEAAE67 /* UIKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -867,30 +713,6 @@
 				4D7B1C1222CEE2DCFBDA59DABEC57AC8 /* Support Files */,
 			);
 			path = Result;
-			sourceTree = "<group>";
-		};
-		1DE4AC0DB2F15D5150A7EB91D8465F46 /* Facebook */ = {
-			isa = PBXGroup;
-			children = (
-				8F9A624772A3AA90EFA7C85E31657ADD /* SimpleAuthFacebookProvider.h */,
-				704D9E3830C07D386249A6233B16F5E8 /* SimpleAuthFacebookProvider.m */,
-			);
-			name = Facebook;
-			sourceTree = "<group>";
-		};
-		235F6FA4306A2AA4E61A08BA86FA2C18 /* SimpleAuth */ = {
-			isa = PBXGroup;
-			children = (
-				482F9C334941568D023ED9270B34E0F3 /* Core */,
-				1DE4AC0DB2F15D5150A7EB91D8465F46 /* Facebook */,
-				2AE8ECDAA712017AA37C3F4AF4CDD4DB /* GoogleWeb */,
-				F657E6B8E55279A6F077AC163F7B1DF7 /* Instagram */,
-				F4282200D5177A0DE3813EED86CEF91A /* LinkedInWeb */,
-				31424556C2C74426A2B289C807BD0DD3 /* Support Files */,
-				61D3350B1114DA9356EFC147C9F6C5E9 /* Tumblr */,
-				5177976B7E6066BFACB99B4F51903FF8 /* Twitter */,
-			);
-			path = SimpleAuth;
 			sourceTree = "<group>";
 		};
 		25D691FF024409C66F1C4610DF63AE4B /* Core */ = {
@@ -1065,31 +887,6 @@
 			name = Core;
 			sourceTree = "<group>";
 		};
-		2AE8ECDAA712017AA37C3F4AF4CDD4DB /* GoogleWeb */ = {
-			isa = PBXGroup;
-			children = (
-				898BC6E0808601B763D9A8D7BB3B1D49 /* SimpleAuthGoogleWebLoginViewController.h */,
-				7A9384C42B1D1255DDBA5A8D097B1871 /* SimpleAuthGoogleWebLoginViewController.m */,
-				1E7903947772A0E5105E1C23C0068CEB /* SimpleAuthGoogleWebProvider.h */,
-				2A39E71BAE8DCC34AE94D7B69D85AC07 /* SimpleAuthGoogleWebProvider.m */,
-			);
-			name = GoogleWeb;
-			sourceTree = "<group>";
-		};
-		31424556C2C74426A2B289C807BD0DD3 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				BB5B9C5ACA5BDD095221C42765B52F28 /* Info.plist */,
-				E053D122A7F02403AF58167550ECB48B /* SimpleAuth.modulemap */,
-				F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */,
-				8E93E34FCEFA29A34A54867431FB8B6E /* SimpleAuth-dummy.m */,
-				4A3C3996A2F5908EA90378E3FB798F11 /* SimpleAuth-prefix.pch */,
-				A8B4E146565F1316ACC606F2F0144984 /* SimpleAuth-umbrella.h */,
-			);
-			name = "Support Files";
-			path = "../Target Support Files/SimpleAuth";
-			sourceTree = "<group>";
-		};
 		3CE6926D844FA9E3F9D3586A0DC69180 /* Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -1118,33 +915,6 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		482F9C334941568D023ED9270B34E0F3 /* Core */ = {
-			isa = PBXGroup;
-			children = (
-				4AC7326385AA5E960487860E305F1EC2 /* ACAccountStore+SimpleAuth.h */,
-				3D5EC629E6F9F873150E00DC098B5F07 /* ACAccountStore+SimpleAuth.m */,
-				8D14B77FE7E57DB77E9C4A5DD4F74229 /* NSObject+SimpleAuthAdditions.h */,
-				987485B92C5DA51DE5B565BB4FC839BC /* NSObject+SimpleAuthAdditions.m */,
-				D28AE0140105F8CB20E41FD019162FCE /* SimpleAuth.h */,
-				02F8221A5AEF0AF39249BB5B0C20B10C /* SimpleAuth.m */,
-				74918804CF12F51CFFF53EB87699A9C0 /* SimpleAuthDefines.h */,
-				43E56A66692C6A8C98B62ED02E6F7A05 /* SimpleAuthDefines.m */,
-				217EC36241A31C8102DBC84506CB4ED1 /* SimpleAuthProvider.h */,
-				7E313C887904DCB5A3AFCA9B44FF011F /* SimpleAuthProvider.m */,
-				DCDB2F2DB09C3FBAD653B3C3F230BED2 /* SimpleAuthSingleSignOnProvider.h */,
-				8A9AB6986CBC5CBDF0D8A6C54B367DCF /* SimpleAuthUtilities.h */,
-				4718535DA0D438FADDFFAC684A78C30A /* SimpleAuthUtilities.m */,
-				C28FD062C78043E003524CFDA3A131EB /* SimpleAuthWebViewController.h */,
-				1C4A15E79A159B63E1F61ADEB4314224 /* SimpleAuthWebViewController.m */,
-				3477EAF92594100B12A8E3085665DB7D /* UIViewController+SimpleAuthAdditions.h */,
-				29DFFD284AD2C148664F26526DE71A81 /* UIViewController+SimpleAuthAdditions.m */,
-				0E688408657157AD9463EE1F61F5DFE2 /* UIWindow+SimpleAuthAdditions.h */,
-				6CB8998DDBC64C21B8A9C1A9973CE759 /* UIWindow+SimpleAuthAdditions.m */,
-				BE68469EB502DF253DEBB0C68207BE1D /* Resources */,
-			);
-			name = Core;
-			sourceTree = "<group>";
-		};
 		4C99FE4E3091B684260D0B461E19F6FB /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -1155,8 +925,6 @@
 				2460F13905952B601364F60D0783CA35 /* Pods_Sherpa.framework */,
 				E0F8DE864B5A4840E48BF5267BA69D49 /* ReactiveCocoa.framework */,
 				19144774CE5ED73648B604F412F03C3F /* Result.framework */,
-				B928AA07538F7C09FBFE62CE4E8A04FF /* SimpleAuth.bundle */,
-				D4C88ECB59A2594C2D0CF1A7C8F1E149 /* SimpleAuth.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1194,26 +962,6 @@
 			path = CMDQueryStringSerialization;
 			sourceTree = "<group>";
 		};
-		5177976B7E6066BFACB99B4F51903FF8 /* Twitter */ = {
-			isa = PBXGroup;
-			children = (
-				270F89E8F4FA394FD8A05F908355BC54 /* SimpleAuthTwitterProvider.h */,
-				5ADC9F8394FD9F85719BAA12D0D7175B /* SimpleAuthTwitterProvider.m */,
-			);
-			name = Twitter;
-			sourceTree = "<group>";
-		};
-		61D3350B1114DA9356EFC147C9F6C5E9 /* Tumblr */ = {
-			isa = PBXGroup;
-			children = (
-				07B9595FEA05FF14A652024409DC7F24 /* SimpleAuthTumblrLoginViewController.h */,
-				B18BC6BB5317EAA4A8AE06E0659CA42D /* SimpleAuthTumblrLoginViewController.m */,
-				FCECE59B2D692E6ECA9C03D9ECB26C69 /* SimpleAuthTumblrProvider.h */,
-				B153BFB69913BA87DDFBA73408B721FB /* SimpleAuthTumblrProvider.m */,
-			);
-			name = Tumblr;
-			sourceTree = "<group>";
-		};
 		6AE8DEF8178F609C4DF64931B93C01B8 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
@@ -1223,7 +971,6 @@
 				E32CF2F4A5F5D28C88176DA00128F8E1 /* NSData+Base64 */,
 				D266F365BAB8FB40E76B90CADE7E3D6A /* ReactiveCocoa */,
 				14B86083DB93CDA3A90AAC135F27D49C /* Result */,
-				235F6FA4306A2AA4E61A08BA86FA2C18 /* SimpleAuth */,
 			);
 			name = Pods;
 			sourceTree = "<group>";
@@ -1314,14 +1061,6 @@
 			path = "cocoa-oauth";
 			sourceTree = "<group>";
 		};
-		BE68469EB502DF253DEBB0C68207BE1D /* Resources */ = {
-			isa = PBXGroup;
-			children = (
-				A1F1BEF3C5253E86B510385E88151DE0 /* en.lproj */,
-			);
-			name = Resources;
-			sourceTree = "<group>";
-		};
 		D266F365BAB8FB40E76B90CADE7E3D6A /* ReactiveCocoa */ = {
 			isa = PBXGroup;
 			children = (
@@ -1355,28 +1094,6 @@
 			);
 			name = "Support Files";
 			path = "../Target Support Files/ISO8601";
-			sourceTree = "<group>";
-		};
-		F4282200D5177A0DE3813EED86CEF91A /* LinkedInWeb */ = {
-			isa = PBXGroup;
-			children = (
-				D8BF3BDAC7EA1BE86DB2B7C51E5FDED4 /* SimpleAuthLinkedInWebLoginViewController.h */,
-				E3FD260B6584F967A74C86FDA9B50975 /* SimpleAuthLinkedInWebLoginViewController.m */,
-				06F4E951A989C548DDCDEEA14E143C85 /* SimpleAuthLinkedInWebProvider.h */,
-				5EDDA1ECA678089AC12DD05928714926 /* SimpleAuthLinkedInWebProvider.m */,
-			);
-			name = LinkedInWeb;
-			sourceTree = "<group>";
-		};
-		F657E6B8E55279A6F077AC163F7B1DF7 /* Instagram */ = {
-			isa = PBXGroup;
-			children = (
-				6DE4B407AFFB0A2F3D99A9E9106672DA /* SimpleAuthInstagramLoginViewController.h */,
-				384DF32FCC3B651BFBF620378F810206 /* SimpleAuthInstagramLoginViewController.m */,
-				1C8B6D8D45F419A91715BA5124F089A9 /* SimpleAuthInstagramProvider.h */,
-				36D33EA460370896766A3D2B8266B516 /* SimpleAuthInstagramProvider.m */,
-			);
-			name = Instagram;
 			sourceTree = "<group>";
 		};
 		F743585F81C9B3882A1BDB7BEDCE7DC2 /* UI */ = {
@@ -1480,34 +1197,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				1BEE5E600D40998BF0D74E0B55FCBA16 /* Pods-Sherpa-umbrella.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		50192033550C72785A130DE08DF5F904 /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				412E6736E520DA4C309400CCD75E40DC /* ACAccountStore+SimpleAuth.h in Headers */,
-				D0F6426DF0566B6B1BF34154AC295AD1 /* NSObject+SimpleAuthAdditions.h in Headers */,
-				62EBF6463880C8085230A831B0FF09A5 /* SimpleAuth-umbrella.h in Headers */,
-				B59647C02E75CDAEDBEACBCC84051C5E /* SimpleAuth.h in Headers */,
-				C7AC08A54316EAC54621BA6CAAF46B6F /* SimpleAuthDefines.h in Headers */,
-				B07944D74B155930FB4D0F2B8C088CD2 /* SimpleAuthFacebookProvider.h in Headers */,
-				1B223E744D96C8311D437729E7225B6C /* SimpleAuthGoogleWebLoginViewController.h in Headers */,
-				F81496818D6E1E65833200D9E772A916 /* SimpleAuthGoogleWebProvider.h in Headers */,
-				15B0E395261DE3E4231861DC089C6047 /* SimpleAuthInstagramLoginViewController.h in Headers */,
-				2F2C8FA4C475C9B85A1EE713AA651E3F /* SimpleAuthInstagramProvider.h in Headers */,
-				D893DF2E17769C5924E35E8F00992002 /* SimpleAuthLinkedInWebLoginViewController.h in Headers */,
-				88812DF4DC7FFA1FE592E3016A713A62 /* SimpleAuthLinkedInWebProvider.h in Headers */,
-				D2C79FD437E09F19EDB858CE9C2762AD /* SimpleAuthProvider.h in Headers */,
-				783A05293BA433E9EF383D55BCFF4E9C /* SimpleAuthSingleSignOnProvider.h in Headers */,
-				81653CAA3B97C7EF7D9F42C4494FFCB6 /* SimpleAuthTumblrLoginViewController.h in Headers */,
-				8B44FD33E421EAB1060F1F7535AA2D85 /* SimpleAuthTumblrProvider.h in Headers */,
-				25FCE34AEE79D1294D6836E2E69EB438 /* SimpleAuthTwitterProvider.h in Headers */,
-				FCEE847FE592F2DDA7D7D918CD95FB9D /* SimpleAuthUtilities.h in Headers */,
-				D95AFE8F3C46BBF732C930608DFD7606 /* SimpleAuthWebViewController.h in Headers */,
-				1786287A7F353E70CC451C93CBC6775E /* UIViewController+SimpleAuthAdditions.h in Headers */,
-				3D65D28A0CBA45B3CDE5C616D403099C /* UIWindow+SimpleAuthAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1651,28 +1340,6 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		061D64AEE35B2118413069C8316EEE4C /* SimpleAuth */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 80F991D697AFC20E28F1EA7D74C1F5F4 /* Build configuration list for PBXNativeTarget "SimpleAuth" */;
-			buildPhases = (
-				5E0828276AC9D07C8843AF2597B78C4E /* Sources */,
-				CB6310684E94C74C7F5A3B1C13DAB6BB /* Frameworks */,
-				15C448013B7C1F69059874914DE7E984 /* Resources */,
-				50192033550C72785A130DE08DF5F904 /* Headers */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				218C6C1C4A0CBC607CE67E078D7874F9 /* PBXTargetDependency */,
-				A91FAAD25FF1A4818815B2D36B5BB686 /* PBXTargetDependency */,
-				39C955EC9733D037802DC7561F9EE9B6 /* PBXTargetDependency */,
-				904E4D8E7DD9A886738D5B2527A8AF05 /* PBXTargetDependency */,
-			);
-			name = SimpleAuth;
-			productName = SimpleAuth;
-			productReference = D4C88ECB59A2594C2D0CF1A7C8F1E149 /* SimpleAuth.framework */;
-			productType = "com.apple.product-type.framework";
-		};
 		0CA398E4D8D4D248E2A7D56E4C24D7E4 /* ReactiveCocoa */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 81B5471256A55151AFCA3A9D6671A108 /* Build configuration list for PBXNativeTarget "ReactiveCocoa" */;
@@ -1707,23 +1374,6 @@
 			productName = ISO8601;
 			productReference = 6C9A0A01EB424107B571373A77FB49AC /* ISO8601.framework */;
 			productType = "com.apple.product-type.framework";
-		};
-		156A8DF64ABB622FC4045E30034392C8 /* SimpleAuth-SimpleAuth */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 44137627BCB7445363DBA5A99374CA9F /* Build configuration list for PBXNativeTarget "SimpleAuth-SimpleAuth" */;
-			buildPhases = (
-				3F73F22C4C026C416B31B3AB36697BFC /* Sources */,
-				884B9A297227AFAB2BD78BFB54551EFD /* Frameworks */,
-				A51D689F58C76D889CCB15B6474E5224 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = "SimpleAuth-SimpleAuth";
-			productName = "SimpleAuth-SimpleAuth";
-			productReference = B928AA07538F7C09FBFE62CE4E8A04FF /* SimpleAuth.bundle */;
-			productType = "com.apple.product-type.bundle";
 		};
 		159BC06C654E042D9622888CBEC7B2FB /* NSData+Base64 */ = {
 			isa = PBXNativeTarget;
@@ -1775,7 +1425,6 @@
 				0B553C4B88206877374E6F963989C086 /* PBXTargetDependency */,
 				3F1056D1068F21296CD82C2D93D9E1F9 /* PBXTargetDependency */,
 				A90C24640A591BF2570F68B409A3347D /* PBXTargetDependency */,
-				454EAA6C3CE391700D73FF7A12B8DA09 /* PBXTargetDependency */,
 				3A786EA60D5609B2B2AC427B8E09DABE /* PBXTargetDependency */,
 			);
 			name = "Pods-Sherpa";
@@ -1827,6 +1476,14 @@
 			attributes = {
 				LastSwiftUpdateCheck = 0700;
 				LastUpgradeCheck = 0700;
+				TargetAttributes = {
+					0CA398E4D8D4D248E2A7D56E4C24D7E4 = {
+						LastSwiftMigration = 0800;
+					};
+					7CB63437A114B3123FFD6C2AE5BB25F8 = {
+						LastSwiftMigration = 0800;
+					};
+				};
 			};
 			buildConfigurationList = 2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -1847,30 +1504,9 @@
 				7CB63437A114B3123FFD6C2AE5BB25F8 /* Pods-Sherpa */,
 				0CA398E4D8D4D248E2A7D56E4C24D7E4 /* ReactiveCocoa */,
 				5BF816A3805F0411F34242764396A795 /* Result */,
-				061D64AEE35B2118413069C8316EEE4C /* SimpleAuth */,
-				156A8DF64ABB622FC4045E30034392C8 /* SimpleAuth-SimpleAuth */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXResourcesBuildPhase section */
-		15C448013B7C1F69059874914DE7E984 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				50AAA99E86BF642264F060BC0F55E193 /* SimpleAuth.bundle in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		A51D689F58C76D889CCB15B6474E5224 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				26CE3272F809197CEC4EBCED86AA9FCD /* en.lproj in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		1D138D40A04C61AD885ECB8E9F11A064 /* Sources */ = {
@@ -1988,13 +1624,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3F73F22C4C026C416B31B3AB36697BFC /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		496E4EFB9A97D4A56E7CE55DC21F3906 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2012,33 +1641,6 @@
 				F9883EF81138949CD2CFA30ADD54F0AE /* Result-dummy.m in Sources */,
 				5C9B372C16D465E73A9561372B3FC802 /* Result.swift in Sources */,
 				84298E4A70F1D2A217B07742F3525982 /* ResultType.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		5E0828276AC9D07C8843AF2597B78C4E /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				945D5D2EB4359225F3595894BF87A5DB /* ACAccountStore+SimpleAuth.m in Sources */,
-				E1A55C12021E4AB573510C234CFD70E8 /* NSObject+SimpleAuthAdditions.m in Sources */,
-				CC4F29B8D797846F461DA65EB2E029B1 /* SimpleAuth-dummy.m in Sources */,
-				B4E403E6C4391CE1F54190397D5CFB96 /* SimpleAuth.m in Sources */,
-				500DF831208B98E38D2D337502428133 /* SimpleAuthDefines.m in Sources */,
-				27911249193148A734EDA36E23ECDAC8 /* SimpleAuthFacebookProvider.m in Sources */,
-				F52D8DFC3CB9743AACF186F2D6284CDE /* SimpleAuthGoogleWebLoginViewController.m in Sources */,
-				63F109129E5558EBA5C538CE03939683 /* SimpleAuthGoogleWebProvider.m in Sources */,
-				17EBAE75D51EFF28FCA0A36686D1E919 /* SimpleAuthInstagramLoginViewController.m in Sources */,
-				CD511DF975279099B341967129F18033 /* SimpleAuthInstagramProvider.m in Sources */,
-				6BAEA41811C5BF4E2B5074D7A84791EB /* SimpleAuthLinkedInWebLoginViewController.m in Sources */,
-				9239AD13E9DF981C996AD6DC99E5ECCE /* SimpleAuthLinkedInWebProvider.m in Sources */,
-				2681FD2D49C5A65A7418B0C63065A20A /* SimpleAuthProvider.m in Sources */,
-				FB12E0B891B9DD84F66793F2D04AAFA2 /* SimpleAuthTumblrLoginViewController.m in Sources */,
-				350EF8096F1ADDFFBCF7D6E0B4484AA1 /* SimpleAuthTumblrProvider.m in Sources */,
-				FBBC58C59CB73061780974BCE9FFFA8A /* SimpleAuthTwitterProvider.m in Sources */,
-				D0DA66A6958802F736603EC4A86BCD7F /* SimpleAuthUtilities.m in Sources */,
-				E474D3265B931B8B50940FF4842C6F8E /* SimpleAuthWebViewController.m in Sources */,
-				7036FA976F391E148FAF964164682945 /* UIViewController+SimpleAuthAdditions.m in Sources */,
-				41F042D0157418AB59F96AC81FC25E70 /* UIWindow+SimpleAuthAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2096,18 +1698,6 @@
 			target = 9AF5CDE957670DCFFF410F2DBF61592C /* CMDQueryStringSerialization */;
 			targetProxy = 99AD60350DD636ED33CFFB770A08BFA3 /* PBXContainerItemProxy */;
 		};
-		218C6C1C4A0CBC607CE67E078D7874F9 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = CMDQueryStringSerialization;
-			target = 9AF5CDE957670DCFFF410F2DBF61592C /* CMDQueryStringSerialization */;
-			targetProxy = 12C172BF29595F0479D3CA94773B18D9 /* PBXContainerItemProxy */;
-		};
-		39C955EC9733D037802DC7561F9EE9B6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "SimpleAuth-SimpleAuth";
-			target = 156A8DF64ABB622FC4045E30034392C8 /* SimpleAuth-SimpleAuth */;
-			targetProxy = BAA076C52F79FFB835F5B350474F81A9 /* PBXContainerItemProxy */;
-		};
 		3A786EA60D5609B2B2AC427B8E09DABE /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = "cocoa-oauth";
@@ -2119,12 +1709,6 @@
 			name = ReactiveCocoa;
 			target = 0CA398E4D8D4D248E2A7D56E4C24D7E4 /* ReactiveCocoa */;
 			targetProxy = 09AFC1C3A3E94DCA039F5A6837B42ADA /* PBXContainerItemProxy */;
-		};
-		454EAA6C3CE391700D73FF7A12B8DA09 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = SimpleAuth;
-			target = 061D64AEE35B2118413069C8316EEE4C /* SimpleAuth */;
-			targetProxy = EB7CD4AA19ECD224E5B8DBC42FE70ED2 /* PBXContainerItemProxy */;
 		};
 		4EB751340B1CCC0722838F60239F00DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2138,12 +1722,6 @@
 			target = 159BC06C654E042D9622888CBEC7B2FB /* NSData+Base64 */;
 			targetProxy = 37A4803015C3150C4DECA8BC9FF49731 /* PBXContainerItemProxy */;
 		};
-		904E4D8E7DD9A886738D5B2527A8AF05 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "cocoa-oauth";
-			target = A05CE7B8B92FC54CBE8FDB2CB68C1F7B /* cocoa-oauth */;
-			targetProxy = 36E551DAFFA1A7200390145497585FFC /* PBXContainerItemProxy */;
-		};
 		9FF6E3E41C70358FF8E2C42D852ACD48 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Result;
@@ -2155,12 +1733,6 @@
 			name = Result;
 			target = 5BF816A3805F0411F34242764396A795 /* Result */;
 			targetProxy = 875BBC538FD87991CDCE1F77B4A47D9E /* PBXContainerItemProxy */;
-		};
-		A91FAAD25FF1A4818815B2D36B5BB686 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = ReactiveCocoa;
-			target = 0CA398E4D8D4D248E2A7D56E4C24D7E4 /* ReactiveCocoa */;
-			targetProxy = 36FB90C1026CC08B0CEBC8DC8A0B2ED7 /* PBXContainerItemProxy */;
 		};
 		F0DB266B68F2046D110CCC4565A5FF6C /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -2227,34 +1799,6 @@
 			};
 			name = Release;
 		};
-		2E74D01A25D0835B53883B2834C5B046 /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/SimpleAuth/SimpleAuth-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/SimpleAuth/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/SimpleAuth/SimpleAuth.modulemap";
-				MTL_ENABLE_DEBUG_INFO = NO;
-				PRODUCT_NAME = SimpleAuth;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
 		395D2EB292D4069B772F05786BE7F861 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = BEF6BCA18CA859FAD895088606BEA674 /* ISO8601.xcconfig */;
@@ -2312,19 +1856,6 @@
 			};
 			name = Debug;
 		};
-		5768B6B7F2C921B320EC9C5D8F0D7930 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */;
-			buildSettings = {
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				PRODUCT_NAME = SimpleAuth;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = bundle;
-			};
-			name = Debug;
-		};
 		5D3F5487E101A989678D772771AAEA90 /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 577F3138B3555293F78ED4E3691735C5 /* CMDQueryStringSerialization.xcconfig */;
@@ -2350,19 +1881,6 @@
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
-			};
-			name = Release;
-		};
-		5FF7B60658DAFE221707043627094EEE /* Release */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */;
-			buildSettings = {
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				PRODUCT_NAME = SimpleAuth;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				WRAPPER_EXTENSION = bundle;
 			};
 			name = Release;
 		};
@@ -2392,6 +1910,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2488,6 +2007,7 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2575,6 +2095,7 @@
 				PRODUCT_NAME = Pods_Sherpa;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2637,34 +2158,6 @@
 			};
 			name = Release;
 		};
-		F2D08F1031BB089D9A24684464A8CCC2 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = F6EB14A3CE98C49A77E91F186FCAB0D9 /* SimpleAuth.xcconfig */;
-			buildSettings = {
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				ENABLE_BITCODE = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_PREFIX_HEADER = "Target Support Files/SimpleAuth/SimpleAuth-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/SimpleAuth/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/SimpleAuth/SimpleAuth.modulemap";
-				MTL_ENABLE_DEBUG_INFO = YES;
-				PRODUCT_NAME = SimpleAuth;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
-		};
 		F6902BEF97F0B4C5F7FA755BA235E66F /* Release */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 7FDD39450439BC7D7184544228C41BAF /* ReactiveCocoa.xcconfig */;
@@ -2687,6 +2180,7 @@
 				PRODUCT_NAME = ReactiveCocoa;
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 2.3;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
@@ -2753,24 +2247,6 @@
 			buildConfigurations = (
 				857E07FD9A2ECD6C36A03A6A1F9CE81A /* Debug */,
 				D86DA5261264E3A99D9CFB23A0CAFC83 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		44137627BCB7445363DBA5A99374CA9F /* Build configuration list for PBXNativeTarget "SimpleAuth-SimpleAuth" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				5768B6B7F2C921B320EC9C5D8F0D7930 /* Debug */,
-				5FF7B60658DAFE221707043627094EEE /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		80F991D697AFC20E28F1EA7D74C1F5F4 /* Build configuration list for PBXNativeTarget "SimpleAuth" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				F2D08F1031BB089D9A24684464A8CCC2 /* Debug */,
-				2E74D01A25D0835B53883B2834C5B046 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

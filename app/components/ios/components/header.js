@@ -27,7 +27,6 @@ class Header extends Component {
             topRightImageStyle:this.props.settings.topRightImageStyle
         };
 
-        //console.log('nav settings',navSettings)
 
         let topLeftImage=navSettings.color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
         let topRightImage=navSettings.color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
@@ -42,7 +41,6 @@ class Header extends Component {
             "settings":navSettings
         }
 
-        console.log('state',this.state);
     }
 
     updateRouteName(routeName){

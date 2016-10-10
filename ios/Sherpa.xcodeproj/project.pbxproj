@@ -47,8 +47,7 @@
 		F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F371BA9E1D417C7C00FAD5D1 /* libRNNotifications.a */; };
 		F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37482521D9BD65600D953B1 /* libRCTCameraRoll.a */; };
 		F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F379100A1DA69D9100FEF138 /* libRNUploader.a */; };
-		F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F386799C1D184F11002DBE52 /* SimpleAuth.framework */; };
-		F38679B31D1851C4002DBE52 /* SimpleAuthWrapper.m in Sources */ = {isa = PBXBuildFile; fileRef = F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */; };
+		F37910131DA7FF2B00FEF138 /* libRCTImageResizer.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F37910121DA7FF2300FEF138 /* libRCTImageResizer.a */; };
 		F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3100A541CAD971D006A7AB9 /* libRCTMapboxGL.a */; };
 		F387AB101CC93FF500D88D5D /* Mapbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F387AB0F1CC93FF200D88D5D /* Mapbox.framework */; };
 		F387AB111CC93FF500D88D5D /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F387AB0F1CC93FF200D88D5D /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
@@ -223,6 +222,13 @@
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNUploader;
 		};
+		F37910111DA7FF2300FEF138 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 5D72D2E81C16249000E22EC1;
+			remoteInfo = RCTImageResizer;
+		};
 		F3A542101D512B6000CC10F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */;
@@ -323,9 +329,8 @@
 		F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNNotifications.xcodeproj; path = "../node_modules/react-native-notifications/RNNotifications/RNNotifications.xcodeproj"; sourceTree = "<group>"; };
 		F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNUploader.xcodeproj; path = "../node_modules/react-native-uploader/RNUploader/RNUploader.xcodeproj"; sourceTree = "<group>"; };
+		F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
 		F386799C1D184F11002DBE52 /* SimpleAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleAuth.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Sherpa-crsigiawhdrczddfiqcpyecxabqn/Build/Products/Debug-iphonesimulator/SimpleAuth.framework"; sourceTree = "<group>"; };
-		F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleAuthWrapper.h; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.h"; sourceTree = "<group>"; };
-		F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleAuthWrapper.m; path = "../node_modules/react-native-simple-auth/iOS/SimpleAuthWrapper.m"; sourceTree = "<group>"; };
 		F387AB0F1CC93FF200D88D5D /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		F3A6129F1D897377002A3AF7 /* ReactNativeSocialShare.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeSocialShare.xcodeproj; path = "../node_modules/react-native-social-share/ReactNativeSocialShare.xcodeproj"; sourceTree = "<group>"; };
@@ -358,6 +363,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F37910131DA7FF2B00FEF138 /* libRCTImageResizer.a in Frameworks */,
 				F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */,
 				F3306DFD1DA53C2500E687BC /* libRNFetchBlob.a in Frameworks */,
 				F37482671D9BD66600D953B1 /* libRCTCameraRoll.a in Frameworks */,
@@ -366,7 +372,6 @@
 				F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */,
 				F371BA9F1D417D9C00FAD5D1 /* libRNNotifications.a in Frameworks */,
 				F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */,
-				F386799D1D184F11002DBE52 /* SimpleAuth.framework in Frameworks */,
 				F36CD9F81CE3DDDA00E3AFFB /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
 				F36CD9F71CE3DDBF00E3AFFB /* CoreData.framework in Frameworks */,
 				F387AB0E1CC93EDC00D88D5D /* libRCTMapboxGL.a in Frameworks */,
@@ -477,6 +482,7 @@
 		13B07FAE1A68108700A75B9A /* Sherpa */ = {
 			isa = PBXGroup;
 			children = (
+				F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */,
 				F321A5781BDA99F70014AA18 /* Assets */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -539,8 +545,6 @@
 				F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */,
 				F371BA991D417C7C00FAD5D1 /* RNNotifications.xcodeproj */,
 				F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */,
-				F38679B11D1851C4002DBE52 /* SimpleAuthWrapper.h */,
-				F38679B21D1851C4002DBE52 /* SimpleAuthWrapper.m */,
 				F36CD9DE1CE3DD5D00E3AFFB /* RCTGoogleAnalyticsBridge.xcodeproj */,
 				F3100A4E1CAD971D006A7AB9 /* RCTMapboxGL.xcodeproj */,
 				F32D8FA41CAD891200E58DA1 /* RCTPushNotification.xcodeproj */,
@@ -703,6 +707,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F379100E1DA7FF2200FEF138 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F37910121DA7FF2300FEF138 /* libRCTImageResizer.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F3A5420D1D512B6000CC10F2 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -789,6 +801,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = VQ89ZPS6NL;
+						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -836,6 +849,10 @@
 				{
 					ProductGroup = 00C302BC1ABCB91800DB3ED1 /* Products */;
 					ProjectRef = 00C302BB1ABCB91800DB3ED1 /* RCTImage.xcodeproj */;
+				},
+				{
+					ProductGroup = F379100E1DA7FF2200FEF138 /* Products */;
+					ProjectRef = F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */;
 				},
 				{
 					ProductGroup = 78C398B11ACF4ADC00677621 /* Products */;
@@ -1058,6 +1075,13 @@
 			remoteRef = F37910091DA69D9100FEF138 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F37910121DA7FF2300FEF138 /* libRCTImageResizer.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTImageResizer.a;
+			remoteRef = F37910111DA7FF2300FEF138 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		F3A542111D512B6000CC10F2 /* libART.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
@@ -1229,7 +1253,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
-				F38679B31D1851C4002DBE52 /* SimpleAuthWrapper.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 				F3A612B11D897378002A3AF7 /* KDSocialShare.m in Sources */,
 			);
@@ -1330,6 +1353,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
 				PROVISIONING_PROFILE = "0dbe72f0-374b-4076-893b-4d31f028273e";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
 		};
@@ -1366,6 +1390,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
 				PROVISIONING_PROFILE = "c2e3a05d-ab5b-4837-a9ef-1692e5346efa";
+				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
 		};

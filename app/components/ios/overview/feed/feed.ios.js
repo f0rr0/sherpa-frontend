@@ -180,7 +180,7 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),hideNav:true,fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),hideNav:true,fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
 
@@ -197,7 +197,6 @@ class Feed extends Component {
     }
 
     _navActionRight(){
-        console.log(this.currentRenderScene,'current render scene',this.navigator.refs);
         if(this.navigator.refs[this.currentRenderScene].navActionRight)this.navigator.refs[this.currentRenderScene].navActionRight();
     }
 

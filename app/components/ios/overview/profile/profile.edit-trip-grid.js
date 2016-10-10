@@ -24,13 +24,14 @@ class EditTripGrid extends React.Component {
     }
 
 
+
     render(){
         return(
-            <View style={{flex:1,backgroundColor:"red"}}>
+            <View style={{flex:1}}>
                 {this.props.navigation.default}
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <View style={{height:SCREEN_HEIGHT-65,position:'absolute',bottom:0,flex:1,left:0,right:0,backgroundColor:'green'}}>
-                    <PhotoSelectorGrid wrapper={{position:'absolute',top:0}}></PhotoSelectorGrid>
+                <View style={{height:SCREEN_HEIGHT-65,position:'absolute',bottom:0,flex:1,left:0,right:0}}>
+                    <PhotoSelectorGrid data={this.props.momentData} wrapper={{position:'absolute',top:0}}></PhotoSelectorGrid>
                 </View>
             </View>
         )

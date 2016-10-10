@@ -228,6 +228,8 @@ export function loadUser() {
                             var responseJSON = JSON.parse(rawSherpaResponse);
                             dispatch(updateUserData({
                                 serviceObject:responseJSON,
+                                profileID:responseJSON.profile.id,
+                                profilePicture:responseJSON.profile.serviceProfilePicture,
                                 bio:responseJSON.profile.serviceBio,
                             }));
 
@@ -238,6 +240,10 @@ export function loadUser() {
                             }else{
                                 dispatch(updateUserDBState("empty"));
                             }
+
+                            console.log(responseJSON);
+
+                            dispatch(storeUser());
                         break;
                         case 400:
                         case 401:
@@ -419,6 +425,8 @@ export function signupUser(){
                     dispatch(updateUserSignupState("sherpa_token_complete"));
                     dispatch(updateUserDBState("available-new"));
                 }
+
+
 
             })
         }

@@ -33,7 +33,7 @@ class SherpaCameraRollPicker extends Component {
         if(typeof containerWidth != "undefined") {
             width = containerWidth;
         }
-        this._imageSize = (width - (imagesPerRow + 1) ) / imagesPerRow;
+        this._imageSize = (width - (imagesPerRow) ) / imagesPerRow;
 
         this.fetch();
     }
@@ -123,10 +123,9 @@ class SherpaCameraRollPicker extends Component {
 
         var isSelected=(this._arrayObjectIndexOf(this.state.selected, 'uri', item.node.image.uri) >= 0);
         return (
-            <View>
+            <View key={item.node.image.uri}>
                 <View style={{flex:1,position:'absolute',backgroundColor:'white',top:0,width:this._imageSize,height:this._imageSize}}></View>
                 <TouchableOpacity
-                    key={item.node.image.uri}
                     style={{marginBottom: imageMargin, marginRight: imageMargin}}
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image
@@ -139,12 +138,44 @@ class SherpaCameraRollPicker extends Component {
         );
     }
 
+    _captureImage(){
+
+    }
+
+    _renderCapture(){
+        var {selectedMarker, imageMargin} = this.props;
+
+        return(
+            <View key='capture'>
+                <TouchableOpacity onPress={event => this._captureImage()}>
+                <View style={{flex:1,backgroundColor:'#3f3f3f',top:0,width:this._imageSize,height:this._imageSize,marginBottom: imageMargin, marginRight: imageMargin,justifyContent:'center',alignItems:'center'}}>
+                    <Image
+                        source={require('../../../Images/icon-camera-grey.png')}
+                        style={{height: 13, width: 17}} >
+                    </Image>
+                </View>
+                </TouchableOpacity>
+            </View>
+        )
+    }
+
     _renderRow(rowData) {
         var items = rowData.map((item) => {
             if (item === null) {
                 return null;
             }
-            return this._renderImage(item);
+
+            var gridEL;
+            console.log(item);
+            switch(item.type){
+                case 'capture':
+                   gridEL=this._renderCapture();
+                break;
+                default:
+                    gridEL=this._renderImage(item);
+            }
+
+            return gridEL
         });
 
         return (
@@ -195,7 +226,11 @@ class SherpaCameraRollPicker extends Component {
         var result = [],
             temp = [];
 
+        //push 'take picture' element
+        temp.push({type:'capture'});
+
         for (var i = 0; i < data.length; ++i) {
+            temp['type']='photo';
             if (i > 0 && i % n === 0) {
                 result.push(temp);
                 temp = [];
@@ -270,7 +305,7 @@ SherpaCameraRollPicker.defaultProps = {
     groupTypes: 'SavedPhotos',
     maximum: 15,
     imagesPerRow: 3,
-    imageMargin: 5,
+    imageMargin: 4,
     assetType: 'Photos',
     backgroundColor: 'white',
     selected: [],

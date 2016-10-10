@@ -18,7 +18,8 @@ const initialState={
     userDBState:"none", //none, empty, available,
     whiteListed:false,
     notificationToken:"",
-    isExistingLogin:false
+    isExistingLogin:false,
+    profileID:-1
 };
 
 export default function userReducer(state=initialState,action){
@@ -27,6 +28,7 @@ export default function userReducer(state=initialState,action){
             return Object.assign({}, state, {
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,
+                profileID:          action.userData.profileID || state.profileID,
                 fullName:           action.userData.fullName || state.fullName,
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
