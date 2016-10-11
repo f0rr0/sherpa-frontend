@@ -12,6 +12,7 @@ import {
     ActivityIndicator,
 } from 'react-native'
 
+
 class SherpaCameraRollPicker extends Component {
     constructor(props) {
         super(props);
@@ -166,7 +167,6 @@ class SherpaCameraRollPicker extends Component {
             }
 
             var gridEL;
-            console.log(item);
             switch(item.type){
                 case 'capture':
                    gridEL=this._renderCapture();

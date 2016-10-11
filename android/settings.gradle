@@ -1,5 +1,7 @@
 rootProject.name = 'sherpa_frontend'
 
 include ':app'
+include ':react-native-exif'
+project(':react-native-exif').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-exif/android')
 include ':react-native-image-resizer'
 project(':react-native-image-resizer').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-image-resizer/android')

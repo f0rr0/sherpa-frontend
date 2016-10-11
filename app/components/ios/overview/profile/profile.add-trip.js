@@ -16,6 +16,7 @@ import EXIF from 'exif-js'
 import RNFetchBlob from 'react-native-fetch-blob';
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 import {createMoment,uploadMoment,getGps} from "../../../../actions/trip.edit.actions"
+import SherpaExif from '../../components/SherpaExif'
 
 let styles = StyleSheet.create({
     container: {
@@ -39,40 +40,40 @@ class AddTrip extends React.Component {
     navActionRight(){
         if(this.state.images.length==0)return;
 
-
-        let momentImages=[];
-        for(let i=0;i<this.state.images.length;i++) {
-            let momentImage=RNFetchBlob.fs.readFile(this.state.images[0].uri, 'base64');
-            momentImages.push(momentImage);
+        let moments = [];
+        let momentsExif = [];
+        for(var i=0;i<this.state.images.length;i++) {
+            momentsExif.push(SherpaExif.getExif(this.state.images[i].uri));
         }
 
-        Promise.all(momentImages).then((momentImagesRes)=>{
-            let moments=[];
-            for(let i=0;i<momentImagesRes.length;i++){
-                let blob=this.base64ToArrayBuffer(momentImagesRes[i]);
-                let momentEXIF=EXIF.readFromBinaryFile(blob);
-
-                let lng=getGps(momentEXIF["GPSLongitude"], momentEXIF['GPSLongitudeRef']);
-                let lat=getGps(momentEXIF["GPSLatitude"], momentEXIF['GPSLatitudeRef']);
-
-                let momentPromise=createMoment({
+        Promise.all(momentsExif).then((momentsExifData)=> {
+            for (let i = 0; i < momentsExifData.length; i++) {
+                console.log(momentsExifData);
+                let exifData = momentsExifData[i];
+                let gps=exifData['gps'];
+                var lat=gps?gps['Latitude']:0;
+                var lng=gps?gps['Longitude']:0;
+                var shotDate=exifData['exif']['DateTimeOriginal'];
+                let momentPromise = createMoment({
                     lat,
                     lng,
-                    "shotDate":new Date(momentEXIF).getTime() / 1000
+                    "shotDate": new Date(shotDate).getTime() / 1000
                 });
 
-                moments.push(momentPromise);
+                moments.push(momentPromise)
             }
+
 
             Promise.all(moments).then((momentsRes)=>{
                 var momentBlobs=[];
+                console.log('moments res',momentsRes);
                 for(let i=0;i<momentsRes.length;i++){
                     momentBlobs.push({
                         moment:momentsRes[i],
                         image:this.state.images[i]
                     })
                 }
-                
+
                 this.props.navigator.push({
                     id: "editTripGrid",
                     hideNav:true,
@@ -86,25 +87,13 @@ class AddTrip extends React.Component {
                 Promise.all(momentUploads).then((res)=>{
                     console.log('upload res',res)
                 }).catch((err)=>{console.log('err')});
+
             }).catch((err)=>{
                 console.log('error:',err);
             })
-
-        }).catch((err)=>{
-            console.log('err',err);
         });
-
     }
 
-    base64ToArrayBuffer(base64) {
-        let binary_string =  window.atob(base64);
-        let len = binary_string.length;
-        let bytes = new Uint8Array( len );
-        for (let i = 0; i < len; i++)        {
-            bytes[i] = binary_string.charCodeAt(i);
-        }
-        return bytes.buffer;
-    }
 
     render(){
         return(

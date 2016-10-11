@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
         margin: 7,
         width: SCREEN_WIDTH/2-21,
         height: SCREEN_WIDTH/2-14,
-        alignItems: 'center',
+        alignItems: 'center'
     },
     thumb: {
         width: 64,

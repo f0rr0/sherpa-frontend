@@ -38,6 +38,7 @@
 		F3470F921D78359900BFA659 /* Akkurat-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F8F1D78349F00BFA659 /* Akkurat-Bold.ttf */; };
 		F3470F931D78359B00BFA659 /* Akkurat-Light.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F901D78349F00BFA659 /* Akkurat-Light.ttf */; };
 		F3470F941D78359E00BFA659 /* Akkurat.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F3470F911D78349F00BFA659 /* Akkurat.ttf */; };
+		F34F8AC51DACEAF30089C7AC /* libReactNativeExif.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F34F8AC41DACEAE70089C7AC /* libReactNativeExif.a */; };
 		F35D9AF61D39679E00D768A3 /* libActivityView.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F35D9AE41D394F1500D768A3 /* libActivityView.a */; };
 		F36471AB1D5B775100CB5E40 /* Fabric.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36471A91D5B775100CB5E40 /* Fabric.framework */; };
 		F36471AC1D5B775100CB5E40 /* Crashlytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F36471AA1D5B775100CB5E40 /* Crashlytics.framework */; };
@@ -180,6 +181,13 @@
 			remoteGlobalIDString = A15C300E1CD25C330074CB35;
 			remoteInfo = RNFetchBlob;
 		};
+		F34F8AC31DACEAE70089C7AC /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 327633421BFAAD7E004DA88E;
+			remoteInfo = ReactNativeExif;
+		};
 		F35D9AE31D394F1500D768A3 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */;
@@ -320,6 +328,7 @@
 		F3470F8F1D78349F00BFA659 /* Akkurat-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Akkurat-Bold.ttf"; sourceTree = "<group>"; };
 		F3470F901D78349F00BFA659 /* Akkurat-Light.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Akkurat-Light.ttf"; sourceTree = "<group>"; };
 		F3470F911D78349F00BFA659 /* Akkurat.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Akkurat.ttf; sourceTree = "<group>"; };
+		F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeExif.xcodeproj; path = "../node_modules/react-native-exif/ios/ReactNativeExif.xcodeproj"; sourceTree = "<group>"; };
 		F35D9ADF1D394F1500D768A3 /* ActivityView.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ActivityView.xcodeproj; path = "../node_modules/react-native-activity-view/ActivityView.xcodeproj"; sourceTree = "<group>"; };
 		F36471A91D5B775100CB5E40 /* Fabric.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Fabric.framework; sourceTree = "<group>"; };
 		F36471AA1D5B775100CB5E40 /* Crashlytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Crashlytics.framework; sourceTree = "<group>"; };
@@ -363,6 +372,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F34F8AC51DACEAF30089C7AC /* libReactNativeExif.a in Frameworks */,
 				F37910131DA7FF2B00FEF138 /* libRCTImageResizer.a in Frameworks */,
 				F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */,
 				F3306DFD1DA53C2500E687BC /* libRNFetchBlob.a in Frameworks */,
@@ -532,6 +542,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */,
 				F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */,
 				F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */,
 				F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */,
@@ -655,6 +666,14 @@
 			isa = PBXGroup;
 			children = (
 				F3306DFC1DA53C1900E687BC /* libRNFetchBlob.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		F34F8AC01DACEAE70089C7AC /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F34F8AC41DACEAE70089C7AC /* libReactNativeExif.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -797,11 +816,13 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
+						DevelopmentTeam = VQ89ZPS6NL;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = VQ89ZPS6NL;
 						LastSwiftMigration = 0800;
+						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
 							com.apple.Push = {
 								enabled = 1;
@@ -889,6 +910,10 @@
 				{
 					ProductGroup = 146834001AC3E56700842450 /* Products */;
 					ProjectRef = 146833FF1AC3E56700842450 /* React.xcodeproj */;
+				},
+				{
+					ProductGroup = F34F8AC01DACEAE70089C7AC /* Products */;
+					ProjectRef = F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */;
 				},
 				{
 					ProductGroup = F3A612A01D897377002A3AF7 /* Products */;
@@ -1031,6 +1056,13 @@
 			fileType = archive.ar;
 			path = libRNFetchBlob.a;
 			remoteRef = F3306DFB1DA53C1900E687BC /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F34F8AC41DACEAE70089C7AC /* libReactNativeExif.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libReactNativeExif.a;
+			remoteRef = F34F8AC31DACEAE70089C7AC /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F35D9AE41D394F1500D768A3 /* libActivityView.a */ = {
@@ -1285,6 +1317,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = VQ89ZPS6NL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1307,6 +1340,7 @@
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = VQ89ZPS6NL;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(SDKROOT)/Developer/Library/Frameworks",
 					"$(inherited)",
@@ -1327,8 +1361,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = VQ89ZPS6NL;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1352,7 +1387,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
-				PROVISIONING_PROFILE = "0dbe72f0-374b-4076-893b-4d31f028273e";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Debug;
@@ -1364,8 +1400,9 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = VQ89ZPS6NL;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1389,7 +1426,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.trysherpa;
 				PRODUCT_NAME = Sherpa;
-				PROVISIONING_PROFILE = "c2e3a05d-ab5b-4837-a9ef-1692e5346efa";
+				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 2.3;
 			};
 			name = Release;
