@@ -48,7 +48,6 @@ class AddTrip extends React.Component {
 
         Promise.all(momentsExif).then((momentsExifData)=> {
             for (let i = 0; i < momentsExifData.length; i++) {
-                console.log(momentsExifData);
                 let exifData = momentsExifData[i];
                 let gps=exifData['gps'];
                 var lat=gps?gps['Latitude']:0;
@@ -59,14 +58,11 @@ class AddTrip extends React.Component {
                     lng,
                     "shotDate": new Date(shotDate).getTime() / 1000
                 });
-
                 moments.push(momentPromise)
             }
 
-
             Promise.all(moments).then((momentsRes)=>{
                 var momentBlobs=[];
-                console.log('moments res',momentsRes);
                 for(let i=0;i<momentsRes.length;i++){
                     momentBlobs.push({
                         moment:momentsRes[i],
@@ -77,13 +73,15 @@ class AddTrip extends React.Component {
                 this.props.navigator.push({
                     id: "editTripGrid",
                     hideNav:true,
-                    momentData:momentBlobs
+                    momentData:momentBlobs,
+                    sceneConfig:"right-nodrag"
                 });
 
                 var momentUploads=[];
                 for(var i=0;i<momentBlobs.length;i++){
                     momentUploads.push(uploadMoment(momentBlobs[i]));
                 }
+
                 Promise.all(momentUploads).then((res)=>{
                     console.log('upload res',res)
                 }).catch((err)=>{console.log('err')});
@@ -99,8 +97,8 @@ class AddTrip extends React.Component {
         return(
             <View style={{flex:1,backgroundColor:"#161616"}}>
                 {this.props.navigation.default}
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
                 <SherpaCameraRollPicker wrapper={{height:SCREEN_HEIGHT-70,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImages.bind(this)} />
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )
     }

@@ -295,7 +295,6 @@ class OnboardingSteps extends Component {
                                 <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(me)} text="ok got it"></SimpleButton>
                             </View>
                         }
-
                     />
                 </Swiper>
 

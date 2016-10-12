@@ -41,6 +41,13 @@ var styles = StyleSheet.create({
         top:0,
         left:0,
     },
+    bg:{
+        position:'absolute',
+        left:0,
+        top:0,
+        width:windowSize.width,
+        height:windowSize.height
+    },
     copy:{
         color:'white',
         fontFamily:"TSTAR-bold",
@@ -52,13 +59,7 @@ var styles = StyleSheet.create({
         fontSize:9,
         textAlign:'center'
     },
-    bg:{
-        position:'absolute',
-        left:0,
-        top:0,
-        width:windowSize.width,
-        height:windowSize.height
-    },
+
     login:{
         flex:1,
         padding:20,

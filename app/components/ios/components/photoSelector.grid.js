@@ -36,6 +36,8 @@ class PhotoSelectorGrid extends React.Component {
             // With that in mind you can use the ScrollView's contentContainerStyle prop to style the items.
             <ListView contentContainerStyle={[styles.list,this.props.wrapper]}
                       dataSource={this.state.dataSource}
+                      renderHeader={this.props.headerView}
+                      renderFooter={this.props.footerView}
                       renderRow={this._renderRow.bind(this)}
                       removeClippedSubviews={false}
             />
@@ -79,7 +81,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems:"center",
-        padding:7
+        padding:7,
+        paddingBottom:65
     },
     row: {
         justifyContent: 'center',

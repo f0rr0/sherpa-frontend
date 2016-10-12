@@ -12,6 +12,7 @@ import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
 import AddTrip from '../profile/profile.add-trip'
 import EditTripGrid from '../profile/profile.edit-trip-grid'
+import EditTripNames from '../profile/profile.edit-trip-names'
 import Settings from '../profile/profile.settings'
 
 import { connect } from 'react-redux';
@@ -60,6 +61,28 @@ const FloatFromBottom = {
         pop: {
             ...Navigator.SceneConfigs.FloatFromBottom.gestures.pop,
             edgeHitWidth: SCREEN_HEIGHT,
+        },
+    },
+};
+
+const FloatFromBottomNoDrag = {
+    ...Navigator.SceneConfigs.FloatFromBottom,
+    gestures: {
+        pop: {
+            ...Navigator.SceneConfigs.FloatFromBottom.gestures.pop,
+            edgeHitWidth: 0,
+        },
+    },
+};
+
+
+
+const FloatFromRightNoDrag = {
+    ...Navigator.SceneConfigs.FloatFromRight,
+    gestures: {
+        pop: {
+            ...Navigator.SceneConfigs.FloatFromBottom.gestures.pop,
+            edgeHitWidth: 0,
         },
     },
 };
@@ -180,7 +203,11 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),hideNav:true,fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+            case "editTripNames":
+                showNav=true;
+                sceneContent = <EditTripNames ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
 
@@ -233,8 +260,14 @@ class Feed extends Component {
                     configureScene={(route) => {
 
                             switch(route.sceneConfig){
+                                case "bottom-nodrag":
+                                    return FloatFromBottomNoDrag
+                                break;
                                 case "bottom":
                                     return FloatFromBottom
+                                break;
+                                case "right-nodrag":
+                                    return FloatFromRightNoDrag
                                 break;
                                 default:
                                     return FloatFromRight

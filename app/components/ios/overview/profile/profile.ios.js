@@ -219,7 +219,7 @@ class OwnUserProfile extends React.Component {
     navActionLeft(){
         this.props.navigator.push({
             id: "addTrip",
-            sceneConfig:"bottom",
+            sceneConfig:"bottom-nodrag",
             hideNav:true
         });
     }

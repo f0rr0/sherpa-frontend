@@ -136,7 +136,6 @@ class FeedList extends React.Component{
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-
             </View>
         )
     }
