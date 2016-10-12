@@ -24,6 +24,11 @@ var windowSize=Dimensions.get('window');
 
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 
+const CARD_PREVIEW_WIDTH = 10
+const CARD_MARGIN = 3;
+const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;
+
+
 
 
 class EditTripNames extends React.Component {
@@ -52,12 +57,20 @@ class EditTripNames extends React.Component {
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
 
-                <ScrollView pagingEnabled={true} horizontal={true} contentInset={{top:0,left:0,bottom:0,right:-21}} ref="featuredMomentsGallery"  scrollEnabled={true} showsHorizontalScrollIndicator={false} removeClippedSubviews={false}>
+                <ScrollView
+                    style={styles.container}
+                    automaticallyAdjustInsets={false}
+                    horizontal={true}
+                    decelerationRate={0}
+                    snapToInterval={CARD_WIDTH + CARD_MARGIN*2}
+                    snapToAlignment="start"
+                    contentContainerStyle={styles.content}
+                >
                     {this.props.momentData.map(function(moment){
                         console.log('current index',currentIndex);
                         currentIndex++;
 
-                        return(<LocationName moment={moment} isFirst={currentIndex===1}></LocationName>);
+                        return(<LocationName  style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>);
 
                     })}
                 </ScrollView>
@@ -68,6 +81,29 @@ class EditTripNames extends React.Component {
         )
     }
 }
+
+
+var styles = StyleSheet.create({
+    container: {
+        //flex: 1,
+        backgroundColor: '#F5FCFF',
+    },
+    content: {
+        marginTop: 20,
+        paddingHorizontal: CARD_PREVIEW_WIDTH,
+        alignItems: 'center',
+        //flex: 1,
+    },
+    card: {
+        flex: 1,
+        backgroundColor: '#ccc',
+        width: CARD_WIDTH,
+        margin: CARD_MARGIN,
+        height: CARD_WIDTH,
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+});
 
 
 

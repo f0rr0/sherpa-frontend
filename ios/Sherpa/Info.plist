@@ -89,5 +89,7 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSPPhotoLibraryUsageDescription</key>
+	<string>Sherpa wants to access your photos so you can create custom trips</string>
 </dict>
 </plist>
