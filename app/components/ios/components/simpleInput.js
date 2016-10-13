@@ -16,12 +16,17 @@ export default class SimpleInput extends React.Component {
         onStart:function(){},
         onEnd:function(){},
         onChange:function(){},
+        onSubmitEditing:function(){},
+        keyboardType: "default",
         placeholder:"please add placeholder copy"
     }
 
     constructor(props){
         super(props);
-        this.state={text:props.placeholder};
+        this.state={
+            text:props.placeholder,
+            keyboardType: props.keyboardType
+        };
     }
 
     text(){
@@ -42,6 +47,8 @@ export default class SimpleInput extends React.Component {
                        onFocus={this.props.onStart}
                        onBlur={this.props.onEnd}
                        onChangeText={(text) =>{this.setState({text});this.props.onChange(text)}}
+                       onSubmitEditing={this.props.onSubmitEditing}
+                       keyboardType={this.state.keyboardType}
                        value={this.state.text}
             >
             </TextInput>

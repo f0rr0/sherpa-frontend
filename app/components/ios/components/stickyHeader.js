@@ -30,7 +30,7 @@ class StickyHeader extends Component {
 
     render() {
         return (
-            <Animated.View style={styles.headerContainer}>
+            <Animated.View style={[styles.headerContainer, this.props.style]}>
                     {this.props.navigation}
             </Animated.View>
         );

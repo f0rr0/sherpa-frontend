@@ -130,6 +130,10 @@ class OwnUserProfile extends React.Component {
         });
     }
 
+    showSettings() {
+        this.props.navigator.push({id: "profile-settings"});
+    }
+
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
@@ -170,43 +174,14 @@ class OwnUserProfile extends React.Component {
                 }}
             />
 
-            <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
-            <PopOver ref="popover" showReset={false} resetProfileCallback={this.resetProfile.bind(this)} showShare={false} dispatch={this.props.dispatch} showLogout={true} showDelete={true}></PopOver>
+            <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}/>
 
         </View>
         )
     }
 
-    resetProfile(){
-        const {endpoint,version} = sherpa;
-        let feedRequestURI;
-        feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
-        let sherpaHeaders = new Headers();
-        sherpaHeaders.append("token", this.props.user.sherpaToken);
-        var me = this;
-
-        fetch(feedRequestURI, {
-            method: 'post',
-            headers: sherpaHeaders,
-            mode: 'cors'
-        })
-            .then((rawSherpaResponse)=> {
-                switch (rawSherpaResponse.status) {
-                    case 200:
-                        return rawSherpaResponse.text()
-                        break;
-                    case 400:
-                        return '{}';
-                        break;
-                }
-            })
-            .then((rawSherpaResponseFinal)=> {
-                me.refs.listview._refresh();
-            });
-    }
-
     toggleNav(){
-        this.refs.popover._setAnimation("toggle");
+        this.showSettings();
     }
 
 
@@ -246,9 +221,10 @@ class OwnUserProfile extends React.Component {
             <View>
                 <View style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?300:250, width:windowSize.width,marginBottom:0,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width,zIndex:1}}>
-                        <UserImage onPress={()=>{
-                            Linking.openURL("https://www.instagram.com/"+this.props.user.username);
-                        }} radius={80} userID={this.props.user.id} imageURL={this.props.user.profilePicture}></UserImage>
+                        <UserImage
+                          onPress={()=>{Linking.openURL("https://www.instagram.com/"+this.props.user.username);}}
+                          radius={80}
+                          userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
                         <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your travel photos on Instagram to update your profile.</Text>
                     </View>
@@ -262,7 +238,7 @@ class OwnUserProfile extends React.Component {
 
     _renderRow(tripData) {
         return (
-            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
+            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
         );
     }
 }

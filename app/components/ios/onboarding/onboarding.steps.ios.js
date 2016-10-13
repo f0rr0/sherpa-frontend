@@ -3,9 +3,9 @@
 import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Swiper from 'react-native-swiper';
 import OnboardingScreen from './onboarding.screen.ios';
+import ChooseHometown from '../components/chooseHometown.js';
 import SimpleButton from '../components/simpleButton';
 import React, { Component } from 'react';
 import NotificationsIOS from 'react-native-notifications';
@@ -185,97 +185,46 @@ class OnboardingSteps extends Component {
                         mainComponent={
                         <View>
                             <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
-                                 <GooglePlacesAutocomplete
-                                     placeholder='Search'
-                                     ref="googlesearch"
-                                     minLength={2} // minimum length of text to search
-                                     autoFocus={false}
-
-
-                                     textInputProps={{
-                                        //onEndEditing:()=>{
-                                        //},
-                                        onBlur:(e)=>{
-                                        e.preventDefault();
-                                           //this.refs.googlesearch.setAddressText(this.state.hometown.name)
-                                        }
-                                     }}
-
-                                     fetchDetails={true}
-                                     onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-
-                                        var hometownObject={
-                                            lat:details.geometry.location.lat,
-                                            lng:details.geometry.location.lng,
-                                            name:details.name
-                                        }
-
-                                        this.setState({hometown:hometownObject});
-
-                                        this.props.dispatch(setUserHometown(hometownObject));
-                                        this.props.dispatch(updateUserData({hometown:hometownObject.name}));
-                                     }}
-                                     getDefaultValue={() => {
-                                        return this.state.hometown.name; // text input default value
-                                     }}
-                                     query={{
-                                         key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',
-                                         language: 'en', // language of the results
-                                         types: '(cities)', // default: 'geocode'
-                                     }}
-                                     styles={{
-                                         description: {
-                                             fontFamily: Fonts.type.bodyCopy,
-                                             fontSize: Fonts.size.input,
-                                             letterSpacing:Fonts.letterSpacing.small,
-                                             color:'white'
-                                         },
-                                             predefinedPlacesDescription: {
-                                             color: '#FFFFFF',
-                                         },
-                                             poweredContainer: {
-                                             justifyContent: 'center',
-                                             alignItems: 'center',
-                                             opacity:0
-                                         },
-                                         textInput: {
-                                             backgroundColor: '#FFFFFF',
-                                             height: 42,
-                                             borderRadius: 0,
-                                             paddingTop:0,
-                                             paddingBottom:0,
-                                             fontWeight:'normal',
-                                             fontFamily: Fonts.type.bodyCopy,
-                                             fontSize: Fonts.size.input,
-                                             letterSpacing:Fonts.letterSpacing.small
-                                         },
-                                         textInputContainer: {
-                                             backgroundColor: '#FFFFFF',
-                                             height:55,
-                                             borderRadius:2,
-                                             borderTopWidth: 0,
-                                             borderLeftWidth:0,
-                                             borderRightWidth:0,
-                                             borderBottomWidth: 0
-                                         },
-                                         separator: {
-                                             height: 0,
-                                             backgroundColor: '#FFFFFF'
-                                         }
-                                     }}
-
-                                     currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
-                                     currentLocationLabel="Current location"
-                                     nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
-                                     GoogleReverseGeocodingQuery={{
-                                     }}
-                                     GooglePlacesSearchQuery={{
-                                        rankby: 'distance'
-                                     }}
-
-                                     filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
-
-                                 />
+                                 <ChooseHometown user={this.props.user} dispatch={this.props.dispatch} placeholder='Search' styles={{
+                                     description: {
+                                         fontFamily: Fonts.type.bodyCopy,
+                                         fontSize: Fonts.size.input,
+                                         letterSpacing:Fonts.letterSpacing.small,
+                                         color:'white'
+                                     },
+                                     predefinedPlacesDescription: {
+                                         color: '#FFFFFF',
+                                     },
+                                     poweredContainer: {
+                                         justifyContent: 'center',
+                                         alignItems: 'center',
+                                         opacity:0
+                                     },
+                                     textInput: {
+                                         backgroundColor: '#FFFFFF',
+                                         height: 42,
+                                         borderRadius: 0,
+                                         paddingTop:0,
+                                         paddingBottom:0,
+                                         fontWeight:'normal',
+                                         fontFamily: Fonts.type.bodyCopy,
+                                         fontSize: Fonts.size.input,
+                                         letterSpacing:Fonts.letterSpacing.small
+                                     },
+                                     textInputContainer: {
+                                         backgroundColor: '#FFFFFF',
+                                         height:55,
+                                         borderRadius:2,
+                                         borderTopWidth: 0,
+                                         borderLeftWidth:0,
+                                         borderRightWidth:0,
+                                         borderBottomWidth: 0
+                                     },
+                                     separator: {
+                                         height: 0,
+                                         backgroundColor: '#FFFFFF'
+                                     }
+                                 }}/>
                              </View>
                              <View style={{position:"absolute",top:130,flex:1,width:windowSize.width*.8,left:windowSize.width*.1}}>
                                 <Text style={styles.textStyleNormal}>IS THIS YOUR HOMETOWN?</Text>
