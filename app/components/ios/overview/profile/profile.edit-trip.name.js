@@ -29,6 +29,7 @@ class EditTripName extends React.Component {
     }
 
     componentDidMount(){
+        console.log(this.props.momentData);
     }
 
     navActionRight(){

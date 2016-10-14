@@ -40,59 +40,44 @@ class AddTrip extends React.Component {
     navActionRight(){
         if(this.state.images.length==0)return;
 
-        let moments = [];
         let momentsExif = [];
         for(var i=0;i<this.state.images.length;i++) {
             momentsExif.push(SherpaExif.getExif(this.state.images[i].uri));
         }
 
         Promise.all(momentsExif).then((momentsExifData)=> {
+            var momentBlobs=[];
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
                 let gps=exifData['gps'];
                 var lat=gps?gps['Latitude']:0;
                 var lng=gps?gps['Longitude']:0;
                 var shotDate=exifData['exif']['DateTimeOriginal'];
-                let momentPromise = createMoment({
-                    lat,
-                    lng,
-                    "shotDate": new Date(shotDate).getTime() / 1000
-                });
-                moments.push(momentPromise)
+
+                //convert exif date to iso date
+                const dateTime = shotDate.split(' ');
+                const regex = new RegExp(':', 'g');
+                dateTime[0] = dateTime[0].replace(regex, '-');
+                const newDateTime = `${dateTime[0]} ${dateTime[1]}`;
+
+
+                momentBlobs.push({
+                    moment:{
+                        "lat":lat,
+                        "lng":lng,
+                        "shotDate": new Date(newDateTime).getTime() / 1000
+                    },
+                    image:this.state.images[i]
+                })
             }
 
-            console.log(momentsExifData)
+            this.props.navigator.push({
+                id: "editTripGrid",
+                hideNav:true,
+                momentData:momentBlobs,
+                sceneConfig:"right-nodrag"
+            });
 
-            Promise.all(moments).then((momentsRes)=>{
-                var momentBlobs=[];
-                for(let i=0;i<momentsRes.length;i++){
-                    momentBlobs.push({
-                        moment:momentsRes[i],
-                        image:this.state.images[i]
-                    })
-                }
-
-                console.log(momentsRes)
-
-                this.props.navigator.push({
-                    id: "editTripGrid",
-                    hideNav:true,
-                    momentData:momentBlobs,
-                    sceneConfig:"right-nodrag"
-                });
-
-                //var momentUploads=[];
-                //for(var i=0;i<momentBlobs.length;i++){
-                //    momentUploads.push(uploadMoment(momentBlobs[i]));
-                //}
-                //
-                //Promise.all(momentUploads).then((res)=>{
-                //    console.log('upload res',res)
-                //}).catch((err)=>{console.log('err')});
-
-            }).catch((err)=>{
-                console.log('error:',err);
-            })
         });
     }
 

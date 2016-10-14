@@ -91,16 +91,22 @@ class LocationName extends Component{
 
                     fetchDetails={true}
                     onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
-
-                                            var hometownObject={
-                                                lat:details.geometry.location.lat,
-                                                lng:details.geometry.location.lng,
-                                                name:details.name
+                                            var result=details.address_components;
+                                            var info={};
+                                            for(var i= 0;i<result.length;++i){
+                                                if(result[i].types[0]=="administrative_area_level_1"){info.state=result[i].long_name}
+                                                if(result[i].types[0]=="locality"){info.location=result[i].long_name}
+                                                if(result[i].types[0]=="country"){info.country=result[i].short_name}
                                             }
 
-                                            this.setState({hometown:hometownObject});
-                                            this.moveDown();
 
+                                            this.props.moment.moment.lat=details.geometry.location.lat;
+                                            this.props.moment.moment.lng=details.geometry.location.lng;
+                                            this.props.moment.moment.location=details.name;
+                                            this.props.moment.moment.state=info.state;
+                                            this.props.moment.moment.country=info.country;
+
+                                            this.moveDown();
                                             //this.props.dispatch(setUserHometown(hometownObject));
                                             //this.props.dispatch(updateUserData({hometown:hometownObject.name}));
                                          }}
