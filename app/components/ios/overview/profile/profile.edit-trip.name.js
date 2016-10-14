@@ -32,7 +32,12 @@ class EditTripName extends React.Component {
     }
 
     navActionRight(){
-        console.log('nav action right');
+        this.props.navigator.push({
+            id: "own-profile",
+            hideNav:true,
+            momentData:this.props.momentData,
+            sceneConfig:"bottom-nodrag"
+        });
     }
 
     onStart(){

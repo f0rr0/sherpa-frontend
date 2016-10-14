@@ -81,14 +81,14 @@ class AddTrip extends React.Component {
                     sceneConfig:"right-nodrag"
                 });
 
-                var momentUploads=[];
-                for(var i=0;i<momentBlobs.length;i++){
-                    momentUploads.push(uploadMoment(momentBlobs[i]));
-                }
-
-                Promise.all(momentUploads).then((res)=>{
-                    console.log('upload res',res)
-                }).catch((err)=>{console.log('err')});
+                //var momentUploads=[];
+                //for(var i=0;i<momentBlobs.length;i++){
+                //    momentUploads.push(uploadMoment(momentBlobs[i]));
+                //}
+                //
+                //Promise.all(momentUploads).then((res)=>{
+                //    console.log('upload res',res)
+                //}).catch((err)=>{console.log('err')});
 
             }).catch((err)=>{
                 console.log('error:',err);

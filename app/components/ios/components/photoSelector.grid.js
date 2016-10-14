@@ -23,11 +23,15 @@ class PhotoSelectorGrid extends React.Component {
     }
 
     _pressData(){
-
+        console.log('press data');
     }
 
     componentWillMount(){
         this._pressData = {};
+
+        for (var ii = 0; ii < this.props.data.length; ii++) {
+            this.props.data[ii].selected=true;
+        }
     }
 
     render(){
@@ -47,10 +51,12 @@ class PhotoSelectorGrid extends React.Component {
     _renderRow(rowData, sectionID, rowID) {
         return (
             <TouchableOpacity style={styles.row} onPress={() => this._pressRow(rowID)} >
-                        <Text style={styles.text}>
-                            {rowData.description}
-                        </Text>
                         <Image  style={styles.row} source={{uri: rowData.moment.image.uri}}></Image>
+                        <View style={[{opacity:rowData.selected?1:0,position:'absolute',top:0,left:0},styles.row]}>
+                            <Image
+                            style={[styles.marker, {width: 27, height: 27, right:20,bottom:20,position:'absolute'}]}
+                            source={require('../../../Images/icon-check-green.png')}/>
+                        </View>
             </TouchableOpacity>
         );
     }
@@ -58,11 +64,11 @@ class PhotoSelectorGrid extends React.Component {
     _genRows(pressData){
         var dataBlob = [];
         for (var ii = 0; ii < this.props.data.length; ii++) {
-            var pressedText = pressData[ii] ? ' (X)' : '';
             dataBlob.push({
-                description:'Cell ' + ii + pressedText,
+                selected:!pressData[ii],
                 moment:this.props.data[ii]
             });
+            this.props.data[ii].selected=!pressData[ii]
         }
         return dataBlob;
     }
@@ -98,7 +104,10 @@ const styles = StyleSheet.create({
     text: {
         flex: 1,
         marginTop: 5,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        position:'absolute',
+        color:'red',
+        top:0
     }
 });
 

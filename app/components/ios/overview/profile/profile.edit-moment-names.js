@@ -41,6 +41,7 @@ class EditMomentNames extends React.Component {
     }
 
     componentDidMount(){
+        console.log(this.props.momentData)
     }
 
     _renderHeader(){
@@ -89,7 +90,7 @@ class EditMomentNames extends React.Component {
                         console.log('current index',currentIndex);
                         currentIndex++;
 
-                        return(<LocationName cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>);
+                        return moment.selected?(<LocationName key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>):null;
 
                     })}
                 </ScrollView>
