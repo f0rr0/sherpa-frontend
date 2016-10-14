@@ -7,7 +7,8 @@ import {
     TouchableOpacity,
     Animated,
     ScrollView,
-    TextInput
+    TextInput,
+    Alert
 } from 'react-native';
 import React, { Component } from 'react';
 import SimpleButton from '../../components/simpleButton';
@@ -15,6 +16,7 @@ import Dimensions from 'Dimensions';
 import { Fonts, Colors } from '../../../../Themes/'
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
+import {createMoment,uploadMoment,getGps,createTrip} from "../../../../actions/trip.edit.actions"
 
 
 
@@ -33,12 +35,64 @@ class EditTripName extends React.Component {
     }
 
     navActionRight(){
-        this.props.navigator.push({
-            id: "own-profile",
-            hideNav:true,
-            momentData:this.props.momentData,
-            sceneConfig:"bottom-nodrag"
-        });
+
+        var moments=[];
+        var momentIDs=[];
+        //create moments
+        for(var i=0;i<this.props.momentData.length;i++){
+            let momentPromise = createMoment({
+                "lat":this.props.momentData[i].moment.lat,
+                "lng":this.props.momentData[i].moment.lng,
+                "shotDate": this.props.momentData[i].moment.shotDate,
+                "location": this.props.momentData[i].moment.location,
+                "state": this.props.momentData[i].moment.state,
+                "country": this.props.momentData[i].moment.country
+            });
+            moments.push(momentPromise)
+        }
+
+        Promise.all(moments).then((momentsRes)=>{
+            console.log('created moments');
+
+            var momentUploads=[];
+            //for(var i=0;i<momentsRes.length;i++){
+                    //console.log(momentsRes[i]);
+            //}
+
+            for(var i=0;i<  this.props.momentData.length;i++){
+                momentIDs.push(momentsRes[i].id)
+                this.props.momentData[i].data=momentsRes[i];
+                momentUploads.push(uploadMoment(this.props.momentData[i]));
+            }
+
+            console.log(momentIDs,'moment ids');
+            Promise.all(momentUploads).then((res)=>{
+
+                console.log('uploaded moments');
+                createTrip({momentIDs,name:this.state.text}).then(()=>{
+                    Alert.alert(
+                        'Upload Successful',
+                        'Your trip has been created'
+                    )
+                }).catch((err)=>{
+                    Alert.alert(
+                        'Upload Failed',
+                        'Your trip creation has failed'
+                    )
+                })
+
+            }).catch((err)=>{console.log('err')});
+        })
+
+        //upload
+
+
+        //this.props.navigator.push({
+        //    id: "own-profile",
+        //    hideNav:true,
+        //    momentData:this.props.momentData,
+        //    sceneConfig:"bottom-nodrag"
+        //});
     }
 
     onStart(){

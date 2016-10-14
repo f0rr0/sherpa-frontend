@@ -27,7 +27,6 @@ class LocationName extends Component{
             inputBottomMargin:new Animated.Value(0)
         }
 
-        console.log(this.state);
     }
 
     componentDidMount(){
@@ -107,8 +106,6 @@ class LocationName extends Component{
                                             this.props.moment.moment.country=info.country;
 
                                             this.moveDown();
-                                            //this.props.dispatch(setUserHometown(hometownObject));
-                                            //this.props.dispatch(updateUserData({hometown:hometownObject.name}));
                                          }}
                     getDefaultValue={() => {
                                             return "";//this.state.hometown.name; // text input default value

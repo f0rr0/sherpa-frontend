@@ -54,18 +54,20 @@ class AddTrip extends React.Component {
                 var lng=gps?gps['Longitude']:0;
                 var shotDate=exifData['exif']['DateTimeOriginal'];
 
-                //convert exif date to iso date
-                const dateTime = shotDate.split(' ');
-                const regex = new RegExp(':', 'g');
-                dateTime[0] = dateTime[0].replace(regex, '-');
-                const newDateTime = `${dateTime[0]} ${dateTime[1]}`;
+
+                    const dateTime = shotDate.split(' ');
+                    const regex = new RegExp(':', 'g');
+                    dateTime[0] = dateTime[0].replace(regex, '-');
+                    const newDateTime = `${dateTime[0]} ${dateTime[1]}`;
+                console.log(Date.parse(newDateTime));
 
 
                 momentBlobs.push({
                     moment:{
                         "lat":lat,
                         "lng":lng,
-                        "shotDate": new Date(newDateTime).getTime() / 1000
+                        "locationData":[],
+                        "shotDate": new Date(shotDate).getTime() / 1000
                     },
                     image:this.state.images[i]
                 })

@@ -55,12 +55,12 @@ export function uploadMoment(momentBlob){
 
         ImageResizer.createResizedImage(momentBlob.image.uri, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
             store.get('user').then((user) => {
-                RNFetchBlob.fetch("POST", endpoint + version + "/moment/" + momentBlob.moment.id + "/upload", {
+                RNFetchBlob.fetch("POST", endpoint + version + "/moment/" + momentBlob.data.id + "/upload", {
                     'token' : user.sherpaToken,
                     'Content-Type' : 'multipart/form-data'
                 }, [
                     { name : 'enctype', data : 'multipart/form-data'},
-                    { name : 'image', filename : 'moment' + momentBlob.moment.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
+                    { name : 'image', filename : 'moment' + momentBlob.data.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
                 ]).then((resp) => {
                     fulfill(resp)
                 }).catch((err) => {
@@ -72,9 +72,39 @@ export function uploadMoment(momentBlob){
 }
 
 
-export function createTrip(imagePath,moments) {
-    return new Promise((fulfill, reject)=> {
+export function createTrip(tripBlob) {
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                const queryData = {
+                    //"state": "NY",
+                    //"country": "US",
+                    //"continent": "America",
+                    "name": tripBlob.name,
+                    "owner": user.sherpaID,
+                    //"dateStart": "23456",
+                    //"dateEnd": "23555",
+                    //"type": "state"
+                    "moments":tripBlob.momentIDs
+                };
 
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/json");
+
+                fetch(endpoint + version + "/trip/create", {
+                    method: 'post',
+                    headers: sherpaHeaders,
+                    body: JSON.stringify(queryData)
+                }).then((rawServiceResponse)=> {
+                    console.log('create trip response',rawServiceResponse);
+                    return rawServiceResponse.text();
+                }).then((response)=> {
+                    fulfill(JSON.parse(response))
+                }).catch(err=>reject(err));
+            }
+        });
     })
 }
 
