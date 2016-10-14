@@ -5,6 +5,7 @@ import {
     Text,
     Image,
     TouchableOpacity,
+    Animated,
 ScrollView
 } from 'react-native';
 import React, { Component } from 'react';
@@ -31,9 +32,12 @@ const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_
 
 
 
-class EditTripNames extends React.Component {
+class EditMomentNames extends React.Component {
     constructor(props){
         super(props)
+        this.state={
+            navOpacity:new Animated.Value(1)
+        }
     }
 
     componentDidMount(){
@@ -49,7 +53,20 @@ class EditTripNames extends React.Component {
 
 
     navActionRight(){
+        this.props.navigator.push({
+            id: "editTripName",
+            hideNav:true,
+            momentData:this.props.momentData,
+            sceneConfig:"right-nodrag"
+        });
+    }
 
+    hideNav(){
+        Animated.timing(this.state.navOpacity, {toValue: 0,duration:.8}).start();
+    }
+
+    showNav(){
+        Animated.timing(this.state.navOpacity, {toValue: 1,duration:8}).start();
     }
 
     render(){
@@ -65,17 +82,21 @@ class EditTripNames extends React.Component {
                     snapToInterval={CARD_WIDTH + CARD_MARGIN*2}
                     snapToAlignment="start"
                     contentContainerStyle={styles.content}
+                    showsHorizontalScrollIndicator={false}
                 >
-                    {this.props.momentData.map(function(moment){
+
+                    {this.props.momentData.map((moment)=>{
                         console.log('current index',currentIndex);
                         currentIndex++;
 
-                        return(<LocationName  style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>);
+                        return(<LocationName cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>);
 
                     })}
                 </ScrollView>
+                <Animated.View style={[{flex:1,position:'absolute',top:0},{opacity:this.state.navOpacity}]}>
+                    {this.props.navigation.default}
+                </Animated.View>
                 <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} text="next step (edit tripname)"></SimpleButton>
-                {this.props.navigation.default}
 
             </View>
         )
@@ -86,25 +107,26 @@ class EditTripNames extends React.Component {
 var styles = StyleSheet.create({
     container: {
         //flex: 1,
-        backgroundColor: '#F5FCFF',
+        backgroundColor:'transparent',
     },
     content: {
-        marginTop: 20,
+        marginTop: 130,
+        backgroundColor:'transparent',
         paddingHorizontal: CARD_PREVIEW_WIDTH,
-        alignItems: 'center',
-        //flex: 1,
+        alignItems: 'flex-start',
     },
     card: {
-        flex: 1,
-        backgroundColor: '#ccc',
+        //flex: 1,
+        backgroundColor: 'transparent',
         width: CARD_WIDTH,
         margin: CARD_MARGIN,
-        height: CARD_WIDTH,
+        //height: CARD_WIDTH,
         alignItems: 'center',
         justifyContent: 'center',
+        zIndex:2
     },
 });
 
 
 
-export default EditTripNames;
+export default EditMomentNames;

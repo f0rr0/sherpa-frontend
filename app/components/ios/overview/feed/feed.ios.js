@@ -12,7 +12,8 @@ import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
 import AddTrip from '../profile/profile.add-trip'
 import EditTripGrid from '../profile/profile.edit-trip-grid'
-import EditTripNames from '../profile/profile.edit-trip-names'
+import EditMomentNames from '../profile/profile.edit-moment-names'
+import EditTripName from '../profile/profile.edit-trip.name'
 import Settings from '../profile/profile.settings'
 
 import { connect } from 'react-redux';
@@ -203,11 +204,15 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
-                sceneContent = <EditTripNames ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditMomentNames ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+            case "editTripName":
+                showNav=true;
+                sceneContent = <EditTripName ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit trip name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
         }
 

@@ -61,6 +61,8 @@ class AddTrip extends React.Component {
                 moments.push(momentPromise)
             }
 
+            console.log(momentsExifData)
+
             Promise.all(moments).then((momentsRes)=>{
                 var momentBlobs=[];
                 for(let i=0;i<momentsRes.length;i++){
@@ -69,6 +71,8 @@ class AddTrip extends React.Component {
                         image:this.state.images[i]
                     })
                 }
+
+                console.log(momentsRes)
 
                 this.props.navigator.push({
                     id: "editTripGrid",
