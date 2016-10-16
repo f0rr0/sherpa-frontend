@@ -41,7 +41,7 @@ class EditMomentNames extends React.Component {
     }
 
     componentDidMount(){
-        console.log(this.props.momentData)
+        //console.log(this.props.momentData)
     }
 
     _renderHeader(){
@@ -87,7 +87,7 @@ class EditMomentNames extends React.Component {
                 >
 
                     {this.props.momentData.map((moment)=>{
-                        console.log('current index',currentIndex);
+                        //console.log('current index',currentIndex);
                         currentIndex++;
 
                         return moment.selected?(<LocationName key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>):null;

@@ -71,23 +71,65 @@ export function uploadMoment(momentBlob){
     })
 }
 
+export function getTripLocation(momentBlobs){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            if(user){
 
-export function createTrip(tripBlob) {
+                var coords=[];
+                for(var i=0;i<momentBlobs.length;i++){
+                    coords.push({"lat":momentBlobs[i].moment.lat,"lng":momentBlobs[i].moment.lng});
+                }
+
+
+                const {endpoint,version,user_uri} = sherpa;
+                const queryData = {
+                    "points":coords,
+                    "hometown":{"lat":user.serviceObject.hometownLatitude,"lng":user.serviceObject.hometownLongitude}
+                };
+
+
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/json");
+
+                fetch(endpoint + version + "/cluster", {
+                    method: 'post',
+                    headers: sherpaHeaders,
+                    body: JSON.stringify(queryData)
+                }).then((rawServiceResponse)=> {
+                    return rawServiceResponse.text();
+                }).then((response)=> {
+                    fulfill(JSON.parse(response))
+                }).catch(err=>reject(err));
+            }else{
+                reject('no user');
+            }
+        }
+    )});
+}
+
+
+export function createTrip(tripBlob,tripLocation) {
     return new Promise((fulfill,reject)=> {
         store.get('user').then((user) => {
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
                 const queryData = {
-                    //"state": "NY",
-                    //"country": "US",
-                    //"continent": "America",
-                    "name": tripBlob.name,
-                    "owner": user.sherpaID,
-                    //"dateStart": "23456",
-                    //"dateEnd": "23555",
-                    //"type": "state"
+                    "trip":{
+                        "state": tripLocation.state,
+                        "country": tripLocation.country,
+                        "continent": tripLocation.continent,
+                        "name": tripBlob.name,
+                        "owner": user.sherpaID,
+                        "dateStart": "23456",
+                        "dateEnd": "23555",
+                        "type": tripLocation.type,
+                        "location":tripLocation.location
+                    },
                     "moments":tripBlob.momentIDs
                 };
+
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
@@ -101,6 +143,7 @@ export function createTrip(tripBlob) {
                     console.log('create trip response',rawServiceResponse);
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    console.log('response',response);
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

@@ -55,12 +55,9 @@ class AddTrip extends React.Component {
                 var shotDate=exifData['exif']['DateTimeOriginal'];
 
 
-                    const dateTime = shotDate.split(' ');
-                    const regex = new RegExp(':', 'g');
-                    dateTime[0] = dateTime[0].replace(regex, '-');
-                    const newDateTime = `${dateTime[0]} ${dateTime[1]}`;
-                console.log(Date.parse(newDateTime));
-
+                const dateTime = shotDate.split(' ');
+                const regex = new RegExp(':', 'g');
+                dateTime[0] = dateTime[0].replace(regex, '-');
 
                 momentBlobs.push({
                     moment:{
