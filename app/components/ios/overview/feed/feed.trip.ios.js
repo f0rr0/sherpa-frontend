@@ -87,6 +87,7 @@ var styles = StyleSheet.create({
 class FeedTrip extends Component {
     constructor(props){
         super(props);
+        console.log('trip',props.trip);
          this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state= {
             dataSource: this.ds.cloneWithRows(props.trip.moments),
@@ -111,11 +112,10 @@ class FeedTrip extends Component {
 
 
         for (var i=0;i<this.state.moments.length;i++){
-
             markers.push({
                 coordinates: [this.state.moments[i].lat, this.state.moments[i].lng],
                 type: 'point',
-                title:this.state.moments[i].venue,
+                title:this.state.moments[i].venue||"",
                 annotationImage: {
                     url: 'image!icon-pin',
                     height: 7,

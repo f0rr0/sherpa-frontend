@@ -121,7 +121,7 @@ export function createTrip(tripBlob,tripLocation) {
                         "country": tripLocation.country,
                         "continent": tripLocation.continent,
                         "name": tripBlob.name,
-                        "owner": user.sherpaID,
+                        "owner": user.profileID,
                         "dateStart": "23456",
                         "dateEnd": "23555",
                         "type": tripLocation.type,
@@ -129,7 +129,6 @@ export function createTrip(tripBlob,tripLocation) {
                     },
                     "moments":tripBlob.momentIDs
                 };
-
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
@@ -140,10 +139,8 @@ export function createTrip(tripBlob,tripLocation) {
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
-                    console.log('create trip response',rawServiceResponse);
                     return rawServiceResponse.text();
                 }).then((response)=> {
-                    console.log('response',response);
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

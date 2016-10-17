@@ -86,7 +86,7 @@ class EditTripName extends React.Component {
 
             this.props.navigator.push({
                 id: "own-profile",
-                hideNav:true,
+                hideNav:false,
                 momentData:this.props.momentData,
                 sceneConfig:"bottom-nodrag"
             });
