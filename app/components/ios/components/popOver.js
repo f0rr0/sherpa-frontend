@@ -9,7 +9,6 @@ import {
 import Communications from 'react-native-communications';
 import React, { Component } from 'react';
 import ActivityView from "react-native-activity-view";
-import { deleteUser,logoutUser } from '../../../actions/user.actions';
 
 var styles = StyleSheet.create({
     button:{
@@ -80,23 +79,21 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>{this.props.shareCopy}</Text>
             </TouchableHighlight>:null;
 
-        var logoutButton=this.props.showLogout?
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
-                <Text style={styles.buttonCopy}>LOGOUT</Text>
-            </TouchableHighlight>:null;
-
         var resetProfileButton=this.props.showReset?
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
-                        this.props.resetProfileCallback();
-                        this._setAnimation(false)
-                }}>
-                <Text style={styles.buttonCopy}>RESET PROFILE</Text>
-            </TouchableHighlight>:null;
+          <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
+              this.props.resetProfileCallback();
+              this._setAnimation(false)
+          }}>
+              <Text style={styles.buttonCopy}>RESET PROFILE</Text>
+          </TouchableHighlight>:null;
 
-        var deleteButton=this.props.showDelete?
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
-                <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
-            </TouchableHighlight>:null;
+        var profileSettingsButton = this.props.settings ?
+          <TouchableHighlight underlayColor="#ececec" style={styles.button} dispatch={this.props.dispatch.bind(this)} onPress={() => {
+              this.props.showSettings();
+              this._setAnimation(false);
+          }}>
+              <Text style={styles.buttonCopy}>PROFILE SETTINGS</Text>
+          </TouchableHighlight> : null;
 
         var cancelButton=
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this._setAnimation(false)}}>
@@ -117,9 +114,7 @@ class PopOver extends Component {
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {shareButton}
                 {reportPhotoButton}
-                {resetProfileButton}
-                {logoutButton}
-                {deleteButton}
+                {profileSettingsButton}
                 {emailFeedbackButton}
                 {cancelButton}
             </Animated.View>

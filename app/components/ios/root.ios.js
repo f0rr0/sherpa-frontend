@@ -128,7 +128,7 @@ class Root extends Component {
                 return <Overview navigator={navigator} {...this.props}/>;
             break;
             case "onboarding-steps":
-                return <OnboardingSteps navigator={navigator} {...this.props}/>
+                return <OnboardingSteps navigator={navigator} {...this.props}/>;
             break;
         }
     }

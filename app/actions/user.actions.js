@@ -170,6 +170,30 @@ export function logoutUser(){
         })
     }
 }
+
+export function setUserData(userdata) {
+    return function (dispatch, getState) {
+        return store.get('user').then(user => {
+            if (!user) return Promise.reject(new Error('No user'));
+            const {endpoint, version } = sherpa;
+
+            let sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            return fetch(endpoint + version + "/user/" + user.sherpaID + "/update", {
+                method: 'patch',
+                headers: sherpaHeaders,
+                body: encodeQueryData(userdata)
+            }).then(response => {
+                if (!response.ok) Promise.reject(new Error(response.statusText));
+                // Only update the field that changed - no need to update the whole user object
+                dispatch(updateUserData(userdata));
+            }).catch(err => console.log("Error updating user", err));
+        })
+    }
+}
+
 export function setUserHometown(hometown){
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
@@ -231,6 +255,9 @@ export function loadUser() {
                                 profileID:responseJSON.profile.id,
                                 profilePicture:responseJSON.profile.serviceProfilePicture,
                                 bio:responseJSON.profile.serviceBio,
+                                allowScrape: responseJSON.allowScrape,
+                                userContactSettings: responseJSON.contactSettings,
+                                allContactSettings: responseJSON.allContactSettings,
                             }));
 
                             if(!user.whiteListed){
@@ -395,7 +422,7 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
-                const {email,id,fullName,profilePicture,profile,username,hometown} = sherpaResponse.user;
+                const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings} = sherpaResponse.user;
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,
@@ -407,7 +434,10 @@ export function signupUser(){
                     profilePicture,
                     hometown,
                     serviceObject:userData,
-                    whiteListed:sherpaResponse.whitelisted
+                    whiteListed:sherpaResponse.whitelisted,
+                    allowScrape: sherpaResponse.allowScrape,
+                    userContactSettings: contactSettings,
+                    allContactSettings: sherpaResponse.allContactSettings
                 }));
 
                 dispatch(storeUser());

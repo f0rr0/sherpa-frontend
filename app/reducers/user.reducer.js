@@ -41,7 +41,10 @@ export default function userReducer(state=initialState,action){
                 whiteListed:        action.userData.whiteListed == undefined ?state.whiteListed:action.userData.whiteListed,
                 isExistingLogin:    action.userData.isExistingLogin == undefined ?state.isExistingLogin:action.userData.isExistingLogin,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
-                notificationToken:  action.userData.notificationToken || state.notificationToken
+                notificationToken:  action.userData.notificationToken || state.notificationToken,
+                allowScrape:        action.userData.allowScrape || state.allowScrape,
+                userContactSettings: action.userData.userContactSettings || state.userContactSettings,
+                allContactSettings: action.userData.allContactSettings || state.allContactSettings,
             });
         break;
         case types.USER_SIGNUP_UPDATE_STATE:

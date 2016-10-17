@@ -7,6 +7,7 @@ import FeedLocation from './feed.location.ios';
 import FeedTrip from './feed.trip.ios';
 import TripDetail from './feed.trip.detail.ios';
 import OwnUserProfile from './../profile/profile.ios'
+import ProfileSettings from './../profile/profile.settings.ios';
 import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
@@ -213,6 +214,11 @@ class Feed extends Component {
             case "editTripName":
                 showNav=true;
                 sceneContent = <EditTripName ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit trip name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
+            break;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
+            break;
+            case "profile-settings":
+                sceneContent =  <ProfileSettings ref={route.id} navigator={navigator} navigation={this._getNavigation("black", "SETTINGS",false,true,true,true)} {...this.props}/>;
             break;
         }
 
