@@ -49,7 +49,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:20,
+        paddingBottom:60,
     },
     listItemContainer:{
         flex:1,
@@ -107,6 +107,7 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
+        console.log(this.state.moments);
         var markers=[];
         var momentIDs=[];
 

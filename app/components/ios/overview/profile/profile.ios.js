@@ -134,10 +134,6 @@ class OwnUserProfile extends React.Component {
         });
     }
 
-    showSettings() {
-        this.props.navigator.push({id: "profile-settings"});
-    }
-
     _onFetch(page=1,callback){
         this.itemsLoadedCallback=callback;
         this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
@@ -213,7 +209,7 @@ class OwnUserProfile extends React.Component {
 
     navActionRight(){
         this.props.navigator.push({
-            id: "settings",
+            id: "profile-settings",
             sceneConfig:"bottom",
             hideNav:true
         });
@@ -225,9 +221,9 @@ class OwnUserProfile extends React.Component {
             sceneConfig:"bottom-nodrag",
             hideNav:true
         });
-        toggleNav(){
-        this.showSettings();
     }
+
+
 
 
     _renderEmpty(){

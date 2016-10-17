@@ -176,7 +176,7 @@ class ProfileSettings extends React.Component {
     render(){
         return (
             <ScrollView style={styles.container}>
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed} style={styles.settingsHeader}/>
+                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}/>
                 <View style={styles.button}>
                     <Text style={styles.buttonCopy}>NAME</Text>
                     <SimpleInput placeholder={this.props.user.fullName} style={styles.inputStyle} onSubmitEditing={(event) => this._submitEditing("fullName", event.nativeEvent.text)}/>
@@ -238,8 +238,10 @@ class ProfileSettings extends React.Component {
                         <Switch
                           value={this.state.allowTripAddedNotif}
                           onValueChange={(value) => {
-                              this.setContactSetting(value, 'trip-added').then(success => {
-                                  if (success) this.setState({allowTripAddedNotif: value});
+                              this.setContactSetting(value, 'trip-added').then((success) => {
+                                  if(success){
+                                    this.setState({allowTripAddedNotif: value});
+                                  }
                               });
                           }}/>
                     </View>
@@ -254,7 +256,7 @@ class ProfileSettings extends React.Component {
                         <Switch
                           value={this.state.allowTripFeaturedNotif}
                           onValueChange={(value) => {
-                              this.setContactSetting(value, 'trip-featured').then(success => {
+                              this.setContactSetting(value, 'trip-featured').then((success) => {
                                   if (success) this.setState({allowTripFeaturedNotif: value});
                               });
                           }}/>
@@ -270,7 +272,7 @@ class ProfileSettings extends React.Component {
                         <Switch
                           value={this.state.allowMomentSavedNotif}
                           onValueChange={(value) => {
-                              this.setContactSetting(value, 'moment-saved').then(success => {
+                              this.setContactSetting(value, 'moment-saved').then((success) => {
                                   if (success) this.setState({allowMomentSavedNotif: value});
                               });
                           }}/>
@@ -286,7 +288,7 @@ class ProfileSettings extends React.Component {
                         <Switch
                           value={this.state.allowNewSuitcaseTripNotif}
                           onValueChange={(value) => {
-                              this.setContactSetting(value, 'new-suitcase-trip').then(success => {
+                              this.setContactSetting(value, 'new-suitcase-trip').then((success) => {
                                   if (success) this.setState({allowNewSuitcaseTripNotif: value});
                               });
                           }}/>
@@ -301,6 +303,8 @@ class ProfileSettings extends React.Component {
                 <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
                     <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
                 </TouchableHighlight>
+                {this.props.navigation.default}
+
             </ScrollView>
         );
     }

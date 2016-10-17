@@ -27,7 +27,9 @@ class SherpaCameraRollPicker extends Component {
         };
     }
 
+
     componentWillMount() {
+        //this.resetSelected();
         var {width} = Dimensions.get('window');
         var {imageMargin, imagesPerRow, containerWidth} = this.props;
 
@@ -42,6 +44,15 @@ class SherpaCameraRollPicker extends Component {
     componentWillReceiveProps(nextProps) {
         this.setState({
             selected: nextProps.selected,
+        });
+    }
+
+    resetSelected(){
+        this.setState({
+            selected: [],
+            dataSource: this.state.dataSource.cloneWithRows(
+                this._nEveryRow(this.state.images, this.props.imagesPerRow)
+            )
         });
     }
 
@@ -86,6 +97,7 @@ class SherpaCameraRollPicker extends Component {
         if (assets.length > 0) {
             newState.lastCursor = data.page_info.end_cursor;
             newState.images = this.state.images.concat(assets);
+            console.log('data source->append images');
             newState.dataSource = this.state.dataSource.cloneWithRows(
                 this._nEveryRow(newState.images, this.props.imagesPerRow)
             );
@@ -115,6 +127,7 @@ class SherpaCameraRollPicker extends Component {
 
     _renderImage(item) {
         var {selectedMarker, imageMargin} = this.props;
+        console.log(this.state.selected,'check selected');
 
         var marker = selectedMarker ? selectedMarker :
             <Image
@@ -166,6 +179,7 @@ class SherpaCameraRollPicker extends Component {
                 return null;
             }
 
+
             var gridEL;
             switch(item.type){
                 case 'capture':
@@ -211,15 +225,15 @@ class SherpaCameraRollPicker extends Component {
                 selected.push(image);
             }
         }
-
+        console.log('data source->select image');
         this.setState({
             selected: selected,
             dataSource: this.state.dataSource.cloneWithRows(
                 this._nEveryRow(this.state.images, imagesPerRow)
-            ),
+            )
         });
 
-        callback(this.state.selected, image);
+        callback(selected, image);
     }
 
     _nEveryRow(data, n) {

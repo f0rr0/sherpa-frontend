@@ -37,6 +37,10 @@ class AddTrip extends React.Component {
         this.setState({images:res})
     }
 
+    reset(){
+        this.refs.sherpaCameraRoll.resetSelected();
+    }
+
     navActionRight(){
         if(this.state.images.length==0)return;
 
@@ -85,7 +89,7 @@ class AddTrip extends React.Component {
         return(
             <View style={{flex:1,backgroundColor:"#161616"}}>
                 {this.props.navigation.default}
-                <SherpaCameraRollPicker wrapper={{height:SCREEN_HEIGHT-70,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImages.bind(this)} />
+                <SherpaCameraRollPicker ref="sherpaCameraRoll" wrapper={{height:SCREEN_HEIGHT-70,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImages.bind(this)} />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )

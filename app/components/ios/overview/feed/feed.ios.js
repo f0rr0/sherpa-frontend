@@ -94,6 +94,9 @@ class Feed extends Component {
     constructor(){
         super();
         this.currentRenderScene="";
+        this.state={
+            renderScene:""
+        }
     }
 
     componentDidMount(){
@@ -155,8 +158,9 @@ class Feed extends Component {
 
         //console.log('go to ',route);
         this.currentRenderScene=route.id;
-
         this.props.toggleTabBar(!route.hideNav);
+
+        //this.setState({renderScene:route.id});
 
         switch (route.id) {
             case 'feed':
@@ -218,7 +222,7 @@ class Feed extends Component {
                 sceneContent = <TripDetail ref={route.id} navigator={navigator}  navSettings={{toggleNav:this._toggleNav.bind(this),color:'white',hideBack:false,opaque:false,hideNav:false,topShadow:true}} user={this.props.user} momentID={route.momentID} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
             break;
             case "profile-settings":
-                sceneContent =  <ProfileSettings ref={route.id} navigator={navigator} navigation={this._getNavigation("black", "SETTINGS",false,true,true,true)} {...this.props}/>;
+                sceneContent =  <ProfileSettings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"settings",opaque:true,topLeftImage:require('./../../../../Images/icon-close-black.png'),fixedHeader:true,hideNav:true })} {...this.props}/>;
             break;
         }
 
@@ -260,6 +264,12 @@ class Feed extends Component {
 
     }
 
+    sceneChange(route){
+        if(route.id==='addTrip'){
+            this.navigator.refs.addTrip.reset();
+        }
+    }
+
     render() {
         return (
             <View style={{flex:1,height:SCREEN_HEIGHT}}>
@@ -268,6 +278,7 @@ class Feed extends Component {
                     sceneStyle={styles.container}
                     ref={(navigator) => { this.navigator = navigator; }}
                     renderScene={this.renderScene.bind(this)}
+                    onDidFocus={this.sceneChange.bind(this)}
                     configureScene={(route) => {
 
                             switch(route.sceneConfig){
@@ -291,7 +302,9 @@ class Feed extends Component {
                 />
             </View>
         );
+
     }
+
 }
 
 
