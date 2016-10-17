@@ -87,7 +87,7 @@ var styles = StyleSheet.create({
 class FeedTrip extends Component {
     constructor(props){
         super(props);
-        console.log('trip',props.trip);
+        //console.log('trip',props.trip);
          this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state= {
             dataSource: this.ds.cloneWithRows(props.trip.moments),
@@ -107,7 +107,7 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        console.log(this.state.moments);
+        //console.log(this.state.moments);
         var markers=[];
         var momentIDs=[];
 

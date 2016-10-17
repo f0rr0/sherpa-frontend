@@ -54,6 +54,7 @@
 		F387AB111CC93FF500D88D5D /* Mapbox.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = F387AB0F1CC93FF200D88D5D /* Mapbox.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		F3A612B11D897378002A3AF7 /* KDSocialShare.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A612B01D897378002A3AF7 /* KDSocialShare.m */; };
 		F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A612B21D897378002A3AF7 /* Social.framework */; };
+		F3AE13B71DB5165500C22D62 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AE139D1DB5164900C22D62 /* libRCTCamera.a */; };
 		F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */; };
 		F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */; };
 		F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A542111D512B6000CC10F2 /* libART.a */; };
@@ -272,6 +273,13 @@
 			remoteGlobalIDString = 00E356EE1AD99517003FC87E;
 			remoteInfo = ReactNativeSocialShareTests;
 		};
+		F3AE139C1DB5164900C22D62 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
+			remoteInfo = RCTCamera;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -347,6 +355,8 @@
 		F3A612AF1D897378002A3AF7 /* KDSocialShare.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = KDSocialShare.h; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.h"; sourceTree = "<group>"; };
 		F3A612B01D897378002A3AF7 /* KDSocialShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDSocialShare.m; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.m"; sourceTree = "<group>"; };
 		F3A612B21D897378002A3AF7 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
+		F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
+		F3AE13B81DB5228D00C22D62 /* Sherpa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Sherpa.entitlements; path = Sherpa/Sherpa.entitlements; sourceTree = "<group>"; };
 		F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Light.otf"; sourceTree = "<group>"; };
 		F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Regular.otf"; sourceTree = "<group>"; };
 		F3CDFF611BFBD6D000CE9567 /* CoreTelephony.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreTelephony.framework; path = System/Library/Frameworks/CoreTelephony.framework; sourceTree = SDKROOT; };
@@ -372,6 +382,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3AE13B71DB5165500C22D62 /* libRCTCamera.a in Frameworks */,
 				F34F8AC51DACEAF30089C7AC /* libReactNativeExif.a in Frameworks */,
 				F37910131DA7FF2B00FEF138 /* libRCTImageResizer.a in Frameworks */,
 				F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */,
@@ -492,6 +503,7 @@
 		13B07FAE1A68108700A75B9A /* Sherpa */ = {
 			isa = PBXGroup;
 			children = (
+				F3AE13B81DB5228D00C22D62 /* Sherpa.entitlements */,
 				F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */,
 				F321A5781BDA99F70014AA18 /* Assets */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -542,6 +554,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */,
 				F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */,
 				F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */,
 				F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */,
@@ -760,6 +773,14 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F3AE13961DB5164800C22D62 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3AE139D1DB5164900C22D62 /* libRCTCamera.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -854,6 +875,10 @@
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
+				},
+				{
+					ProductGroup = F3AE13961DB5164800C22D62 /* Products */;
+					ProjectRef = F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */;
 				},
 				{
 					ProductGroup = F374824B1D9BD65500D953B1 /* Products */;
@@ -1149,6 +1174,13 @@
 			remoteRef = F3A612BE1D89737A002A3AF7 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		F3AE139D1DB5164900C22D62 /* libRCTCamera.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTCamera.a;
+			remoteRef = F3AE139C1DB5164900C22D62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 /* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
@@ -1360,6 +1392,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Sherpa/Sherpa.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
@@ -1399,6 +1432,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_ENTITLEMENTS = Sherpa/Sherpa.entitlements;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				DEAD_CODE_STRIPPING = NO;
@@ -1420,6 +1454,17 @@
 				INFOPLIST_FILE = Sherpa/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				OTHER_CFLAGS = (
+					"$(inherited)",
+					"-iquote",
+					"\"$CONFIGURATION_BUILD_DIR/CMDQueryStringSerialization.framework/Headers\"",
+					"-iquote",
+					"\"$CONFIGURATION_BUILD_DIR/ISO8601.framework/Headers\"",
+					"-iquote",
+					"\"$CONFIGURATION_BUILD_DIR/NSData_Base64.framework/Headers\"",
+					"-iquote",
+					"\"$CONFIGURATION_BUILD_DIR/Result.framework/Headers\"",
+				);
 				OTHER_LDFLAGS = (
 					"-ObjC",
 					"$(inherited)",

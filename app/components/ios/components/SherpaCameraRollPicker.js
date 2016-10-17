@@ -11,6 +11,7 @@ import {
     ListView,
     ActivityIndicator,
 } from 'react-native'
+import Camera from 'react-native-camera';
 
 
 class SherpaCameraRollPicker extends Component {
@@ -97,7 +98,7 @@ class SherpaCameraRollPicker extends Component {
         if (assets.length > 0) {
             newState.lastCursor = data.page_info.end_cursor;
             newState.images = this.state.images.concat(assets);
-            console.log('data source->append images');
+            //console.log('data source->append images');
             newState.dataSource = this.state.dataSource.cloneWithRows(
                 this._nEveryRow(newState.images, this.props.imagesPerRow)
             );
@@ -127,7 +128,7 @@ class SherpaCameraRollPicker extends Component {
 
     _renderImage(item) {
         var {selectedMarker, imageMargin} = this.props;
-        console.log(this.state.selected,'check selected');
+        //console.log(this.state.selected,'check selected');
 
         var marker = selectedMarker ? selectedMarker :
             <Image
@@ -162,15 +163,24 @@ class SherpaCameraRollPicker extends Component {
         return(
             <View key='capture'>
                 <TouchableOpacity onPress={event => this._captureImage()}>
-                <View style={{flex:1,backgroundColor:'#3f3f3f',top:0,width:this._imageSize,height:this._imageSize,marginBottom: imageMargin, marginRight: imageMargin,justifyContent:'center',alignItems:'center'}}>
-                    <Image
-                        source={require('../../../Images/icon-camera-grey.png')}
-                        style={{height: 13, width: 17}} >
-                    </Image>
-                </View>
+                    {/*<Camera onPress={this.takePicture.bind(this)} ref={(cam) => { this.camera = cam;}} aspect={Camera.constants.Aspect.fill}>*/}
+                    <View style={{flex:1,backgroundColor:'#3f3f3f',top:0,width:this._imageSize,height:this._imageSize,marginBottom: imageMargin, marginRight: imageMargin,justifyContent:'center',alignItems:'center'}}>
+                        <Image
+                            source={require('../../../Images/icon-camera-grey.png')}
+                            style={{height: 13, width: 17}} >
+                        </Image>
+                    </View>
+                    {/*</Camera>*/}
                 </TouchableOpacity>
             </View>
         )
+    }
+
+
+    takePicture() {
+        this.camera.capture()
+            .then((data) => console.log(data))
+            .catch(err => console.error(err));
     }
 
     _renderRow(rowData) {
@@ -225,7 +235,7 @@ class SherpaCameraRollPicker extends Component {
                 selected.push(image);
             }
         }
-        console.log('data source->select image');
+        //console.log('data source->select image');
         this.setState({
             selected: selected,
             dataSource: this.state.dataSource.cloneWithRows(
@@ -324,8 +334,8 @@ SherpaCameraRollPicker.defaultProps = {
     backgroundColor: 'white',
     selected: [],
     callback: function(selectedImages, currentImage) {
-        console.log(currentImage);
-        console.log(selectedImages);
+        //console.log(currentImage);
+        //console.log(selectedImages);
     },
 }
 

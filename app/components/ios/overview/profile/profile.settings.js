@@ -23,7 +23,7 @@ class Settings extends React.Component {
     }
 
     componentDidMount(){
-        console.log('show settings');
+        //console.log('show settings');
     }
 
     render(){

@@ -54,21 +54,35 @@ class EditTripName extends React.Component {
 
         getTripLocation(this.props.momentData).then((tripLocation)=>{
             Promise.all(moments).then((momentsRes)=>{
-                console.log('trip location',tripLocation);
+                //console.log('trip location',tripLocation);
 
                 var momentUploads=[];
-
+                var dates=[]
                 for(var i=0;i<  this.props.momentData.length;i++){
                     momentIDs.push(momentsRes[i].id)
                     this.props.momentData[i].data=momentsRes[i];
+                    dates.push(this.props.momentData[i].moment.shotDate)
                     momentUploads.push(uploadMoment(this.props.momentData[i]));
                 }
+
+                dates.sort(function(a,b) {
+                    return new Date(a.start).getTime() - new Date(b.start).getTime()
+                });
+
+                //console.log(dates);
+                var startDate=new Date(dates[0]).getTime()/1000;
+                var endDate=dates[dates.length-1].getTime()/1000;
+
+                //console.log('start date',startDate);
+                //console.log('end date',endDate);
 
                 Promise.all(momentUploads).then((res)=>{
 
                     createTrip({
                         momentIDs,
                         name:this.state.text,
+                        startDate,
+                        endDate
                     },tripLocation).then(()=>{
                         Alert.alert(
                             'Upload Successful',

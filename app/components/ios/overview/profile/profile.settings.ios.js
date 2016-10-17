@@ -150,9 +150,9 @@ class ProfileSettings extends React.Component {
     setContactSetting(value, label) {
         const {endpoint,version} = sherpa;
         let setting = _.findWhere(this.props.user.allContactSettings, {label: label});
-        console.log(this.props.user.allContactSettings);
-        console.log(label);
-        console.log(this.props.user);
+        //console.log(this.props.user.allContactSettings);
+        //console.log(label);
+        //console.log(this.props.user);
         let feedRequestURI = endpoint + version + "/user/" + this.props.user.sherpaID + "/contact-settings/" + setting.id;
         let sherpaHeaders = new Headers();
         let payload = {enabled: value};

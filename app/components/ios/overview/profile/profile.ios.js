@@ -44,7 +44,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:20
+        paddingBottom:60
     },
     listItemContainer:{
         flex:1,

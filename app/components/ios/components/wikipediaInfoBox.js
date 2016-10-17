@@ -87,7 +87,7 @@ class WikpediaInfoBox extends Component {
                 // a perfect match on the normalized query
                 //console.log(cleardQuery,'+++',cleardResponse)
 
-                console.log(this.props.isLocationView, 'is location view');
+                //console.log(this.props.isLocationView, 'is location view');
                 if ((wikiTitle.toLowerCase() == query.toLowerCase() || cleardQuery == cleardResponse) && countryMatch && locationCheck) {
                     wikiResult = wikiResponse[i];
                     titleMatch = true;
@@ -122,7 +122,7 @@ class WikpediaInfoBox extends Component {
             //console.log('locatio check',locationCheck
 
             var moveForward=this.props.isLocationView?locationCheck&&titleMatch:locationCheck&& (titleMatch || partialTitleMatch);
-            console.log(this.props.isLocationView,"::",titleMatch,"::",moveForward)
+            //console.log(this.props.isLocationView,"::",titleMatch,"::",moveForward)
             if(moveForward){
 
                 //to get better description copy, now query dbpedia and lets hope we get the same result as from geonames

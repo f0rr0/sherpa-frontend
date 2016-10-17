@@ -40,7 +40,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:20
+        paddingBottom:60
     },
     listItemContainer:{
         flex:1,
@@ -94,7 +94,7 @@ class FeedDestination extends Component {
             markers.push({
                 coordinates: [this.props.trip.moments[i].lat, this.props.trip.moments[i].lng],
                 type: 'point',
-                title:this.props.trip.moments[i].venue,
+                title:this.props.trip.moments[i].venue||"",
                 annotationImage: {
                     url: 'image!icon-pin',
                     height: 8,

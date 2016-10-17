@@ -36,7 +36,7 @@ class LocationName extends Component{
     }
 
     moveUp(){
-        console.log('move up');
+        //console.log('move up');
         this.props.hideNav();
         Animated.spring(this.state.inputBottomMargin, {toValue: -350, friction:8}).start();
         //Animated.spring(this.state.overlayOpacity, {toValue: .5,friction:8}).start();
@@ -54,7 +54,7 @@ class LocationName extends Component{
 
     render(){
         var moment = this.props.moment;
-        console.log(this)
+        //console.log(this)
         return(
             <Animated.View style={[this.props.style,{marginTop:this.state.inputBottomMargin}]}>
                 <ImageProgress

@@ -23,7 +23,7 @@ class PhotoSelectorGrid extends React.Component {
     }
 
     _pressData(){
-        console.log('press data');
+        //console.log('press data');
     }
 
     componentWillMount(){

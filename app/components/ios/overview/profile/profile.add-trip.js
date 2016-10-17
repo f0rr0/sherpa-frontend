@@ -38,7 +38,7 @@ class AddTrip extends React.Component {
     }
 
     reset(){
-        this.refs.sherpaCameraRoll.resetSelected();
+        //this.refs.sherpaCameraRoll.resetSelected();
     }
 
     navActionRight(){
@@ -68,7 +68,7 @@ class AddTrip extends React.Component {
                         "lat":lat,
                         "lng":lng,
                         "locationData":[],
-                        "shotDate": new Date(shotDate).getTime() / 1000
+                        "shotDate": new Date(dateTime)
                     },
                     image:this.state.images[i]
                 })

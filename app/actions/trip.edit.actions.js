@@ -26,7 +26,7 @@ export function createMoment(moment){
                     "country": moment.country,
                     "continent": moment.continent,
                     "venue": moment.venue,
-                    "date": moment.shotDate,
+                    "date": moment.shotDate.getTime() / 1000,
                     "caption": moment.caption,
                     "scrapeTime": new Date()
                 };
@@ -122,8 +122,8 @@ export function createTrip(tripBlob,tripLocation) {
                         "continent": tripLocation.continent,
                         "name": tripBlob.name,
                         "owner": user.profileID,
-                        "dateStart": "23456",
-                        "dateEnd": "23555",
+                        "dateStart": tripBlob.startDate,
+                        "dateEnd": tripBlob.endDate,
                         "type": tripLocation.type,
                         "location":tripLocation.location
                     },
