@@ -24,7 +24,7 @@ class EditTripGrid extends React.Component {
 
     _renderHeader(){
         return (
-            <View style={{flex:1,justifyContent:'center',height:70,width:SCREEN_WIDTH,alignItems:'center',backgroundColor:'white'}}>
+            <View style={{position:'absolute',top:0,left:0,flex:1,justifyContent:'center',height:70,marginBottom:-5,width:SCREEN_WIDTH-14,alignItems:'center',backgroundColor:'white'}}>
                 {this.props.navigation.default}
             </View>
         )
@@ -32,8 +32,14 @@ class EditTripGrid extends React.Component {
 
     _renderFooter(){
         return(
-            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:0,left:7}} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+            <View style={{marginLeft:7,flex:1,width:SCREEN_WIDTH-21,height:55,paddingBottom:0,marginTop:-10,justifyContent:"flex-start"}}>
+                <SimpleButton style={{width:SCREEN_WIDTH-21}} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+            </View>
         )
+    }
+
+    navActionLeft(){
+        this.props.navigator.popToTop();
     }
 
     navActionRight(){
@@ -47,8 +53,14 @@ class EditTripGrid extends React.Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
-                <PhotoSelectorGrid footerView={this._renderFooter.bind(this)} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
+            <View style={{backgroundColor:'white',flex:1}}>
+                <PhotoSelectorGrid moreCallback={()=>{
+                    this.props.navigator.push({
+                        id: "addTrip",
+                        hideNav:true,
+                        sceneConfig:"bottom-nodrag"
+                    });
+                }} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )

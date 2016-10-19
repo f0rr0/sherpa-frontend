@@ -173,6 +173,32 @@ class ProfileSettings extends React.Component {
         });
     }
 
+    allowTripAddedNotifCallback(value){
+        this.setContactSetting(value, 'trip-added').then((success) => {
+            if(success){
+                this.setState({allowTripAddedNotif: value});
+            }
+        });
+    }
+
+    allowTripFeatureNotifCallback(value){
+        this.setContactSetting(value, 'trip-featured').then((success) => {
+            if (success) this.setState({allowTripFeaturedNotif: value});
+        });
+    }
+
+    allowMomentSavedNotifCallback(value){
+        this.setContactSetting(value, 'moment-saved').then((success) => {
+            if (success) this.setState({allowMomentSavedNotif: value});
+        });
+    }
+
+    allowNewSuitcaseNotifCallback(value){
+        this.setContactSetting(value, 'new-suitcase-trip').then((success) => {
+            if (success) this.setState({allowNewSuitcaseTripNotif: value});
+        });
+    }
+
     render(){
         return (
             <ScrollView style={styles.container}>
@@ -237,13 +263,7 @@ class ProfileSettings extends React.Component {
                         ]}>Trip Added From Instagram</Text>
                         <Switch
                           value={this.state.allowTripAddedNotif}
-                          onValueChange={(value) => {
-                              this.setContactSetting(value, 'trip-added').then((success) => {
-                                  if(success){
-                                    this.setState({allowTripAddedNotif: value});
-                                  }
-                              });
-                          }}/>
+                          onValueChange={(value)=>this.allowTripAddedNotifCallback(value)}/>
                     </View>
                     <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                         <Text style={[
@@ -255,11 +275,7 @@ class ProfileSettings extends React.Component {
                         ]}>Trip Featured</Text>
                         <Switch
                           value={this.state.allowTripFeaturedNotif}
-                          onValueChange={(value) => {
-                              this.setContactSetting(value, 'trip-featured').then((success) => {
-                                  if (success) this.setState({allowTripFeaturedNotif: value});
-                              });
-                          }}/>
+                          onValueChange={(value)=>this.allowTripFeatureNotifCallback(value)}/>
                     </View>
                     <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                         <Text style={[
@@ -271,11 +287,7 @@ class ProfileSettings extends React.Component {
                         ]}>Moment Saved</Text>
                         <Switch
                           value={this.state.allowMomentSavedNotif}
-                          onValueChange={(value) => {
-                              this.setContactSetting(value, 'moment-saved').then((success) => {
-                                  if (success) this.setState({allowMomentSavedNotif: value});
-                              });
-                          }}/>
+                          onValueChange={(value) => this.allowMomentSavedNotifCallback(value)}/>
                     </View>
                     <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
                         <Text style={[
@@ -287,11 +299,7 @@ class ProfileSettings extends React.Component {
                         ]}>New Suitcase Trip</Text>
                         <Switch
                           value={this.state.allowNewSuitcaseTripNotif}
-                          onValueChange={(value) => {
-                              this.setContactSetting(value, 'new-suitcase-trip').then((success) => {
-                                  if (success) this.setState({allowNewSuitcaseTripNotif: value});
-                              });
-                          }}/>
+                          onValueChange={(value) => this.allowNewSuitcaseNotifCallback(value)}/>
                     </View>
                 </View>
                 <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.resetProfile()}}>

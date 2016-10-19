@@ -159,7 +159,7 @@ class Overview extends React.Component {
         return (
 
             <View style={{flex:1}}>
-                <Animated.View style={{position:'absolute',bottom:this.state.bottomOffset,zIndex:0}}>
+                <Animated.View style={{position:'absolute',bottom:this.state.bottomOffset}}>
                     <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
                 </Animated.View>
                 {tabBar}

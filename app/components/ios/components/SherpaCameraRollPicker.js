@@ -48,15 +48,6 @@ class SherpaCameraRollPicker extends Component {
         });
     }
 
-    resetSelected(){
-        this.setState({
-            selected: [],
-            dataSource: this.state.dataSource.cloneWithRows(
-                this._nEveryRow(this.state.images, this.props.imagesPerRow)
-            )
-        });
-    }
-
     fetch() {
         if (!this.state.loadingMore) {
             this.setState({loadingMore: true}, () => { this._fetch(); });

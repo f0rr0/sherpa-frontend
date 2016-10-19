@@ -20,6 +20,7 @@ import * as Progress from 'react-native-progress';
 import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { Fonts, Colors } from '../../../../Themes/'
+import SimpleError from '../../components/simpleError';
 
 var windowSize=Dimensions.get('window');
 
@@ -54,12 +55,25 @@ class EditMomentNames extends React.Component {
 
 
     navActionRight(){
-        this.props.navigator.push({
-            id: "editTripName",
-            hideNav:true,
-            momentData:this.props.momentData,
-            sceneConfig:"right-nodrag"
-        });
+        if(this.checkEmpty()){
+            this.refs.locationError.show();
+        }else{
+            this.refs.locationError.hide();
+            this.props.navigator.push({
+                id: "editTripName",
+                hideNav:true,
+                momentData:this.props.momentData,
+                sceneConfig:"right-nodrag"
+            });
+        }
+    }
+
+    checkEmpty(){
+        var isEmpty=false;
+        for(var i=0;i<this.props.momentData.length;i++){
+            isEmpty=!this.props.momentData[i].moment.location;
+        }
+        return isEmpty;
     }
 
     hideNav(){
@@ -70,16 +84,25 @@ class EditMomentNames extends React.Component {
         Animated.timing(this.state.navOpacity, {toValue: 1,duration:8}).start();
     }
 
+    makeCoverPhoto(index){
+        for(var i=1;i<=this.props.momentData.length;i++){
+            this.refs["location-"+i].isCover(i===index);
+        }
+    }
+
     render(){
         var currentIndex=0;
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
+
+                {/* //error message here */}
 
                 <ScrollView
                     style={styles.container}
                     automaticallyAdjustInsets={false}
                     horizontal={true}
                     decelerationRate={0}
+                    ref="scrollview"
                     snapToInterval={CARD_WIDTH + CARD_MARGIN*2}
                     snapToAlignment="start"
                     contentContainerStyle={styles.content}
@@ -87,17 +110,15 @@ class EditMomentNames extends React.Component {
                 >
 
                     {this.props.momentData.map((moment)=>{
-                        //console.log('current index',currentIndex);
                         currentIndex++;
-
-                        return moment.selected?(<LocationName key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment} isFirst={currentIndex===1}></LocationName>):null;
-
+                        return moment.selected?(<LocationName makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+currentIndex} locationIndex={currentIndex} key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
                     })}
                 </ScrollView>
                 <Animated.View style={[{flex:1,position:'absolute',top:0},{opacity:this.state.navOpacity}]}>
                     {this.props.navigation.default}
                 </Animated.View>
                 <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} text="next step (edit tripname)"></SimpleButton>
+                <SimpleError ref="locationError" errorMessage="Please add a location name to each photo"></SimpleError>
 
             </View>
         )

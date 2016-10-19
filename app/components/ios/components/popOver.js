@@ -35,7 +35,7 @@ var styles = StyleSheet.create({
         flex:1,
         right:0,
         position:'absolute',
-        paddingBottom:50
+        paddingBottom:100
     }
 });
 

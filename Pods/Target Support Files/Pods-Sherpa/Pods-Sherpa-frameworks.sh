@@ -89,7 +89,6 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "Pods-Sherpa/NSData_Base64.framework"
   install_framework "Pods-Sherpa/ReactiveCocoa.framework"
   install_framework "Pods-Sherpa/Result.framework"
-  install_framework "Pods-Sherpa/SimpleAuth.framework"
   install_framework "Pods-Sherpa/cocoa_oauth.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
@@ -98,6 +97,5 @@ if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "Pods-Sherpa/NSData_Base64.framework"
   install_framework "Pods-Sherpa/ReactiveCocoa.framework"
   install_framework "Pods-Sherpa/Result.framework"
-  install_framework "Pods-Sherpa/SimpleAuth.framework"
   install_framework "Pods-Sherpa/cocoa_oauth.framework"
 fi

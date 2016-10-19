@@ -18,12 +18,6 @@ const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 import {createMoment,uploadMoment,getGps} from "../../../../actions/trip.edit.actions"
 import SherpaExif from '../../components/SherpaExif'
 
-let styles = StyleSheet.create({
-    container: {
-        flex: 1
-    }
-});
-
 class AddTrip extends React.Component {
     constructor(){
         super();
@@ -35,10 +29,6 @@ class AddTrip extends React.Component {
 
     getSelectedImages(res){
         this.setState({images:res})
-    }
-
-    reset(){
-        //this.refs.sherpaCameraRoll.resetSelected();
     }
 
     navActionRight(){
@@ -68,7 +58,7 @@ class AddTrip extends React.Component {
                         "lat":lat,
                         "lng":lng,
                         "locationData":[],
-                        "shotDate": new Date(dateTime)
+                        "shotDate": new Date(shotDate)
                     },
                     image:this.state.images[i]
                 })
@@ -78,7 +68,7 @@ class AddTrip extends React.Component {
                 id: "editTripGrid",
                 hideNav:true,
                 momentData:momentBlobs,
-                sceneConfig:"right-nodrag"
+                sceneConfig:"bottom-nodrag"
             });
 
         });

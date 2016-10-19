@@ -23,7 +23,7 @@ class PhotoSelectorGrid extends React.Component {
     }
 
     _pressData(){
-        //console.log('press data');
+        console.log('press data');
     }
 
     componentWillMount(){
@@ -49,27 +49,38 @@ class PhotoSelectorGrid extends React.Component {
     }
 
     _renderRow(rowData, sectionID, rowID) {
-        return (
+        var rowContent=rowData.type=='moment'?
             <TouchableOpacity style={styles.row} onPress={() => this._pressRow(rowID)} >
-                        <Image  style={styles.row} source={{uri: rowData.moment.image.uri}}></Image>
-                        <View style={[{opacity:rowData.selected?1:0,position:'absolute',top:0,left:0},styles.row]}>
-                            <Image
-                            style={[styles.marker, {width: 27, height: 27, right:20,bottom:20,position:'absolute'}]}
-                            source={require('../../../Images/icon-check-green.png')}/>
-                        </View>
-            </TouchableOpacity>
-        );
+                <Image  style={styles.row} source={{uri: rowData.moment.image.uri}}></Image>
+                <View style={[{opacity:rowData.selected?1:0,position:'absolute',top:0,left:0},styles.row]}>
+                    <Image
+                        style={[styles.marker, {width: 27, height: 27, right:20,bottom:20,position:'absolute'}]}
+                        source={require('../../../Images/icon-check-green.png')}/>
+                </View>
+            </TouchableOpacity>:
+            <TouchableOpacity onPress={() => rowData.callback()} >
+                <View style={[styles.row,{borderWidth:1,borderColor:"#e6e6e6"}]} >
+                    <Image style={{width:9,height:9}} source={require("../../../Images/icon-plus-green.png")}></Image>
+                </View>
+            </TouchableOpacity>;
+
+        return rowContent;
     }
 
     _genRows(pressData){
         var dataBlob = [];
         for (var ii = 0; ii < this.props.data.length; ii++) {
             dataBlob.push({
+                type:'moment',
                 selected:!pressData[ii],
                 moment:this.props.data[ii]
             });
             this.props.data[ii].selected=!pressData[ii]
         }
+        dataBlob.push({
+            type:'add-more',
+            callback:this.props.moreCallback
+        });
         return dataBlob;
     }
 
@@ -87,14 +98,16 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         alignItems:"center",
-        padding:7,
-        paddingBottom:65
+        paddingLeft:7,
+        paddingRight:7,
+        paddingTop:0,
+        paddingBottom:30
     },
     row: {
         justifyContent: 'center',
         margin: 7,
         width: SCREEN_WIDTH/2-21,
-        height: SCREEN_WIDTH/2-14,
+        height: SCREEN_WIDTH/2-25,
         alignItems: 'center'
     },
     thumb: {

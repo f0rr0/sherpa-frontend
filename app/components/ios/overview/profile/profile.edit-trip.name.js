@@ -46,7 +46,9 @@ class EditTripName extends React.Component {
                 "shotDate": this.props.momentData[i].moment.shotDate,
                 "location": this.props.momentData[i].moment.location,
                 "state": this.props.momentData[i].moment.state,
-                "country": this.props.momentData[i].moment.country
+                "country": this.props.momentData[i].moment.country,
+                "venue": this.props.momentData[i].moment.location,
+
             });
             moments.push(momentPromise)
         }

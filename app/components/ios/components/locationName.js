@@ -24,7 +24,8 @@ class LocationName extends Component{
     constructor(props){
         super();
         this.state={
-            inputBottomMargin:new Animated.Value(0)
+            inputBottomMargin:new Animated.Value(0),
+            isCover:false
         }
 
     }
@@ -32,46 +33,60 @@ class LocationName extends Component{
     componentDidMount(){
     }
 
+    isCover(val){
+        this.setState({isCover:val})
+    }
+
     componentDidUpdate(prevProps,prevState){
     }
 
     moveUp(){
-        //console.log('move up');
         this.props.hideNav();
         Animated.spring(this.state.inputBottomMargin, {toValue: -350, friction:8}).start();
-        //Animated.spring(this.state.overlayOpacity, {toValue: .5,friction:8}).start();
-        //Animated.spring(this.state.headlineOpacity, {toValue: 0,friction:8}).start();
     }
 
     moveDown(){
         dismissKeyboard();
         this.props.showNav();
         Animated.spring(this.state.inputBottomMargin, {toValue: 0,friction:8}).start();
-        //Animated.spring(this.state.overlayOpacity, {toValue: 0,friction:8}).start();
-        //Animated.spring(this.state.headlineOpacity, {toValue: 1,friction:8}).start();
     }
 
+    setCoverPhoto(){
+        this.props.makeCoverPhoto(this.props.locationIndex);
+    }
 
     render(){
         var moment = this.props.moment;
-        //console.log(this)
         return(
             <Animated.View style={[this.props.style,{marginTop:this.state.inputBottomMargin}]}>
-                <ImageProgress
-                    resizeMode="cover"
-                    indicator={Progress.Circle}
-                    indicatorProps={{
-                                                color: 'rgba(150, 150, 150, 1)',
-                                                unfilledColor: 'rgba(200, 200, 200, 0.2)'
-                                            }}
-                    style={{
-                      width:this.props.cardWidth,
-                      height:this.props.cardWidth
-                    }}
-                    source={{uri:moment.image.uri}}
-                    onLoad={() => {}}
-                    onError={()=>{}}
-                />
+                <View>
+                    <ImageProgress
+                        resizeMode="cover"
+                        indicator={Progress.Circle}
+                        indicatorProps={{
+                                                    color: 'rgba(150, 150, 150, 1)',
+                                                    unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                                                }}
+                        style={{
+                          width:this.props.cardWidth,
+                          height:this.props.cardWidth
+                        }}
+                        source={{uri:moment.image.uri}}
+                        onLoad={() => {}}
+                        onError={()=>{}}
+                    />
+                    <Image style={{width:this.props.cardWidth,position:'absolute',bottom:-60,left:0}} resizeMode="contain" source={require('../../../Images/shadow-bottom.png')}></Image>
+                    <TouchableOpacity onPress={this.setCoverPhoto.bind(this)} style={{position:'absolute',right:12,bottom:12}}>
+                        <View style={{flexDirection:'row',flex:1,alignItems:'center',justifyContent:'center'}}>
+
+                            <Text style={{color:'white',fontSize:10,fontFamily:Fonts.type.headline,letterSpacing:1}}>MAKE THIS THE COVER PHOTO</Text>
+                            <View style={{marginBottom:3,marginLeft:10,width:21,height:21}}>
+                                <Image style={{position:'absolute',width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-empty-white-circle.png')}></Image>
+                                <Image style={{position:'absolute',opacity:this.state.isCover?1:0,width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-check-white-circle.png')}></Image>
+                            </View>
+                        </View>
+                    </TouchableOpacity>
+                </View>
                 <GooglePlacesAutocomplete
                     placeholder='Enter photo location'
                     ref="googlesearch"
@@ -113,7 +128,7 @@ class LocationName extends Component{
                     query={{
                                              key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',
                                              language: 'en', // language of the results
-                                             types: '(cities)', // default: 'geocode'
+                                             types: 'geocode', // default: 'geocode'
                                          }}
                     styles={{
                                              description: {
@@ -175,7 +190,7 @@ class LocationName extends Component{
                                             rankby: 'distance'
                                          }}
 
-                    filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                    filterReverseGeocodingByTypes={['locality']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
                 />
             </Animated.View>

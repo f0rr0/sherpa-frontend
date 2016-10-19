@@ -347,7 +347,6 @@
 		F374824A1D9BD65500D953B1 /* RCTCameraRoll.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCameraRoll.xcodeproj; path = "../node_modules/react-native/Libraries/CameraRoll/RCTCameraRoll.xcodeproj"; sourceTree = "<group>"; };
 		F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNUploader.xcodeproj; path = "../node_modules/react-native-uploader/RNUploader/RNUploader.xcodeproj"; sourceTree = "<group>"; };
 		F379100D1DA7FF2200FEF138 /* RCTImageResizer.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTImageResizer.xcodeproj; path = "../node_modules/react-native-image-resizer/ios/RCTImageResizer.xcodeproj"; sourceTree = "<group>"; };
-		F386799C1D184F11002DBE52 /* SimpleAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SimpleAuth.framework; path = "../../../../Library/Developer/Xcode/DerivedData/Sherpa-crsigiawhdrczddfiqcpyecxabqn/Build/Products/Debug-iphonesimulator/SimpleAuth.framework"; sourceTree = "<group>"; };
 		F387AB0F1CC93FF200D88D5D /* Mapbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Mapbox.framework; sourceTree = "<group>"; };
 		F3A5420C1D512B6000CC10F2 /* ART.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ART.xcodeproj; path = "../node_modules/react-native/Libraries/ART/ART.xcodeproj"; sourceTree = "<group>"; };
 		F3A6129F1D897377002A3AF7 /* ReactNativeSocialShare.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = ReactNativeSocialShare.xcodeproj; path = "../node_modules/react-native-social-share/ReactNativeSocialShare.xcodeproj"; sourceTree = "<group>"; };
@@ -528,7 +527,6 @@
 			isa = PBXGroup;
 			children = (
 				F3A612B21D897378002A3AF7 /* Social.framework */,
-				F386799C1D184F11002DBE52 /* SimpleAuth.framework */,
 				88D135E3BCB4EB92F7CB96F5 /* Pods_Sherpa.framework */,
 			);
 			name = Frameworks;

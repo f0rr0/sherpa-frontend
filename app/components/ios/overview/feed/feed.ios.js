@@ -209,7 +209,7 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid ref={route.id} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
@@ -243,6 +243,7 @@ class Feed extends Component {
     }
 
     _navActionLeft(){
+        console.log('nav action left',this.navigator.refs[this.currentRenderScene])
         if(this.navigator.refs[this.currentRenderScene].navActionLeft){
             this.navigator.refs[this.currentRenderScene].navActionLeft();
         }else{
@@ -265,9 +266,6 @@ class Feed extends Component {
     }
 
     sceneChange(route){
-        if(route.id==='addTrip'){
-            this.navigator.refs.addTrip.reset();
-        }
     }
 
     render() {
