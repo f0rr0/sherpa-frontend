@@ -87,8 +87,7 @@ var styles = StyleSheet.create({
 class FeedTrip extends Component {
     constructor(props){
         super(props);
-        //console.log('trip',props.trip);
-         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state= {
             dataSource: this.ds.cloneWithRows(props.trip.moments),
             annotations:[],
@@ -154,7 +153,15 @@ class FeedTrip extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
+                <PopOver ref="popover" showEditTrip={true} onEditTrip={()=>{
+                      this.props.navigator.push({
+                            id: "editTripGrid",
+                            hideNav:true,
+                            momentData:this.props.trip.moments,
+                            tripData:this.props.trip,
+                            sceneConfig:"bottom-nodrag"
+                      });
+                }} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )
     }

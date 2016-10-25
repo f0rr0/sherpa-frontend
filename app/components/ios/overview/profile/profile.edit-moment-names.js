@@ -62,6 +62,7 @@ class EditMomentNames extends React.Component {
             this.props.navigator.push({
                 id: "editTripName",
                 hideNav:true,
+                tripData:this.props.tripData,
                 momentData:this.props.momentData,
                 sceneConfig:"right-nodrag"
             });
@@ -69,9 +70,11 @@ class EditMomentNames extends React.Component {
     }
 
     checkEmpty(){
+
         var isEmpty=false;
         for(var i=0;i<this.props.momentData.length;i++){
-            isEmpty=!this.props.momentData[i].moment.location;
+        console.log('moment',this.props.momentData[i]);
+            isEmpty=!this.props.momentData[i].location&&this.props.momentData[i].selected;
         }
         return isEmpty;
     }
@@ -85,9 +88,13 @@ class EditMomentNames extends React.Component {
     }
 
     makeCoverPhoto(index){
-        for(var i=1;i<=this.props.momentData.length;i++){
-            this.refs["location-"+i].isCover(i===index);
-        }
+        var currentIndex=0;
+        this.props.momentData.map((moment)=>{
+            currentIndex++;
+            if(moment.selected){
+                this.refs["location-"+currentIndex].isCover(currentIndex===index);
+            };
+        })
     }
 
     render(){

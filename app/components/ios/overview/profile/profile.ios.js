@@ -115,12 +115,18 @@ class OwnUserProfile extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
+
         if(!this.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
             this.ready=true;
             this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage]);
             this.refs.listview._refresh();
             this.isScraping=false;
         }
+    }
+
+    refresh(){
+        this.ready=false;
+        this.props.dispatch(loadFeed(this.props.user.serviceID, this.props.user.sherpaToken, 1, "profile"));
     }
 
     reset(){

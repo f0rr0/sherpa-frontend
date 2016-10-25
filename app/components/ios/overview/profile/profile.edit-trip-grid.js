@@ -13,7 +13,6 @@ import SimpleButton from '../../components/simpleButton';
 import RNFetchBlob from 'react-native-fetch-blob';
 import PhotoSelectorGrid from '../../components/photoSelector.grid';
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
-
 class EditTripGrid extends React.Component {
     constructor(props){
         super(props)
@@ -47,6 +46,7 @@ class EditTripGrid extends React.Component {
             id: "editTripNames",
             hideNav:true,
             momentData:this.props.momentData,
+            tripData:this.props.tripData || null,
             sceneConfig:"right-nodrag"
         });
     }
@@ -55,12 +55,8 @@ class EditTripGrid extends React.Component {
         return(
             <View style={{backgroundColor:'white',flex:1}}>
                 <PhotoSelectorGrid moreCallback={()=>{
-                    this.props.navigator.push({
-                        id: "addTrip",
-                        hideNav:true,
-                        sceneConfig:"bottom-nodrag"
-                    });
-                }} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
+                    this.props.navigator.pop();
+                }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )

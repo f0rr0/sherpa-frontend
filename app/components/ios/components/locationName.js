@@ -71,7 +71,7 @@ class LocationName extends Component{
                           width:this.props.cardWidth,
                           height:this.props.cardWidth
                         }}
-                        source={{uri:moment.image.uri}}
+                        source={{uri:moment.mediaUrl}}
                         onLoad={() => {}}
                         onError={()=>{}}
                     />
@@ -114,16 +114,17 @@ class LocationName extends Component{
                                             }
 
 
-                                            this.props.moment.moment.lat=details.geometry.location.lat;
-                                            this.props.moment.moment.lng=details.geometry.location.lng;
-                                            this.props.moment.moment.location=details.name;
-                                            this.props.moment.moment.state=info.state;
-                                            this.props.moment.moment.country=info.country;
+                                            this.props.moment.lat=details.geometry.location.lat;
+                                            this.props.moment.lng=details.geometry.location.lng;
+                                            this.props.moment.location=details.name;
+                                            this.props.moment.venue=details.name;
+                                            this.props.moment.state=info.state;
+                                            this.props.moment.country=info.country;
 
                                             this.moveDown();
                                          }}
                     getDefaultValue={() => {
-                                            return "";//this.state.hometown.name; // text input default value
+                                            return this.props.moment.venue;//this.state.hometown.name; // text input default value
                                          }}
                     query={{
                                              key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',

@@ -26,7 +26,7 @@ export function createMoment(moment){
                     "country": moment.country,
                     "continent": moment.continent,
                     "venue": moment.venue,
-                    "date": moment.shotDate.getTime() / 1000,
+                    "date": moment.date,
                     "caption": moment.caption,
                     "scrapeTime": new Date()
                 };
@@ -35,8 +35,11 @@ export function createMoment(moment){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
 
-                fetch(endpoint + version + "/moment/create", {
-                    method: 'post',
+                var createOrUpdate=moment.id?moment.id+"/update":"create";
+
+
+                fetch(endpoint + version + "/moment/"+createOrUpdate, {
+                    method: moment.id?'patch':'post',
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
@@ -49,11 +52,13 @@ export function createMoment(moment){
     })
 }
 
+
+
 export function uploadMoment(momentBlob){
     return new Promise((fulfill,reject)=> {
         const {endpoint,version} = sherpa;
 
-        ImageResizer.createResizedImage(momentBlob.image.uri, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
+        ImageResizer.createResizedImage(momentBlob.mediaUrl, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
             store.get('user').then((user) => {
                 RNFetchBlob.fetch("POST", endpoint + version + "/moment/" + momentBlob.data.id + "/upload", {
                     'token' : user.sherpaToken,
@@ -78,7 +83,7 @@ export function getTripLocation(momentBlobs){
 
                 var coords=[];
                 for(var i=0;i<momentBlobs.length;i++){
-                    coords.push({"lat":momentBlobs[i].moment.lat,"lng":momentBlobs[i].moment.lng});
+                    coords.push({"lat":momentBlobs[i].lat,"lng":momentBlobs[i].lng});
                 }
 
 
@@ -87,7 +92,6 @@ export function getTripLocation(momentBlobs){
                     "points":coords,
                     "hometown":{"lat":user.serviceObject.hometownLatitude,"lng":user.serviceObject.hometownLongitude}
                 };
-
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
@@ -134,8 +138,9 @@ export function createTrip(tripBlob,tripLocation) {
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
 
-                fetch(endpoint + version + "/trip/create", {
-                    method: 'post',
+                var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create"
+                fetch(endpoint + version + "/trip/"+createOrUpdate, {
+                    method: tripBlob.trip?'put':'post',
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
@@ -158,5 +163,18 @@ export function getGps(exifCoord, hemi) {
     let flip = (hemi == 'W' || hemi == 'S') ? -1 : 1;
 
     return flip * (degrees + minutes / 60 + seconds / 3600);
+}
 
+export function getUserInstagramPhotos(){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            fetch('https://api.instagram.com/v1/users/self/media/recent/?access_token='+user.serviceToken, {
+                method: 'get'
+            }).then((rawServiceResponse)=> {
+                return rawServiceResponse.text();
+            }).then((response)=> {
+                fulfill(JSON.parse(response))
+            }).catch(err=>reject(err));
+        })
+    });
 }

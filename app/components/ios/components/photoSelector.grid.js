@@ -51,7 +51,7 @@ class PhotoSelectorGrid extends React.Component {
     _renderRow(rowData, sectionID, rowID) {
         var rowContent=rowData.type=='moment'?
             <TouchableOpacity style={styles.row} onPress={() => this._pressRow(rowID)} >
-                <Image  style={styles.row} source={{uri: rowData.moment.image.uri}}></Image>
+                <Image  style={styles.row} source={{uri: rowData.moment.mediaUrl}}></Image>
                 <View style={[{opacity:rowData.selected?1:0,position:'absolute',top:0,left:0},styles.row]}>
                     <Image
                         style={[styles.marker, {width: 27, height: 27, right:20,bottom:20,position:'absolute'}]}
@@ -77,10 +77,12 @@ class PhotoSelectorGrid extends React.Component {
             });
             this.props.data[ii].selected=!pressData[ii]
         }
-        dataBlob.push({
-            type:'add-more',
-            callback:this.props.moreCallback
-        });
+        if(this.props.showMore){
+            dataBlob.push({
+                type:'add-more',
+                callback:this.props.moreCallback
+            });
+        }
         return dataBlob;
     }
 

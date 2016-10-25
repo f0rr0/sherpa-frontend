@@ -27,7 +27,7 @@ var styles=StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:50
+        paddingBottom:50,
     }
 });
 

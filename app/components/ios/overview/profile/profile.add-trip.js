@@ -12,31 +12,50 @@ import React, { Component } from 'react';
 import StickyHeader from '../../components/stickyHeader';
 import Header from '../../components/stickyHeader';
 import SherpaCameraRollPicker from '../../components/SherpaCameraRollPicker'
+import SherpaInstagramPicker from '../../components/SherpaInstagramPicker'
 import EXIF from 'exif-js'
 import RNFetchBlob from 'react-native-fetch-blob';
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
+const SCREEN_WIDTH = require('Dimensions').get('window').width;
 import {createMoment,uploadMoment,getGps} from "../../../../actions/trip.edit.actions"
 import SherpaExif from '../../components/SherpaExif'
+import {Fonts} from '../../../../Themes'
+import PhotoSelectorGrid from '../../components/photoSelector.grid';
+import {getUserInstagramPhotos} from '../../../../actions/trip.edit.actions'
 
 class AddTrip extends React.Component {
     constructor(){
         super();
-        this.state={images:[]}
+        this.state={images:{cameraroll:[],instagram:[]},type:'cameraroll'}
     }
 
     componentDidMount(){
+        this.setType('cameraroll');
     }
 
-    getSelectedImages(res){
-        this.setState({images:res})
+    componentDidUpdate(){
+        this.refs['tab-cameraroll'].setOpacityTo(this.refs['tab-cameraroll'].props.disabled?1:.2)
+        this.refs['tab-instagram'].setOpacityTo(this.refs['tab-instagram'].props.disabled?1:.2)
+    }
+
+    getSelectedImagesCameraRoll(res){
+        this.state.images.cameraroll=res;
+        //console.log(this.state.images);
+        this.setState({images:this.state.images})
+    }
+
+    getSelectedImagesInstagram(res) {
+        this.state.images.instagram=res;
+        //console.log(this.state.images);
+        this.setState({images:this.state.images})
     }
 
     navActionRight(){
-        if(this.state.images.length==0)return;
+        if(this.state.images.cameraroll.length==0&&this.state.images.instagram.length==0)return;
 
         let momentsExif = [];
-        for(var i=0;i<this.state.images.length;i++) {
-            momentsExif.push(SherpaExif.getExif(this.state.images[i].uri));
+        for(var i=0;i<this.state.images.cameraroll.length;i++) {
+            momentsExif.push(SherpaExif.getExif(this.state.images.cameraroll[i].uri));
         }
 
         Promise.all(momentsExif).then((momentsExifData)=> {
@@ -52,18 +71,23 @@ class AddTrip extends React.Component {
                 const dateTime = shotDate.split(' ');
                 const regex = new RegExp(':', 'g');
                 dateTime[0] = dateTime[0].replace(regex, '-');
-
+                //console.log('push moment with exif',this.state.images.cameraroll[i].uri)
                 momentBlobs.push({
-                    moment:{
-                        "lat":lat,
-                        "lng":lng,
-                        "locationData":[],
-                        "shotDate": new Date(shotDate)
-                    },
-                    image:this.state.images[i]
+                    "lat":lat,
+                    "lng":lng,
+                    "date": new Date(dateTime).getTime()/1000,
+                    "service":"",
+                    "venue":"",
+                    "location":"",
+                    "state":"",
+                    "country":"",
+                    "mediaUrl":this.state.images.cameraroll[i].uri
                 })
             }
 
+            momentBlobs=momentBlobs.concat(this.state.images.instagram);
+
+            //console.log(momentBlobs);
             this.props.navigator.push({
                 id: "editTripGrid",
                 hideNav:true,
@@ -74,12 +98,35 @@ class AddTrip extends React.Component {
         });
     }
 
+    setType(newType){
+        this.setState({type:newType})
+    }
+
 
     render(){
+        var currentImageSelection=null;
+        switch(this.state.type){
+            case "cameraroll":
+                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
+            break;
+            case "instagram":
+                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
+            break;
+        }
         return(
             <View style={{flex:1,backgroundColor:"#161616"}}>
                 {this.props.navigation.default}
-                <SherpaCameraRollPicker ref="sherpaCameraRoll" wrapper={{height:SCREEN_HEIGHT-70,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImages.bind(this)} />
+
+                <View style={{width:SCREEN_WIDTH,marginTop:70,flex:1,flexDirection:'row',borderTopColor:"#343434",borderTopWidth:1}}>
+                    <TouchableOpacity disabled={this.state.type==='cameraroll'} onPress={()=>this.setType('cameraroll')} ref="tab-cameraroll" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
+                        <Text style={{color:'white',fontFamily:Fonts.type.headline,fontSize:11,letterSpacing:.5}}>CAMERA ROLL</Text>
+                    </TouchableOpacity>
+                    <View style={{height:50,width:1,backgroundColor:"#343434"}}></View>
+                    <TouchableOpacity disabled={this.state.type==='instagram'} onPress={()=>this.setType('instagram')} ref="tab-instagram" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
+                        <Text style={{color:'white',fontFamily:Fonts.type.headline,fontSize:11,letterSpacing:.5}}>INSTAGRAM</Text>
+                    </TouchableOpacity>
+                </View>
+                {currentImageSelection}
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )

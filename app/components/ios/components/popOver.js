@@ -79,6 +79,11 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>{this.props.shareCopy}</Text>
             </TouchableHighlight>:null;
 
+        var editTripButton=this.props.showEditTrip?
+            <TouchableHighlight onPress={this.props.onEditTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
+                <Text style={styles.buttonCopy}>EDIT TRIP</Text>
+            </TouchableHighlight>:null;
+
         var resetProfileButton=this.props.showReset?
           <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
               this.props.resetProfileCallback();
@@ -112,6 +117,7 @@ class PopOver extends Component {
 
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
+                {editTripButton}
                 {shareButton}
                 {reportPhotoButton}
                 {profileSettingsButton}

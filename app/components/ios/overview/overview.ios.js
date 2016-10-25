@@ -13,6 +13,7 @@ import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
 import React, { Component } from 'react';
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
+import HeaderProgress from '../components/headerProgress'
 import {
     Animated,
     StyleSheet,
@@ -134,25 +135,25 @@ class Overview extends React.Component {
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-feed.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={FEED} ref={FEED} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={FEED} headerProgress={this.refs.headerProgress} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === EXPLORE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-explore.png')} />}
                                 onPress={()=>this.updateTabTo(EXPLORE)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={EXPLORE} ref={EXPLORE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={EXPLORE} headerProgress={this.refs.headerProgress} ref={EXPLORE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === PROFILE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-profil.png')} />}
                                 onPress={()=>this.updateTabTo(PROFILE)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} ref={PROFILE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} headerProgress={this.refs.headerProgress} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === SUITCASE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-suitcase.png')} />}
                                 onPress={()=>this.updateTabTo(SUITCASE)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={SUITCASE} ref={SUITCASE} {...this.props}/>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={SUITCASE} headerProgress={this.refs.headerProgress} ref={SUITCASE} {...this.props}/>
                             </TabNavigator.Item>
                         </TabNavigator>
 
@@ -163,6 +164,7 @@ class Overview extends React.Component {
                     <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
                 </Animated.View>
                 {tabBar}
+                <HeaderProgress ref="headerProgress"></HeaderProgress>
             </View>
         );
     }

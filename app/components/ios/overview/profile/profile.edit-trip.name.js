@@ -17,15 +17,17 @@ import { Fonts, Colors } from '../../../../Themes/'
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import {createMoment,uploadMoment,getGps,createTrip,getTripLocation} from "../../../../actions/trip.edit.actions"
+import SimpleError from '../../components/simpleError';
 
 
 
 class EditTripName extends React.Component {
     constructor(props){
         super(props)
+        //console.log('props',props);
         this.state={
             remainingCharacters:30,
-            text:"",
+            text:props.tripData?props.tripData.name:"",
             positionBottom:new Animated.Value(14)
         }
     }
@@ -36,77 +38,78 @@ class EditTripName extends React.Component {
 
     navActionRight(){
 
-        var moments=[];
-        var momentIDs=[];
-        //create moments
-        for(var i=0;i<this.props.momentData.length;i++){
-            let momentPromise = createMoment({
-                "lat":this.props.momentData[i].moment.lat,
-                "lng":this.props.momentData[i].moment.lng,
-                "shotDate": this.props.momentData[i].moment.shotDate,
-                "location": this.props.momentData[i].moment.location,
-                "state": this.props.momentData[i].moment.state,
-                "country": this.props.momentData[i].moment.country,
-                "venue": this.props.momentData[i].moment.location,
 
-            });
-            moments.push(momentPromise)
-        }
+        if(this.state.text==""){
+            this.refs.tripnameError.show();
+        }else{
+            this.refs.tripnameError.hide();
+
+            var moments=[];
+            var momentIDs=[];
+
+            //create moments or edit moments
+            for(var i=0;i<this.props.momentData.length;i++){
+                //console.log('moment[i]',this.props.momentData[i]);
+                let momentPromise = createMoment(this.props.momentData[i]);
+
+                moments.push(momentPromise)
+            }
 
 
-        getTripLocation(this.props.momentData).then((tripLocation)=>{
-            Promise.all(moments).then((momentsRes)=>{
-                //console.log('trip location',tripLocation);
+            this.props.headerProgress.show();
+            this.props.headerProgress.startToMiddle();
 
-                var momentUploads=[];
-                var dates=[]
-                for(var i=0;i<  this.props.momentData.length;i++){
-                    momentIDs.push(momentsRes[i].id)
-                    this.props.momentData[i].data=momentsRes[i];
-                    dates.push(this.props.momentData[i].moment.shotDate)
-                    momentUploads.push(uploadMoment(this.props.momentData[i]));
-                }
+            getTripLocation(this.props.momentData).then((tripLocation)=>{
+                Promise.all(moments).then((momentsRes)=>{
 
-                dates.sort(function(a,b) {
-                    return new Date(a.start).getTime() - new Date(b.start).getTime()
+                    var momentUploads=[];
+                    var dates=[]
+                    for(var i=0;i<  this.props.momentData.length;i++){
+                        momentIDs.push(momentsRes[i].id)
+                        this.props.momentData[i].data=momentsRes[i];
+                        dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
+                        if(!this.props.momentData[i].id)momentUploads.push(uploadMoment(this.props.momentData[i]));
+                    }
+
+                    dates.sort(function(a,b) {
+                        return a - b
+                    });
+
+                    //console.log(dates);
+                    var startDate=dates[0];
+                    var endDate=dates[dates.length-1];
+
+                    //console.log('start date',startDate);
+                    //console.log('end date',endDate);
+                    var uploadResolver=momentUploads.length>0?momentUploads:[true];
+                    Promise.all(uploadResolver).then((res)=> {
+                        createTrip({
+                            momentIDs,
+                            name: this.state.text,
+                            startDate,
+                            endDate,
+                            trip: this.props.tripData
+                        }, tripLocation).then(()=> {
+                            this.props.headerProgress.showSuccess();
+                            this.props.refreshCurrentScene();
+                        }).catch((err)=> {
+                            //console.log('err from create trip',err);
+                            this.props.headerProgress.showError();
+                        })
+                    }).catch((err)=>{console.log('err from upload')});
                 });
 
-                //console.log(dates);
-                var startDate=new Date(dates[0]).getTime()/1000;
-                var endDate=dates[dates.length-1].getTime()/1000;
-
-                //console.log('start date',startDate);
-                //console.log('end date',endDate);
-
-                Promise.all(momentUploads).then((res)=>{
-
-                    createTrip({
-                        momentIDs,
-                        name:this.state.text,
-                        startDate,
-                        endDate
-                    },tripLocation).then(()=>{
-                        Alert.alert(
-                            'Upload Successful',
-                            'Your trip has been created'
-                        )
-                    }).catch((err)=>{
-                        Alert.alert(
-                            'Upload Failed',
-                            'Your trip creation has failed'
-                        )
-                    })
-
-                }).catch((err)=>{console.log('err')});
-            })
-
-            this.props.navigator.push({
-                id: "own-profile",
-                hideNav:false,
-                momentData:this.props.momentData,
-                sceneConfig:"bottom-nodrag"
+                //console.log(this.props.navigator.getCurrentRoutes())
+                this.props.navigator.popToTop();
+                //this.props.navigator.push({
+                //    id: "own-profile",
+                //    hideNav:false,
+                //    momentData:this.props.momentData,
+                //    refresh:true,
+                //    sceneConfig:"bottom-nodrag"
+                //});
             });
-        });
+        }
 
 
     }
@@ -149,6 +152,7 @@ class EditTripName extends React.Component {
                 <Animated.View style={{position:'absolute',bottom:this.state.positionBottom,left:7,flex:1}}>
                     <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7}} onPress={()=>{this.navActionRight()}} text="save and publish trip"></SimpleButton>
                 </Animated.View>
+                <SimpleError ref="tripnameError" errorMessage="Please add a trip name"></SimpleError>
 
             </View>
         )

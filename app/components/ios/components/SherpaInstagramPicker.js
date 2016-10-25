@@ -12,11 +12,11 @@ import {
     ActivityIndicator,
 } from 'react-native'
 import Camera from 'react-native-camera';
+import {getUserInstagramPhotos} from '../../../actions/trip.edit.actions'
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 
-
-class SherpaCameraRollPicker extends Component {
+class SherpaInstagramPicker extends Component {
     constructor(props) {
         super(props);
 
@@ -74,23 +74,47 @@ class SherpaCameraRollPicker extends Component {
             fetchParams.after = this.state.lastCursor;
         }
 
-        CameraRoll.getPhotos(fetchParams)
+        getUserInstagramPhotos()
             .then((data) => this._appendImages(data), (e) => console.log(e));
     }
 
-    _appendImages(data) {
-        var assets = data.edges;
+    _appendImages(res) {
+        //console.log(res)
+        var assets = res.data;
         var newState = {
             loadingMore: false,
         };
 
-        if (!data.page_info.has_next_page) {
-            newState.noMore = true;
-        }
+        this.setState({})
 
+        //if (!data.page_info.has_next_page) {
+            newState.noMore = true;
+        //}
         if (assets.length > 0) {
-            newState.lastCursor = data.page_info.end_cursor;
-            newState.images = this.state.images.concat(assets);
+            var images=[];
+            for(var i=0;i<assets.length;i++){
+                var asset=assets[i];
+
+                images.push({
+                        node:{
+                            image:{
+                                "uri":asset.images['standard_resolution'].url,
+                                "lat":asset.location?asset.location.latitude:null,
+                                "lng":asset.location?asset.location.longitude:null,
+                                "date": asset.created_time,
+                                "service":"instagram",
+                                "venue":asset.location?asset.location.name:"",
+                                "location":asset.location?asset.location.name:"",
+                                "state":"",
+                                "country":"",
+                                "mediaUrl":assets[i].images['standard_resolution'].url
+                            }
+                        }
+                });
+            }
+
+            //newState.lastCursor = data.page_info.end_cursor;
+            newState.images = this.state.images.concat(images);
             //console.log('data source->append images');
             newState.dataSource = this.state.dataSource.cloneWithRows(
                 this._nEveryRow(newState.images, this.props.imagesPerRow)
@@ -106,7 +130,6 @@ class SherpaCameraRollPicker extends Component {
             <View
                 style={[styles.wrapper, {padding: 0, paddingRight: 0, backgroundColor: backgroundColor},this.props.wrapper]}>
                 <View style={[{opacity:this.state.loadingMore?1:0,width:SCREEN_WIDTH,height:SCREEN_HEIGHT,position:'absolute',top:0,left:0,justifyContent:'center',alignItems:'center'},this.props.wrapper]}><ActivityIndicator style={styles.spinner} /></View>
-
                 <ListView
                     style={{flex: 1,}}
                     scrollRenderAheadDistance={scrollRenderAheadDistance}
@@ -122,6 +145,7 @@ class SherpaCameraRollPicker extends Component {
     }
 
     _renderImage(item) {
+        //console.log('item',item);
         var {selectedMarker, imageMargin} = this.props;
         //console.log(this.state.selected,'check selected');
 
@@ -186,8 +210,8 @@ class SherpaCameraRollPicker extends Component {
             var gridEL;
             switch(item.type){
                 case 'capture':
-                   gridEL=this._renderCapture();
-                break;
+                    gridEL=this._renderCapture();
+                    break;
                 default:
                     gridEL=this._renderImage(item);
             }
@@ -244,8 +268,6 @@ class SherpaCameraRollPicker extends Component {
             temp = [];
 
         //push 'take picture' element
-        temp.push({type:'capture'});
-
         for (var i = 0; i < data.length; ++i) {
             temp['type']='photo';
             if (i > 0 && i % n === 0) {
@@ -285,7 +307,7 @@ const styles = StyleSheet.create({
     },
 })
 
-SherpaCameraRollPicker.propTypes = {
+SherpaInstagramPicker.propTypes = {
     scrollRenderAheadDistance: React.PropTypes.number,
     initialListSize: React.PropTypes.number,
     pageSize: React.PropTypes.number,
@@ -314,7 +336,7 @@ SherpaCameraRollPicker.propTypes = {
     backgroundColor: React.PropTypes.string,
 }
 
-SherpaCameraRollPicker.defaultProps = {
+SherpaInstagramPicker.defaultProps = {
     scrollRenderAheadDistance: 500,
     initialListSize: 1,
     pageSize: 3,
@@ -332,4 +354,4 @@ SherpaCameraRollPicker.defaultProps = {
     },
 }
 
-export default SherpaCameraRollPicker;
+export default SherpaInstagramPicker;
