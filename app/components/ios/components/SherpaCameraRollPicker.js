@@ -244,7 +244,7 @@ class SherpaCameraRollPicker extends Component {
             temp = [];
 
         //push 'take picture' element
-        temp.push({type:'capture'});
+        //temp.push({type:'capture'});
 
         for (var i = 0; i < data.length; ++i) {
             temp['type']='photo';
