@@ -22,15 +22,20 @@ export default function feedReducer(state=initialState,action){
             if(action.feedData.type!='search'&&action.feedData.type!='location-search'){
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
-                    var moments=action.feedData.trips[index].moments.reverse();
-                    var name=action.feedData.trips[index].name;
-                    if(name.indexOf("Trip to ")>-1)action.feedData.trips[index].name= name.split("Trip to ")[1];
+
+                    let currentTrip=action.feedData.trips[index];
+
+                    var moments=currentTrip.moments.reverse();
+                    var name=currentTrip.name;
+                    if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
                     if(moments.length>0){
-                        action.feedData.trips[index].moments=[];
+                        currentTrip.moments=[];
                         for(var i=0;i<moments.length;i++){
-                            if(moments[i].type==='image')action.feedData.trips[index].moments.push(moments[i]);
+                            if(moments[i].type==='image')currentTrip.moments.push(moments[i]);
                         }
-                        cleanTrips.push(action.feedData.trips[index]);
+
+                        if(currentTrip.coverMoment)currentTrip.moments.unshift(currentTrip.coverMoment)
+                        cleanTrips.push(currentTrip);
                     }
                 }
                 var newPage={};

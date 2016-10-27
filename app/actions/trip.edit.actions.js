@@ -132,10 +132,13 @@ export function createTrip(tripBlob,tripLocation) {
                         "dateStart": tripBlob.startDate,
                         "dateEnd": tripBlob.endDate,
                         "type": tripLocation.type,
-                        "location":tripLocation.location
+                        "location":tripLocation.location,
+                        "coverMoment":tripBlob.coverMomentID
                     },
                     "moments":tripBlob.momentIDs
                 };
+
+                console.log('query data',queryData)
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);

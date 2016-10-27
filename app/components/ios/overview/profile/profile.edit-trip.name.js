@@ -65,9 +65,14 @@ class EditTripName extends React.Component {
                 Promise.all(moments).then((momentsRes)=>{
 
                     var momentUploads=[];
-                    var dates=[]
+                    var dates=[];
+                    var coverMomentID="";
                     for(var i=0;i<  this.props.momentData.length;i++){
-                        momentIDs.push(momentsRes[i].id)
+                        if(!this.props.momentData[i].isCover){
+                            momentIDs.push(momentsRes[i].id)
+                        }else{
+                            coverMomentID=momentsRes[i].id;
+                        }
                         this.props.momentData[i].data=momentsRes[i];
                         dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
                         if(!this.props.momentData[i].id)momentUploads.push(uploadMoment(this.props.momentData[i]));
@@ -86,17 +91,16 @@ class EditTripName extends React.Component {
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {
-                        console.log('create trip');
                         createTrip({
                             momentIDs,
                             name: this.state.text,
                             startDate,
                             endDate,
+                            coverMomentID,
                             trip: this.props.tripData
                         }, tripLocation).then(()=> {
                             this.props.headerProgress.showSuccess();
                             setTimeout(this.props.refreshCurrentScene,500)
-                            console.log('refresh scene');
                         }).catch((err)=> {
                             //console.log('err from create trip',err);
                             this.props.headerProgress.showError();
