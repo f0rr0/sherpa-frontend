@@ -30,11 +30,23 @@ class EditTripGrid extends React.Component {
     }
 
     _renderFooter(){
+        console.log('check empty',this.checkEmpty());
         return(
             <View style={{marginLeft:7,flex:1,width:SCREEN_WIDTH-21,height:55,paddingBottom:0,marginTop:-10,justifyContent:"flex-start"}}>
-                <SimpleButton style={{width:SCREEN_WIDTH-21}} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+                <SimpleButton style={{width:SCREEN_WIDTH-21}} disabled={this.checkEmpty()} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
             </View>
         )
+    }
+
+    checkEmpty(){
+        let isEmpty=true;
+        for(var i=0;i<this.props.momentData.length;i++){
+            if(this.props.momentData[i].selected){
+                isEmpty=false;
+                break;
+            }
+        }
+        return isEmpty;
     }
 
     navActionLeft(){
@@ -42,20 +54,24 @@ class EditTripGrid extends React.Component {
     }
 
     navActionRight(){
-        this.props.navigator.push({
-            id: "editTripNames",
-            hideNav:true,
-            momentData:this.props.momentData,
-            tripData:this.props.tripData || null,
-            sceneConfig:"right-nodrag"
-        });
+            this.props.navigator.push({
+                id: "editTripNames",
+                hideNav:true,
+                momentData:this.props.momentData,
+                tripData:this.props.tripData || null,
+                sceneConfig:"right-nodrag"
+            });
     }
 
     render(){
         return(
             <View style={{backgroundColor:'white',flex:1}}>
                 <PhotoSelectorGrid moreCallback={()=>{
-                    this.props.navigator.pop();
+                    this.props.navigator.push({
+                        id: "addTrip",
+                        hideNav:true,
+                        sceneConfig:"bottom-nodrag"
+                    });
                 }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>

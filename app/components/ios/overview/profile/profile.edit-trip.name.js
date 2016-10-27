@@ -59,7 +59,9 @@ class EditTripName extends React.Component {
             this.props.headerProgress.show();
             this.props.headerProgress.startToMiddle();
 
+            console.log('get trip location');
             getTripLocation(this.props.momentData).then((tripLocation)=>{
+                console.log('got trip location')
                 Promise.all(moments).then((momentsRes)=>{
 
                     var momentUploads=[];
@@ -82,7 +84,9 @@ class EditTripName extends React.Component {
                     //console.log('start date',startDate);
                     //console.log('end date',endDate);
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
+
                     Promise.all(uploadResolver).then((res)=> {
+                        console.log('create trip');
                         createTrip({
                             momentIDs,
                             name: this.state.text,
@@ -91,7 +95,8 @@ class EditTripName extends React.Component {
                             trip: this.props.tripData
                         }, tripLocation).then(()=> {
                             this.props.headerProgress.showSuccess();
-                            this.props.refreshCurrentScene();
+                            setTimeout(this.props.refreshCurrentScene,500)
+                            console.log('refresh scene');
                         }).catch((err)=> {
                             //console.log('err from create trip',err);
                             this.props.headerProgress.showError();

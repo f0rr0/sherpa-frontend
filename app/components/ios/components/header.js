@@ -43,9 +43,6 @@ class Header extends Component {
 
     }
 
-    updateRouteName(routeName){
-        this.setState({routeName});
-    }
 
     render() {
 
@@ -59,8 +56,8 @@ class Header extends Component {
             </TouchableOpacity>;
 
         var navButton=this.state.settings.hideNav?null:
-            <TouchableOpacity  underlayColor="#ececec" onPress={()=>{this.props.navActionRight()}} style={[styles.dotsMoreContainer]}>
-                <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle]} source={this.state.topRightImage} resizeMode="contain" />
+            <TouchableOpacity  underlayColor="#ececec" disabled={this.props.rightDisabled}  onPress={()=>{this.props.navActionRight()}} style={[styles.dotsMoreContainer]}>
+                <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle,{opacity:this.props.rightDisabled?.2:1}]} source={this.state.topRightImage} resizeMode="contain" />
             </TouchableOpacity>;
 
         var topShadow=this.state.settings.topShadow?<Image style={{position:'absolute',top:0,left:0,width:windowSize.width,height:140}} resizeMode="cover" source={require('../../../Images/shadow-top.png')}></Image>:null;

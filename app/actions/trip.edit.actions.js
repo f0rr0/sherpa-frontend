@@ -24,10 +24,10 @@ export function createMoment(moment){
                     "location": moment.location,
                     "state": moment.state,
                     "country": moment.country,
-                    "continent": moment.continent,
+                    "continent": moment.continent || "",
                     "venue": moment.venue,
                     "date": moment.date,
-                    "caption": moment.caption,
+                    "caption": moment.caption || "",
                     "scrapeTime": new Date()
                 };
 
@@ -37,12 +37,15 @@ export function createMoment(moment){
 
                 var createOrUpdate=moment.id?moment.id+"/update":"create";
 
-
+                console.log(endpoint + version + "/moment/"+createOrUpdate)
+                console.log('update moments body',queryData);
+                console.log('token',user.sherpaToken);
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
                     method: moment.id?'patch':'post',
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
+                    //console.log('create moment resp',rawServiceResponse.text())
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     fulfill(JSON.parse(response))

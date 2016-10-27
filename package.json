@@ -32,6 +32,7 @@
     "react-native-localization": "^0.1.15",
     "react-native-mapbox-gl": "^4.1.1",
     "react-native-notifications": "^1.0.1",
+    "react-native-paged-scroll-view": "^2.0.4",
     "react-native-progress": "^3.0.1",
     "react-native-safari-view": "^1.0.1",
     "react-native-simple-auth": "^0.3.0",

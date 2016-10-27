@@ -6,7 +6,6 @@ import {
     Image,
     TouchableOpacity,
     Animated,
-ScrollView
 } from 'react-native';
 import React, { Component } from 'react';
 import StickyHeader from '../../components/stickyHeader';
@@ -21,6 +20,9 @@ import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { Fonts, Colors } from '../../../../Themes/'
 import SimpleError from '../../components/simpleError';
+import { ScrollView } from 'react-native'
+import AddPaging from 'react-native-paged-scroll-view/index'
+var PagedScrollView = AddPaging(ScrollView)
 
 var windowSize=Dimensions.get('window');
 
@@ -73,7 +75,6 @@ class EditMomentNames extends React.Component {
 
         var isEmpty=false;
         for(var i=0;i<this.props.momentData.length;i++){
-        console.log('moment',this.props.momentData[i]);
             isEmpty=!this.props.momentData[i].location&&this.props.momentData[i].selected;
         }
         return isEmpty;
@@ -97,6 +98,16 @@ class EditMomentNames extends React.Component {
         })
     }
 
+    handlePageChange(){
+        var currentIndex=0;
+        this.props.momentData.map((moment)=>{
+            currentIndex++;
+            if(moment.selected){
+                this.refs["location-"+currentIndex].moveDown();
+            };
+        })
+    }
+
     render(){
         var currentIndex=0;
         return(
@@ -104,7 +115,7 @@ class EditMomentNames extends React.Component {
 
                 {/* //error message here */}
 
-                <ScrollView
+                <PagedScrollView
                     style={styles.container}
                     automaticallyAdjustInsets={false}
                     horizontal={true}
@@ -114,13 +125,14 @@ class EditMomentNames extends React.Component {
                     snapToAlignment="start"
                     contentContainerStyle={styles.content}
                     showsHorizontalScrollIndicator={false}
+                    onPageChange={this.handlePageChange.bind(this)}
                 >
 
                     {this.props.momentData.map((moment)=>{
                         currentIndex++;
                         return moment.selected?(<LocationName makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+currentIndex} locationIndex={currentIndex} key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
                     })}
-                </ScrollView>
+                </PagedScrollView>
                 <Animated.View style={[{flex:1,position:'absolute',top:0},{opacity:this.state.navOpacity}]}>
                     {this.props.navigation.default}
                 </Animated.View>

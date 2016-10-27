@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import React, { Component } from 'react';
 import StickyHeader from '../../components/stickyHeader';
-import Header from '../../components/stickyHeader';
+import Header from '../../components/header';
 import SherpaCameraRollPicker from '../../components/SherpaCameraRollPicker'
 import SherpaInstagramPicker from '../../components/SherpaInstagramPicker'
 import EXIF from 'exif-js'
@@ -51,7 +51,7 @@ class AddTrip extends React.Component {
     }
 
     navActionRight(){
-        if(this.state.images.cameraroll.length==0&&this.state.images.instagram.length==0)return;
+        if(this.checkEmpty())return
 
         let momentsExif = [];
         for(var i=0;i<this.state.images.cameraroll.length;i++) {
@@ -71,7 +71,6 @@ class AddTrip extends React.Component {
                 const dateTime = shotDate.split(' ');
                 const regex = new RegExp(':', 'g');
                 dateTime[0] = dateTime[0].replace(regex, '-');
-                //console.log('push moment with exif',this.state.images.cameraroll[i].uri)
                 momentBlobs.push({
                     "lat":lat,
                     "lng":lng,
@@ -102,8 +101,15 @@ class AddTrip extends React.Component {
         this.setState({type:newType})
     }
 
+    checkEmpty(){
+        return (this.state.images.cameraroll.length==0&&this.state.images.instagram.length==0);
+    }
+
 
     render(){
+        var header=<Header ref="navFixed" rightDisabled={this.checkEmpty()} settings={{opaque:false,routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),navColor:'white'}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
+
+
         var currentImageSelection=null;
         switch(this.state.type){
             case "cameraroll":
@@ -115,7 +121,7 @@ class AddTrip extends React.Component {
         }
         return(
             <View style={{flex:1,backgroundColor:"#161616"}}>
-                {this.props.navigation.default}
+                {header}
 
                 <View style={{width:SCREEN_WIDTH,marginTop:70,flex:1,flexDirection:'row',borderTopColor:"#343434",borderTopWidth:1}}>
                     <TouchableOpacity disabled={this.state.type==='cameraroll'} onPress={()=>this.setType('cameraroll')} ref="tab-cameraroll" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
@@ -127,7 +133,6 @@ class AddTrip extends React.Component {
                     </TouchableOpacity>
                 </View>
                 {currentImageSelection}
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )
     }

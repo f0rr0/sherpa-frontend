@@ -131,8 +131,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
-        return(
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;        return(
             <View style={styles.listViewContainer}>
                 <ListView
                     enableEmptySections={false}
@@ -194,7 +193,8 @@ class FeedTrip extends Component {
 
     _renderHeader(){
         var tripData=this.props.trip;
-        var tripLocation=this.props.trip[this.props.trip.type];
+        var type=this.props.trip.type=='global'?'state':this.props.trip.type;
+        var tripLocation=this.props.trip[type];
 
         var country = countries.filter(function(country) {
             return country["alpha-2"].toLowerCase() === tripLocation.toLowerCase();
@@ -218,7 +218,7 @@ class FeedTrip extends Component {
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
                             <UserImage radius={40} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP TO":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP TO'}</Text>
+                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP ":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>
                             <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                             </TouchableHighlight>

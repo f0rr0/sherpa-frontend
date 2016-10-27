@@ -191,7 +191,7 @@ class LocationName extends Component{
                                             rankby: 'distance'
                                          }}
 
-                    filterReverseGeocodingByTypes={['locality']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                    filterReverseGeocodingByTypes={['locality','establishment']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
                 />
             </Animated.View>

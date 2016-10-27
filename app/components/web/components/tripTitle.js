@@ -55,7 +55,7 @@ class TripTitle extends Component {
         return (
             <div className="trip-title">
                 {profilePic}
-                <h2>{this.props.owner.serviceUsername.toUpperCase()} TRIP TO</h2>
+                <h2>{this.props.owner.serviceUsername.toUpperCase()} TRIP</h2>
                 <h1>{tripName.replace("Tripto","").toUpperCase()}</h1>
                 <h2>{subTitle.toUpperCase()}</h2>
             </div>
