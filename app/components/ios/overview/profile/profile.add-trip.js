@@ -24,9 +24,10 @@ import PhotoSelectorGrid from '../../components/photoSelector.grid';
 import {getUserInstagramPhotos} from '../../../../actions/trip.edit.actions'
 
 class AddTrip extends React.Component {
-    constructor(){
-        super();
-        this.state={images:{cameraroll:[],instagram:[]},type:'cameraroll'}
+    constructor(props){
+        super(props);
+        console.log('props',props)
+        this.state={images:{cameraroll:props.images?props.images.cameraroll:[],instagram:props.images?props.images.instagram:[]},type:'cameraroll'}
     }
 
     componentDidMount(){
@@ -91,6 +92,7 @@ class AddTrip extends React.Component {
                 id: "editTripGrid",
                 hideNav:true,
                 momentData:momentBlobs,
+                images:this.state.images,
                 sceneConfig:"bottom-nodrag"
             });
 
@@ -113,10 +115,10 @@ class AddTrip extends React.Component {
         var currentImageSelection=null;
         switch(this.state.type){
             case "cameraroll":
-                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
+                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" selected={this.state.images.cameraroll} wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
             break;
             case "instagram":
-                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
+                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" selected={this.state.images.instagram} wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
             break;
         }
         return(

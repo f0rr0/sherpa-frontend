@@ -70,7 +70,9 @@ class EditTripGrid extends React.Component {
                     this.props.navigator.push({
                         id: "addTrip",
                         hideNav:true,
-                        sceneConfig:"bottom-nodrag"
+                        sceneConfig:"bottom-nodrag",
+                        images:this.props.images,
+                        momentData:this.props.momentData
                     });
                 }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>

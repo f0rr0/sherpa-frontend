@@ -6,6 +6,7 @@ import countries from "./../../../../data/countries";
 import Mapbox from "react-native-mapbox-gl";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
+import {deleteTrip} from '../../../../actions/trip.edit.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
@@ -160,6 +161,12 @@ class FeedTrip extends Component {
                             tripData:this.props.trip,
                             sceneConfig:"bottom-nodrag"
                       });
+                }} showDeleteTrip={true} onDeleteTrip={()=>{
+                    deleteTrip(this.props.trip.id).then(()=>{
+                        setTimeout(this.props.refreshCurrentScene,500)
+                    })
+                    this.props.navigator.pop();
+
                 }} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )

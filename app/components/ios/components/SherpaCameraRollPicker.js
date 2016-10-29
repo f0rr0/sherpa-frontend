@@ -28,6 +28,7 @@ class SherpaCameraRollPicker extends Component {
             noMore: false,
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
         };
+        console.log('sherpa camera roll constructor',this.props.selected)
     }
 
 
@@ -39,6 +40,7 @@ class SherpaCameraRollPicker extends Component {
         if(typeof containerWidth != "undefined") {
             width = containerWidth;
         }
+        console.log('component will mount');
         this._imageSize = (width - (imagesPerRow) ) / imagesPerRow;
 
         this.fetch();
@@ -131,7 +133,9 @@ class SherpaCameraRollPicker extends Component {
                 source={require('../../../Images/icon-check-green.png')}
             />;
 
+        //console.log(this.state.selected,'selected')
         var isSelected=(this._arrayObjectIndexOf(this.state.selected, 'uri', item.node.image.uri) >= 0);
+
         return (
             <View key={item.node.image.uri}>
                 <View style={{flex:1,position:'absolute',backgroundColor:'white',top:0,width:this._imageSize,height:this._imageSize}}></View>

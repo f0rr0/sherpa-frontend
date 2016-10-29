@@ -42,7 +42,7 @@ var styles = StyleSheet.create({
 class PopOver extends Component {
     constructor(props) {
         super(props);
-        this.bottomOffset = new Animated.Value(-350);
+        this.bottomOffset = new Animated.Value(-400);
         this.enabled=false;
     }
 
@@ -54,7 +54,7 @@ class PopOver extends Component {
         if(this.enabled!=enable){
             this.enabled=enable;
             Animated.spring(this.bottomOffset, {
-                toValue: enable?-40:-350   // return to start
+                toValue: enable?-40:-400   // return to start
             }).start()
         }
     }
@@ -82,6 +82,11 @@ class PopOver extends Component {
         var editTripButton=this.props.showEditTrip?
             <TouchableHighlight onPress={this.props.onEditTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
                 <Text style={styles.buttonCopy}>EDIT TRIP</Text>
+            </TouchableHighlight>:null;
+
+        var deleteTripButton=this.props.showDeleteTrip?
+            <TouchableHighlight onPress={this.props.onDeleteTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
+                <Text style={styles.buttonCopy}>DELETE TRIP</Text>
             </TouchableHighlight>:null;
 
         var resetProfileButton=this.props.showReset?
@@ -118,6 +123,7 @@ class PopOver extends Component {
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {editTripButton}
+                {deleteTripButton}
                 {shareButton}
                 {reportPhotoButton}
                 {profileSettingsButton}

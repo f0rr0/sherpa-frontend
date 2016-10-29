@@ -116,6 +116,43 @@ export function getTripLocation(momentBlobs){
     )});
 }
 
+export function deleteTrip(tripID){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+            const {endpoint,version} = sherpa;
+            var requestURI = endpoint + version + "/trip/"+tripID;
+
+
+            var reqBody = {
+                method: 'delete',
+                headers: sherpaHeaders,
+                body: encodeQueryData({})
+            };
+
+
+            fetch(requestURI, reqBody)
+                .then((rawSherpaResponse)=> {
+                    console.log('delete response',rawSherpaResponse)
+                    switch (rawSherpaResponse.status) {
+                        case 200:
+                            return rawSherpaResponse.text()
+                            break;
+                        case 400:
+                            return '{}';
+                            break;
+                        case 401:
+                        break;
+                    }
+                })
+                .then((response)=> {
+                    fulfill();
+                }).catch((err)=>reject(err))
+        })
+    })
+}
 
 export function createTrip(tripBlob,tripLocation) {
     return new Promise((fulfill,reject)=> {

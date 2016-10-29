@@ -145,10 +145,6 @@ class OwnUserProfile extends React.Component {
         this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
     }
 
-    getSelectedImages(){
-
-    }
-
     render(){
         return(
         <View style={{flex:1,backgroundColor:'white'}}>
