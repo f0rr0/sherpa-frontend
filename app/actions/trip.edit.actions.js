@@ -187,8 +187,10 @@ export function createTrip(tripBlob,tripLocation) {
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
+                    console.log(rawServiceResponse,'raw response');
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    console.log(response,'response');
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

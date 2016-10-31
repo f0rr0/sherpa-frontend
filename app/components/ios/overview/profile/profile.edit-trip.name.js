@@ -59,9 +59,9 @@ class EditTripName extends React.Component {
             this.props.headerProgress.show();
             this.props.headerProgress.startToMiddle();
 
-            console.log('get trip location');
+            console.log('get trip location',this.props.momentData);
             getTripLocation(this.props.momentData).then((tripLocation)=>{
-                console.log('got trip location')
+                console.log('got trip location',tripLocation)
                 Promise.all(moments).then((momentsRes)=>{
 
                     var momentUploads=[];

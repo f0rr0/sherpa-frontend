@@ -29,57 +29,65 @@ const {instagram,sherpa}=config.auth[config.environment];
 
 var styles = StyleSheet.create({
     container:{
-        backgroundColor:'white',
-        left:0,
-        flex:1,
-        right:0,
-        position:'absolute',
-        paddingBottom:50
+        backgroundColor:'white'
     },
     buttonCopy: {
         fontFamily: "TSTAR",
-        letterSpacing: 1,
-        fontSize: 11,
-        fontWeight: "600"
+        letterSpacing: .5,
+        fontSize: 10,
+        fontWeight: "600",
+        marginLeft:10,
     },
     warningButtonCopy: {
         fontFamily: "TSTAR",
         letterSpacing: 1,
-        fontSize: 11,
+        fontSize: 10,
         color: "red",
         fontWeight: "600"
     },
     button: {
-        borderStyle: "solid",
-        borderTopWidth: 1,
-        borderColor: "#d8d8d8",
-        paddingLeft: 20,
-        height: 70,
-        flex: 1,
-        position: "relative",
-        justifyContent: "center"
+        marginLeft: 20,
+        marginRight:20,
+        height: 90,
+    },
+    toggleCopy:{
+        fontFamily: Fonts.type.bodyCopy,
+        letterSpacing: .5,
+        fontSize: 12,
+        color:'rgba(0,0,0,.5)',
+        fontWeight: "600",
+        padding:0,
+        marginLeft:10,
     },
     dynamicButton: {
         borderStyle: "solid",
-        borderTopWidth: 1,
-        borderColor: "#d8d8d8",
         paddingLeft: 20,
         position: "relative",
         justifyContent: "center"
     },
     settingsHeader: {
-        height:70,
         position:'relative',
         backgroundColor:'transparent'
     },
     inputStyle: {
         textAlign: 'left',
-        height: 20
+        borderWidth:1,
+        borderColor:"#e5e5e5",
+        paddingLeft:20,
+        borderRadius:3,
+        marginTop:2,
     },
     toggleRow: {
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems: "center"
+        alignItems: "center",
+        height:80,
+        marginRight:20,
+        borderBottomColor:"#e5e5e5",
+        borderBottomWidth:1
+    },
+    toggleRowLow:{
+        height:50
     }
 });
 
@@ -201,119 +209,117 @@ class ProfileSettings extends React.Component {
 
     render(){
         return (
-            <ScrollView style={styles.container}>
+            <View style={{flex:1}}>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}/>
-                <View style={styles.button}>
-                    <Text style={styles.buttonCopy}>NAME</Text>
-                    <SimpleInput placeholder={this.props.user.fullName} style={styles.inputStyle} onSubmitEditing={(event) => this._submitEditing("fullName", event.nativeEvent.text)}/>
-                </View>
-                <View style={styles.button}>
-                    <Text style={styles.buttonCopy}>EMAIL</Text>
-                    <SimpleInput placeholder={this.props.user.email} style={styles.inputStyle} keyboardType="email-address" onSubmitEditing={(event) => this._submitEditing("email", event.nativeEvent.text)}/>
-                </View>
-                <View style={styles.dynamicButton}>
-                    <Text style={styles.buttonCopy}>HOMETOWN</Text>
-                    {/* TODO: fix styling*/}
-                    <ChooseHometown user={this.props.user} placeholder='' dispatch={this.props.dispatch} styles={{
-                        poweredContainer: {
-                            opacity:0
-                        },
-                        description:[
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ],
-                        textInput: [
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ],
-                        textInputContainer: {
-                            backgroundColor: '#FFFFFF',
-                            borderTopColor: '#FFFFFF',
-                            borderBottomColor: '#FFFFFF',
-                            borderTopWidth: 0,
-                            borderBottomWidth: 0,
-                        },
-                        separator: {
-                            backgroundColor: '#FFFFFF'
-                        }}}/>
-                </View>
-                <View style={styles.button}>
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <Text style={styles.buttonCopy}>ADD NEW TRIPS FROM INSTAGRAM</Text>
-                        <Switch
-                          value={this.state.allowScrape}
-                          onValueChange={this.setAllowScrape.bind(this)}/>
-                    </View>
-                </View>
-                <View style={styles.dynamicButton}>
-                    <Text style={styles.buttonCopy}>NOTIFICATIONS</Text>
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <Text style={[
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ]}>Trip Added From Instagram</Text>
-                        <Switch
-                          value={this.state.allowTripAddedNotif}
-                          onValueChange={(value)=>this.allowTripAddedNotifCallback(value)}/>
-                    </View>
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <Text style={[
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ]}>Trip Featured</Text>
-                        <Switch
-                          value={this.state.allowTripFeaturedNotif}
-                          onValueChange={(value)=>this.allowTripFeatureNotifCallback(value)}/>
-                    </View>
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <Text style={[
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ]}>Moment Saved</Text>
-                        <Switch
-                          value={this.state.allowMomentSavedNotif}
-                          onValueChange={(value) => this.allowMomentSavedNotifCallback(value)}/>
-                    </View>
-                    <View style={{flexDirection: "row", justifyContent: "space-between", alignItems: "center"}}>
-                        <Text style={[
-                            buttonStyles.button,
-                            inputStyles.inputField,
-                            buttonStyles.buttonText,
-                            inputStyles.inputText,
-                            styles.inputStyle
-                        ]}>New Suitcase Trip</Text>
-                        <Switch
-                          value={this.state.allowNewSuitcaseTripNotif}
-                          onValueChange={(value) => this.allowNewSuitcaseNotifCallback(value)}/>
-                    </View>
-                </View>
-                <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.resetProfile()}}>
-                    <Text style={styles.buttonCopy}>RESET PROFILE</Text>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(logoutUser())}}>
-                    <Text style={styles.buttonCopy}>LOGOUT</Text>
-                </TouchableHighlight>
-                <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this.props.dispatch(deleteUser())}}>
-                    <Text style={styles.buttonCopy}>DELETE ACCOUNT</Text>
-                </TouchableHighlight>
-                {this.props.navigation.default}
 
+                <ScrollView style={styles.container}>
+
+                    <View style={[styles.button,{marginTop:100}]}>
+                        <Text style={styles.buttonCopy}>NAME</Text>
+                        <SimpleInput placeholder={this.props.user.fullName} style={styles.inputStyle} onSubmitEditing={(event) => this._submitEditing("fullName", event.nativeEvent.text)}/>
+                    </View>
+                    <View style={styles.button}>
+                        <Text style={styles.buttonCopy}>EMAIL</Text>
+                        <SimpleInput placeholder={this.props.user.email} style={styles.inputStyle} keyboardType="email-address" onSubmitEditing={(event) => this._submitEditing("email", event.nativeEvent.text)}/>
+                    </View>
+                    <View style={[styles.button,{zIndex:2}]}>
+                        <Text style={styles.buttonCopy}>HOMETOWN</Text>
+                        {/* TODO: fix styling*/}
+                        <View style={{position:'absolute',flex:1,right:0,left:0}}>
+
+
+                        <ChooseHometown user={this.props.user} placeholder='' dispatch={this.props.dispatch} styles={{
+                            poweredContainer: {
+                                opacity:0
+                            },
+                            row:{
+                                backgroundColor:'white'
+                            },
+                            description:[
+                                inputStyles.inputText,
+                                {borderWidth:0,backgroundColor:'white',margin:0}
+                            ],
+                            textInput: [
+                                buttonStyles.button,
+                                inputStyles.inputField,
+                                buttonStyles.buttonText,
+                                inputStyles.inputText,
+                                styles.inputStyle,
+                                {marginRight:0,paddingRight:0}
+                            ],
+                            textInputContainer: {
+                                backgroundColor: '#FFFFFF',
+                                borderTopColor: '#FFFFFF',
+                                borderBottomColor: '#FFFFFF',
+                                borderTopWidth: 0,
+                                borderBottomWidth: 0,
+                                marginBottom:20
+                            },
+                            separator: {
+                                backgroundColor: '#FFFFFF'
+                            }}}/>
+                    </View>
+                    </View>
+                    <View style={[styles.button,{justifyContent:'center',marginBottom:20}]}>
+                        <View style={[styles.toggleRow,{borderBottomWidth:0}]}>
+                            <Text style={styles.buttonCopy}>ADD NEW TRIPS FROM INSTAGRAM</Text>
+                            <Switch
+                              value={this.state.allowScrape}
+                              onValueChange={this.setAllowScrape.bind(this)}/>
+                        </View>
+                    </View>
+                    <View style={styles.dynamicButton}>
+                        <Text style={styles.buttonCopy}>PUSH NOTIFICATIONS</Text>
+                        <View style={[styles.toggleRow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]}>
+                            <Text style={[styles.toggleCopy
+                            ]}>Trip Added From Instagram</Text>
+                            <Switch
+                                style={{marginRight:20}}
+                              value={this.state.allowTripAddedNotif}
+                              onValueChange={(value)=>this.allowTripAddedNotifCallback(value)}/>
+                        </View>
+                        <View style={styles.toggleRow}>
+                            <Text style={[styles.toggleCopy
+                            ]}>Trip Featured</Text>
+                            <Switch
+                                style={{marginRight:20}}
+                              value={this.state.allowTripFeaturedNotif}
+                              onValueChange={(value)=>this.allowTripFeatureNotifCallback(value)}/>
+                        </View>
+                        <View style={styles.toggleRow}>
+                            <Text style={[styles.toggleCopy
+                            ]}>Moment Saved</Text>
+                            <Switch
+                                style={{marginRight:20}}
+                              value={this.state.allowMomentSavedNotif}
+                              onValueChange={(value) => this.allowMomentSavedNotifCallback(value)}/>
+                        </View>
+                        <View style={[styles.toggleRow,{marginBottom:40}]}>
+                            <Text style={[styles.toggleCopy
+                            ]}>New Suitcase Trip</Text>
+                            <Switch
+                                style={{marginRight:20}}
+                              value={this.state.allowNewSuitcaseTripNotif}
+                              onValueChange={(value) => this.allowNewSuitcaseNotifCallback(value)}/>
+                        </View>
+                    </View>
+                    <View style={[styles.dynamicButton,{paddingBottom:60}]}>
+
+                        <Text style={styles.buttonCopy}>ACCOUNT</Text>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {this.resetProfile()}}>
+                            <Text style={styles.toggleCopy}>Reset my profile</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,,styles.toggleRowLow]} onPress={() => {this.props.dispatch(logoutUser())}}>
+                            <Text style={styles.toggleCopy}>Logout</Text>
+                        </TouchableHighlight>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={() => {this.props.dispatch(deleteUser())}}>
+                            <Text style={styles.toggleCopy}>Delete Account</Text>
+                        </TouchableHighlight>
+                    </View>
+
+                    {this.props.navigation.default}
             </ScrollView>
+            </View>
         );
     }
 }

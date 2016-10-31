@@ -94,7 +94,7 @@ class FeedTrip extends Component {
             annotations:[],
             moments:props.trip.moments,
             shouldUpdate:true,
-            isCurrentUsersTrip:false,
+            isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
             routeName:"TRIP"
         };
     }
@@ -128,6 +128,7 @@ class FeedTrip extends Component {
             momentIDs.push(this.state.moments[i].id);
         }
 
+
         this.setState({annotations:markers})
     }
 
@@ -153,7 +154,7 @@ class FeedTrip extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-                <PopOver ref="popover" showEditTrip={true} onEditTrip={()=>{
+                <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} onEditTrip={()=>{
                       this.props.navigator.push({
                             id: "editTripGrid",
                             hideNav:true,
@@ -161,7 +162,7 @@ class FeedTrip extends Component {
                             tripData:this.props.trip,
                             sceneConfig:"bottom-nodrag"
                       });
-                }} showDeleteTrip={true} onDeleteTrip={()=>{
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={()=>{
                     deleteTrip(this.props.trip.id).then(()=>{
                         setTimeout(this.props.refreshCurrentScene,500)
                     })

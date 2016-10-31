@@ -212,7 +212,7 @@ class OwnUserProfile extends React.Component {
     navActionRight(){
         this.props.navigator.push({
             id: "profile-settings",
-            sceneConfig:"bottom",
+            sceneConfig:"bottom-nodrag",
             hideNav:true
         });
     }
