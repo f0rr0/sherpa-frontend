@@ -26,8 +26,7 @@ import {getUserInstagramPhotos} from '../../../../actions/trip.edit.actions'
 class AddTrip extends React.Component {
     constructor(props){
         super(props);
-        console.log('props',props)
-        this.state={images:{cameraroll:props.images?props.images.cameraroll:[],instagram:props.images?props.images.instagram:[]},type:'cameraroll'}
+        this.state={images:{cameraroll:props.images&&!props.momentData?props.images.cameraroll:[],instagram:props.images&&!props.momentData?props.images.instagram:[]},type:'cameraroll'}
     }
 
     componentDidMount(){
@@ -41,13 +40,11 @@ class AddTrip extends React.Component {
 
     getSelectedImagesCameraRoll(res){
         this.state.images.cameraroll=res;
-        //console.log(this.state.images);
         this.setState({images:this.state.images})
     }
 
     getSelectedImagesInstagram(res) {
         this.state.images.instagram=res;
-        //console.log(this.state.images);
         this.setState({images:this.state.images})
     }
 
@@ -60,7 +57,7 @@ class AddTrip extends React.Component {
         }
 
         Promise.all(momentsExif).then((momentsExifData)=> {
-            var momentBlobs=[];
+            var momentBlobs=this.props.momentData||[];
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
                 let gps=exifData['gps'];
@@ -87,13 +84,13 @@ class AddTrip extends React.Component {
 
             momentBlobs=momentBlobs.concat(this.state.images.instagram);
 
-            //console.log(momentBlobs);
             this.props.navigator.push({
                 id: "editTripGrid",
                 hideNav:true,
                 momentData:momentBlobs,
                 images:this.state.images,
-                sceneConfig:"bottom-nodrag"
+                sceneConfig:"bottom-nodrag",
+                tripData:this.props.tripData
             });
 
         });

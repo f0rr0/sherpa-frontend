@@ -48,6 +48,7 @@ export default class HeaderProgress extends React.Component {
 
     showError(){
         this.refs.uploadFailed.show();
+        Animated.timing(this.state.progressPercent, {toValue:0,duration:500}).start();
     }
 
     showSuccess(){

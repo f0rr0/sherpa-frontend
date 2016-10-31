@@ -37,15 +37,11 @@ export function createMoment(moment){
 
                 var createOrUpdate=moment.id?moment.id+"/update":"create";
 
-                console.log(endpoint + version + "/moment/"+createOrUpdate)
-                console.log('update moments body',queryData);
-                console.log('token',user.sherpaToken);
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
                     method: moment.id?'patch':'post',
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
-                    //console.log('create moment resp',rawServiceResponse.text())
                     return rawServiceResponse.text();
                 }).then((response)=> {
                     fulfill(JSON.parse(response))
@@ -135,7 +131,6 @@ export function deleteTrip(tripID){
 
             fetch(requestURI, reqBody)
                 .then((rawSherpaResponse)=> {
-                    console.log('delete response',rawSherpaResponse)
                     switch (rawSherpaResponse.status) {
                         case 200:
                             return rawSherpaResponse.text()
@@ -175,7 +170,6 @@ export function createTrip(tripBlob,tripLocation) {
                     "moments":tripBlob.momentIDs
                 };
 
-                console.log('query data',queryData)
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
@@ -187,10 +181,15 @@ export function createTrip(tripBlob,tripLocation) {
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
-                    console.log(rawServiceResponse,'raw response');
-                    return rawServiceResponse.text();
+                    switch (rawServiceResponse.status) {
+                        case 200:
+                            return rawServiceResponse.text()
+                        break;
+                            reject({'response':rawServiceResponse})
+                        default:
+
+                    }
                 }).then((response)=> {
-                    console.log(response,'response');
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

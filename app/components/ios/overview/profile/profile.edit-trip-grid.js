@@ -72,7 +72,8 @@ class EditTripGrid extends React.Component {
                         hideNav:true,
                         sceneConfig:"bottom-nodrag",
                         images:this.props.images,
-                        momentData:this.props.momentData
+                        momentData:this.props.momentData,
+                        tripData:this.props.tripData
                     });
                 }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>

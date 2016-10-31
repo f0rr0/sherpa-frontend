@@ -32,7 +32,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>3</string>
+	<string>5</string>
 	<key>Fabric</key>
 	<dict>
 		<key>APIKey</key>
@@ -62,13 +62,13 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>Sherpa wants to access your camera so you can add custom photos to your trips</string>
+	<string>Create and publish trips</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string></string>
 	<key>NSPPhotoLibraryUsageDescription</key>
-	<string>Sherpa wants to access your photos so you can create custom trips</string>
+	<string>Create and publish trips</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Upload Photos to Sherpa for creating custom trips</string>
+	<string>Create and publish trips</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>TSTAR-Bold.otf</string>

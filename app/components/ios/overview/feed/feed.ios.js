@@ -204,7 +204,7 @@ class Feed extends Component {
             break;
             case "addTrip":
                 showNav=true;
-                sceneContent = <AddTrip images={route.images} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <AddTrip images={route.images} tripData={route.tripData} momentData={route.momentData} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripGrid":
                 showNav=true;

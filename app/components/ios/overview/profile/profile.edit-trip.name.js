@@ -102,7 +102,6 @@ class EditTripName extends React.Component {
                             this.props.headerProgress.showSuccess();
                             setTimeout(this.props.refreshCurrentScene,500)
                         }).catch((err)=> {
-                            console.log('err from create trip',err);
                             this.props.headerProgress.showError();
                         })
                     }).catch((err)=>{console.log('err from upload')});
