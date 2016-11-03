@@ -119,7 +119,7 @@ class TripDetail extends React.Component{
 
 
     suiteCaseTrip(){
-        console.log('suitcase trip');
+        //console.log('suitcase trip');
 
         this.setState({suitcased:!this.state.suitcased});
         if(!this.state.suitcased){
@@ -136,7 +136,7 @@ class TripDetail extends React.Component{
 
 
     _renderSuitcaseButton(){
-        console.log('this state suitcase',this.state.suitcased);
+        //console.log('this state suitcase',this.state.suitcased);
         return(
             <View>
                 <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
