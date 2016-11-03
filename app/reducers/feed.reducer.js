@@ -11,6 +11,23 @@ const initialState={
     feedPage:1
 };
 
+function moveArravPos(arr,old_index, new_index) {
+    while (old_index < 0) {
+        old_index += arr.length;
+    }
+    while (new_index < 0) {
+        new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length;
+        while ((k--) + 1) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing purposes
+};
+
 export default function feedReducer(state=initialState,action){
     switch(action.type){
         case types.CLEAR_FEED:
@@ -27,14 +44,24 @@ export default function feedReducer(state=initialState,action){
 
                     var moments=currentTrip.moments.reverse();
                     var name=currentTrip.name;
+                    var coverIndex=0;
                     if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
                     if(moments.length>0){
                         currentTrip.moments=[];
                         for(var i=0;i<moments.length;i++){
                             if(moments[i].type==='image')currentTrip.moments.push(moments[i]);
+                            if(currentTrip.coverMoment&&moments[i].id==currentTrip.coverMoment.id){
+                                //currentTrip.moments.unshift(currentTrip.coverMoment);
+                                coverIndex=i;
+                            }
                         }
 
-                        if(currentTrip.coverMoment)currentTrip.moments.unshift(currentTrip.coverMoment)
+
+                        moveArravPos(currentTrip.moments,coverIndex,0);
+                        //console.log('cover index',coverIndex)
+
+
+                        //if(currentTrip.coverMoment)currentTrip.moments.unshift(currentTrip.coverMoment);
                         cleanTrips.push(currentTrip);
                     }
                 }

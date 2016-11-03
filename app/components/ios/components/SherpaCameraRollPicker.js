@@ -28,7 +28,7 @@ class SherpaCameraRollPicker extends Component {
             noMore: false,
             dataSource: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}),
         };
-        console.log('sherpa camera roll constructor',this.props.selected)
+        //console.log('sherpa camera roll constructor',this.props.selected)
     }
 
 
@@ -40,7 +40,7 @@ class SherpaCameraRollPicker extends Component {
         if(typeof containerWidth != "undefined") {
             width = containerWidth;
         }
-        console.log('component will mount');
+        //console.log('component will mount');
         this._imageSize = (width - (imagesPerRow) ) / imagesPerRow;
 
         this.fetch();

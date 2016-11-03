@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import config from '../../../data/config';
-import {setUserHometown, updateUserData} from '../../../actions/user.actions'
+import {setUserHometown, updateUserData,resetProfile} from '../../../actions/user.actions'
 
 
 const {instagram,sherpa}=config.auth[config.environment];
@@ -63,6 +63,7 @@ class ChooseHometown extends Component {
           this.setState({hometown: hometownObject});
 
           this.props.dispatch(setUserHometown(hometownObject));
+          if(this.props.rescrapeOnChange)this.props.dispatch(resetProfile());
           this.props.dispatch(updateUserData({hometown: hometownObject.name}));
         }}
         getDefaultValue={() => {

@@ -15,8 +15,11 @@ import RNFetchBlob from 'react-native-fetch-blob';
 export function createMoment(moment){
     return new Promise((fulfill,reject)=> {
         store.get('user').then((user) => {
+            //console.log('create trip with user',user);
+
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
+                //console.log('moment data',moment.date);
                 const queryData = {
                     "profile": user.profileID,
                     "lat": moment.lat,
@@ -37,6 +40,9 @@ export function createMoment(moment){
 
                 var createOrUpdate=moment.id?moment.id+"/update":"create";
 
+                //console.log('create or ipdate',createOrUpdate)
+
+
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
                     method: moment.id?'patch':'post',
                     headers: sherpaHeaders,
@@ -44,6 +50,7 @@ export function createMoment(moment){
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    //console.log('moment create response',JSON.parse(response));
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

@@ -185,7 +185,7 @@ class OnboardingSteps extends Component {
                         mainComponent={
                         <View>
                             <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
-                                 <ChooseHometown user={this.props.user} dispatch={this.props.dispatch} placeholder='Search' styles={{
+                                 <ChooseHometown user={this.props.user} rescrapeOnChange={true} dispatch={this.props.dispatch} placeholder='Search' styles={{
                                      description: {
                                          fontFamily: Fonts.type.bodyCopy,
                                          fontSize: Fonts.size.input,

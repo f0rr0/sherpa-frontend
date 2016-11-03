@@ -30,7 +30,8 @@ import {
     Text,
     ListView,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+    Alert
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -163,11 +164,19 @@ class FeedTrip extends Component {
                             sceneConfig:"bottom-nodrag"
                       });
                 }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={()=>{
-                    deleteTrip(this.props.trip.id).then(()=>{
-                        setTimeout(this.props.refreshCurrentScene,500)
-                    })
-                    this.props.navigator.pop();
-
+                    Alert.alert(
+                      'Delete Trip',
+                      'Are you sure you want to delete this trip?',
+                      [
+                        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                        {text: 'OK', onPress: () => {
+                            deleteTrip(this.props.trip.id).then(()=>{
+                                setTimeout(this.props.refreshCurrentScene,500)
+                            })
+                            this.props.navigator.pop();
+                        }}
+                      ]
+                    )
                 }} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )

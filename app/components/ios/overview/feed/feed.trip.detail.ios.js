@@ -119,6 +119,7 @@ class TripDetail extends React.Component{
 
 
     suiteCaseTrip(){
+        console.log('suitcase trip');
 
         this.setState({suitcased:!this.state.suitcased});
         if(!this.state.suitcased){
@@ -135,6 +136,7 @@ class TripDetail extends React.Component{
 
 
     _renderSuitcaseButton(){
+        console.log('this state suitcase',this.state.suitcased);
         return(
             <View>
                 <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
@@ -151,11 +153,12 @@ class TripDetail extends React.Component{
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
         var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{momentData.caption}</Text>:null;
 
-        var profilePic= momentData.serviceJson?
+        //console.log('momentData',momentData);
+        var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                     <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
                 <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-                    <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} userID={momentData.profile.id} imageURL={momentData.serviceJson.user['profile_picture']}></UserImage>
+                    <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} userID={momentData.profile.id} imageURL={momentData.profile.serviceProfilePicture}></UserImage>
                     <View style={{marginLeft:20,}}>
                         <TouchableOpacity onPress={()=>{
                             Linking.openURL(momentData.serviceJson.link)

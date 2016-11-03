@@ -30,7 +30,7 @@ class EditTripGrid extends React.Component {
     }
 
     _renderFooter(){
-        console.log('check empty',this.checkEmpty());
+        //console.log('check empty',this.checkEmpty());
         return(
             <View style={{marginLeft:7,flex:1,width:SCREEN_WIDTH-21,height:55,paddingBottom:0,marginTop:-10,justifyContent:"flex-start"}}>
                 <SimpleButton style={{width:SCREEN_WIDTH-21}} disabled={this.checkEmpty()} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>

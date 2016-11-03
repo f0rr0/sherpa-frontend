@@ -15,6 +15,7 @@ import Camera from 'react-native-camera';
 import {getUserInstagramPhotos} from '../../../actions/trip.edit.actions'
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
+import _ from "underscore";
 
 class SherpaInstagramPicker extends Component {
     constructor(props) {
@@ -78,6 +79,18 @@ class SherpaInstagramPicker extends Component {
             .then((data) => this._appendImages(data), (e) => console.log(e));
     }
 
+    _getMediaUrl(media) {
+        var mediaUrl;
+        if(media.type === 'video'){
+            mediaUrl = media.videos.standard_resolution.url;
+        }else if(media.type === 'image'){
+            mediaUrl = media.images.standard_resolution.url;
+        }else{
+            console.log('Unknown instagram media type: ' + media.type);
+        }
+        return mediaUrl;
+    };
+
     _appendImages(res) {
         //console.log(res)
         var assets = res.data;
@@ -102,12 +115,28 @@ class SherpaInstagramPicker extends Component {
                                 "lat":asset.location?asset.location.latitude:null,
                                 "lng":asset.location?asset.location.longitude:null,
                                 "date": asset.created_time,
-                                "service":"instagram",
-                                "venue":asset.location?asset.location.name:"",
-                                "location":asset.location?asset.location.name:"",
+                                "service":"instagram-custom",
+                                "venue":asset.location?asset.location.name:null,
+                                "location":asset.location?asset.location.name:null,
                                 "state":"",
                                 "country":"",
-                                "mediaUrl":assets[i].images['standard_resolution'].url
+                                "caption":asset.caption?asset.caption.text:null,
+                                "serviceJson": _.pick(asset, [
+                                    'attribution',
+                                    'tags',
+                                    'type',
+                                    'location',
+                                    'created_time',
+                                    'link',
+                                    'images',
+                                    'caption',
+                                    'id',
+                                    'user'
+                                ]),
+                                "mediaUrl": this._getMediaUrl(asset),
+                                "highresUrl":this._getMediaUrl(asset).replace(/.640x640\//, '').replace(/.480x480\//, ''),
+                                "scrapeTime": new Date(),
+                                "atHometown": null
                             }
                         }
                 });

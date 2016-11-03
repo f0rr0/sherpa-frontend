@@ -141,7 +141,7 @@ export function deleteMoment(momentID){
 export function getFeed(query,page=1,type='') {
         return new Promise((fulfill,reject)=>{
             store.get('user').then((user) => {
-                console.log('user',user);
+                //console.log('user',user);
 
                 var searchBody = undefined;
                 const {endpoint,version,feed_uri,user_uri} = sherpa;

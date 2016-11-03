@@ -122,6 +122,8 @@ class LocationName extends Component{
                                             this.props.moment.state=info.state;
                                             this.props.moment.country=info.country;
 
+                                            //console.log(this.props.moment);
+
                                             this.moveDown();
                                          }}
                     getDefaultValue={() => {
@@ -130,7 +132,7 @@ class LocationName extends Component{
                     query={{
                                              key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',
                                              language: 'en', // language of the results
-                                             types: 'geocode', // default: 'geocode'
+                                             types: ['establishment','geocode'], // default: 'geocode'
                                          }}
                     styles={{
                                              description: {
@@ -192,7 +194,7 @@ class LocationName extends Component{
                                             rankby: 'distance'
                                          }}
 
-                    filterReverseGeocodingByTypes={['locality','establishment']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
+                    //filterReverseGeocodingByTypes={['establishment']} // filter the reverse geocoding results by types - ['locality', 'administrative_area_level_3'] if you want to display only cities
 
                 />
             </Animated.View>

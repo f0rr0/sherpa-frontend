@@ -60,15 +60,18 @@ class AddTrip extends React.Component {
             var momentBlobs=this.props.momentData||[];
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
+                console.log(exifData);
                 let gps=exifData['gps'];
-                var lat=gps?gps['Latitude']:0;
-                var lng=gps?gps['Longitude']:0;
-                var shotDate=exifData['exif']['DateTimeOriginal'];
+                let lat=gps?gps['Latitude']:0;
+                let lng=gps?gps['Longitude']:0;
+                let dateTime=new Date();
+                if(exifData.exif.DateTimeOriginal){
+                    dateTime=exifData.exif.DateTimeOriginal.split(' ');
+                    const regex = new RegExp(':', 'g');
+                    dateTime[0] = dateTime[0].replace(regex, '-');
+                }
 
-
-                const dateTime = shotDate.split(' ');
-                const regex = new RegExp(':', 'g');
-                dateTime[0] = dateTime[0].replace(regex, '-');
+                console.log('moment date',new Date(dateTime).getTime());
                 momentBlobs.push({
                     "lat":lat,
                     "lng":lng,
@@ -82,7 +85,9 @@ class AddTrip extends React.Component {
                 })
             }
 
+
             momentBlobs=momentBlobs.concat(this.state.images.instagram);
+            console.log(this.state.images.instagram,'instagram');
 
             this.props.navigator.push({
                 id: "editTripGrid",

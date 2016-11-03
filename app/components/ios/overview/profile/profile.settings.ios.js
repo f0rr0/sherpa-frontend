@@ -10,13 +10,14 @@ import {
     Image,
     ScrollView,
     TouchableOpacity,
+    Alert,
     TouchableHighlight
 } from 'react-native';
 import React, { Component } from 'react';
 import StickyHeader from '../../components/stickyHeader';
 import SimpleInput from '../../components/simpleInput';
 import ChooseHometown from '../../components/chooseHometown';
-import { deleteUser, logoutUser, setUserData, loadUser} from '../../../../actions/user.actions';
+import { deleteUser, logoutUser, setUserData, loadUser,resetProfile} from '../../../../actions/user.actions';
 import { Fonts, Colors } from '../../../../Themes';
 import {encodeQueryData} from '../../../../utils/query.utils';
 import buttonStyles from '../../components/styles/simpleButtonStyle';
@@ -111,28 +112,6 @@ class ProfileSettings extends React.Component {
         this.props.dispatch(setUserData(data));
     }
 
-
-    resetProfile(){
-        const {endpoint,version} = sherpa;
-        let feedRequestURI;
-        feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
-        let sherpaHeaders = new Headers();
-        sherpaHeaders.append("token", this.props.user.sherpaToken);
-
-        return fetch(feedRequestURI, {
-            method: 'post',
-            headers: sherpaHeaders
-        }).then((rawSherpaResponse)=> {
-              switch (rawSherpaResponse.status) {
-                  case 200:
-                      return rawSherpaResponse.text();
-                      break;
-                  case 400:
-                      return '{}';
-                      break;
-              }
-          });
-    }
 
     setAllowScrape(value) {
         const {endpoint,version} = sherpa;
@@ -306,13 +285,35 @@ class ProfileSettings extends React.Component {
                     <View style={[styles.dynamicButton,{paddingBottom:60}]}>
 
                         <Text style={styles.buttonCopy}>ACCOUNT</Text>
-                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {this.resetProfile()}}>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {
+                             Alert.alert(
+                              'Reset Profile',
+                              'Are you sure you want to reset your profile?',
+                              [
+                                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                                {text: 'OK', onPress: () => {
+                                        this.props.dispatch(resetProfile());
+                                }}
+                                ]
+                            )
+                        }}>
                             <Text style={styles.toggleCopy}>Reset my profile</Text>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,,styles.toggleRowLow]} onPress={() => {this.props.dispatch(logoutUser())}}>
                             <Text style={styles.toggleCopy}>Logout</Text>
                         </TouchableHighlight>
-                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={() => {this.props.dispatch(deleteUser())}}>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={() => {
+                             Alert.alert(
+                              'Delete Account',
+                              'Are you sure you want to delete your account?',
+                              [
+                                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                                {text: 'OK', onPress: () => {
+                                        this.props.dispatch(deleteUser())
+                                }}
+                                ]
+                            )
+                        }}>
                             <Text style={styles.toggleCopy}>Delete Account</Text>
                         </TouchableHighlight>
                     </View>

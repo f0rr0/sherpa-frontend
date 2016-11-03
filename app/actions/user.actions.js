@@ -131,6 +131,34 @@ export function addNotificationsDeviceToken(deviceToken,sherpaToken){
     }
 }
 
+export function resetProfile(){
+    return function (dispatch, getState) {
+        store.get('user').then((user) => {
+            console.log('reset profile');
+            const {endpoint,version} = sherpa;
+            let feedRequestURI;
+            feedRequestURI = endpoint + version + "/profile/" + user.serviceID + "/reset";
+            let sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+
+            return fetch(feedRequestURI, {
+                method: 'post',
+                headers: sherpaHeaders
+            }).then((rawSherpaResponse)=> {
+                switch (rawSherpaResponse.status) {
+                    case 200:
+                        console.log(rawSherpaResponse)
+                        return rawSherpaResponse.text();
+                        break;
+                    case 400:
+                        return '{}';
+                        break;
+                }
+            });
+        })
+    }
+}
+
 export function deleteUser(){
     return function (dispatch, getState) {
         store.get('user').then((user) => {
@@ -268,7 +296,7 @@ export function loadUser() {
                                 dispatch(updateUserDBState("empty"));
                             }
 
-                            console.log(responseJSON);
+                            //console.log(responseJSON);
 
                             dispatch(storeUser());
                         break;
@@ -347,6 +375,8 @@ export function signupUser(){
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
 
             dispatch(updateUserSignupState("service_token_request"));
+
+            //console.log('instagram auth callbacj');
             fetch(endpoint+token_uri, {
                 method: 'post',
                 headers: {
@@ -357,6 +387,7 @@ export function signupUser(){
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var info=JSON.parse(rawSherpaResponse);
+                //console.log('info',info)
                 signupWithSherpa(info.access_token,info.user);
             }).catch(error => {
                 dispatch(updateUserDBState("empty"));
@@ -381,6 +412,7 @@ export function signupUser(){
         }
 
         function signupWithSherpa(instagramToken,userData){
+            //console.log('sign up with sherpa');
             dispatch(updateUserSignupState("service_token_complete"));
             let deviceData={
                 deviceUniqueId:     DeviceInfo.getUniqueID(),
@@ -412,6 +444,15 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
+            //console.log('call login endpoint',endpoint+version+login_uri)
+            //console.log({
+            //    email:userReducer.email,
+            //    inviteCode:userReducer.inviteCode,
+            //    service:userReducer.service,
+            //    token:instagramToken,
+            //    serviceData:JSON.stringify(userData),
+            //    deviceData:JSON.stringify(deviceData)
+            //})
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -421,11 +462,17 @@ export function signupUser(){
             }).then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
+                //console.log('signup response',rawSherpaResponse)
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings} = sherpaResponse.user;
+
+                console.log('sherpa response profile id',id);
+                console.log('sherpa response profile token',sherpaResponse.token);
+
                 dispatch(updateUserData({
                     sherpaID:id,
                     serviceID:profile,
+                    profileID:profile,
                     sherpaToken:sherpaResponse.token,
                     jobID:sherpaResponse.jobId,
                     email,
@@ -439,6 +486,8 @@ export function signupUser(){
                     userContactSettings: contactSettings,
                     allContactSettings: sherpaResponse.allContactSettings
                 }));
+
+                console.log('store user',sherpaResponse);
 
                 dispatch(storeUser());
 
@@ -458,7 +507,7 @@ export function signupUser(){
 
 
 
-            })
+            }).catch(err=>console.log(err));
         }
     };
 }
