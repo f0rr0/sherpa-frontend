@@ -76,11 +76,11 @@ class AddTrip extends React.Component {
                     "lat":lat,
                     "lng":lng,
                     "date": new Date(dateTime).getTime()/1000,
-                    "service":"",
                     "venue":"",
                     "location":"",
                     "state":"",
                     "country":"",
+                    "service":"sherpa-ios",
                     "mediaUrl":this.state.images.cameraroll[i].uri
                 })
             }

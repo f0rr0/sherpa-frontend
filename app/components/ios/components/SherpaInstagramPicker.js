@@ -107,20 +107,20 @@ class SherpaInstagramPicker extends Component {
             var images=[];
             for(var i=0;i<assets.length;i++){
                 var asset=assets[i];
-
-                images.push({
-                        node:{
-                            image:{
-                                "uri":asset.images['standard_resolution'].url,
-                                "lat":asset.location?asset.location.latitude:null,
-                                "lng":asset.location?asset.location.longitude:null,
+                if(asset.type==='image') {
+                    images.push({
+                        node: {
+                            image: {
+                                "uri": asset.images['standard_resolution'].url,
+                                "lat": asset.location ? asset.location.latitude : null,
+                                "lng": asset.location ? asset.location.longitude : null,
                                 "date": asset.created_time,
-                                "service":"instagram-custom",
-                                "venue":asset.location?asset.location.name:null,
-                                "location":asset.location?asset.location.name:null,
-                                "state":"",
-                                "country":"",
-                                "caption":asset.caption?asset.caption.text:null,
+                                "service": "instagram-custom",
+                                "venue": asset.location ? asset.location.name : null,
+                                "location": asset.location ? asset.location.name : null,
+                                "state": "",
+                                "country": "",
+                                "caption": asset.caption ? asset.caption.text : null,
                                 "serviceJson": _.pick(asset, [
                                     'attribution',
                                     'tags',
@@ -134,12 +134,13 @@ class SherpaInstagramPicker extends Component {
                                     'user'
                                 ]),
                                 "mediaUrl": this._getMediaUrl(asset),
-                                "highresUrl":this._getMediaUrl(asset).replace(/.640x640\//, '').replace(/.480x480\//, ''),
+                                "highresUrl": this._getMediaUrl(asset).replace(/.640x640\//, '').replace(/.480x480\//, ''),
                                 "scrapeTime": new Date(),
                                 "atHometown": null
                             }
                         }
-                });
+                    });
+                }
             }
 
             //newState.lastCursor = data.page_info.end_cursor;

@@ -15,23 +15,25 @@ import RNFetchBlob from 'react-native-fetch-blob';
 export function createMoment(moment){
     return new Promise((fulfill,reject)=> {
         store.get('user').then((user) => {
-            //console.log('create trip with user',user);
 
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
-                //console.log('moment data',moment.date);
                 const queryData = {
                     "profile": user.profileID,
                     "lat": moment.lat,
                     "lng": moment.lng,
+                    "date": moment.date,
+                    "service":moment.service,
+                    "venue": moment.venue,
                     "location": moment.location,
                     "state": moment.state,
                     "country": moment.country,
-                    "continent": moment.continent || "",
-                    "venue": moment.venue,
-                    "date": moment.date,
                     "caption": moment.caption || "",
-                    "scrapeTime": new Date()
+                    "serviceJson":moment.serviceJson || null,
+                    "mediaUrl":moment.mediaUrl || null,
+                    "highresUrl":moment.highresUrl || null,
+                    "continent": moment.continent || "",
+                    "scrapeTime": moment.scrapeTime || new Date()
                 };
 
                 var sherpaHeaders = new Headers();
@@ -39,9 +41,6 @@ export function createMoment(moment){
                 sherpaHeaders.append("Content-Type", "application/json");
 
                 var createOrUpdate=moment.id?moment.id+"/update":"create";
-
-                //console.log('create or ipdate',createOrUpdate)
-
 
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
                     method: moment.id?'patch':'post',

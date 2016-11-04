@@ -73,7 +73,7 @@ class EditTripName extends React.Component {
                         }
                         this.props.momentData[i].data=momentsRes[i];
                         dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
-                        if(!this.props.momentData[i].id)momentUploads.push(uploadMoment(this.props.momentData[i]));
+                        if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i]));
                     }
 
                     dates.sort(function(a,b) {
