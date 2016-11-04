@@ -6,7 +6,8 @@ import {
     View,
     Text,
     Image,
-    TouchableOpacity
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import React, { Component } from 'react';
 import StickyHeader from '../../components/stickyHeader';
@@ -61,10 +62,16 @@ class AddTrip extends React.Component {
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
                 //console.log(exifData);
+
                 let gps=exifData['gps'];
                 let lat=gps?gps['Latitude']:0;
                 let lng=gps?gps['Longitude']:0;
                 let dateTime=new Date();
+                //Alert.alert(
+                //    'Exif data',
+                //    exifData.exif.DateTimeOriginal
+                //)
+
                 if(exifData.exif.DateTimeOriginal){
                     dateTime=exifData.exif.DateTimeOriginal.split(' ');
                     const regex = new RegExp(':', 'g');
@@ -72,10 +79,20 @@ class AddTrip extends React.Component {
                 }
 
                 //console.log('moment date',new Date(dateTime).getTime());
+                //Alert.alert(
+                //    'processed datetime',
+                //    dateTime.toString()
+                //)
+                //
+                //Alert.alert(
+                //    'Exif data',
+                //    (new Date(dateTime[0]).getTime()/1000).toString()
+                //)
+
                 momentBlobs.push({
                     "lat":lat,
                     "lng":lng,
-                    "date": new Date(dateTime).getTime()/1000,
+                    "date": new Date(dateTime[0]).getTime()/1000,
                     "venue":"",
                     "location":"",
                     "state":"",

@@ -4,13 +4,12 @@ import * as types from '../constants/user.actiontypes'
 const {instagram,sherpa}=config.auth[config.environment];
 const SHERPA="SHERPA";
 const INSTAGRAM="INSTAGRAM";
-import React, { Linking,AlertIOS } from 'react-native';
+import React, { Linking,Alert } from 'react-native';
 import store from 'react-native-simple-store';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
 import SafariView from "react-native-safari-view";
 import ImageResizer from 'react-native-image-resizer';
 import RNFetchBlob from 'react-native-fetch-blob';
-
 
 export function createMoment(moment){
     return new Promise((fulfill,reject)=> {
@@ -36,6 +35,8 @@ export function createMoment(moment){
                     "scrapeTime": moment.scrapeTime || new Date()
                 };
 
+                //Alert.alert('send up date',moment.date.toString())
+
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
@@ -49,6 +50,8 @@ export function createMoment(moment){
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    //Alert.alert('return date',JSON.parse(response).date.toString())
+
                     //console.log('moment create response',JSON.parse(response));
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
