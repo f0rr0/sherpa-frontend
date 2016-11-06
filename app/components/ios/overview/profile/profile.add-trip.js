@@ -27,11 +27,11 @@ import {getUserInstagramPhotos} from '../../../../actions/trip.edit.actions'
 class AddTrip extends React.Component {
     constructor(props){
         super(props);
-        this.state={images:{cameraroll:props.images&&!props.momentData?props.images.cameraroll:[],instagram:props.images&&!props.momentData?props.images.instagram:[]},type:'cameraroll'}
+        this.state={images:{cameraroll:props.images&&!props.momentData?props.images.cameraroll:[],instagram:props.images&&!props.momentData?props.images.instagram:[]},type:'instagram'}
     }
 
     componentDidMount(){
-        this.setType('cameraroll');
+        this.setType('instagram');
     }
 
     componentDidUpdate(){

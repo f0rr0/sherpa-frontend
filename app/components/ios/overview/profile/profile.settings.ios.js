@@ -247,6 +247,7 @@ class ProfileSettings extends React.Component {
                               onValueChange={this.setAllowScrape.bind(this)}/>
                         </View>
                     </View>
+                    {/*
                     <View style={styles.dynamicButton}>
                         <Text style={styles.buttonCopy}>PUSH NOTIFICATIONS</Text>
                         <View style={[styles.toggleRow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]}>
@@ -282,10 +283,12 @@ class ProfileSettings extends React.Component {
                               onValueChange={(value) => this.allowNewSuitcaseNotifCallback(value)}/>
                         </View>
                     </View>
+                    */}
                     <View style={[styles.dynamicButton,{paddingBottom:60}]}>
 
                         <Text style={styles.buttonCopy}>ACCOUNT</Text>
-                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {
+
+                        {/* <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {
                              Alert.alert(
                               'Reset Profile',
                               'Are you sure you want to reset your profile?',
@@ -298,8 +301,8 @@ class ProfileSettings extends React.Component {
                             )
                         }}>
                             <Text style={styles.toggleCopy}>Reset my profile</Text>
-                        </TouchableHighlight>
-                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,,styles.toggleRowLow]} onPress={() => {this.props.dispatch(logoutUser())}}>
+                        </TouchableHighlight>*/}
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
                             <Text style={styles.toggleCopy}>Logout</Text>
                         </TouchableHighlight>
                         <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={() => {

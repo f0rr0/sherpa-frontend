@@ -171,6 +171,7 @@ class FeedTrip extends Component {
                         {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                         {text: 'OK', onPress: () => {
                             deleteTrip(this.props.trip.id).then(()=>{
+                                this.props.refreshCurrentScene();
                                 setTimeout(this.props.refreshCurrentScene,500)
                             })
                             this.props.navigator.pop();

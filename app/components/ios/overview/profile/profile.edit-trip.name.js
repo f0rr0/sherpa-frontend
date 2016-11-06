@@ -67,13 +67,15 @@ class EditTripName extends React.Component {
                     var dates=[];
                     var coverMomentID="";
                     for(var i=0;i<  this.props.momentData.length;i++){
+                        if(this.props.momentData[i].selected){
                             momentIDs.push(momentsRes[i].id)
-                        if(this.props.momentData[i].isCover){
-                            coverMomentID=momentsRes[i].id;
+                            if(this.props.momentData[i].isCover){
+                                coverMomentID=momentsRes[i].id;
+                            }
+                            this.props.momentData[i].data=momentsRes[i];
+                            dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
+                            if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i]));
                         }
-                        this.props.momentData[i].data=momentsRes[i];
-                        dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
-                        if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i]));
                     }
 
                     dates.sort(function(a,b) {
