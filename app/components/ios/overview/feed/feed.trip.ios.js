@@ -76,6 +76,7 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    row:{flexDirection: 'row'},
     listViewContainer:{flex:1,backgroundColor:'white'},
     headerContainer:{flex:1,height:windowSize.height+190},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
@@ -90,13 +91,29 @@ class FeedTrip extends Component {
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+
+        const organizedMoments=[];
+        const itemsPerRow=2;
+        let data=props.trip.moments;
+
+        for(var i=0;i<props.trip.moments.length;i++){
+
+            let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+            organizedMoments.push(data.slice(i, endIndex));
+            i = endIndex;
+        }
+
+        //console.log(organizedMoments);
+
         this.state= {
-            dataSource: this.ds.cloneWithRows(props.trip.moments),
+            dataSource: this.ds.cloneWithRows(organizedMoments),
             annotations:[],
             moments:props.trip.moments,
             shouldUpdate:true,
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
-            routeName:"TRIP"
+            routeName:"TRIP",
+            itemsPerRow:itemsPerRow,
+            containerWidth:windowSize.width-30
         };
     }
 
@@ -138,12 +155,12 @@ class FeedTrip extends Component {
             <View style={styles.listViewContainer}>
                 <ListView
                     enableEmptySections={false}
-                   dataSource={this.state.dataSource}
-                   renderRow={this._renderRow.bind(this)}
-                   contentContainerStyle={styles.listView}
-                   renderHeader={this._renderHeader.bind(this)}
-                   ref="listview"
-                   onScroll={(event)=>{
+                    dataSource={this.state.dataSource}
+                    renderRow={this._renderRow.bind(this)}
+                    contentContainerStyle={styles.listView}
+                    renderHeader={this._renderHeader.bind(this)}
+                    ref="listview"
+                    onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;
                          var direction = currentOffset > this.offset ? 'down' : 'up';
                          this.offset = currentOffset;
@@ -267,11 +284,25 @@ class FeedTrip extends Component {
         )
     }
 
-    _renderRow(tripData,sectionID,rowID) {
-        if(tripData.type!=='image')return(<View></View>);
+
+    _renderRow(rowData,sectionID,rowID) {
+        var index=0;
+        var items = rowData.map((item) => {
+            if (item === null || item.type!=='image') {
+                return null;
+            }
+
+            index++;
+
+            return  <MomentRow key={"momentRow"+rowID+"_"+index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+        });
+
         return (
-           <MomentRow tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            <View style={[styles.row,{width:this.state.containerWidth}]}>
+                {items}
+            </View>
         );
+
     }
 }
 

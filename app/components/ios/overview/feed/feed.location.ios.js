@@ -4,7 +4,7 @@ import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
 import { connect } from 'react-redux';
-import GiftedListView from 'react-native-gifted-listview';
+import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import FeedTrip from './feed.trip.ios'
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
@@ -84,8 +84,8 @@ class FeedLocation extends Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
-                <GiftedListView
+            <View style={{flex:1,backgroundColor:'white',width:windowSize.width}}>
+                <SherpaGiftedListview
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
@@ -127,9 +127,9 @@ class FeedLocation extends Component {
     _renderHeader(){
         var tripData=this.props.trip;
         var moments=this.state.moments;
-        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidGhvbWFzcmFnZ2VyIiwiYSI6ImNpaDd3d2pwMTAwMml2NW0zNjJ5bG83ejcifQ.-IlKvZ3XbN8ckIam7-W3pw";
+        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
-
+        console.log(mapURI)
         return (
             <View>
                 <View style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
@@ -159,7 +159,9 @@ class FeedLocation extends Component {
 
     _renderRow(tripData,sectionID,rowID){
         return (
-            <MomentRow tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            <View style={[styles.row,{width:windowSize.width-30}]}>
+                <MomentRow itemsPerRow={1} containerWidth={windowSize.width-30} tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            </View>
         );
     }
 }
@@ -180,13 +182,6 @@ var styles = StyleSheet.create({
         alignItems:'center',
         justifyContent:"center",
         paddingBottom:50
-    },
-    listItemContainer:{
-        flex:1,
-        width:windowSize.width-30,
-        height:windowSize.width-30,
-        marginBottom:0,
-        marginTop:30
     },
     copyLarge:{
         color:'white',

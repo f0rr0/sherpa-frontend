@@ -6,7 +6,7 @@ import config from '../../../../data/config';
 
 import countries from './../../../../data/countries'
 import moment from 'moment';
-import GiftedListView from 'react-native-gifted-listview';
+import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
@@ -99,7 +99,7 @@ class FeedProfile extends React.Component {
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
 
-                <GiftedListView
+                <SherpaGiftedListview
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}

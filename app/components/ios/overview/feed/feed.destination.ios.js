@@ -65,6 +65,7 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    row:{flexDirection: 'row'},
     mapMaskedView:{backgroundColor:'#FAFAFA', justifyContent:'center', height:670, width:windowSize.width,alignItems:'center',flex:1},
     blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
     maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.5 },
@@ -110,7 +111,7 @@ class FeedDestination extends Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:"white"}}>
+            <View style={{flex:1,backgroundColor:"white",width:windowSize.width}}>
                 <ListView
                    dataSource={this.state.dataSource}
                    renderRow={this._renderRow.bind(this)}
@@ -188,7 +189,9 @@ class FeedDestination extends Component {
     _renderRow(tripData) {
         tripData.suitcased=true;
         return (
-            <MomentRow tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            <View style={[styles.row,{width:windowSize.width-30}]}>
+                <MomentRow itemsPerRow={1} containerWidth={windowSize.width-30} tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            </View>
         );
     }
 }

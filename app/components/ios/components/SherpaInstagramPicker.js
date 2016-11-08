@@ -161,7 +161,7 @@ class SherpaInstagramPicker extends Component {
                 style={[styles.wrapper, {padding: 0, paddingRight: 0, backgroundColor: backgroundColor},this.props.wrapper]}>
                 <View style={[{opacity:this.state.loadingMore?1:0,width:SCREEN_WIDTH,height:SCREEN_HEIGHT,position:'absolute',top:0,left:0,justifyContent:'center',alignItems:'center'},this.props.wrapper]}><ActivityIndicator style={styles.spinner} /></View>
                 <ListView
-                    style={{flex: 1,}}
+                    style={{flex: 1}}
                     scrollRenderAheadDistance={scrollRenderAheadDistance}
                     initialListSize={initialListSize}
                     pageSize={pageSize}
@@ -190,7 +190,7 @@ class SherpaInstagramPicker extends Component {
             <View key={item.node.image.uri}>
                 <View style={{flex:1,position:'absolute',backgroundColor:'white',top:0,width:this._imageSize,height:this._imageSize}}></View>
                 <TouchableOpacity
-                    style={{marginBottom: imageMargin, marginRight: imageMargin}}
+                    style={{marginBottom: imageMargin, marginRight: imageMargin,backgroundColor:'red'}}
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image
                         source={{uri: item.node.image.uri}}

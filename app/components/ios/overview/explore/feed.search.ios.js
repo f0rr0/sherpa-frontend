@@ -7,7 +7,7 @@ import states from './../../../../data/states';
 
 import countries from './../../../../data/countries'
 import moment from 'moment';
-import GiftedListView from 'react-native-gifted-listview';
+import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import { connect } from 'react-redux';
 import config from '../../../../data/config';
 import store from 'react-native-simple-store';
@@ -141,7 +141,7 @@ class Search extends React.Component {
     render(){
         return(
             <View style={{flex:1}}>
-                <GiftedListView
+                <SherpaGiftedListview
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}

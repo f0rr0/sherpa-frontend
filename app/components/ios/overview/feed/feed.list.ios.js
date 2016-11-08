@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
-import GiftedListView from 'react-native-gifted-listview';
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import TripRow from '../../components/tripRow'
 import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
+import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 var windowSize=Dimensions.get('window');
 
 import {
@@ -101,7 +101,7 @@ class FeedList extends React.Component{
     render(){
         return(
             <View style={{flex:1}}>
-                <GiftedListView
+                <SherpaGiftedListview
                     // Fixes feed-rendering anomaly, issue #3 but may cause performance issues w/ memory usage
                     removeClippedSubviews={false}
                     //
