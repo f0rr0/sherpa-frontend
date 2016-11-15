@@ -54,7 +54,8 @@ class MomentRow extends Component{
             momentID,
             trip:this.props.tripData,
             suitcase:this.suiteCaseTrip.bind(this),
-            unsuitcase:this.unSuiteCaseTrip.bind(this)
+            unsuitcase:this.unSuiteCaseTrip.bind(this),
+            sceneConfig:"right-nodrag"
         });
     }
 

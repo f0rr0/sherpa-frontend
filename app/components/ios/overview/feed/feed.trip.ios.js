@@ -59,6 +59,8 @@ var styles = StyleSheet.create({
         height:windowSize.width-30,
         marginBottom:38,
     },
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+
     button:{
         backgroundColor:'#001545',
         height:50,
@@ -83,8 +85,8 @@ var styles = StyleSheet.create({
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
-    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:0,right:0,height:20,marginTop:-5}
+    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5}
 });
 
 class FeedTrip extends Component {
@@ -92,18 +94,21 @@ class FeedTrip extends Component {
         super(props);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-        const organizedMoments=[];
         const itemsPerRow=2;
+        let organizedMoments=[];
         let data=props.trip.moments;
 
-        for(var i=0;i<props.trip.moments.length;i++){
-
-            let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
-            organizedMoments.push(data.slice(i, endIndex));
-            i = endIndex;
+        if(!props.trip.organizedMoments){
+            for(var i=0;i<props.trip.moments.length;i++){
+                let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+                organizedMoments.push(data.slice(i, endIndex));
+                i = endIndex-1;
+            }
+            props.trip.organizedMoments=organizedMoments;
+        }else{
+            organizedMoments=props.trip.organizedMoments;
         }
 
-        //console.log(organizedMoments);
 
         this.state= {
             dataSource: this.ds.cloneWithRows(organizedMoments),
@@ -171,7 +176,9 @@ class FeedTrip extends Component {
                          }
                     }}
                 />
+
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
+
                 <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} onEditTrip={()=>{
                       this.props.navigator.push({
                             id: "editTripGrid",
@@ -225,7 +232,6 @@ class FeedTrip extends Component {
         return {location:tripLocation,country:country};
     }
 
-
     _renderHeader(){
         var tripData=this.props.trip;
         var type=this.props.trip.type=='global'?'state':this.props.trip.type;
@@ -236,6 +242,7 @@ class FeedTrip extends Component {
         })[0];
 
         if(country)tripLocation=country.name;
+        var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
 
         return (
             <View style={styles.headerContainer}>
@@ -261,6 +268,8 @@ class FeedTrip extends Component {
 
                         <View style={styles.subTitleContainer}>
                             <TripSubtitle tripData={this.props.trip}></TripSubtitle>
+                            <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
+
                         </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>

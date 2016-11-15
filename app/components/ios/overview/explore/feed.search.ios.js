@@ -61,6 +61,7 @@ var styles = StyleSheet.create({
         height:windowSize.width-30,
         marginBottom:30
     },
+    row:{flexDirection: 'row'},
     button:{
         backgroundColor:'#001545',
         height:50,
@@ -96,7 +97,8 @@ class Search extends React.Component {
             reRender:false,
             moments:[],
             momentIDs:[],
-            searchEmptyMessage:msg_empty
+            searchEmptyMessage:msg_empty,
+            containerWidth:windowSize.width-30
         };
     }
 
@@ -112,7 +114,8 @@ class Search extends React.Component {
         var tripDetails={trip,owner};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails
+            tripDetails,
+            sceneConfig:"right-nodrag"
         });
     }
 
@@ -234,7 +237,7 @@ class Search extends React.Component {
                             source={require('./../../../../Images/icon-explore-dark.png')}
                         />
                         <GooglePlacesAutocomplete
-                            placeholder='Search'
+                            placeholder='Where to?'
                             ref="googleSearch"
                             textInputProps={{
                                onChangeText:(searchQuery) => {
@@ -344,7 +347,9 @@ class Search extends React.Component {
 
     _renderRow(tripData) {
         return (
-            <MomentRow tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            <View style={[styles.row,{width:this.state.containerWidth}]}>
+                <MomentRow itemsPerRow={1} tripData={tripData} containerWidth={this.state.containerWidth}  trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            </View>
         );
     }
 }

@@ -174,13 +174,12 @@ export function deleteUser(){
                     method: 'delete',
                     headers: sherpaHeaders
                 })
-                    .then((rawServiceResponse)=> {
-                        return rawServiceResponse.text();
-                    }).then((response)=> {
+                .then((rawServiceResponse)=> {
+                    return rawServiceResponse.text();
+                }).then((response)=> {
                     store.delete('user').then(()=> {
                         dispatch(updateUserDBState("empty"));
                     })
-
                 }).catch(err=>console.log('device token err',err));
             }
             dispatch(updateUserDBState("empty"));

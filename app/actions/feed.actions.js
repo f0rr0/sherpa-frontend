@@ -78,6 +78,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             .then((rawSherpaResponseFinal)=>{
                 if(!rawSherpaResponseFinal)return;
                 sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+
                 switch(type){
                     case "user":
                         dispatch(udpateFeed({trips:sherpaResponse.trips,page:page,type}));
@@ -141,7 +142,6 @@ export function deleteMoment(momentID){
 export function getFeed(query,page=1,type='') {
         return new Promise((fulfill,reject)=>{
             store.get('user').then((user) => {
-                //console.log('user',user);
 
                 var searchBody = undefined;
                 const {endpoint,version,feed_uri,user_uri} = sherpa;
@@ -218,6 +218,7 @@ export function getFeed(query,page=1,type='') {
                         if (!rawSherpaResponseFinal)return;
                         var parsedResponse=JSON.parse(rawSherpaResponseFinal);
                         var trips = parsedResponse.trips;
+
                         switch(type){
                             case "user":
                             case "moment":
@@ -243,6 +244,7 @@ export function getFeed(query,page=1,type='') {
                                         cleanTrips.push(trips[index]);
                                     }
                                 }
+
 
                                 fulfill({trips:cleanTrips, page, type});
                             break;

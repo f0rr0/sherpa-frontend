@@ -166,14 +166,14 @@ class Suitecase extends React.Component {
         var trips=this.props.feed.suitcaseDestinations["1"];
 
         var tripDuration=trips.length;
-        var citieS=tripDuration>1?"DESTINATIONS":"DESTINATION";
+        var citieS=tripDuration>1||tripDuration==0?"DESTINATIONS":"DESTINATION";
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){
                 moments+=trips[i].moments.length;
             }
         }
-        var photoOrPhotos=moments>1?"LOCATIONS":"LOCATION";
+        var photoOrPhotos=moments>1||moments==0?"PLACES":"PLACE";
 
         return (
             <View style={styles.suitcaseHeaderContainer}>

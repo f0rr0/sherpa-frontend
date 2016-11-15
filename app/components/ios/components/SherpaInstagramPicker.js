@@ -188,9 +188,9 @@ class SherpaInstagramPicker extends Component {
         var isSelected=(this._arrayObjectIndexOf(this.state.selected, 'uri', item.node.image.uri) >= 0);
         return (
             <View key={item.node.image.uri}>
-                <View style={{flex:1,position:'absolute',backgroundColor:'white',top:0,width:this._imageSize,height:this._imageSize}}></View>
+                <View style={{flex:1,position:'absolute',backgroundColor:'transparent',top:0,width:this._imageSize,height:this._imageSize}}></View>
                 <TouchableOpacity
-                    style={{marginBottom: imageMargin, marginRight: imageMargin,backgroundColor:'red'}}
+                    style={{marginBottom: imageMargin, marginRight: imageMargin,backgroundColor:'rgba(0,0,0,0)'}}
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image
                         source={{uri: item.node.image.uri}}

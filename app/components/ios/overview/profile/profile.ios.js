@@ -18,7 +18,7 @@ import store from 'react-native-simple-store';
 const {sherpa}=config.auth[config.environment];
 import TripRow from '../../components/tripRow'
 import SimpleButton from '../../components/simpleButton'
-
+import Hyperlink from 'react-native-hyperlink';
 
 import {
     StyleSheet,
@@ -237,6 +237,7 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderHeader(){
+        console.log(this.props.user);
         if(Object.keys(this.props.feed.profileTrips).length==0)return;
         var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
         var moments=0;
@@ -267,8 +268,15 @@ class OwnUserProfile extends React.Component {
                           onPress={()=>{Linking.openURL("https://www.instagram.com/"+this.props.user.username);}}
                           radius={80}
                           userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
-                        <Text style={{color:"#282b33",fontSize:20,marginBottom:5, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:250,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>Going places? Location tag your travel photos on Instagram to update your profile.</Text>
+                        <Text style={{color:"#282b33",fontSize:20,marginBottom:0, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
+                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.hometown}</Text>
+
+                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject.profile.serviceBio}</Text>
+                        </Hyperlink>
+                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["website"]}</Text>
+                        </Hyperlink>
                     </View>
                     {status}
                 </View>

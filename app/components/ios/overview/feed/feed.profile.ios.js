@@ -14,7 +14,7 @@ import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import UserImage from '../../components/userImage';
 import TripRow from '../../components/tripRow'
-
+import Hyperlink from 'react-native-hyperlink';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
@@ -186,8 +186,15 @@ class FeedProfile extends React.Component {
                         <UserImage onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
                         }} radius={80} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
-                        <Text style={{color:"#282b33",fontSize:20,marginBottom:15, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
+
+                        <Text style={{color:"#282b33",fontSize:20,marginBottom:0, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
+                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown}</Text>
+                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
+                        </Hyperlink>
+                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["website"]}</Text>
+                        </Hyperlink>
                     </View>
                 </View>
 

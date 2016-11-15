@@ -14,6 +14,7 @@ import config from '../../../../data/config';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
+import SimpleButton from '../../components/simpleButton'
 
 import {
     StyleSheet,
@@ -37,6 +38,9 @@ var styles = StyleSheet.create({
         alignItems:'center',
         paddingBottom:10,
     },
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+
     listView:{
         alignItems:'center',
         justifyContent:"center",
@@ -107,6 +111,15 @@ class FeedDestination extends Component {
 
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({dataSource:ds.cloneWithRows(this.props.trip.moments),annotations:markers})
+        //console.log(this.props.trip);
+    }
+
+    showTripLocation(trip){
+        //console.log('trip',trip);
+        this.props.navigator.push({
+            id: "location",
+            trip
+        });
     }
 
     render(){
@@ -147,7 +160,8 @@ class FeedDestination extends Component {
         }};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails
+            tripDetails,
+            sceneConfig:"right-nodrag"
         });
     }
 
@@ -155,6 +169,17 @@ class FeedDestination extends Component {
         var tripData=this.props.trip;
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
         var mapURI=this.props.trip.moments[0].mediaUrl;
+        var tripLocation=this.props.trip.name;
+        this.props.trip.type='country';
+
+        var country = countries.filter(function(country) {
+            return country["alpha-2"].toLowerCase() === tripLocation.toLowerCase();
+        })[0];
+
+        if(country)tripLocation=country.name;
+        this.props.trip.country=this.props.trip.name;
+        var timeAgo="UPDATED "+moment(new Date(tripData.updatedAt)).fromNow()
+
 
         return (
             <View style={{flex:1,height:830}}>
@@ -169,6 +194,9 @@ class FeedDestination extends Component {
                     >
                     </Image>
                     <TripTitle style={{marginTop:100}} type="destination" showSubtitle={false} standalone={true} tripData={tripData}></TripTitle>
+                    <View style={styles.subTitleContainer}>
+                        <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
+                    </View>
                 </View>
                 <Mapbox
                     style={{height:250,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:570,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}

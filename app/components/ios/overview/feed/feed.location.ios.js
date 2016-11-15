@@ -47,7 +47,8 @@ class FeedLocation extends Component {
         var tripDetails={trip,owner};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails
+            tripDetails,
+            sceneConfig:"right-nodrag"
         });
     }
 

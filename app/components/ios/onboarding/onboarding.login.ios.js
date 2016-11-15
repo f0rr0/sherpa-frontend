@@ -159,9 +159,8 @@ class Login extends Component {
                 <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin}]}>
                     <SimpleInput ref="emailInput" onStart={this.moveUp.bind(this)} onEnd={this.moveDown.bind(this)} onChange={(text)=>{this.validate(text)}} placeholder="Enter your email" style={{color:this.state.showError?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
                     <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Request an invite"></SimpleButton>
-                    <TouchableOpacity onPress={()=>{this.alreadyInvited.bind(this)()}}>
-                        <Text style={{fontFamily:"TSTAR-bold",fontSize:10,letterSpacing:1,fontWeight:"600",marginTop:10,textAlign:'center',color:'white',backgroundColor:'transparent'}}>ALREADY INVITED? LOGIN WITH INSTAGRAM</Text>
-                    </TouchableOpacity>
+                    <SimpleButton text="I've been invited" onPress={()=>{this.alreadyInvited.bind(this)()}}>
+                    </SimpleButton>
                 </Animated.View>
 
                 <SimpleError ref="emailError" errorMessage="Valid email address is required"></SimpleError>
