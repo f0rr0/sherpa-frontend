@@ -125,13 +125,26 @@ class FeedTrip extends Component {
             routeName:"TRIP",
             itemsPerRow:itemsPerRow,
             containerWidth:windowSize.width-30,
-            region:null
+            region:null,
+            isPortrait:true
         };
     }
 
 
+    _orientationDidChange(orientation) {
+        var isPortrait=(orientation=="PORTRAIT"||orientation=="PORTRAITUPSIDEDOWN"||orientation=="UNKNOWN")
+        this.props.toggleTabBar(isPortrait);
+        this.setState({isPortrait})
+    }
+
     navActionRight(){
        this.refs.popover._setAnimation("toggle");
+    }
+
+    navActionLeft(){
+        console.log("LEFT LEFT");
+        this.props.navigator.pop();
+        Orientation.lockToPortrait();
     }
 
 
@@ -194,13 +207,9 @@ class FeedTrip extends Component {
             momentIDs.push(this.state.moments[i].id);
         }
 
-
         this.map.fitToCoordinates(markers, {
             edgePadding: DEFAULT_PADDING
         });
-
-
-
         const clusters = supercluster({
             radius: 60,
             maxZoom: 16,
@@ -208,12 +217,19 @@ class FeedTrip extends Component {
 
         clusters.load(markers);
 
+        Orientation.addOrientationListener(this._orientationDidChange.bind(this));
+        Orientation.unlockAllOrientations();
 
         this.setState({annotations:markers,clusters});
     }
 
+    componentWillUnmount(){
+        Orientation.removeOrientationListener(this._orientationDidChange.bind(this));
+    }
+
     render(){
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;        return(
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
+        const completeHeader=this.state.isPortrait?
             <View style={styles.listViewContainer}>
                 <ListView
                     enableEmptySections={false}
@@ -260,8 +276,9 @@ class FeedTrip extends Component {
                       ]
                     )
                 }} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
-            </View>
-        )
+            </View>:<View style={[styles.listViewContainer,{backgroundColor:'red'}]}></View>;
+
+        return completeHeader;
     }
 
 
@@ -341,26 +358,12 @@ class FeedTrip extends Component {
                     >
 
                         {this.createMarkersForRegion()}
-                        {/*this.state.annotations.map((marker,i) => {
-                            return (
-                                    <MapView.Marker key={i} coordinate={{latitude:marker.latitude,longitude:marker.longitude}}>
-                                        <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
-                                            <Image
-                                                style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
-                                                source={{uri:marker.moment.mediaUrl}}
-                                            ></Image>
-                                        </View>
-                                    </MapView.Marker>
-                            );
-                        })*/}
-
                     </MapView>
 
                 </View>
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
-
-                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
+                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
             </View>
         )
     }

@@ -173,7 +173,7 @@ class Feed extends Component {
             break;
             case "trip":
                 showNav=true;
-                sceneContent = <FeedTrip refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
                 showNav=true;
@@ -230,6 +230,7 @@ class Feed extends Component {
     }
 
     reset(){
+        console.log('reset');
         if(!this.navigator)return;
         if(this.navigator.getCurrentRoutes().length==1){
             this.navigator.refs[this.currentRenderScene].reset()
@@ -244,6 +245,8 @@ class Feed extends Component {
     }
 
     _navActionLeft(){
+        console.log("nav action left ",this.navigator.refs[this.currentRenderScene])
+
         if(this.navigator.refs[this.currentRenderScene].navActionLeft){
             this.navigator.refs[this.currentRenderScene].navActionLeft();
         }else{

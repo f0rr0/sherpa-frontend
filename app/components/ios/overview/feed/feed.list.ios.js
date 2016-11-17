@@ -6,6 +6,7 @@ import Dimensions from 'Dimensions';
 import StickyHeader from '../../components/stickyHeader';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 var windowSize=Dimensions.get('window');
+import Orientation from 'react-native-orientation';
 
 import {
     StyleSheet,
@@ -43,6 +44,7 @@ class FeedList extends React.Component{
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
+        Orientation.lockToPortrait();
     }
 
     componentDidUpdate(prevProps,prevState){
