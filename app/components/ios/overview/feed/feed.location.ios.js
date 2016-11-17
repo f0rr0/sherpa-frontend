@@ -1,6 +1,6 @@
 'use strict';
 
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
 import { connect } from 'react-redux';

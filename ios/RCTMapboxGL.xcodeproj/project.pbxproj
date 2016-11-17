@@ -25,6 +25,7 @@
 		3CD9E11EEA8040C7BC57EED4 /* libRCTWebSocketDebugger.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F87921362CD949E49B39CD38 /* libRCTWebSocketDebugger.a */; };
 		C1EF288C7F8B45899F5FD3EB /* libRNUploader.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DBFD0E537C4559A7B1BAE6 /* libRNUploader.a */; };
 		92D7A0F6DFFC42A8918A57F2 /* libAirMaps.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 063CF1A58E7749E0BCE6994F /* libAirMaps.a */; };
+		7766AB4D149E4ECCBE283B3A /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FE66199AD9449F8B28B8475 /* libRCTOrientation.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,8 @@
 		F3DBFD0E537C4559A7B1BAE6 /* libRNUploader.a */ = {isa = PBXFileReference; name = "libRNUploader.a"; path = "libRNUploader.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		305064D8A5744B2197DC05A6 /* AirMaps.xcodeproj */ = {isa = PBXFileReference; name = "AirMaps.xcodeproj"; path = "../node_modules/react-native-maps/ios/AirMaps.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		063CF1A58E7749E0BCE6994F /* libAirMaps.a */ = {isa = PBXFileReference; name = "libAirMaps.a"; path = "libAirMaps.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		145989466B724B54B3000D44 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; name = "RCTOrientation.xcodeproj"; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		1FE66199AD9449F8B28B8475 /* libRCTOrientation.a */ = {isa = PBXFileReference; name = "libRCTOrientation.a"; path = "libRCTOrientation.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +114,7 @@
 				3CD9E11EEA8040C7BC57EED4 /* libRCTWebSocketDebugger.a in Frameworks */,
 				C1EF288C7F8B45899F5FD3EB /* libRNUploader.a in Frameworks */,
 				92D7A0F6DFFC42A8918A57F2 /* libAirMaps.a in Frameworks */,
+				7766AB4D149E4ECCBE283B3A /* libRCTOrientation.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,6 +194,7 @@
 				7C6F6267435445E6B1E2201B /* ReactNativeSocialShare.xcodeproj */,
 				AFEAE8B5214149D99877FAD9 /* RNUploader.xcodeproj */,
 				305064D8A5744B2197DC05A6 /* AirMaps.xcodeproj */,
+				145989466B724B54B3000D44 /* RCTOrientation.xcodeproj */,
 			);
 			name = Libraries;
 			path = "";
@@ -414,11 +419,13 @@
 					"$(SRCROOT)/../node_modules/react-native-safari-view",
 					"$(SRCROOT)/../node_modules/react-native-social-share/iOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/bobby/Downloads/mapbox-gl-ios-0.2.17",
 					"$(PROJECT_DIR)/RCTMapboxGL",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -469,11 +476,13 @@
 					"$(SRCROOT)/../node_modules/react-native-safari-view",
 					"$(SRCROOT)/../node_modules/react-native-social-share/iOS",
 					"$(SRCROOT)/../node_modules/react-native-maps/ios/**",
+					"$(SRCROOT)/../node_modules/react-native-orientation/iOS/RCTOrientation/**",
 				);
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					"/Users/bobby/Downloads/mapbox-gl-ios-0.2.17",
 					"$(PROJECT_DIR)/RCTMapboxGL",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
@@ -528,6 +537,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -545,6 +555,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

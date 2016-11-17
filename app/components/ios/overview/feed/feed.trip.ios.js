@@ -3,7 +3,7 @@
 import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import moment from 'moment';
 import {loadFeed} from '../../../../actions/feed.actions';
 import {deleteTrip} from '../../../../actions/trip.edit.actions';
@@ -21,9 +21,11 @@ import UserImage from '../../components/userImage'
 import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
 import Header from '../../components/header'
-
-
-
+import MapView from 'react-native-maps';
+import supercluster from 'supercluster'
+import {getClusters} from '../../components/get-clusters';
+import Orientation from 'react-native-orientation';
+ 
 import {
     StyleSheet,
     View,
@@ -78,6 +80,9 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+    },
     row:{flexDirection: 'row'},
     listViewContainer:{flex:1,backgroundColor:'white'},
     headerContainer:{flex:1,height:windowSize.height+190},
@@ -88,6 +93,8 @@ var styles = StyleSheet.create({
     headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5}
 });
+
+const DEFAULT_PADDING = { top: 60, right: 60, bottom: 100, left: 60 };
 
 class FeedTrip extends Component {
     constructor(props){
@@ -109,7 +116,6 @@ class FeedTrip extends Component {
             organizedMoments=props.trip.organizedMoments;
         }
 
-
         this.state= {
             dataSource: this.ds.cloneWithRows(organizedMoments),
             annotations:[],
@@ -118,41 +124,92 @@ class FeedTrip extends Component {
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
             routeName:"TRIP",
             itemsPerRow:itemsPerRow,
-            containerWidth:windowSize.width-30
+            containerWidth:windowSize.width-30,
+            region:null
         };
     }
+
 
     navActionRight(){
        this.refs.popover._setAnimation("toggle");
     }
 
-    componentDidUpdate(){
+
+    getZoomLevel(region = this.state.region) {
+        // http://stackoverflow.com/a/6055653
+        const angle = region.longitudeDelta;
+
+        // 0.95 for finetuning zoomlevel grouping
+        return Math.round(Math.log(360 / angle) / Math.LN2);
     }
 
+    createMarkersForRegion() {
+        const padding = 0.25;
+        if (this.state.clusters&&this.state.region) {
+            const markers = this.state.clusters.getClusters([
+                this.state.region.longitude - (this.state.region.longitudeDelta * (0.5 + padding)),
+                this.state.region.latitude - (this.state.region.latitudeDelta * (0.5 + padding)),
+                this.state.region.longitude + (this.state.region.longitudeDelta * (0.5 + padding)),
+                this.state.region.latitude + (this.state.region.latitudeDelta * (0.5 + padding)),
+            ], this.getZoomLevel());
+
+            return markers.map((marker,i) => this.renderMarker(marker,i));
+        }
+        return [];
+    }
+
+    renderMarker(marker,i){
+        let clustercount=null;
+        if(marker.properties&&marker.properties.cluster){
+            clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{marker.properties.point_count}</Text></View>
+        }
+        return(
+            <MapView.Marker key={i} coordinate={{latitude:marker.geometry.coordinates[1],longitude:marker.geometry.coordinates[0]}}>
+                <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
+                    <Image
+                        style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
+                        source={{uri:marker.data.mediaUrl}}
+                    ></Image>
+                    {clustercount}
+                </View>
+            </MapView.Marker>
+        )
+    }
+
+
     componentDidMount(){
-        //console.log(this.state.moments);
         var markers=[];
         var momentIDs=[];
 
 
         for (var i=0;i<this.state.moments.length;i++){
             markers.push({
-                coordinates: [this.state.moments[i].lat, this.state.moments[i].lng],
-                type: 'point',
-                title:this.state.moments[i].venue||"",
-                annotationImage: {
-                    url: 'image!icon-pin',
-                    height: 7,
-                    width: 7
-                },
-                id:"markers"+i
+                latitude:this.state.moments[i].lat,
+                longitude:this.state.moments[i].lng,
+                moment:this.state.moments[i],
+                data:this.state.moments[i],
+                geometry:{coordinates:[this.state.moments[i].lng,this.state.moments[i].lat]}
             });
 
             momentIDs.push(this.state.moments[i].id);
         }
 
 
-        this.setState({annotations:markers})
+        this.map.fitToCoordinates(markers, {
+            edgePadding: DEFAULT_PADDING
+        });
+
+
+
+        const clusters = supercluster({
+            radius: 60,
+            maxZoom: 16,
+        });
+
+        clusters.load(markers);
+
+
+        this.setState({annotations:markers,clusters});
     }
 
     render(){
@@ -232,6 +289,10 @@ class FeedTrip extends Component {
         return {location:tripLocation,country:country};
     }
 
+    _regionUpdated(region){
+        this.setState({region});
+    }
+
     _renderHeader(){
         var tripData=this.props.trip;
         var type=this.props.trip.type=='global'?'state':this.props.trip.type;
@@ -273,17 +334,28 @@ class FeedTrip extends Component {
                         </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
-                    <Mapbox
-                        style={{borderRadius:2,flex:1,top:0,left:0,bottom:0,right:0,fontSize:10,position:'absolute',fontFamily:"TSTAR", fontWeight:"500"}}
-                        styleURL={'mapbox://styles/mapbox/streets-v9'}
-                        accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
-                        centerCoordinate={{latitude: this.state.moments[0].lat,longitude: this.state.moments[0].lng}}
-                        zoomLevel={6}
-                        annotations={this.state.annotations}
-                        scrollEnabled={false}
-                        zoomEnabled={false}
-                    />
-                    <View style={{flex:1,top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></View>
+                    <MapView
+                        style={styles.map}
+                        onRegionChangeComplete={this._regionUpdated.bind(this)}
+                        ref={ref => { this.map = ref; }}
+                    >
+
+                        {this.createMarkersForRegion()}
+                        {/*this.state.annotations.map((marker,i) => {
+                            return (
+                                    <MapView.Marker key={i} coordinate={{latitude:marker.latitude,longitude:marker.longitude}}>
+                                        <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
+                                            <Image
+                                                style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
+                                                source={{uri:marker.moment.mediaUrl}}
+                                            ></Image>
+                                        </View>
+                                    </MapView.Marker>
+                            );
+                        })*/}
+
+                    </MapView>
+
                 </View>
 
                 <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
@@ -292,6 +364,7 @@ class FeedTrip extends Component {
             </View>
         )
     }
+
 
 
     _renderRow(rowData,sectionID,rowID) {

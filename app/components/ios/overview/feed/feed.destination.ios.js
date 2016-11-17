@@ -1,6 +1,6 @@
 'use strict';
 
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import FeedLocation from "./feed.location.ios";
 import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
@@ -198,6 +198,7 @@ class FeedDestination extends Component {
                         <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                     </View>
                 </View>
+                {/*
                 <Mapbox
                     style={{height:250,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:570,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                     accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
@@ -206,7 +207,7 @@ class FeedDestination extends Component {
                     annotations={this.state.annotations}
                     scrollEnabled={false}
                     zoomEnabled={false}
-                />
+                />*/}
 
                 {this.props.navigation.default}
 

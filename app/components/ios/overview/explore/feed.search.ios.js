@@ -1,6 +1,6 @@
 'use strict';
 
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import states from './../../../../data/states';

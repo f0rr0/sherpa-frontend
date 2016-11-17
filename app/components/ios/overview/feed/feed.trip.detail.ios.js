@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -189,7 +189,7 @@ class TripDetail extends React.Component{
                     <FoursquareInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
                     <View style={{height:250,width:windowSize.width,left:0,flex:1}} >
-                        <Mapbox
+                        {/*<Mapbox
                             style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
                             accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
                             centerCoordinate={{latitude:momentData.lat,longitude: momentData.lng}}
@@ -219,7 +219,7 @@ class TripDetail extends React.Component{
                             ]}
                             scrollEnabled={true}
                             zoomEnabled={true}
-                        />
+                        />*/}
 
                     </View>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:true}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.props.navActionRight}></Header>

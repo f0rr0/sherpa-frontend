@@ -1,6 +1,6 @@
 'use strict';
 
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 
 import countries from './../../../../data/countries'

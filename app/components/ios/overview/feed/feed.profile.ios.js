@@ -1,6 +1,6 @@
 'use strict';
 
-import Mapbox from "react-native-mapbox-gl";
+//import Mapbox from "react-native-mapbox-gl";
 import FeedTrip from './../feed/feed.trip.ios'
 import config from '../../../../data/config';
 
@@ -140,8 +140,8 @@ class FeedProfile extends React.Component {
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 250, height: 250}} source={{uri: 'http://www.thomasragger.com/loader.gif'}} />
+            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
 
         )
