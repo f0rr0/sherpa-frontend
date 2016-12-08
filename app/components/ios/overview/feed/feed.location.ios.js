@@ -24,7 +24,8 @@ import {
     View,
     Text,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+Alert
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -34,10 +35,11 @@ class FeedLocation extends Component {
         super();
         this.itemsLoadedCallback=null;
         this.moments=[];
-        this.state={moments:[]}
+        this.state={moments:[],containerWidth:windowSize.width-30}
     }
 
     componentDidMount(){
+        //console.log('trip location');
     }
     navActionRight(){
         this.refs.popover._setAnimation("toggle");
@@ -53,15 +55,52 @@ class FeedLocation extends Component {
     }
 
     _onFetch(page=1,callback){
-        var req={type:this.props.trip.type,page}
-        req[this.props.trip.type]=this.props.trip[this.props.trip.type];
+        let req;
+        let searchType;
+        let data=this.props.trip;
+        if(this.props.version=='v2'){
+            req={
+                layer:data.layer,
+                source:data.source,
+                source_id:data.source_id
+            }
+            searchType='search-places-v2';
+        }else{
+            req={type:data.type,page}
+            req[data.type]=this.props.trip[data.type];
+            searchType='search-places';
+        }
+        getFeed(req,page,searchType).then((response)=>{
+            if(response.moments.length==0){
+                Alert.alert(
+                    'Location is Empty',
+                    'We dont have any moments for this location',
+                    [
+                        {text: 'OK'}
+                    ]
+                )
+                this.props.navigator.pop();
+            }else{
 
-        getFeed(req,page,'search-places').then((response)=>{
-            if(page==1)this.setState({moments:response.moments});
-            var settings=response.moments.length==0?{
-                allLoaded: true, // the end of the list is reached
-            }:{};
-            callback(response.moments,settings);
+
+                const itemsPerRow=2;
+                let organizedMoments=[];
+                let data=response.moments;
+
+                    for(var i=0;i<data.length;i++){
+                        let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+                        organizedMoments.push(data.slice(i, endIndex));
+                        i = endIndex-1;
+                    }
+
+
+                if(page==1)this.setState({moments:organizedMoments});
+                var settings=response.moments.length==0?{
+                    allLoaded: true
+                }:{};
+
+                callback(organizedMoments,settings);
+            }
         })
     }
 
@@ -85,7 +124,7 @@ class FeedLocation extends Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white',width:windowSize.width}}>
+            <View style={{flex:1,backgroundColor:'white'}}>
                 <SherpaGiftedListview
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
@@ -128,11 +167,13 @@ class FeedLocation extends Component {
     _renderHeader(){
         var tripData=this.props.trip;
         var moments=this.state.moments;
-        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0].lng+","+moments[0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
+        if(moments.length==0)return null
+        //console.log('moments',moments);
+        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
-        console.log(mapURI)
+        //console.log(mapURI)
         return (
-            <View>
+            <View style={{flex:1}}>
                 <View style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
 
                     <Image
@@ -158,10 +199,21 @@ class FeedLocation extends Component {
         )
     }
 
-    _renderRow(tripData,sectionID,rowID){
+    _renderRow(rowData,sectionID,rowID){
+        var index=0;
+        var items = rowData.map((item) => {moment
+            if (item === null || item.type!=='image') {
+                return null;
+            }
+
+            index++;
+            return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+        });
+
+
         return (
             <View style={[styles.row,{width:windowSize.width-30}]}>
-                <MomentRow itemsPerRow={1} containerWidth={windowSize.width-30} tripData={tripData} trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                {items}
             </View>
         );
     }
@@ -179,6 +231,7 @@ var styles = StyleSheet.create({
         alignItems:'center',
         paddingBottom:10,
     },
+    row:{flexDirection: 'row'},
     listView:{
         alignItems:'center',
         justifyContent:"center",

@@ -115,8 +115,6 @@ class Login extends Component {
         return re.test(email);
     };
 
-
-
     componentDidMount(){
         //console.log("user:: ",this.props.user);
         if(this.props.denied)this.refs.notInvitedError.show();

@@ -33,7 +33,21 @@ class FoursquareInfoBox extends Component {
         if(location.split(",").length>=0)location=location.split(",")[0];
 
         //console.log('foursquare location',location);
-        this.getFoursquareData(location);
+        //this.getFoursquareData(location);
+
+        let venueInfo=this.props.data;
+
+        if(venueInfo){
+            var venueObject={
+                category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
+                rating:venueInfo.rating||undefined,
+                ratingCount:venueInfo.ratingSignals||undefined,
+                price:_.findWhere(venueInfo.attributes.groups,{type: "price"}),
+                icon:venueInfo.categories[0].icon.prefix+"64"+venueInfo.categories[0].icon.suffix
+            }
+
+            this.setState({venue:venueObject,foursquareURL:venueInfo.canonicalUrl});
+        }
     }
 
     getFoursquareData(query){

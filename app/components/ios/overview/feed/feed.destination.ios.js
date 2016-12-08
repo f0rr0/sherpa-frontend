@@ -69,20 +69,36 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
-    row:{flexDirection: 'row'},
+    row:{flexDirection: 'row',justifyContent:"space-between"},
     mapMaskedView:{backgroundColor:'#FAFAFA', justifyContent:'center', height:670, width:windowSize.width,alignItems:'center',flex:1},
     blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
     maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.5 },
 });
 
 class FeedDestination extends Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
+        const itemsPerRow=2;
+        let organizedMoments=[];
+        let data=props.trip.moments;
+
+        if(!props.trip.organizedMoments){
+            for(var i=0;i<props.trip.moments.length;i++){
+                let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+                organizedMoments.push(data.slice(i, endIndex));
+                i = endIndex-1;
+            }
+            props.trip.organizedMoments=organizedMoments;
+        }else{
+            organizedMoments=props.trip.organizedMoments;
+        }
+
         this.state= {
-            dataSource: ds.cloneWithRows([]),
-            annotations:[]
+            dataSource: ds.cloneWithRows(organizedMoments),
+            annotations:[],
+            containerWidth:windowSize.width-25
         };
     }
 
@@ -93,26 +109,6 @@ class FeedDestination extends Component {
         this.refs.popover._setAnimation("toggle");
     }
 
-    componentWillMount(){
-        var markers=[];
-        for (var i=0;i<this.props.trip.moments.length;i++){
-            markers.push({
-                coordinates: [this.props.trip.moments[i].lat, this.props.trip.moments[i].lng],
-                type: 'point',
-                title:this.props.trip.moments[i].venue||"",
-                annotationImage: {
-                    url: 'image!icon-pin',
-                    height: 8,
-                    width: 8
-                },
-                id:"markers"+i
-            })
-        }
-
-        var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-        this.setState({dataSource:ds.cloneWithRows(this.props.trip.moments),annotations:markers})
-        //console.log(this.props.trip);
-    }
 
     showTripLocation(trip){
         //console.log('trip',trip);
@@ -124,7 +120,7 @@ class FeedDestination extends Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:"white",width:windowSize.width}}>
+            <View style={{backgroundColor:"white",width:windowSize.width}}>
                 <ListView
                    dataSource={this.state.dataSource}
                    renderRow={this._renderRow.bind(this)}
@@ -182,7 +178,7 @@ class FeedDestination extends Component {
 
 
         return (
-            <View style={{flex:1,height:830}}>
+            <View style={{height:580}}>
                 <View maskImage='mask-test' style={styles.mapMaskedView} >
 
                     <View
@@ -198,28 +194,26 @@ class FeedDestination extends Component {
                         <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                     </View>
                 </View>
-                {/*
-                <Mapbox
-                    style={{height:250,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:570,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                    accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
-                    centerCoordinate={{latitude: this.props.trip.moments[0].lat,longitude: this.props.trip.moments[0].lng}}
-                    zoomLevel={6}
-                    annotations={this.state.annotations}
-                    scrollEnabled={false}
-                    zoomEnabled={false}
-                />*/}
-
                 {this.props.navigation.default}
 
             </View>
         )
     }
 
-    _renderRow(tripData) {
-        tripData.suitcased=true;
+    _renderRow(rowData,sectionID,rowID) {
+        rowData.suitcased=true;
+        var index=0;
+        var items = rowData.map((item) => {moment
+            if (item === null || item.type!=='image') {
+                return null;
+            }
+
+            index++;
+            return  <MomentRow key={"momentRow"+rowID+"_"+index} itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+        });
         return (
-            <View style={[styles.row,{width:windowSize.width-30}]}>
-                <MomentRow itemsPerRow={1} containerWidth={windowSize.width-30} tripData={tripData} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            <View style={[styles.row,{width:this.state.containerWidth}]}>
+                {items}
             </View>
         );
     }

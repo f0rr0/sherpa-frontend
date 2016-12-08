@@ -24,8 +24,9 @@ import Header from '../../components/header'
 import MapView from 'react-native-maps';
 import supercluster from 'supercluster'
 import {getClusters} from '../../components/get-clusters';
-import Orientation from 'react-native-orientation';
- 
+import TripDetail from '../../components/tripDetail'
+import { Fonts, Colors } from '../../../../Themes/'
+import MarkerMap from '../../components/MarkerMap'
 import {
     StyleSheet,
     View,
@@ -33,33 +34,42 @@ import {
     ListView,
     Image,
     TouchableHighlight,
-    Alert
+    Alert,
+    PanResponder,
+    Animated,
+    ScrollView,
+    TouchableOpacity
+
 } from 'react-native';
 import React, { Component } from 'react';
+import AddPaging from 'react-native-paged-scroll-view/index'
 
-
+const CARD_PREVIEW_WIDTH = 10
+const CARD_MARGIN = 3;
+const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;
+import ImageProgress from 'react-native-image-progress';
+import * as Progress from 'react-native-progress';
 
 var styles = StyleSheet.create({
-    container: {
-        flex: 1
+    map: {
+        ...StyleSheet.absoluteFillObject
     },
-    listItem:{
-        flex:1,
-        backgroundColor:"black",
-        justifyContent:"center",
-        alignItems:'center',
-        paddingBottom:10,
+    listViewContainer:{flex:1,backgroundColor:'white',paddingBottom:60},
+    container: {
+        flex: 1,
+    },
+    tripDetailContainer:{
+        //backgroundColor:'rgba(0,0,0,.5)',
+        position:'absolute',
+        top:0,
+        left:0,
+        bottom:0,
+        right:0
     },
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:60,
-    },
-    listItemContainer:{
-        flex:1,
-        width:windowSize.width-30,
-        height:windowSize.width-30,
-        marginBottom:38,
+        paddingBottom:0,
     },
     tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
 
@@ -80,18 +90,19 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
-    map: {
-        ...StyleSheet.absoluteFillObject,
+    card: {
+        width: CARD_WIDTH,
+        position:'relative'
     },
     row:{flexDirection: 'row'},
-    listViewContainer:{flex:1,backgroundColor:'white'},
     headerContainer:{flex:1,height:windowSize.height+190},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
     headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
-    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5}
+    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5},
+    tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
 
 const DEFAULT_PADDING = { top: 60, right: 60, bottom: 100, left: 60 };
@@ -105,6 +116,7 @@ class FeedTrip extends Component {
         let organizedMoments=[];
         let data=props.trip.moments;
 
+
         if(!props.trip.organizedMoments){
             for(var i=0;i<props.trip.moments.length;i++){
                 let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
@@ -116,9 +128,11 @@ class FeedTrip extends Component {
             organizedMoments=props.trip.organizedMoments;
         }
 
+
         this.state= {
             dataSource: this.ds.cloneWithRows(organizedMoments),
             annotations:[],
+
             moments:props.trip.moments,
             shouldUpdate:true,
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
@@ -126,15 +140,15 @@ class FeedTrip extends Component {
             itemsPerRow:itemsPerRow,
             containerWidth:windowSize.width-30,
             region:null,
-            isPortrait:true
+            isPortrait:true,
+            momentDetailsOffsetY:new Animated.Value(windowSize.height),
+            momentDetailsBackground:new Animated.Value(0),
+            shouldHideDetailView:true,
+            didHideDetailView:true,
+            didShowDetailView:false,
+            scroll: new Animated.Value(0)
         };
-    }
 
-
-    _orientationDidChange(orientation) {
-        var isPortrait=(orientation=="PORTRAIT"||orientation=="PORTRAITUPSIDEDOWN"||orientation=="UNKNOWN")
-        this.props.toggleTabBar(isPortrait);
-        this.setState({isPortrait})
     }
 
     navActionRight(){
@@ -142,94 +156,45 @@ class FeedTrip extends Component {
     }
 
     navActionLeft(){
-        console.log("LEFT LEFT");
         this.props.navigator.pop();
-        Orientation.lockToPortrait();
     }
 
+    componentDidUpdate(prevProps,prevState){
+        var showTabBar=true;
+        if(this.state.shouldHideDetailView!==prevState.shouldHideDetailView){
+            if(this.state.shouldHideDetailView){
+                showTabBar=false;
+                Animated.timing(this.state.momentDetailsOffsetY, {
+                    toValue: windowSize.height,
+                    duration:200
+                }).start(()=>{
+                });
+                    this.setState({didHideDetailView:true})
+                this.setState({didShowDetailView:false})
+            }else{
+                showTabBar=true;
+                Animated.spring(this.state.momentDetailsOffsetY, {
+                    toValue: 60
+                }).start(()=>{
+                    this.setState({didShowDetailView:true})
+                });
 
-    getZoomLevel(region = this.state.region) {
-        // http://stackoverflow.com/a/6055653
-        const angle = region.longitudeDelta;
-
-        // 0.95 for finetuning zoomlevel grouping
-        return Math.round(Math.log(360 / angle) / Math.LN2);
-    }
-
-    createMarkersForRegion() {
-        const padding = 0.25;
-        if (this.state.clusters&&this.state.region) {
-            const markers = this.state.clusters.getClusters([
-                this.state.region.longitude - (this.state.region.longitudeDelta * (0.5 + padding)),
-                this.state.region.latitude - (this.state.region.latitudeDelta * (0.5 + padding)),
-                this.state.region.longitude + (this.state.region.longitudeDelta * (0.5 + padding)),
-                this.state.region.latitude + (this.state.region.latitudeDelta * (0.5 + padding)),
-            ], this.getZoomLevel());
-
-            return markers.map((marker,i) => this.renderMarker(marker,i));
+                this.setState({didHideDetailView:false});
+            }
+            if(this.state.isPortrait)this.props.toggleTabBar(!showTabBar);
+        }else if(this.state.isPortrait!==prevState.isPortrait){
+            this.props.toggleTabBar(this.state.isPortrait);
         }
-        return [];
-    }
 
-    renderMarker(marker,i){
-        let clustercount=null;
-        if(marker.properties&&marker.properties.cluster){
-            clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{marker.properties.point_count}</Text></View>
-        }
-        return(
-            <MapView.Marker key={i} coordinate={{latitude:marker.geometry.coordinates[1],longitude:marker.geometry.coordinates[0]}}>
-                <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
-                    <Image
-                        style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
-                        source={{uri:marker.data.mediaUrl}}
-                    ></Image>
-                    {clustercount}
-                </View>
-            </MapView.Marker>
-        )
     }
-
 
     componentDidMount(){
-        var markers=[];
-        var momentIDs=[];
-
-
-        for (var i=0;i<this.state.moments.length;i++){
-            markers.push({
-                latitude:this.state.moments[i].lat,
-                longitude:this.state.moments[i].lng,
-                moment:this.state.moments[i],
-                data:this.state.moments[i],
-                geometry:{coordinates:[this.state.moments[i].lng,this.state.moments[i].lat]}
-            });
-
-            momentIDs.push(this.state.moments[i].id);
-        }
-
-        this.map.fitToCoordinates(markers, {
-            edgePadding: DEFAULT_PADDING
-        });
-        const clusters = supercluster({
-            radius: 60,
-            maxZoom: 16,
-        });
-
-        clusters.load(markers);
-
-        Orientation.addOrientationListener(this._orientationDidChange.bind(this));
-        Orientation.unlockAllOrientations();
-
-        this.setState({annotations:markers,clusters});
-    }
-
-    componentWillUnmount(){
-        Orientation.removeOrientationListener(this._orientationDidChange.bind(this));
     }
 
     render(){
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
-        const completeHeader=this.state.isPortrait?
+
+        const completeHeader=
             <View style={styles.listViewContainer}>
                 <ListView
                     enableEmptySections={false}
@@ -260,27 +225,28 @@ class FeedTrip extends Component {
                             tripData:this.props.trip,
                             sceneConfig:"bottom-nodrag"
                       });
-                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={()=>{
-                    Alert.alert(
-                      'Delete Trip',
-                      'Are you sure you want to delete this trip?',
-                      [
-                        {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-                        {text: 'OK', onPress: () => {
-                            deleteTrip(this.props.trip.id).then(()=>{
-                                this.props.refreshCurrentScene();
-                                setTimeout(this.props.refreshCurrentScene,500)
-                            })
-                            this.props.navigator.pop();
-                        }}
-                      ]
-                    )
-                }} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
-            </View>:<View style={[styles.listViewContainer,{backgroundColor:'red'}]}></View>;
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
 
+            </View>
         return completeHeader;
     }
 
+    deleteTripAlert(){
+            Alert.alert(
+                'Delete Trip',
+                'Are you sure you want to delete this trip?',
+                [
+                    {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                    {text: 'OK', onPress: () => {
+                        deleteTrip(this.props.trip.id).then(()=>{
+                            this.props.refreshCurrentScene();
+                            setTimeout(this.props.refreshCurrentScene,500)
+                        })
+                        this.props.navigator.pop();
+                    }}
+                ]
+            )
+    }
 
     showUserProfile(trip){
         this.props.dispatch(udpateFeedState("reset"));
@@ -297,18 +263,14 @@ class FeedTrip extends Component {
         });
     }
 
-    getTripLocation(tripData){
-        var country = countries.filter(function(country) {
-            return country["name"].toLowerCase() === tripData.name.toLowerCase();
-        })[0];
-
-        var tripLocation=tripData.name;
-        return {location:tripLocation,country:country};
+    showTripMap(trip){
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            trip,
+            sceneConfig:"right-nodrag"
+        });
     }
 
-    _regionUpdated(region){
-        this.setState({region});
-    }
 
     _renderHeader(){
         var tripData=this.props.trip;
@@ -332,7 +294,7 @@ class FeedTrip extends Component {
                         <Image
                             style={styles.headerImage}
                             resizeMode="cover"
-                            source={{uri:this.state.moments[0].mediaUrl}}
+                            source={{uri:this.state.moments[0].highresUrl||this.state.moments[0].mediaUrl}}
                         />
 
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
@@ -351,14 +313,13 @@ class FeedTrip extends Component {
                         </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
-                    <MapView
-                        style={styles.map}
-                        onRegionChangeComplete={this._regionUpdated.bind(this)}
-                        ref={ref => { this.map = ref; }}
-                    >
+                    <View style={[{backgroundColor:'white'},styles.map]}></View>
 
-                        {this.createMarkersForRegion()}
-                    </MapView>
+                    <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap(this.props.trip)}}>
+
+                    <MarkerMap interactive={false} moments={this.props.trip.moments}></MarkerMap>
+                    </TouchableOpacity>
+
 
                 </View>
 
@@ -368,18 +329,146 @@ class FeedTrip extends Component {
         )
     }
 
-
-
+    //renderTripDetails(){
+    //    let currentIndex=0;
+    //    var currentMoment=this.props.trip.moments[0];
+    //
+    //    return(
+    //        this.state.didHideDetailView?null:<Animated.View style={[styles.tripDetailContainer,{backgroundColor:this.state.momentDetailsOffsetY.interpolate({extrapolate:'clamp',inputRange:[0,windowSize.height],outputRange:['rgba(0,0,0,.8)','rgba(0,0,0,0)']})}]}>
+    //                <PanController
+    //                            horizontal
+    //                            vertical
+    //                            xBounds={[-(this.props.trip.moments.length-1) * (CARD_WIDTH + CARD_MARGIN*2),0]}
+    //                            yBounds={[-20,this.state.shouldHideDetailView?9999:60]}
+    //                            snapSpacingX={CARD_WIDTH + CARD_MARGIN*2}
+    //                            xMode="snap"
+    //                            panX={this.state.scroll}
+    //                            panY={this.state.momentDetailsOffsetY}
+    //                            overshootY='spring'
+    //                            overshootReductionFactor={2}
+    //                            pageCount={this.props.trip.moments.length}
+    //                            onPanResponderMove={(_,{dx,dy,x0,y0})=>{
+    //                            }}
+    //                            onReleaseY={({ vx, vy, dx, dy })=>{
+    //                               let currentPosY=this.state.momentDetailsOffsetY._offset+dy;
+    //                               if(currentPosY>0&&currentPosY<250){
+    //                                     Animated.timing(this.state.momentDetailsOffsetY, {toValue:50,duration:200}).start();
+    //                               }else if(currentPosY>250){
+    //                                     this.setState({shouldHideDetailView:true});
+    //                               }
+    //                            }}
+    //                >
+    //                    <Animated.View style={{top:this.state.momentDetailsOffsetY}}>
+    //
+    //                        <Animated.View style={{marginLeft:CARD_PREVIEW_WIDTH,left:this.state.scroll,flexDirection:'row',backgroundColor:'red'}}>
+    //
+    //                            {this.props.trip.moments.map((momentData)=>{
+    //                                currentIndex++;
+    //
+    //                                var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
+    //                                var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{momentData.caption}</Text>:null;
+    //
+    //
+    //                                var profilePic= this.props.trip.owner.serviceProfilePicture?
+    //                                    <View style={{height:CARD_WIDTH,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
+    //                                        <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
+    //
+    //                                        <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
+    //                                        <UserImage onPress={()=>{this.showUserProfile({owner:moment.profile})}} radius={30} userID={momentData.profile.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
+    //                                            <View style={{marginLeft:20,}}>
+    //                                                <TouchableOpacity onPress={()=>{Linking.openURL(momentData.serviceJson.link)}}>
+    //                                                    {description}
+    //                                                </TouchableOpacity>
+    //                                                <View style={{flexDirection:'row',alignItems:'center'}}>
+    //                                                    <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+    //                                                    <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
+    //                                                </View>
+    //                                            </View>
+    //                                        </View>
+    //                                    </View>:null;
+    //
+    //                                return (
+    //                                    <ImageProgress
+    //                                            style={[styles.card,
+    //                                                {
+    //                                                    backgroundColor:'grey',
+    //                                                    width:CARD_WIDTH,
+    //                                                    height:CARD_WIDTH,
+    //                                                    marginHorizontal:CARD_MARGIN,
+    //                                                    position:'absolute',
+    //                                                    left:(currentIndex-1)*(CARD_WIDTH+CARD_MARGIN*2)
+    //                                            }]}
+    //                                            resizeMode="cover"
+    //                                            key={"moment-"+momentData.id}
+    //                                            indicator={Progress.Circle}
+    //                                            indicatorProps={{
+    //                                                color: 'rgba(150, 150, 150, 1)',
+    //                                                unfilledColor: 'rgba(200, 200, 200, 0.2)'
+    //                                            }}
+    //                                            source={{uri:momentData.mediaUrl}}
+    //                                        >
+    //                                        {profilePic}
+    //                                        </ImageProgress>
+    //
+    //                                )
+    //                            })}
+    //
+    //                        </Animated.View>
+    //
+    //                        <View style={{height:CARD_WIDTH,width:CARD_WIDTH,top:CARD_WIDTH,left:CARD_PREVIEW_WIDTH+CARD_MARGIN}} >
+    //                            {this._renderSuitcaseButton()}
+    //                            <View style={{height:CARD_WIDTH,width:CARD_WIDTH,backgroundColor:'grey'}}>
+    //                                {this.state.didShowDetailView?this._renderMap(currentMoment):null}
+    //                            </View>
+    //                        </View>
+    //
+    //                    </Animated.View>
+    //                </PanController>
+    //        </Animated.View>
+    //    )
+    //}
+    //_renderMap(currentMoment){
+    //    return(
+    //            <MapView
+    //                style={styles.map} ref={ref => { this.map = ref; }}
+    //                initialRegion={{
+    //                                    latitude: parseFloat(currentMoment.lat),
+    //                                    longitude: parseFloat(currentMoment.lng),
+    //                                    latitudeDelta: 1,
+    //                                    longitudeDelta: 1,
+    //                                }}
+    //                scrollEnabled={false}
+    //            >
+    //                <MapView.Marker coordinate={{latitude:parseFloat(currentMoment.lat),longitude:parseFloat(currentMoment.lng)}}>
+    //                    <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
+    //                        <Image
+    //                            style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
+    //                            source={{uri:currentMoment.mediaUrl}}
+    //                        ></Image>
+    //                    </View>
+    //                </MapView.Marker>
+    //            </MapView>
+    //    )
+    //}
+    //
+    //_renderSuitcaseButton(){
+    //    return(
+    //        <Animated.View style={{marginTop:this.props.gap,marginBottom:this.props.gap,borderRadius:this.props.borderRadius,overflow:'hidden'}}>
+    //            <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white,borderRadius:0}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
+    //            <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip()}} text="ADD TO YOUR SUITCASE"></SimpleButton>
+    //        </Animated.View>
+    //    )
+    //}
+    //
     _renderRow(rowData,sectionID,rowID) {
         var index=0;
-        var items = rowData.map((item) => {
+        var items = rowData.map((item) => {moment
             if (item === null || item.type!=='image') {
                 return null;
             }
 
             index++;
-
-            return  <MomentRow key={"momentRow"+rowID+"_"+index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
 
         return (

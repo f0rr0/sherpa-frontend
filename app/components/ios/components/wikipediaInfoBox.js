@@ -19,12 +19,18 @@ class WikpediaInfoBox extends Component {
     constructor(props){
         super(props);
         this.state={
-            wikipediaDescription:""
+            wikipediaDescription:"",
+            wikiURL:""
         }
     }
 
     componentDidMount(){
-        this.getWikipediaData(this.props.location);
+        //this.getWikipediaData(this.props.location);
+        console.log('wiki data',this.props.data)
+        if(this.props.data){
+            let data=this.props.data;
+            this.setState({"wikipediaDescription":data.extract,"wikiURL":data.fullurl})
+        }
     }
 
     getWikipediaData(query){

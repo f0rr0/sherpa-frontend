@@ -25,9 +25,7 @@ import AddPaging from 'react-native-paged-scroll-view/index'
 var PagedScrollView = AddPaging(ScrollView)
 
 var windowSize=Dimensions.get('window');
-
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
-
 const CARD_PREVIEW_WIDTH = 10
 const CARD_MARGIN = 3;
 const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;

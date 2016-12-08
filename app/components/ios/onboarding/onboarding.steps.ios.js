@@ -153,7 +153,7 @@ class OnboardingSteps extends Component {
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
-                this.setState({hometownBG:{uri:parsedResponse.mediaUrl},darken:true})
+                this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
             });
     }
 

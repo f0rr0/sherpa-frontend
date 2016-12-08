@@ -1,5 +1,4 @@
 import { connect } from 'react-redux';
-import FeedTrip from './feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';
 //import Mapbox from "react-native-mapbox-gl";
@@ -16,7 +15,7 @@ import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import Header from '../../components/header'
-
+import MapView from 'react-native-maps'
 import {
     StyleSheet,
     View,
@@ -59,6 +58,10 @@ var styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center'
     },
+    map: {
+        ...StyleSheet.absoluteFillObject,
+        height:250,width:windowSize.width
+    },
     copyLarge:{
         color:'white',
         fontFamily:"TSTAR-bold",
@@ -71,13 +74,14 @@ class TripDetail extends React.Component{
     constructor(props){
         super();
         this.state= {
-            suitcased: props.trip?props.trip.suitcased:false,
+            suitcased: props.isSuitcased?true:(props.trip?props.trip.suitcased:false),
             momentData: null,
             routeName:"TRIP"
         }
 
 
         getFeed(props.momentID,1,'moment').then((moment)=>{
+            console.log(moment,'moment')
             this.setState({
                 momentData: moment.data,
                 routeName: moment.data.venue
@@ -94,6 +98,10 @@ class TripDetail extends React.Component{
         //    })
         //})
 
+    }
+
+    showTripDetail(){
+        //console.log('this is trip detail');
     }
 
     showUserProfile(trip){
@@ -185,42 +193,30 @@ class TripDetail extends React.Component{
 
                     {profilePic}
                     {this._renderSuitcaseButton()}
-                    <WikipediaInfoBox countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
-                    <FoursquareInfoBox location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
+                    <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
+                    <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
-                    <View style={{height:250,width:windowSize.width,left:0,flex:1}} >
-                        {/*<Mapbox
-                            style={{height:250,width:windowSize.width,left:0,flex:1,position:'absolute',bottom:0,fontSize:10,fontFamily:"TSTAR", fontWeight:"500"}}
-                            accessToken={'pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg'}
-                            centerCoordinate={{latitude:momentData.lat,longitude: momentData.lng}}
-                            zoomLevel={12}
-                            onScroll={(event)=>{
-                                 var currentOffset = event.nativeEvent.contentOffset.y;
-                                 var direction = currentOffset > this.offset ? 'down' : 'up';
-                                 this.offset = currentOffset;
-                                 if(direction=='down'||currentOffset<30){
-                                    this.refs.stickyHeader._setAnimation(false);
-                                 }else{
-                                    this.refs.stickyHeader._setAnimation(true);
-                                 }
-                            }}
-                            annotations={[
-                                {
-                                    coordinates: [momentData.lat, momentData.lng],
-                                    type: 'point',
-                                    title:momentData.venue,
-                                    annotationImage: {
-                                        url: 'image!icon-pin',
-                                        height: 7,
-                                        width: 7
-                                    },
-                                    id:"markers1"
-                                }
-                            ]}
-                            scrollEnabled={true}
-                            zoomEnabled={true}
-                        />*/}
-
+                    <View style={{height:250,left:0,flex:1}} >
+                        <MapView
+                            style={styles.map} ref={ref => { this.map = ref; }}
+                            scrollEnabled={false}
+                            zoomEnabled={false}
+                            initialRegion={{
+                                    latitude: parseFloat(momentData.lat),
+                                    longitude: parseFloat(momentData.lng),
+                                    latitudeDelta: 1,
+                                    longitudeDelta: 1,
+                                }}
+                        >
+                            <MapView.Marker onPress={()=>{console.log('yoyo')}} coordinate={{latitude:parseFloat(momentData.lat),longitude:parseFloat(momentData.lng)}}>
+                                <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
+                                    <Image
+                                        style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
+                                        source={{uri:momentData.mediaUrl}}
+                                    ></Image>
+                                </View>
+                            </MapView.Marker>
+                        </MapView>
                     </View>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:true}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.props.navActionRight}></Header>
                 </ScrollView>

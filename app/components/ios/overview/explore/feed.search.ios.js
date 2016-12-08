@@ -106,6 +106,11 @@ class Search extends React.Component {
         this.props.feed.searchResults=[];
     }
 
+
+    componentDidUpdate(){
+        console.log(this.state.backendSearchQuery)
+    }
+
     reset(){
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true});
     }
@@ -222,12 +227,13 @@ class Search extends React.Component {
         }else{
             this.setState({searchQuery,backendSearchQuery:{needle}});
         }
+
     }
 
     _renderHeader(){
         var me=this;
         return (
-            <View style={{zIndex:1}}>
+            <View style={{zIndex:1,flex:1}}>
                 <View style={{alignItems:'center',justifyContent:'center',width:windowSize.width,marginTop:70}}>
 
                     <View>

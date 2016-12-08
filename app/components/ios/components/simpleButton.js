@@ -3,7 +3,8 @@ import { TouchableHighlight, Text,StyleSheet,View,TouchableWithoutFeedback } fro
 import styles from './styles/simpleButtonStyle'
 
 import {
-    Image
+    Image,
+    Animated
 } from 'react-native';
 
 export default class SimpleButton extends React.Component {
@@ -49,10 +50,10 @@ export default class SimpleButton extends React.Component {
     render () {
         return (
                 <TouchableWithoutFeedback disabled={this.props.disabled} style={[this.props.stateStyle]} onPress={this.props.onPress}>
-                    <View style={[styles.button, this.props.style,{opacity:this.props.disabled?.5:this.props.style?this.props.style.opacity:1}]} >
+                    <Animated.View style={[styles.button, this.props.style,{opacity:this.props.disabled?.5:this.props.style?this.props.style.opacity:1}]} >
                         {this._renderIcon()}
                         <Text style={[styles.buttonText,this.props.textStyle]}>{this.props.text && this.props.text.toUpperCase()}</Text>
-                    </View>
+                    </Animated.View>
                 </TouchableWithoutFeedback>
         )
     }

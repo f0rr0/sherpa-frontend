@@ -66,6 +66,7 @@
 		F3CDFF6E1BFBD6FB00CE9567 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF6D1BFBD6FB00CE9567 /* libc++.tbd */; };
 		F3CDFF701BFBD70300CE9567 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF6F1BFBD70300CE9567 /* libsqlite3.tbd */; };
 		F3CDFF721BFBD70900CE9567 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F3CDFF711BFBD70900CE9567 /* libz.tbd */; };
+		F3DC9E591DF5C49400EE6639 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3DC9E351DF5C48800EE6639 /* libRCTAnimation.a */; };
 		F3FB50811DDDBEB100643EA1 /* libRCTOrientation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3FB50801DDDBE9500643EA1 /* libRCTOrientation.a */; };
 /* End PBXBuildFile section */
 
@@ -322,6 +323,20 @@
 			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
 			remoteInfo = RCTCamera;
 		};
+		F3DC9E341DF5C48800EE6639 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTAnimation;
+		};
+		F3DC9E361DF5C48800EE6639 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 2D2A28201D9B03D100D4039D;
+			remoteInfo = "RCTAnimation-tvOS";
+		};
 		F3FB507F1DDDBE9500643EA1 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3FB507B1DDDBE9400643EA1 /* RCTOrientation.xcodeproj */;
@@ -415,6 +430,7 @@
 		F3CDFF6D1BFBD6FB00CE9567 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
 		F3CDFF6F1BFBD70300CE9567 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F3CDFF711BFBD70900CE9567 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
+		F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		F3FB507B1DDDBE9400643EA1 /* RCTOrientation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTOrientation.xcodeproj; path = "../node_modules/react-native-orientation/iOS/RCTOrientation.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -423,6 +439,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F3DC9E591DF5C49400EE6639 /* libRCTAnimation.a in Frameworks */,
 				F3FB50811DDDBEB100643EA1 /* libRCTOrientation.a in Frameworks */,
 				F37606A61DDB2FF700070706 /* libAirMaps.a in Frameworks */,
 				F3A941D91DDB2243007F9537 /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
@@ -602,6 +619,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */,
 				F3FB507B1DDDBE9400643EA1 /* RCTOrientation.xcodeproj */,
 				F376067B1DDB2FE900070706 /* AirMaps.xcodeproj */,
 				F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */,
@@ -829,6 +847,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		F3DC9E2C1DF5C48800EE6639 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				F3DC9E351DF5C48800EE6639 /* libRCTAnimation.a */,
+				F3DC9E371DF5C48800EE6639 /* libRCTAnimation-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		F3FB507C1DDDBE9400643EA1 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -912,6 +939,10 @@
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
+				},
+				{
+					ProductGroup = F3DC9E2C1DF5C48800EE6639 /* Products */;
+					ProjectRef = F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */;
 				},
 				{
 					ProductGroup = F3AE13961DB5164800C22D62 /* Products */;
@@ -1264,6 +1295,20 @@
 			fileType = archive.ar;
 			path = libRCTCamera.a;
 			remoteRef = F3AE139C1DB5164900C22D62 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F3DC9E351DF5C48800EE6639 /* libRCTAnimation.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTAnimation.a;
+			remoteRef = F3DC9E341DF5C48800EE6639 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		F3DC9E371DF5C48800EE6639 /* libRCTAnimation-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTAnimation-tvOS.a";
+			remoteRef = F3DC9E361DF5C48800EE6639 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F3FB50801DDDBE9500643EA1 /* libRCTOrientation.a */ = {

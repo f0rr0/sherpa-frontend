@@ -163,10 +163,13 @@ export function getFeed(query,page=1,type='') {
                     case "search-places":
                         feedRequestURI = endpoint + version + "/search";
                         searchBody = query;
-                        break;
+                    break;
+                    case "search-places-v2":
+                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&page="+page;
+                    break;
                     case "search-people":
                         feedRequestURI = endpoint + version + "/search/users?text=" + query;
-                        break;
+                    break;
                     case "user":
                         feedRequestURI = endpoint + version + user_uri + "/" + query;
                     break;
@@ -196,6 +199,8 @@ export function getFeed(query,page=1,type='') {
                     headers: sherpaHeaders
                 };
 
+                //console.log('feed req uri',feedRequestURI,':: feed req body',reqBody,':: query',query);
+
 
 
                 fetch(feedRequestURI, reqBody)
@@ -218,7 +223,7 @@ export function getFeed(query,page=1,type='') {
                         if (!rawSherpaResponseFinal)return;
                         var parsedResponse=JSON.parse(rawSherpaResponseFinal);
                         var trips = parsedResponse.trips;
-
+                        //console.log('final response',type,"::",parsedResponse)
                         switch(type){
                             case "user":
                             case "moment":
@@ -250,6 +255,7 @@ export function getFeed(query,page=1,type='') {
                             break;
                             case "search":
                             case "search-places":
+                            case "search-places-v2":
                             case "search-people":
                             case "location-search":
                                 var cleanMoments=[];

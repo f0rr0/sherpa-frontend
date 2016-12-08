@@ -124,13 +124,13 @@ class Overview extends React.Component {
 
     toggleTabBar(enable){
         Animated.timing(this.state.bottomOffset, {
-            duration: 400,
+            duration: 200,
             toValue: enable? 0 : -100
         }).start()
     }
 
     render() {
-        var tabBar =    <TabNavigator tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset}]} container={{}}>
+        var tabBar =    <TabNavigator tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset}]}  sceneStyle={{paddingBottom:0}}>
                             <TabNavigator.Item
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-feed.png')} />}
