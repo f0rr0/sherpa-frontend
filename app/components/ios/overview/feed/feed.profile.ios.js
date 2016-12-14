@@ -7,7 +7,7 @@ import config from '../../../../data/config';
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import {loadFeed} from '../../../../actions/feed.actions';
+import {getFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -66,16 +66,11 @@ class FeedProfile extends React.Component {
         this.itemsLoadedCallback=null;
 
         this.state= {
+            trips:[],
             annotations:[]
         };
 
 
-    }
-
-    componentDidUpdate(prevProps,prevState){
-        if(this.props.feed.feedState==='ready'&&this.props.feed.profileTrips){
-            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage])
-        }
     }
 
     showTripDetail(trip) {
@@ -89,10 +84,12 @@ class FeedProfile extends React.Component {
         this.refs.popover._setAnimation("toggle");
     }
 
-    _onFetch(page=1,callback){
+    _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
-        //console.log(this.props.trip.owner)
-        this.props.dispatch(loadFeed(this.props.trip.owner.id,this.props.user.sherpaToken,page,"profile"));
+        getFeed(this.props.trip.owner.id,page,'profile').then((response)=>{
+            this.setState({trips:response.data})
+            callback(response.data);
+        });
     }
 
     render(){
@@ -149,10 +146,8 @@ class FeedProfile extends React.Component {
 
 
     _renderHeader(){
-        if(Object.keys(this.props.feed.profileTrips).length==0)return;
-        //console.log('feed',this.props.feed);
-        //console.log('trips',this.props.feed.profileTrips);
-        var trips=this.props.feed.profileTrips["1"];
+        if(Object.keys(this.state.trips).length==0)return;
+        var trips=this.state.trips["1"];
         var tripDuration=trips.length;
         var tripS=tripDuration>1?"TRIPS":"TRIP";
         var moments=0;
@@ -161,7 +156,7 @@ class FeedProfile extends React.Component {
         }
         var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
 
-        var trips = this.props.feed.profileTrips["1"];
+        var trips = this.state.trips["1"]
         var markers = [];
 
         for (var i = 0; i < trips.length; i++) {
@@ -181,7 +176,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View style={{marginBottom:15}}>
-                <View style={{backgroundColor:'#FFFFFF', height:640, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                <View style={{backgroundColor:'#FFFFFF', height:660, width:windowSize.width,marginBottom:-290,marginTop:70}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
                         <UserImage onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
@@ -198,7 +193,7 @@ class FeedProfile extends React.Component {
                     </View>
                 </View>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:365,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
+                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:385,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:4}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>

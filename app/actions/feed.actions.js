@@ -11,10 +11,10 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
     return function (dispatch, getState) {
             dispatch(udpateFeedState('fetch'));
             dispatch(updateFeedPage(page,type));
-            var searchBody=undefined;
+            let searchBody=undefined;
 
             const {endpoint,version,feed_uri,user_uri} = sherpa;
-            var feedRequestURI;
+            let feedRequestURI;
             switch(type){
                 case "location":
                     feedRequestURI=endpoint+version+"/search";
@@ -43,14 +43,14 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
             }
 
 
-            var sherpaResponse;
-            var sherpaHeaders = new Headers();
+            let sherpaResponse;
+            let sherpaHeaders = new Headers();
             sherpaHeaders.append("token", sherpaToken);
             sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
 
 
-            var reqBody=searchBody?{
+            let reqBody=searchBody?{
                 method:'post',
                 headers:sherpaHeaders,
                 body:encodeQueryData(searchBody)
@@ -102,14 +102,14 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
 export function deleteMoment(momentID){
         return new Promise((fulfill,reject)=> {
             store.get('user').then((user) => {
-                var sherpaHeaders = new Headers();
+                let sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                 const {endpoint,version} = sherpa;
-                var requestURI = endpoint + version + "/moment/"+momentID;
+                let requestURI = endpoint + version + "/moment/"+momentID;
 
 
-                var reqBody = {
+                let reqBody = {
                     method: 'delete',
                     headers: sherpaHeaders,
                     body: encodeQueryData({reason: "image-not-found"})
@@ -143,17 +143,24 @@ export function getFeed(query,page=1,type='') {
         return new Promise((fulfill,reject)=>{
             store.get('user').then((user) => {
 
-                var searchBody = undefined;
+                let searchBody = undefined;
                 const {endpoint,version,feed_uri,user_uri} = sherpa;
-                var feedRequestURI;
+                let feedRequestURI;
                 switch (type) {
                     case "location":
                         feedRequestURI = endpoint + version + "/search";
                         searchBody = query;
-                        break;
+                    break;
+                    case "map-search":
+                        feedRequestURI = endpoint + version + "/search/bbox";
+                        searchBody = query
+                    break;
                     case "profile":
                         feedRequestURI = endpoint + version + "/profile/" + query + "/trips?page=" + page;
                         break;
+                    case "featured-profiles":
+                        feedRequestURI = endpoint + version + "/profiles/featured";
+                    break;
                     case "suitcase-list":
                         feedRequestURI = endpoint + version + "/user/" + query + "/suitcases?page=" + page;
                         break;
@@ -185,26 +192,46 @@ export function getFeed(query,page=1,type='') {
                     break;
                 }
 
-                var sherpaHeaders = new Headers();
-                var finalToken=user?user.sherpaToken:sherpaToken;
+                let sherpaHeaders = new Headers();
+                let finalToken=user?user.sherpaToken:sherpaToken;
+                let reqBody;
+                console.log(feedRequestURI);
+
                 sherpaHeaders.append("token", finalToken);
-                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                switch(type){
+                    case 'map-search':
+                        sherpaHeaders.append("Content-Type", "application/json");
+                        reqBody={
+                            method: 'post',
+                            headers: sherpaHeaders,
+                            body: JSON.stringify(searchBody)
+                        }
+                    break;
+                    case 'location':
+                    case 'search-places':
+                        sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                        reqBody={
+                            method: 'post',
+                            headers: sherpaHeaders,
+                            body: encodeQueryData(searchBody)
+                        }
 
-                var reqBody = searchBody ? {
-                    method: 'post',
-                    headers: sherpaHeaders,
-                    body: encodeQueryData(searchBody)
-                } : {
-                    method: 'get',
-                    headers: sherpaHeaders
-                };
+                    break;
+                    default:
+                        reqBody={
+                            method: 'get',
+                            headers: sherpaHeaders
+                        }
 
-                //console.log('feed req uri',feedRequestURI,':: feed req body',reqBody,':: query',query);
+                }
+
+                //console.log(type,'::feed req uri',feedRequestURI,':: feed req body',reqBody,':: query',query);
 
 
 
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
+                        //console.log('raw response',rawSherpaResponse)
                         switch (rawSherpaResponse.status) {
                             case 200:
                                 return rawSherpaResponse.text()
@@ -221,29 +248,33 @@ export function getFeed(query,page=1,type='') {
                     })
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
-                        var parsedResponse=JSON.parse(rawSherpaResponseFinal);
-                        var trips = parsedResponse.trips;
+                        //console.log(rawSherpaResponseFinal)
+                        let parsedResponse=JSON.parse(rawSherpaResponseFinal);
+                        let trips = parsedResponse.trips;
                         //console.log('final response',type,"::",parsedResponse)
                         switch(type){
                             case "user":
                             case "moment":
                             case "trip":
                             case "location":
+                            case "featured-profiles":
+                            case "profile":
+                            case "map-search":
                                 fulfill({data:parsedResponse, page, type});
                             break;
 
-                            case "profile":
+
                             case "suitcase-list":
                             case "single-suitcase-feed":
                             case "feed":
-                                var cleanTrips=[];
-                                for(var index in trips){
-                                    var moments=trips[index].moments.reverse();
-                                    var name=trips[index].name;
+                                let cleanTrips=[];
+                                for(let index in trips){
+                                    let moments=trips[index].moments.reverse();
+                                    let name=trips[index].name;
                                     if(name.indexOf("Trip to ")>-1)trips[index].name= name.split("Trip to ")[1];
                                     if(moments.length>0){
                                         trips[index].moments=[];
-                                        for(var i=0;i<moments.length;i++){
+                                        for(let i=0;i<moments.length;i++){
                                             if(moments[i].type==='image')trips[index].moments.push(moments[i]);
                                         }
                                         cleanTrips.push(trips[index]);
@@ -258,10 +289,10 @@ export function getFeed(query,page=1,type='') {
                             case "search-places-v2":
                             case "search-people":
                             case "location-search":
-                                var cleanMoments=[];
-                                var moments=parsedResponse;
+                                let cleanMoments=[];
+                                let moments=parsedResponse;
                                 if(moments.length>0){
-                                    for(var i=0;i<moments.length;i++){
+                                    for(let i=0;i<moments.length;i++){
                                         if(moments[i].type==='image')cleanMoments.push(moments[i]);
                                     }
                                 }

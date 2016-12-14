@@ -3,6 +3,7 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import {udpateFeedState,deleteMoment} from '../../../actions/feed.actions';
 import {checkSuitcased} from '../../../actions/user.actions';
+import { BlurView, VibrancyView } from 'react-native-blur';
 
 import {
     StyleSheet,
@@ -11,7 +12,8 @@ import {
     ListView,
     Image,
     TouchableHighlight,
-TouchableOpacity
+TouchableOpacity,
+Animated
 } from 'react-native';
 import React, { Component } from 'react';
 import ImageProgress from 'react-native-image-progress';
@@ -22,14 +24,18 @@ var styles = StyleSheet.create({
     listItemContainer:{
         flex:1,
         marginBottom:10,
-        alignItems:"stretch"
+        alignItems:"stretch",
     }
 });
 
 class MomentRow extends Component{
     constructor(props){
         super();
-        this.state={suitcased:props.tripData.suitcased,available:true}
+        this.state={
+            suitcased:props.tripData.suitcased||props.isSuitcased,
+            available:true,
+            loadedImageOpacity:new Animated.Value(0)
+        }
 
     }
 
@@ -54,8 +60,8 @@ class MomentRow extends Component{
             id: "tripDetail",
             momentID,
             suiteCaseTrip:this.suiteCaseTrip.bind(this),
-            unSuiteCaseTrip:this.suitcaseTrip.bind(this),
-            isSuitcased:this.state.suitacased
+            unSuiteCaseTrip:this.unSuiteCaseTrip.bind(this),
+            isSuitcased:this.state.suitcased
         });
     }
 
@@ -66,7 +72,6 @@ class MomentRow extends Component{
         var tripData = this.props.tripData;
         var imageMargin=10;
         var baseWidth=(this.props.containerWidth - (imageMargin*(this.props.itemsPerRow-1)) ) / this.props.itemsPerRow;
-        //console.log(this.props.itemsPerRow)
         return(
             this.state.available?
 
@@ -78,15 +83,17 @@ class MomentRow extends Component{
                     onPress={()=>{
                                 this.showTripDetail(tripData.id);
                             }}>
-                        <ImageProgress
-                            style={{...StyleSheet.absoluteFillObject}}
+
+                    <Image
+                            style={{...StyleSheet.absoluteFillObject,opacity:1}}
                             resizeMode="cover"
                             indicator={Progress.Circle}
                             indicatorProps={{
                             color: 'rgba(150, 150, 150, 1)',
                             unfilledColor: 'rgba(200, 200, 200, 0.2)'
                         }}
-                            source={{uri:tripData.highresUrl||tripData.mediaUrl}}
+                            //tripData.serviceJson.images.thumbnail.url
+                            source={{uri:tripData.serviceJson.images.thumbnail.url||tripData.mediaUrl}}
                             onLoad={() => {
                             }}
                             onError={()=>{
@@ -96,7 +103,26 @@ class MomentRow extends Component{
 
                         >
                             <View style={styles.darkener}></View>
-                        </ImageProgress>
+                        <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+
+                    </Image>
+                    <Animated.Image
+                        style={{...StyleSheet.absoluteFillObject,opacity:this.state.loadedImageOpacity}}
+                        resizeMode="cover"
+                        source={{uri:tripData.highresUrl||tripData.mediaUrl}}
+                        onLoad={() => {
+                                Animated.timing(this.state.loadedImageOpacity,{toValue:1,duration:200}).start()
+                            }}
+                        onError={()=>{
+                                this.setState({available:false})
+                                deleteMoment(tripData.id);
+                            }}
+
+                    >
+                        <View style={styles.darkener}></View>
+
+                    </Animated.Image>
+
                 </TouchableOpacity>
 
                     <View style={{position:"absolute",bottom:-36,left:0,flex:1,paddingLeft:7,paddingRight:7,width:baseWidth,marginRight:imageMargin,flexDirection:"row", alignItems:"center",justifyContent:"space-between",height:30}}>

@@ -15,14 +15,15 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
-
+import MarkerMap from '../../components/MarkerMap'
 import {
     StyleSheet,
     View,
     Text,
     ListView,
     Image,
-    TouchableHighlight
+    TouchableHighlight,
+TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -70,7 +71,7 @@ var styles = StyleSheet.create({
         fontSize:12
     },
     row:{flexDirection: 'row',justifyContent:"space-between"},
-    mapMaskedView:{backgroundColor:'#FAFAFA', justifyContent:'center', height:670, width:windowSize.width,alignItems:'center',flex:1},
+    mapMaskedView:{backgroundColor:'#FAFAFA', justifyContent:'center', height:473, width:windowSize.width-24,alignItems:'center',marginBottom:0,marginTop:70},
     blackOverlay:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:1,backgroundColor:'black' },
     maskedViewImage:{position:"absolute",top:0,left:0,flex:1,height:610,width:windowSize.width,opacity:.5 },
 });
@@ -161,6 +162,14 @@ class FeedDestination extends Component {
         });
     }
 
+    showTripMap(trip){
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            trip,
+            sceneConfig:"right-nodrag"
+        });
+    }
+
     _renderHeader(){
         var tripData=this.props.trip;
         var photoOrPhotos=tripData.moments.length>1?"PHOTOS":"PHOTO";
@@ -178,21 +187,12 @@ class FeedDestination extends Component {
 
 
         return (
-            <View style={{height:580}}>
-                <View maskImage='mask-test' style={styles.mapMaskedView} >
-
-                    <View
-                        style={styles.blackOverlay}
-                    />
-                    <Image
-                        style={styles.maskedViewImage}
-                        source={{uri:mapURI}}
-                    >
-                    </Image>
-                    <TripTitle style={{marginTop:100}} type="destination" showSubtitle={false} standalone={true} tripData={tripData}></TripTitle>
-                    <View style={styles.subTitleContainer}>
-                        <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
-                    </View>
+            <View style={{width:windowSize.width,alignItems:'center'}}>
+                <TouchableOpacity  style={styles.mapMaskedView} onPress={()=>{this.showTripMap(this.props.trip)}}>
+                    <MarkerMap moments={this.props.trip.moments} interactive={false}></MarkerMap>
+                </TouchableOpacity>
+                <View style={{width:windowSize.width,marginTop:15,marginBottom:12}}>
+                    <Text style={{marginLeft:14,fontWeight:"600",fontSize:10,fontFamily:"TSTAR"}}>{this.props.trip.moments.length} MOMENTS SAVED</Text>
                 </View>
                 {this.props.navigation.default}
 
@@ -201,15 +201,14 @@ class FeedDestination extends Component {
     }
 
     _renderRow(rowData,sectionID,rowID) {
-        rowData.suitcased=true;
         var index=0;
-        var items = rowData.map((item) => {moment
+        var items = rowData.map((item) => {
             if (item === null || item.type!=='image') {
                 return null;
             }
 
             index++;
-            return  <MomentRow key={"momentRow"+rowID+"_"+index} itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow isSuitcased={true} key={"momentRow"+rowID+"_"+index} itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
         return (
             <View style={[styles.row,{width:this.state.containerWidth}]}>

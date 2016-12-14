@@ -4,7 +4,7 @@ import FeedTrip from './../feed/feed.trip.ios'
 import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import {loadFeed} from '../../../../actions/feed.actions';
+import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -77,7 +77,7 @@ class OwnUserProfile extends React.Component {
         this.state= {
             annotations:[],
             trips:[],
-            isRescraping:false
+            isRescraping:false,
         };
         this.isScraping=false;
     }
@@ -105,27 +105,17 @@ class OwnUserProfile extends React.Component {
                 }else if(parsedResponse.scrapeState=='completed'){
                     clearTimeout(this.checkScrapeTimeout);
                     setTimeout(()=> {
-                        this.ready=false
-                        this.props.dispatch(loadFeed(this.props.user.serviceID, this.props.user.sherpaToken, 1, "profile"));
+                        this.ready=false;
+                        this._onFetch();
                     },3000)
                 }
             });
         })
     }
 
-    componentDidUpdate(prevProps,prevState){
-
-        if(!this.ready&&this.props.feed.feedState==='ready'&&this.props.feed.profileTrips) {
-            this.ready=true;
-            this.itemsLoadedCallback(this.props.feed.profileTrips[this.props.feed.feedPage]);
-            this.refs.listview._refresh();
-            this.isScraping=false;
-        }
-    }
-
     refresh(){
         this.ready=false;
-        this.props.dispatch(loadFeed(this.props.user.serviceID, this.props.user.sherpaToken, 1, "profile"));
+        this._onFetch();
     }
 
     reset(){
@@ -139,9 +129,13 @@ class OwnUserProfile extends React.Component {
         });
     }
 
-    _onFetch(page=1,callback){
+    _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
-        this.props.dispatch(loadFeed(this.props.user.serviceID,this.props.user.sherpaToken,page,"profile"));
+        console.log('get feed')
+        getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
+            callback(response.data);
+            this.setState({trips:response.data})
+        });
     }
 
     render(){
@@ -236,9 +230,8 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderHeader(){
-        console.log(this.props.user);
-        if(Object.keys(this.props.feed.profileTrips).length==0)return;
-        var trips=this.props.feed.profileTrips?this.props.feed.profileTrips["1"]:[];
+        if(Object.keys(this.state.trips).length==0)return;
+        var trips=this.state.trips?this.state.trips["1"]:[];
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){

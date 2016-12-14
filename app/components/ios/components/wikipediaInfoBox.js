@@ -26,7 +26,7 @@ class WikpediaInfoBox extends Component {
 
     componentDidMount(){
         //this.getWikipediaData(this.props.location);
-        console.log('wiki data',this.props.data)
+        //console.log('wiki data',this.props.data)
         if(this.props.data){
             let data=this.props.data;
             this.setState({"wikipediaDescription":data.extract,"wikiURL":data.fullurl})

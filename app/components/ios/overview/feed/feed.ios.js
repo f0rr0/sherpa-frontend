@@ -159,8 +159,10 @@ class Feed extends Component {
 
         GoogleAnalytics.trackScreenView(route.id);
 
-        this.currentRenderScene=route.id;
-        this.props.toggleTabBar(!route.hideNav);
+        if(this.currentRenderScene!==route.id){
+            this.currentRenderScene=route.id;
+            this.props.toggleTabBar(!route.hideNav);
+        }
 
         switch (route.id) {
             case 'feed':
@@ -169,7 +171,7 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({routeName:route.id,fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:route.id,fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
@@ -177,11 +179,11 @@ class Feed extends Component {
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({navColor:'white',routeName:'suitcase',fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name+' suitcase',fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "tripDetailMap":
                 showNav=true;
-                sceneContent = <TripDetailMap ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:'Trip Map',fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetailMap regionMap={route.regionMap} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:'Trip Map',fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;

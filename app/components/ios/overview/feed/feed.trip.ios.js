@@ -5,7 +5,6 @@ import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
 //import Mapbox from "react-native-mapbox-gl";
 import moment from 'moment';
-import {loadFeed} from '../../../../actions/feed.actions';
 import {deleteTrip} from '../../../../actions/trip.edit.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
@@ -27,6 +26,7 @@ import {getClusters} from '../../components/get-clusters';
 import TripDetail from '../../components/tripDetail'
 import { Fonts, Colors } from '../../../../Themes/'
 import MarkerMap from '../../components/MarkerMap'
+import {BlurView} from 'react-native-blur';
 import {
     StyleSheet,
     View,
@@ -71,7 +71,7 @@ var styles = StyleSheet.create({
         justifyContent:"center",
         paddingBottom:0,
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:-4,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
 
     button:{
         backgroundColor:'#001545',
@@ -94,14 +94,15 @@ var styles = StyleSheet.create({
         width: CARD_WIDTH,
         position:'relative'
     },
+    subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
     row:{flexDirection: 'row'},
     headerContainer:{flex:1,height:windowSize.height+190},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3, lineHeight:28,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
-    subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5},
+    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
 
@@ -132,7 +133,8 @@ class FeedTrip extends Component {
         this.state= {
             dataSource: this.ds.cloneWithRows(organizedMoments),
             annotations:[],
-
+            headerPreviewLoadedOpacity:new Animated.Value(0),
+            headerLoadedOpacity:new Animated.Value(0),
             moments:props.trip.moments,
             shouldUpdate:true,
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
@@ -181,9 +183,10 @@ class FeedTrip extends Component {
 
                 this.setState({didHideDetailView:false});
             }
-            if(this.state.isPortrait)this.props.toggleTabBar(!showTabBar);
+            //if(this.state.isPortrait)this.props.toggleTabBar(!showTabBar);
         }else if(this.state.isPortrait!==prevState.isPortrait){
-            this.props.toggleTabBar(this.state.isPortrait);
+            //this.props.toggleTabBar(this.state.isPortrait);
+            //console.log('toggle tab if portrait');
         }
 
     }
@@ -283,47 +286,65 @@ class FeedTrip extends Component {
 
         if(country)tripLocation=country.name;
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
-
         return (
             <View style={styles.headerContainer}>
                 <View maskImage='mask-test' style={[styles.headerMaskedView,{height:windowSize.height}]} >
-                    <View
-                        style={styles.headerDarkBG}
-                    />
 
-                        <Image
-                            style={styles.headerImage}
-                            resizeMode="cover"
-                            source={{uri:this.state.moments[0].highresUrl||this.state.moments[0].mediaUrl}}
-                        />
+
+                        <View style={{position:'absolute',left:0,top:0}}>
+                            <Animated.Image
+                                style={[styles.headerImage,{opacity:1}]}
+                                resizeMode="cover"
+                                onLoad={()=>{
+                                    Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
+                                }}
+                                source={{uri:this.state.moments[0].serviceJson.images.thumbnail.url||this.state.moments[0].mediaUrl}}
+                            >
+                                <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                            </Animated.Image>
+                        </View>
+
+
+                        <Animated.View style={{position:'absolute',left:0,top:0,opacity:this.state.headerLoadedOpacity}}>
+                            <View
+                                style={styles.headerDarkBG}
+                            />
+                            <Image
+                                style={styles.headerImage}
+                                resizeMode="cover"
+                                onLoad={()=>{
+                                    Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
+                                }}
+                                source={{uri:this.state.moments[0].highresUrl||this.state.moments[0].mediaUrl}}
+                            />
+                        </Animated.View>
+
+
 
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                            <UserImage radius={40} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP ":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>
-                            <TouchableHighlight onPress={() => this.showTripLocation(this.props.trip)}>
+                            {/*<Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP ":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>*/}
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                            </TouchableHighlight>
+                                    <TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>
                             </View>
 
                         <View style={styles.subTitleContainer}>
-                            <TripSubtitle tripData={this.props.trip}></TripSubtitle>
-                            <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
-
+                            <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
+                             <UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+                                <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,fontWeight:"800"}}>{this.props.trip.owner.serviceFullName}</Text>
+                            </View>
+                            <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
                         </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
                     <View style={[{backgroundColor:'white'},styles.map]}></View>
 
                     <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap(this.props.trip)}}>
-
-                    <MarkerMap interactive={false} moments={this.props.trip.moments}></MarkerMap>
+                        <MarkerMap interactive={false} moments={this.props.trip.moments}></MarkerMap>
                     </TouchableOpacity>
-
-
                 </View>
 
-                <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>
+                {/* <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>*/}
                 <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
             </View>
         )
@@ -459,7 +480,8 @@ class FeedTrip extends Component {
     //        </Animated.View>
     //    )
     //}
-    //
+
+
     _renderRow(rowData,sectionID,rowID) {
         var index=0;
         var items = rowData.map((item) => {moment

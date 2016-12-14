@@ -1,13 +1,14 @@
 import {
     View,
     Text,
+    TouchableOpacity,
     StyleSheet
 } from 'react-native';
 import React, {Component} from 'react';
 import countries from '../../../data/countries'
 
 var styles=StyleSheet.create({
-        subtitle:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}
+        subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"}
 });
 
 class TripSubtitle extends Component {
@@ -57,28 +58,54 @@ class TripSubtitle extends Component {
         if(tripData.type=='state')countryOrState=country.name;
 
 
-        var subTitle="";
+        var subTitle=[]
+        let initialNode={type:tripData.type,name:tripData.name}
+        initialNode[tripData.type]=tripData[tripData.type];
+        subTitle.push(initialNode);
+
         if(isTripNameContinent){
-            subTitle="";
-        }
-        else if(((tripData.type=='state'&&!isInAmerica) || tripData.type=='region' || tripData.type=='location' )&&countryOrState!=tripData.continent){
-            subTitle=countryOrState+"/"+tripData.continent
+            //subTitle="";
+        } else if(((tripData.type=='state'&&!isInAmerica) || tripData.type=='region' || tripData.type=='location' )&&countryOrState!=tripData.continent){
+            let countryStateType=isState?'state':'country';
+            let countryStateNode={name:countryOrState,type:countryStateType}
+            countryStateNode[countryStateType]=countryOrState;
+
+            subTitle.push(countryStateNode);
+            subTitle.push({name:tripData.continent,type:'continent',continent:tripData.continent});
         }
         else if(isTripNameCountry||isState||countryOrState===tripData.continent){
-            subTitle=tripData.continent || "";
+            if(tripData.continent)subTitle.push({type:'continent',name:tripData.continent,continent:tripData.continent})
         }else{
-            subTitle=countryOrState+"/"+tripData.continent
+            let countryStateType=isState?'state':'country';
+            let countryStateNode={name:countryOrState,type:countryStateType}
+            countryStateNode[countryStateType]=countryOrState;
+
+            subTitle.push(countryStateNode);
+            subTitle.push({name:tripData.continent,type:'continent',continent:tripData.continent});
         }
 
 
         return (
-            <Text style={styles.subtitle}>{subTitle.toUpperCase()}</Text>
+            <View style={{flexDirection:'row'}}>
+                {subTitle.map((el,index)=>{
+                    const divider=index<subTitle.length-1?<Text style={[styles.subtitle,{marginHorizontal:2}]}>/</Text>:null;
+                    return(
+                        <View key={"subtitle-"+index} style={{flexDirection:'row'}}>
+                            <TouchableOpacity onPress={()=>{this.props.goLocation(el)}} style={{borderBottomWidth:.5,height:16,borderBottomColor:'rgba(255,255,255,.4)'}}>
+                                <Text style={[styles.subtitle]}>{el.name.toUpperCase()}</Text>
+                            </TouchableOpacity>
+                            {divider}
+                        </View>
+                    )
+                })}
+            </View>
         );
     }
 }
 
 TripSubtitle.defaultProps = {
-    tripData:{}
+    tripData:{},
+    goLocation:function(el){}
 };
 
 export default TripSubtitle;

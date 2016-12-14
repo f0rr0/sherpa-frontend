@@ -66,9 +66,9 @@ class UserImage extends Component {
     render() {
         var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
         return(
-            <TouchableOpacity onPress={()=>{this.props.onPress()}}>
+            <TouchableOpacity onPress={()=>{this.props.onPress()}} style={this.props.style}>
                 <Image
-                    style={{height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
+                    style={{borderWidth:1.5,borderColor:"#FFFFFF",height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
                     resizeMode="cover"
                     source={{uri:imageURL}}
                 />

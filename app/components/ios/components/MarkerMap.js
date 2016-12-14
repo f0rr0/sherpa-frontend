@@ -27,41 +27,17 @@ class TripDetailMap extends Component{
     constructor(props){
         super(props);
         this.state={
-            moments:props.moments,
             region:null,
             markers:[],
             markerScale:new Animated.Value(1)
-        }
+        };
+
+        this.recluster()
+
+
     }
 
     componentDidMount(){
-        var markers=[];
-        var momentIDs=[];
-
-        for (var i=0;i<this.state.moments.length;i++){
-            markers.push({
-                latitude:parseFloat(this.state.moments[i].lat),
-                longitude:parseFloat(this.state.moments[i].lng),
-                moment:this.state.moments[i],
-                data:this.state.moments[i],
-                geometry:{coordinates:[this.state.moments[i].lng,this.state.moments[i].lat]}
-            });
-
-            momentIDs.push(this.state.moments[i].id);
-        }
-
-        this.map.fitToCoordinates(markers, {
-            edgePadding: DEFAULT_PADDING
-        });
-
-        const clusters = supercluster({
-            radius: 60,
-            maxZoom: 16
-        });
-
-        clusters.load(markers);
-
-        this.setState({annotations:markers,clusters});
 
         if(this.props.hideOnInit){
             Animated.timing(this.state.markerScale, {
@@ -71,22 +47,57 @@ class TripDetailMap extends Component{
         }else{
             this.showMarkers().start()
         }
+
+        this.map.fitToCoordinates(this.markers, {
+            edgePadding: DEFAULT_PADDING
+        });
     }
 
-    _regionUpdated(region){
+    recluster(){
+        let moments=this.props.moments;
+        //console.log('moments',moments)
+        let markers=[];
+
+        for (var i=0;i<moments.length;i++){
+            markers.push({
+                latitude:parseFloat(moments[i].lat),
+                longitude:parseFloat(moments[i].lng),
+                moment:moments[i],
+                data:moments[i],
+                geometry:{coordinates:[parseFloat(moments[i].lng),parseFloat(moments[i].lat)]}
+            });
+        }
+
+        this.clusters = supercluster({
+            radius: 60,
+            maxZoom: 16
+        });
+        this.clusters.load(markers);
+        this.markers=markers;
+        //console.log('did re-cluster',markers);
+        return markers
+    }
+
+    componentDidUpdate(){
+    }
+
+    _regionUpdated(region=this.state.region){
         const padding = .2;
-        const markers = this.state.clusters.getClusters([
+        //const markers = this.markers;
+        let markers=this.clusters.getClusters([
             region.longitude - (region.longitudeDelta * (0.5 + padding)),
             region.latitude - (region.latitudeDelta * (0.5 + padding)),
             region.longitude + (region.longitudeDelta * (0.5 + padding)),
             region.latitude + (region.latitudeDelta * (0.5 + padding)),
         ], this.getZoomLevel(region));
 
-        this.setState({markers});
-    }
+        var newZoomLevel=this.getZoomLevel(region);
+        if(newZoomLevel!==this.state.zoomLevel){
+            this.props.zoomChanged(region);
+        }
 
-    shouldComponentUpdate(nextProps,nextState){
-        return((this.state.markers.length!== nextState.markers.length)||(this.props.interactive!==nextProps.interactive)||(this.props.moments!==nextProps.moments))
+        this.props.regionChanged(region);
+        this.setState({markers,zoomLevel:newZoomLevel,region});
     }
 
     getZoomLevel(region = this.state.region) {
@@ -99,6 +110,7 @@ class TripDetailMap extends Component{
 
     createMarkersForRegion() {
         if (this.state.markers) {
+            //console.log('did render new markers',this.state.markers)
             return this.state.markers.map((marker,i) => this.renderMarker(marker,i));
         }
         return [];
@@ -123,9 +135,6 @@ class TripDetailMap extends Component{
 
 
     hideMarkers(){
-        this.map.fitToCoordinates(this.state.annotations, {
-            edgePadding: DEFAULT_PADDING
-        });
         return Animated.timing(this.state.markerScale, {
             toValue: 0,
             duration:0
@@ -134,9 +143,9 @@ class TripDetailMap extends Component{
 
     renderMarker(marker,i){
         let clustercount=null;
-        //if(marker.properties&&marker.properties.cluster){
-        //    clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{marker.properties.point_count}</Text></View>
-        //}
+        if(marker.properties&&marker.properties.cluster){
+            clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{marker.properties.point_count}</Text></View>
+        }
         return(
             <MapView.Marker ref="marker" onPress={()=>{this.goToTripDetail(marker.data.id)}} key={i} coordinate={{latitude:parseFloat(marker.geometry.coordinates[1]),longitude:parseFloat(marker.geometry.coordinates[0])}}>
                 <Animated.View style={{width:45,height:45,borderRadius:45,backgroundColor:'white',transform: [{scale: this.state.markerScale}]}}>
@@ -184,7 +193,9 @@ TripDetailMap.defaultProps={
     interactive:true,
     moments:[],
     hideOnInit:false,
-    onLeave:function(){}
+    onLeave:function(){},
+    zoomChanged:function(){},
+    regionChanged:function(){}
 }
 
 export default TripDetailMap;

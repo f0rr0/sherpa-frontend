@@ -17,6 +17,7 @@ import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
+import MarkerMap from '../../components/MarkerMap'
 
 
 import {
@@ -25,7 +26,8 @@ import {
     Text,
     Image,
     TouchableHighlight,
-Alert
+    TouchableOpacity,
+    Alert
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -35,7 +37,7 @@ class FeedLocation extends Component {
         super();
         this.itemsLoadedCallback=null;
         this.moments=[];
-        this.state={moments:[],containerWidth:windowSize.width-30}
+        this.state={moments:[],containerWidth:windowSize.width-30,originalMoments:[]}
     }
 
     componentDidMount(){
@@ -46,10 +48,21 @@ class FeedLocation extends Component {
     }
 
     showTripDetail(trip,owner){
+
         var tripDetails={trip,owner};
         this.props.navigator.push({
             id: "tripDetail",
             tripDetails,
+            sceneConfig:"right-nodrag"
+        });
+    }
+
+
+    showTripMap(trip){
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            trip,
+            regionMap:true,
             sceneConfig:"right-nodrag"
         });
     }
@@ -71,7 +84,7 @@ class FeedLocation extends Component {
             searchType='search-places';
         }
         getFeed(req,page,searchType).then((response)=>{
-            if(response.moments.length==0){
+            if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
                     'We dont have any moments for this location',
@@ -94,7 +107,7 @@ class FeedLocation extends Component {
                     }
 
 
-                if(page==1)this.setState({moments:organizedMoments});
+                if(page==1)this.setState({moments:organizedMoments,originalMoments:response.moments});
                 var settings=response.moments.length==0?{
                     allLoaded: true
                 }:{};
@@ -137,7 +150,7 @@ class FeedLocation extends Component {
                     ref="listview"
                     onEndReachedThreshold={1200}
                     paginationFetchingView={this._renderEmpty.bind(this)}
-
+                    removeClippedSubviews={false}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
@@ -168,29 +181,38 @@ class FeedLocation extends Component {
         var tripData=this.props.trip;
         var moments=this.state.moments;
         if(moments.length==0)return null
-        //console.log('moments',moments);
         var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
+        var randomMoment=moments[Math.floor(Math.random()*moments.length)][0];
         //console.log(mapURI)
+
+        //console.log(this.state.moments);
+
+        //console.log(this.props.trip)
         return (
             <View style={{flex:1}}>
-                <View style={{backgroundColor:'#FFFFFF', height:500, width:windowSize.width, marginBottom:-200,alignItems:'center',flex:1}} >
+                <View style={{backgroundColor:'#000', height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
 
                     <Image
-                        style={{height:602,width:windowSize.width,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
-                        source={{uri:mapURI}}
+                        style={{height:windowSize.height,width:windowSize.width,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
+                        source={{uri:randomMoment.highresUrl||randomMoment.mediaUrl}}
                     >
 
                     </Image>
 
 
-                    <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:125,left:0,right:0,height:20}}>
+                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View>
-                            <Text style={{color:"#282b33",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                         </View>
                         <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
                         </View>
                     </View>
+                </View>
+                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'white',flex:1,position:'absolute',top:windowSize.height*.85}}>
+                    <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap({moments:this.state.originalMoments})}}>
+                        <MarkerMap interactive={false} moments={this.state.originalMoments}></MarkerMap>
+                    </TouchableOpacity>
                 </View>
                 <WikipediaInfoBox isLocationView={true} type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
                 {this.props.navigation.default}
@@ -241,7 +263,10 @@ var styles = StyleSheet.create({
         color:'white',
         fontFamily:"TSTAR-bold",
         fontSize:12
-    }
+    },
+    map: {
+        ...StyleSheet.absoluteFillObject
+    },
 });
 
 export default FeedLocation;

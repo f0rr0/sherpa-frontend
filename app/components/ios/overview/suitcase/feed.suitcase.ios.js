@@ -29,9 +29,9 @@ var styles = StyleSheet.create({
     },
     listItem:{
         flex:1,
-        backgroundColor:"#fcfcfc",
+        backgroundColor:"black",
         justifyContent:"center",
-        alignItems:'center',
+        alignItems:'flex-start',
     },
     listView:{
         alignItems:'center',
@@ -41,9 +41,8 @@ var styles = StyleSheet.create({
     listItemContainer:{
         flex:1,
         width:windowSize.width-30,
-        height:90,
-
-        marginBottom:5
+        height:125,
+        marginBottom:2
     },
 
     copyLarge:{
@@ -58,18 +57,18 @@ var styles = StyleSheet.create({
     emptyContainer:{flex:1,justifyContent: 'center', height:400,alignItems: 'center'},
     emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
 
-    suitcaseCopySmall:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent", marginTop:5},
-    suitcaseCopyLarge:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",textAlign:'center', letterSpacing:1,backgroundColor:"transparent"},
+    suitcaseCopySmall:{marginLeft:30,color:"#FFFFFF",fontSize:10, fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent", marginTop:5},
+    suitcaseCopyLarge:{marginLeft:30,color:"#FFFFFF",fontSize:25, fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent"},
     listViewLabel:{fontSize:12},
 
-    suitcaseHeaderContainer:{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:150},
+    suitcaseHeaderContainer:{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:70},
     suitcaseHeaderInfo:{backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',height:50,marginTop:75,marginBottom:5,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"},
     suitcaseHeaderInfoCopy:{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
 
     iconCountries:{height:8,marginBottom:3},
     iconDivider:{height:25,marginLeft:35,marginRight:25},
     iconImages:{height:7,marginBottom:3},
-    listItemImage:{position:"absolute",top:0,left:0,flex:1,height:90,width:windowSize.width-30,opacity:1}
+    listItemImage:{position:"absolute",top:0,left:0,flex:1,height:125,width:windowSize.width-30,opacity:.8}
 });
 
 class Suitecase extends React.Component {
@@ -101,6 +100,10 @@ class Suitecase extends React.Component {
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
+    }
+
+    refreshCurrentScene(){
+        this.refs.listview._refresh()
     }
 
     componentDidUpdate(){
@@ -174,16 +177,15 @@ class Suitecase extends React.Component {
             }
         }
         var photoOrPhotos=moments>1||moments==0?"PLACES":"PLACE";
-
         return (
-            <View style={styles.suitcaseHeaderContainer}>
-                <View style={styles.suitcaseHeaderInfo}>
+        <View style={styles.suitcaseHeaderContainer}>
+            {/* <View style={styles.suitcaseHeaderInfo}>
                     <Image source={require('image!icon-countries-negative')} style={styles.iconCountries} resizeMode="contain"></Image>
                     <Text style={styles.suitcaseHeaderInfoCopy}>{tripDuration} {citieS}</Text>
                     <Image source={require('image!icon-divider')} style={styles.iconDivider} resizeMode="contain"></Image>
                     <Image source={require('image!icon-images-negative')} style={styles.iconImages} resizeMode="contain"></Image>
                     <Text style={styles.suitcaseHeaderInfoCopy}>{moments} {photoOrPhotos}</Text>
-                </View>
+                </View>*/}
                 {this.props.navigation.default}
             </View>
         )

@@ -10,7 +10,7 @@ import {
 var styles=StyleSheet.create({
     tripTitleContainer:{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0},
     tripTitleLarge: {color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"},
-    tripTitleSmall:{color:"#FFFFFF",fontSize:30, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"},
+    tripTitleSmall:{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"},
     tripTitleStandaloneContainer:{position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}
 });
 
@@ -56,7 +56,6 @@ class TripTitle extends Component {
             <View style={[this.state.containerStyle,this.props.style]}>
                 <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.state.tripTitle}</Text>
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
-                {subTitle}
             </View>
         );
     }

@@ -81,7 +81,7 @@ class TripDetail extends React.Component{
 
 
         getFeed(props.momentID,1,'moment').then((moment)=>{
-            console.log(moment,'moment')
+            //console.log(moment,'moment')
             this.setState({
                 momentData: moment.data,
                 routeName: moment.data.venue
@@ -208,7 +208,7 @@ class TripDetail extends React.Component{
                                     longitudeDelta: 1,
                                 }}
                         >
-                            <MapView.Marker onPress={()=>{console.log('yoyo')}} coordinate={{latitude:parseFloat(momentData.lat),longitude:parseFloat(momentData.lng)}}>
+                            <MapView.Marker onPress={()=>{}} coordinate={{latitude:parseFloat(momentData.lat),longitude:parseFloat(momentData.lng)}}>
                                 <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
                                     <Image
                                         style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}

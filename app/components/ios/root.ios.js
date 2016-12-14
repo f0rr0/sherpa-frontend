@@ -52,6 +52,7 @@ class Root extends Component {
     }
 
     _handleAppStateChange(currentAppState) {
+        console.log('handle app state change')
         this.setState({ currentAppState })
     }
 

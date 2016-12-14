@@ -3,7 +3,9 @@ import {
     TouchableHighlight,
     Image,
     Text,
-    StyleSheet
+    StyleSheet,
+    TouchableOpacity,
+Animated
 } from 'react-native';
 import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
@@ -14,6 +16,7 @@ import UserImage from "./userImage";
 var windowSize=Dimensions.get('window');
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
+import { BlurView, VibrancyView } from 'react-native-blur';
 
 var styles=StyleSheet.create({
     listItem: {
@@ -32,11 +35,11 @@ var styles=StyleSheet.create({
     imageRowContainer:{flex:1,width:windowSize.width-30},
 
     tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
-    tripDataFootnoteContainer:{position:'absolute',bottom:20,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:0,right:0},
-    tripDataFootnoteIcon:{height:7,marginBottom:3},
+    tripDataFootnoteContainer:{position:'absolute',bottom:12,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',right:15},
+    tripDataFootnoteIcon:{height:7,marginBottom:3,marginLeft:6},
 
     darkener:{flex:1, backgroundColor:"rgba(0,0,0,.2)"},
-    userImageContainer:{position:'absolute',top:20,left:0,right:0,flex:1,alignItems:'center',backgroundColor:'transparent'},
+    userImageContainer:{position:'absolute',bottom:15,left:15,flex:1,alignItems:'center',backgroundColor:'transparent'},
 
     imageProgressBar:{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}
 });
@@ -46,7 +49,8 @@ class TripRow extends Component {
         super(props);
         this.state={
             imageLoaded:false,
-            userImageRadius:50
+            userImageRadius:25,
+            imageLoadedOpacity:new Animated.Value(0)
         }
 
     }
@@ -60,29 +64,35 @@ class TripRow extends Component {
 
 
         return(
-        <TouchableHighlight style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
+        <TouchableOpacity style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
             <View style={styles.listItem}>
-                <ImageProgress
-                    style={styles.imageProgressBar}
+                <Image
+                    style={[styles.imageProgressBar]}
                     resizeMode="cover"
-                    indicator={Progress.Circle}
-                    indicatorProps={{
-                        color: 'rgba(150, 150, 150, 1)',
-                        unfilledColor: 'rgba(200, 200, 200, 0.2)'
-                    }}
+                    source={{uri:tripData.moments[0].serviceJson.images.thumbnail.url||tripData.moments[0].mediaUrl}}
+                >
+                    <View style={styles.darkener}></View>
+                    <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                </Image>
+
+                <Animated.Image
+                    style={[styles.imageProgressBar,{opacity:this.state.imageLoadedOpacity}]}
+                    resizeMode="cover"
                     source={{uri:tripData.moments[0].mediaUrl}}
                     onLoad={() => {
-                        this.setState({imageLoaded:true});
+                         Animated.timing(this.state.imageLoadedOpacity,{toValue:1,duration:200}).start()
                     }}
 
                 >
                     <View style={styles.darkener}></View>
-                </ImageProgress>
+                </Animated.Image>
 
-                <View style={[styles.imageRowContainer,{opacity:this.state.imageLoaded?1:0}]}>
-                    <View style={[styles.userImageContainer,{opacity:this.props.hideProfileImage?0:1}]}>
-                        <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
-                    </View>
+                <Animated.View style={[styles.userImageContainer,{opacity:this.state.imageLoadedOpacity}]}>
+                    <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
+                </Animated.View>
+
+                <Animated.View style={[styles.imageRowContainer,{opacity:this.state.imageLoadedOpacity}]}>
+
 
                     <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s "}></TripTitle>
 
@@ -92,9 +102,9 @@ class TripRow extends Component {
                         <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                         <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                     </View>
-                </View>
+                </Animated.View>
             </View>
-        </TouchableHighlight>
+        </TouchableOpacity>
         )
     }
 }

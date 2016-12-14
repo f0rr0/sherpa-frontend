@@ -21,7 +21,8 @@ import {
     Image,
     TouchableOpacity,
     Animated,
-    PixelRatio
+    PixelRatio,
+    ScrollView
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -38,9 +39,10 @@ var styles=StyleSheet.create({
     }
 });
 
-const snapOffset=10;
-const topOffset=150;
+const snapOffset=20;
+const topOffset=100;
 const mediumOffset=100;
+const mapBaseHeight=240;
 
 class FeedList extends React.Component{
 
@@ -50,41 +52,54 @@ class FeedList extends React.Component{
         this.state={
             currentAppState:'undefined',
             mapLarge:false,
-            mapHeight:new Animated.Value(360),
+            mapHeight:new Animated.Value(mapBaseHeight),
             searchbarTopOffset:new Animated.Value(snapOffset),
-            inputFocusOffset:new Animated.Value(0)
+            inputFocusOffset:new Animated.Value(0),
+            featuredProfiles:[],
+            mapMoments:[]
         };
     }
 
     updateMapSize(){
+        this.props.toggleTabBar(!this.state.mapLarge)
+
         if(this.state.mapLarge){
-            Animated.stagger(100, [
+            Animated.stagger(600, [
                 Animated.spring(this.state.mapHeight, {
                     toValue: windowSize.height
                 }),
-                this.refs.listview.refs.listview.refs.map.showMarkers()
+                this.refs.listview.refs.listview.refs.feedlistmap.showMarkers()
             ]).start()
 
             this.reset();
 
         }else{
             Animated.spring(this.state.mapHeight, {
-                toValue: 360
+                toValue: mapBaseHeight
             }).start();
-            this.refs.listview.refs.listview.refs.map.hideMarkers().start()
+            this.refs.listview.refs.listview.refs.feedlistmap.hideMarkers().start()
         }
 
-        this.props.toggleTabBar(!this.state.mapLarge)
     }
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
         Orientation.lockToPortrait();
+
+        getFeed(this.props.user.sherpaID,-1,'featured-profiles').then((response)=>{
+            this.setState({featuredProfiles:response.data})
+        })
+
+        this.onZoomChange({longitudeDelta: 131.8298027140316, latitude: 32.97302104200914, longitude: -40.58928990251642, latitudeDelta: 145.2092125973603});
     }
 
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            this.refs.listview._refresh();
+        }
+
+        if(this.state.reqID!==prevState.reqID){
+            if(this.refs.listview.refs.listview.refs.feedlistmap)this.refs.listview.refs.listview.refs.feedlistmap.recluster()
         }
 
         if(prevState.mapLarge!==this.state.mapLarge){
@@ -135,23 +150,34 @@ class FeedList extends React.Component{
         })
     }
 
+    onZoomChange(region){
+        var reqBody={
+            "limit": 50,
+            "bbox": [region.longitude-region.longitudeDelta/2,region.latitude-region.latitudeDelta/2,region.longitude+region.longitudeDelta/2,region.latitude+region.latitudeDelta/2]
+        };
+
+        getFeed(reqBody,-1,'map-search').then((response)=>{
+            this.setState({mapMoments:response.data,reqID:Math.random()})
+        })
+    }
+
     refreshCurrentScene(){
        this.updateMapSize();
     }
 
     _renderHeader(){
         const mapIcon=this.state.mapLarge?<Image style={{width: 6, height: 6}} source={require('./../../../../Images/close-map-button.png')} />:<Image style={{width: 6, height: 6}} source={require('./../../../../Images/open-map-button.png')} />;
-
         return (
-            <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',zIndex:1}}>
-                <Animated.View style={{overflow:'visible',alignItems:'center',height:this.state.mapHeight,width:windowSize.width,marginBottom:30}}>
+            <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start',zIndex:1}}>
+                <Animated.View style={{overflow:'visible',alignItems:'center',height:this.state.mapHeight,width:windowSize.width,marginBottom:30,zIndex:2}}>
                     <MarkerMap
                         //onLeave={()=>{this.setState({mapLarge:false})}}
-                        ref="map"
+                        ref="feedlistmap"
                         hideOnInit={true}
                         navigator={this.props.navigator}
                         interactive={this.state.mapLarge}
-                        moments={this.state.moments}>
+                        regionChanged={this.onZoomChange.bind(this)}
+                        moments={this.state.mapMoments}>
                     </MarkerMap>
                     <TouchableOpacity
                         style={{position:'absolute',bottom:0,right:0,backgroundColor:'transparent',width:100,height:100}}
@@ -176,9 +202,11 @@ class FeedList extends React.Component{
                     </TouchableOpacity>
                     {this._renderFixedSearchBar()}
                 </Animated.View>
-                <View style={{position:'absolute',top:30,left:0,width:windowSize.width,alignItems:'center'}}>
+                <View style={{position:'absolute',top:30,left:0,width:windowSize.width,alignItems:'center',zIndex:3}}>
                     <Image style={{width: 73, height: 15}} source={require('./../../../../Images/sherpa-map-logo.png')} />
                 </View>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRAVELLERS</Text>
+                {this._renderFeaturedProfiles.bind(this)()}
             </View>
         )
     }
@@ -191,19 +219,44 @@ class FeedList extends React.Component{
         )
     }
 
+    showUserProfile(user){
+        this.props.navigator.push({
+            id: "profile",
+            trip:{owner:user}
+        });
+    }
+
+    _renderFeaturedProfiles(){
+        //console.log('feat',this.state.featuredProfiles)
+
+        return(
+            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:40}}>
+                {this.state.featuredProfiles.map((profile,index)=> {
+                    return (
+                        <TouchableOpacity key={'featured-profile-'+index} onPress={()=>{
+                            this.showUserProfile(profile)
+                        }}>
+                            <Image style={{width:75,height:75,flexDirection:'row',marginLeft:index==0?15:5,marginRight:index==this.state.featuredProfiles.length-1?15:0}} source={{uri:profile.serviceProfilePicture}}></Image>
+                        </TouchableOpacity>
+                    )
+                })}
+            </ScrollView>
+        )
+    }
+
     update(){
 
     }
 
     _renderFixedSearchBar(){
         return(
-            <Animated.View style={{
+            <Animated.View accessible={this.state.isFixed} style={{
                         position:'absolute',
                         marginTop:this.state.inputFocusOffset,
-                        top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,150],extrapolate:'clamp'}),
+                        top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
                         width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
                         left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
-                        opacity:this.state.mapHeight.interpolate({inputRange:[360,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
+                        opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
                     }}>
                     {this._renderSearchInput('inputFixed')}
             </Animated.View>
@@ -212,7 +265,7 @@ class FeedList extends React.Component{
 
     _renderAnimatedSearchBar(){
         return(
-            <Animated.View style={{
+            <Animated.View  accessible={!this.state.isFixed}  style={{
                      position:'absolute',
                      top:this.state.searchbarTopOffset,
                      zIndex:1,
@@ -229,7 +282,7 @@ class FeedList extends React.Component{
                     shadowOffset:{width:0,height:1},
                     width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
                     left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
-                    opacity:this.state.mapHeight.interpolate({inputRange:[360,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
+                    opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
                 }}>
                     {this._renderSearchInput('inputAnimated')}
                 </Animated.View>
@@ -248,11 +301,11 @@ class FeedList extends React.Component{
         return(
             <View>
                 <MapzenPlacesAutocomplete
-                    placeholder="Search for places"
+                    placeholder="Discover the World"
                     ref={ref}
                     textInputProps={{
                         onChangeText:this._updateSearchInput.bind(this),
-                        onFocus:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:-80}).start()},
+                        onFocus:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()},
                         onBlur:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()}
                     }}
                     onPress={this.showTripLocation.bind(this)}
@@ -292,7 +345,6 @@ class FeedList extends React.Component{
                                      borderBottomColor:"#F0F0F0",
                                      marginBottom:-2,
                                      paddingTop:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[10,0],extrapolate:'clamp'}),
-
                                 },
                                 row:{
                                    height:75,
@@ -304,7 +356,7 @@ class FeedList extends React.Component{
                                 },
                                 listView:{
                                     backgroundColor:'white',
-                                    borderRadius:2,
+                                    borderRadius:2
                                 }
                           }}
                 />
@@ -346,14 +398,15 @@ class FeedList extends React.Component{
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      this.offset = currentOffset;
-                             this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
+                            this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
+                            this.refs.inputAnimated.triggerBlur();
 
                      if(currentOffset>(topOffset-snapOffset)){
                           this.setState({isFixed:true})
-                          Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:200,friction:15}).start()
+                          Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:150,friction:12}).start()
                      }else{
                           this.setState({isFixed:false})
-                          Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:200,friction:15}).start()
+                          Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
                      }
 
                     }}
