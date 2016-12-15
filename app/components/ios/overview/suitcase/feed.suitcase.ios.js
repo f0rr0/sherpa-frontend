@@ -9,6 +9,7 @@ import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed} from '../../../../actions/feed.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
+import { BlurView, VibrancyView } from 'react-native-blur';
 
 
 import Dimensions from 'Dimensions';
@@ -19,6 +20,7 @@ import {
     View,
     Text,
     Image,
+    Animated,
     TouchableHighlight
 } from 'react-native';
 import React, { Component } from 'react';
@@ -29,7 +31,7 @@ var styles = StyleSheet.create({
     },
     listItem:{
         flex:1,
-        backgroundColor:"black",
+        //backgroundColor:"black",
         justifyContent:"center",
         alignItems:'flex-start',
     },
@@ -68,13 +70,17 @@ var styles = StyleSheet.create({
     iconCountries:{height:8,marginBottom:3},
     iconDivider:{height:25,marginLeft:35,marginRight:25},
     iconImages:{height:7,marginBottom:3},
-    listItemImage:{position:"absolute",top:0,left:0,flex:1,height:125,width:windowSize.width-30,opacity:.8}
+    listItemImage:{position:"absolute",top:0,left:0,flex:1,height:125,width:windowSize.width-30}
 });
 
 class Suitecase extends React.Component {
     constructor(){
         super();
         this.itemsLoadedCallback=null;
+        this.state={
+            smallImageOpacity:new Animated.Value(0),
+            largeImageOpacity:new Animated.Value(0),
+        }
     }
 
 
@@ -202,16 +208,35 @@ class Suitecase extends React.Component {
         return (
             <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
-                    <Image
-                        style={styles.listItemImage}
+                    <Animated.Image
+                        style={[styles.listItemImage,{opacity:this.state.smallImageOpacity}]}
                         resizeMode="cover"
+                        onLoad={()=>{
+                            Animated.timing(this.state.smallImageOpacity,{toValue:1,duration:200}).start()
+                        }}
+                        source={{uri:tripData.moments[0].serviceJson.images.thumbnail.url}}
+                    >
+                        <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
+                        <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+
+                    </Animated.Image>
+
+                    <Animated.Image
+                        style={[styles.listItemImage,{opacity:this.state.largeImageOpacity}]}
+                        resizeMode="cover"
+                        onLoad={()=>{
+                            Animated.timing(this.state.largeImageOpacity,{toValue:1,duration:500}).start()
+                        }}
                         source={{uri:tripData.moments[0].mediaUrl}}
                     >
                         <View style={{flex:1, backgroundColor:"rgba(0,0,0,.2)"}}></View>
 
-                    </Image>
-                    <Text style={styles.suitcaseCopySmall}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
-                    <Text style={styles.suitcaseCopyLarge}>{countryOrState.toUpperCase()}</Text>
+                    </Animated.Image>
+
+                    <Animated.View style={{opacity:this.state.largeImageOpacity}}>
+                        <Text style={styles.suitcaseCopySmall}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
+                        <Text style={styles.suitcaseCopyLarge}>{countryOrState.toUpperCase()}</Text>
+                    </Animated.View>
                 </View>
             </TouchableHighlight>
         );

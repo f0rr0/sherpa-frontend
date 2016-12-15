@@ -34,7 +34,8 @@ export default class InteractiveNotification extends React.Component {
 
     render () {
         return (
-            <TouchableOpacity onPress={this.hide.bind(this)} style={[notificationStyles.errorContainer,{marginTop:this.state.offsetTop},{backgroundColor:'red'}]}>
+
+            <TouchableOpacity onPress={this.hide.bind(this)} style={[notificationStyles.errorContainer,{backgroundColor:'red',marginTop:this.state.offsetTop}]}>
                 <Animated.View style={[notificationStyles.errorContainer,{backgroundColor:this.props.success?Colors.highlight:Colors.error}]}>
                     <Image resizeMode="contain" style={notificationStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
                     <Text style={notificationStyles.errorMessage}>{this.props.notificationMessage.toUpperCase()}</Text>

@@ -176,7 +176,7 @@ class FeedProfile extends React.Component {
 
         return (
             <View style={{marginBottom:15}}>
-                <View style={{backgroundColor:'#FFFFFF', height:660, width:windowSize.width,marginBottom:-290,marginTop:70}} >
+                <View style={{backgroundColor:'#FFFFFF', height:600, width:windowSize.width,marginBottom:-290,marginTop:100}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
                         <UserImage onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
@@ -193,7 +193,7 @@ class FeedProfile extends React.Component {
                     </View>
                 </View>
 
-                <View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:385,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
+                {/*<View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:385,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:4}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
@@ -203,7 +203,7 @@ class FeedProfile extends React.Component {
                         <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:5}} resizeMode="contain"></Image>
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
                     </View>
-                </View>
+                </View>*/}
 
                 {this.props.navigation.default}
             </View>

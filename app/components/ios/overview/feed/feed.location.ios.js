@@ -27,9 +27,11 @@ import {
     Image,
     TouchableHighlight,
     TouchableOpacity,
-    Alert
+    Alert,
+    Animated
 } from 'react-native';
 import React, { Component } from 'react';
+import {BlurView} from 'react-native-blur';
 
 
 class FeedLocation extends Component {
@@ -37,7 +39,13 @@ class FeedLocation extends Component {
         super();
         this.itemsLoadedCallback=null;
         this.moments=[];
-        this.state={moments:[],containerWidth:windowSize.width-30,originalMoments:[]}
+        this.state={
+            moments:[],
+            containerWidth:windowSize.width-30,
+            originalMoments:[],
+            headerPreviewLoadedOpacity:new Animated.Value(0),
+            headerLoadedOpacity:new Animated.Value(0),
+        }
     }
 
     componentDidMount(){
@@ -191,14 +199,37 @@ class FeedLocation extends Component {
         //console.log(this.props.trip)
         return (
             <View style={{flex:1}}>
-                <View style={{backgroundColor:'#000', height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
+                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
 
-                    <Image
-                        style={{height:windowSize.height,width:windowSize.width,left:0,opacity:.5,backgroundColor:'black',flex:1,position:'absolute',top:0}}
-                        source={{uri:randomMoment.highresUrl||randomMoment.mediaUrl}}
-                    >
 
-                    </Image>
+                    <View style={{position:'absolute',left:0,top:0}}>
+                        <Animated.Image
+                            style={[styles.headerImage,{opacity:1}]}
+                            resizeMode="cover"
+                            onLoad={()=>{
+                                    Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
+                                }}
+                            source={{uri:randomMoment.serviceJson.images.thumbnail.url||randomMoment.mediaUrl}}
+                        >
+                            <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                        </Animated.Image>
+                    </View>
+
+
+                    <Animated.View style={{position:'absolute',left:0,top:0,opacity:this.state.headerLoadedOpacity}}>
+                        <View
+                            style={styles.headerDarkBG}
+                        />
+                        <Image
+                            style={styles.headerImage}
+                            resizeMode="cover"
+                            onLoad={()=>{
+                                    Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
+                                }}
+                            source={{uri:randomMoment.highresUrl||randomMoment.mediaUrl}}
+                        />
+                    </Animated.View>
+
 
 
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
@@ -264,6 +295,9 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
+
     map: {
         ...StyleSheet.absoluteFillObject
     },

@@ -8,6 +8,7 @@ import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 var windowSize=Dimensions.get('window');
 import Orientation from 'react-native-orientation';
 import MarkerMap from '../../components/MarkerMap'
+import FeaturedProfile from '../../components/featuredProfile'
 import {MapzenPlacesAutocomplete} from 'react-native-mapzen-places-autocomplete';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 
@@ -121,6 +122,7 @@ class FeedList extends React.Component{
 
     showTripLocation(data){
         //console.log('trip location data',data);
+
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -227,17 +229,17 @@ class FeedList extends React.Component{
     }
 
     _renderFeaturedProfiles(){
-        //console.log('feat',this.state.featuredProfiles)
-
         return(
             <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:40}}>
                 {this.state.featuredProfiles.map((profile,index)=> {
                     return (
-                        <TouchableOpacity key={'featured-profile-'+index} onPress={()=>{
-                            this.showUserProfile(profile)
-                        }}>
-                            <Image style={{width:75,height:75,flexDirection:'row',marginLeft:index==0?15:5,marginRight:index==this.state.featuredProfiles.length-1?15:0}} source={{uri:profile.serviceProfilePicture}}></Image>
-                        </TouchableOpacity>
+                        <FeaturedProfile
+                            key={"profile"+index}
+                            style={{width:75,height:75,flexDirection:'row',marginLeft:index==0?15:5,marginRight:index==this.state.featuredProfiles.length-1?15:0}}
+                            onPress={()=>{this.showUserProfile(profile)}}
+                            profileImageUrl={profile.serviceProfilePicture}
+                        >
+                        </FeaturedProfile>
                     )
                 })}
             </ScrollView>

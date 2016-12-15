@@ -5,10 +5,11 @@ import {
     View,
     TouchableOpacity,
     StyleSheet,
-TouchableHighlight,
-Linking
+    TouchableHighlight,
+    Linking
 } from 'react-native';
 
+import BlurImageLoader from '../components/blurImageLoader'
 import store from 'react-native-simple-store';
 import config from '../../../data/config';
 import React, {Component} from 'react';
@@ -67,11 +68,9 @@ class UserImage extends Component {
         var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
         return(
             <TouchableOpacity onPress={()=>{this.props.onPress()}} style={this.props.style}>
-                <Image
-                    style={{borderWidth:1.5,borderColor:"#FFFFFF",height:this.props.radius,width:this.props.radius,opacity:1,borderRadius:this.props.radius/2}}
-                    resizeMode="cover"
-                    source={{uri:imageURL}}
-                />
+                <View style={{height:this.props.radius,width:this.props.radius}}>
+                    <BlurImageLoader imageStyle={{height:this.props.radius,width:this.props.radius,borderWidth:1.5,borderColor:"#FFFFFF",borderRadius:this.props.radius/2}} thumbUrl={imageURL.replace("s150x150","s50x50")} largeUrl={imageURL} style={this.props.style}  />
+                </View>
             </TouchableOpacity>
         )
     }

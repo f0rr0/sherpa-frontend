@@ -13,6 +13,7 @@ import SimpleButton from '../../components/simpleButton';
 import RNFetchBlob from 'react-native-fetch-blob';
 import PhotoSelectorGrid from '../../components/photoSelector.grid';
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
+const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 class EditTripGrid extends React.Component {
     constructor(props){
         super(props)
@@ -30,23 +31,11 @@ class EditTripGrid extends React.Component {
     }
 
     _renderFooter(){
-        //console.log('check empty',this.checkEmpty());
         return(
-            <View style={{marginLeft:7,flex:1,width:SCREEN_WIDTH-21,height:55,paddingBottom:0,marginTop:-10,justifyContent:"flex-start"}}>
-                <SimpleButton style={{width:SCREEN_WIDTH-21}} disabled={this.checkEmpty()} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+            <View style={{marginLeft:7,width:SCREEN_WIDTH-21,height:55,paddingBottom:0,marginTop:0,justifyContent:"flex-start"}}>
+                <SimpleButton style={{width:SCREEN_WIDTH-21}} disabled={this.refs.selectorGrid?!this.refs.selectorGrid.checkEmpty().empty:false} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
             </View>
         )
-    }
-
-    checkEmpty(){
-        let isEmpty=true;
-        for(var i=0;i<this.props.momentData.length;i++){
-            if(this.props.momentData[i].selected){
-                isEmpty=false;
-                break;
-            }
-        }
-        return isEmpty;
     }
 
     navActionLeft(){
@@ -59,14 +48,16 @@ class EditTripGrid extends React.Component {
                 hideNav:true,
                 momentData:this.props.momentData,
                 tripData:this.props.tripData || null,
-                sceneConfig:"right-nodrag"
+                sceneConfig:"right-nodrag",
+                selection:this.refs.selectorGrid.checkEmpty().checkArr
             });
     }
 
     render(){
+
         return(
-            <View style={{backgroundColor:'white',flex:1}}>
-                <PhotoSelectorGrid moreCallback={()=>{
+            <View style={{backgroundColor:'white',minHeight:SCREEN_HEIGHT}}>
+                <PhotoSelectorGrid ref="selectorGrid" moreCallback={()=>{
                     this.props.navigator.push({
                         id: "addTrip",
                         hideNav:true,
@@ -75,7 +66,7 @@ class EditTripGrid extends React.Component {
                         momentData:this.props.momentData,
                         tripData:this.props.tripData
                     });
-                }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
+                }} showMore={true} footerView={this._renderFooter.bind(this)} wrapper={{paddingTop:60,width:SCREEN_WIDTH}} headerView={this._renderHeader.bind(this)} data={this.props.momentData}></PhotoSelectorGrid>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
             </View>
         )

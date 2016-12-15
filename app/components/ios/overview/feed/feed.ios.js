@@ -219,11 +219,11 @@ class Feed extends Component {
             break;
             case "editTripNames":
                 showNav=true;
-                sceneContent = <EditMomentNames ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditMomentNames selection={route.selection} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripName":
                 showNav=true;
-                sceneContent = <EditTripName refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit trip name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripName selection={route.selection}  refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit trip name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "profile-settings":
                 sceneContent = <ProfileSettings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"settings",opaque:true,topLeftImage:require('./../../../../Images/icon-close-black.png'),fixedHeader:true,hideNav:true })} {...this.props}/>;

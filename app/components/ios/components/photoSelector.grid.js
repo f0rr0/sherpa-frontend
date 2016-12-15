@@ -19,19 +19,26 @@ class PhotoSelectorGrid extends React.Component {
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state={
             dataSource: ds.cloneWithRows(this._genRows({})),
+            pressData:{}
         };
-    }
-
-    _pressData(){
-        console.log('press data');
     }
 
     componentWillMount(){
         this._pressData = {};
 
         for (var ii = 0; ii < this.props.data.length; ii++) {
-            this.props.data[ii].selected=true;
+            this._pressData[ii]=false;
         }
+    }
+
+    checkEmpty(){
+        var empty=false;
+        var checkArr=[];
+        for(var pressDataEl in this._pressData){
+            checkArr.push({selected:!this._pressData[pressDataEl]});
+            if(!this._pressData[pressDataEl])empty=true
+        }
+        return {empty,checkArr};
     }
 
     render(){
@@ -75,7 +82,8 @@ class PhotoSelectorGrid extends React.Component {
                 selected:!pressData[ii],
                 moment:this.props.data[ii]
             });
-            this.props.data[ii].selected=!pressData[ii]
+
+            //this.props.data[ii].selected=!pressData[ii]
         }
         if(this.props.showMore){
             dataBlob.push({
@@ -88,9 +96,12 @@ class PhotoSelectorGrid extends React.Component {
 
     _pressRow(rowID) {
         this._pressData[rowID] = !this._pressData[rowID];
-        this.setState({dataSource: this.state.dataSource.cloneWithRows(
-            this._genRows(this._pressData)
-        )});
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(
+                this._genRows(this._pressData)
+            ),
+            pressData:this._pressData
+        });
     }
 }
 
@@ -103,7 +114,7 @@ const styles = StyleSheet.create({
         paddingLeft:7,
         paddingRight:7,
         paddingTop:0,
-        paddingBottom:30
+        paddingBottom:30,
     },
     row: {
         justifyContent: 'center',

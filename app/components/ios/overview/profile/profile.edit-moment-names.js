@@ -65,7 +65,8 @@ class EditMomentNames extends React.Component {
                 hideNav:true,
                 tripData:this.props.tripData,
                 momentData:this.props.momentData,
-                sceneConfig:"right-nodrag"
+                sceneConfig:"right-nodrag",
+                selection:this.props.selection
             });
         }
     }
@@ -74,7 +75,7 @@ class EditMomentNames extends React.Component {
 
         var isEmpty=false;
         for(var i=0;i<this.props.momentData.length;i++){
-            isEmpty=!this.props.momentData[i].location&&this.props.momentData[i].selected;
+            isEmpty=!this.props.momentData[i].location&&this.props.selection[i].selected;
         }
         return isEmpty;
     }
@@ -87,30 +88,27 @@ class EditMomentNames extends React.Component {
         Animated.timing(this.state.navOpacity, {toValue: 1,duration:8}).start();
     }
 
-    makeCoverPhoto(index){
-        var currentIndex=0;
-        this.props.momentData.map((moment)=>{
-            currentIndex++;
-            if(moment.selected){
-                this.refs["location-"+currentIndex].isCover(currentIndex===index);
+    makeCoverPhoto(targetIndex){
+        this.props.momentData.map((moment,index)=>{
+            if(this.props.selection[index].selected){
+                this.props.selection[index].isCover=(index===targetIndex);
+                this.refs["location-"+index].isCover(targetIndex===index);
+
             };
         })
     }
 
     handlePageChange(){
-        var currentIndex=0;
-        this.props.momentData.map((moment)=>{
-            currentIndex++;
-            if(moment.selected){
-                this.refs["location-"+currentIndex].moveDown();
+        this.props.momentData.map((moment,index)=>{
+            if(this.props.selection[index].selected){
+                this.refs["location-"+index].moveDown();
             };
         })
     }
 
     render(){
-        var currentIndex=0;
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
+            <View style={{backgroundColor:'white'}}>
 
                 {/* //error message here */}
 
@@ -127,9 +125,8 @@ class EditMomentNames extends React.Component {
                     onPageChange={this.handlePageChange.bind(this)}
                 >
 
-                    {this.props.momentData.map((moment)=>{
-                        currentIndex++;
-                        return moment.selected?(<LocationName makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+currentIndex} locationIndex={currentIndex} key={currentIndex} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
+                    {this.props.momentData.map((moment,index)=>{
+                        return this.props.selection[index].selected?(<LocationName makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
                     })}
                 </PagedScrollView>
                 <Animated.View style={[{flex:1,position:'absolute',top:0},{opacity:this.state.navOpacity}]}>
@@ -147,6 +144,7 @@ class EditMomentNames extends React.Component {
 var styles = StyleSheet.create({
     container: {
         //flex: 1,
+        minHeight:windowSize.height,
         backgroundColor:'transparent',
     },
     content: {
@@ -154,6 +152,7 @@ var styles = StyleSheet.create({
         backgroundColor:'transparent',
         paddingHorizontal: CARD_PREVIEW_WIDTH,
         alignItems: 'flex-start',
+
     },
     card: {
         //flex: 1,

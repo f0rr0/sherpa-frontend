@@ -254,7 +254,7 @@ class OwnUserProfile extends React.Component {
 
         return (
             <View>
-                <View style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?300:250, width:windowSize.width,marginBottom:0,marginTop:70}} >
+                <View style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?300:250, width:windowSize.width,marginBottom:0,marginTop:100}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width,zIndex:1}}>
                         <UserImage
                           onPress={()=>{Linking.openURL("https://www.instagram.com/"+this.props.user.username);}}

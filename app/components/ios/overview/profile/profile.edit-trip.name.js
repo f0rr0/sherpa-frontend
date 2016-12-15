@@ -67,14 +67,14 @@ class EditTripName extends React.Component {
                     var dates=[];
                     var coverMomentID="";
                     for(var i=0;i<  this.props.momentData.length;i++){
-                        if(this.props.momentData[i].selected){
+                        if(this.props.selection[i].selected){
                             momentIDs.push(momentsRes[i].id)
-                            if(this.props.momentData[i].isCover){
+                            if(this.props.selection[i].isCover){
                                 coverMomentID=momentsRes[i].id;
                             }
-                            this.props.momentData[i].data=momentsRes[i];
+                            this.props.selection[i].data=momentsRes[i];
                             dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
-                            if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i]));
+                            if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i],momentsRes[i]));
                         }
                     }
 
@@ -91,7 +91,7 @@ class EditTripName extends React.Component {
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {
-                        //console.log('uploaded moments');
+                        console.log('uploaded moments');
                         createTrip({
                             momentIDs,
                             name: this.state.text,
@@ -103,6 +103,7 @@ class EditTripName extends React.Component {
                             this.props.headerProgress.showSuccess();
                             setTimeout(this.props.refreshCurrentScene,500)
                         }).catch((err)=> {
+                            console.log('create trip error',err);
                             this.props.headerProgress.showError();
                         })
                     }).catch((err)=>{console.log('err from upload')});

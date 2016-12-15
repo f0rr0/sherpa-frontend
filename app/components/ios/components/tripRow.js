@@ -21,7 +21,7 @@ import { BlurView, VibrancyView } from 'react-native-blur';
 var styles=StyleSheet.create({
     listItem: {
         flex: 1,
-        backgroundColor: "#fcfcfc",
+        //backgroundColor: "#fcfcfc",
         justifyContent: "center",
         alignItems: 'center'
     },

@@ -195,7 +195,7 @@ export function getFeed(query,page=1,type='') {
                 let sherpaHeaders = new Headers();
                 let finalToken=user?user.sherpaToken:sherpaToken;
                 let reqBody;
-                console.log(feedRequestURI);
+                //console.log(feedRequestURI);
 
                 sherpaHeaders.append("token", finalToken);
                 switch(type){

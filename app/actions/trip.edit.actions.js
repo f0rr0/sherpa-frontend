@@ -62,21 +62,25 @@ export function createMoment(moment){
 
 
 
-export function uploadMoment(momentBlob){
+export function uploadMoment(momentBlob,momentData){
     return new Promise((fulfill,reject)=> {
         const {endpoint,version} = sherpa;
 
+        console.log(momentData,': moment data');
+
         ImageResizer.createResizedImage(momentBlob.mediaUrl, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
             store.get('user').then((user) => {
-                RNFetchBlob.fetch("POST", endpoint + version + "/moment/" + momentBlob.data.id + "/upload", {
+                RNFetchBlob.fetch("POST", endpoint + version + "/moment/" + momentData.id + "/upload", {
                     'token' : user.sherpaToken,
                     'Content-Type' : 'multipart/form-data'
                 }, [
                     { name : 'enctype', data : 'multipart/form-data'},
-                    { name : 'image', filename : 'moment' + momentBlob.data.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
+                    { name : 'image', filename : 'moment' + momentData.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
                 ]).then((resp) => {
+                    console.log('resp',resp);
                     fulfill(resp)
                 }).catch((err) => {
+                    console.log('error',err);
                     reject(err);
                 })
             });
@@ -112,6 +116,7 @@ export function getTripLocation(momentBlobs){
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    console.log('cluster response',response)
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }else{
@@ -184,7 +189,10 @@ export function createTrip(tripBlob,tripLocation) {
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
 
-                var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create"
+                var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create";
+
+                console.log('trip query data',queryData)
+
                 fetch(endpoint + version + "/trip/"+createOrUpdate, {
                     method: tripBlob.trip?'put':'post',
                     headers: sherpaHeaders,
@@ -196,7 +204,6 @@ export function createTrip(tripBlob,tripLocation) {
                         break;
                             reject({'response':rawServiceResponse})
                         default:
-
                     }
                 }).then((response)=> {
                     fulfill(JSON.parse(response))

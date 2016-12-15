@@ -38,7 +38,7 @@ class LocationName extends Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-        this.props.moment.isCover=this.state.isCover;
+        //this.props.moment.isCover=this.state.isCover;
     }
 
     moveUp(){
