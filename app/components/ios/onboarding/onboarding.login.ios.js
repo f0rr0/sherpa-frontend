@@ -41,9 +41,9 @@ var styles = StyleSheet.create({
         height:windowSize.height
     },
     login:{
-        flex:1,
         padding:15,
-        justifyContent:'center'
+        justifyContent:'center',
+        alignItems:'center'
     },
     overlay:{
         flex:1,
@@ -154,11 +154,15 @@ class Login extends Component {
                     />
                 </View>
 
-                <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin}]}>
+                <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin,justifyContent:'center',alignItems:'center',flex:1}]}>
+                    <View style={{width:windowSize.width-30}}>
+
                     <SimpleInput ref="emailInput" onStart={this.moveUp.bind(this)} onEnd={this.moveDown.bind(this)} onChange={(text)=>{this.validate(text)}} placeholder="Enter your email" style={{color:this.state.showError?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
                     <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Request an invite"></SimpleButton>
-                    <SimpleButton text="I've been invited" onPress={()=>{this.alreadyInvited.bind(this)()}}>
-                    </SimpleButton>
+                    </View>
+                        <TouchableOpacity style={{borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}} onPress={()=>{this.alreadyInvited.bind(this)()}}>
+                            <Text style={{color:'white',marginTop:18,fontFamily:"TSTAR-bold",fontWeight:"800",fontSize:9,letterSpacing:.6,textAlign:"center"}}>I'M ALREADY INVITED</Text>
+                        </TouchableOpacity>
                 </Animated.View>
 
                 <SimpleError ref="emailError" errorMessage="Valid email address is required"></SimpleError>

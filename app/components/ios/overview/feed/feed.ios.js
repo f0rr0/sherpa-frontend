@@ -159,10 +159,6 @@ class Feed extends Component {
 
         GoogleAnalytics.trackScreenView(route.id);
 
-        if(this.currentRenderScene!==route.id){
-            this.currentRenderScene=route.id;
-            this.props.toggleTabBar(!route.hideNav);
-        }
 
         switch (route.id) {
             case 'feed':
@@ -179,11 +175,11 @@ class Feed extends Component {
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name+' suitcase',fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "tripDetailMap":
                 showNav=true;
-                sceneContent = <TripDetailMap regionMap={route.regionMap} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:'Trip Map',fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetailMap regionData={route.regionData} regionMap={route.regionMap} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;
@@ -191,11 +187,11 @@ class Feed extends Component {
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Timeline',fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"destinations",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
@@ -203,7 +199,7 @@ class Feed extends Component {
             break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Timeline",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9},topRightImage:require('./../../../../Images/icon-settings.png')})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9},topRightImage:require('./../../../../Images/icon-settings.png')})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "settings":
                 showNav=true;
@@ -270,6 +266,13 @@ class Feed extends Component {
     }
 
     sceneChange(route){
+
+
+        if(this.currentRenderScene!==route.id||route.toggleTabBar){
+            this.currentRenderScene=route.id;
+            this.props.toggleTabBar(!route.hideNav);
+        }
+
         this.currentRenderScene=route.id;
         this.refreshCurrentScene()
     }

@@ -5,7 +5,8 @@ import {getClusters} from './get-clusters';
 const DEFAULT_PADDING = { top: 100, right: 60, bottom: 100, left: 60 };
 import StickyHeader from './stickyHeader';
 import Header from './header'
-
+import SherpaMapMarker from './SherpaMapMarker';
+import ReactTransitionGroup  from 'react-addons-transition-group';
 import {
     StyleSheet,
     View,
@@ -51,11 +52,20 @@ class TripDetailMap extends Component{
         this.map.fitToCoordinates(this.markers, {
             edgePadding: DEFAULT_PADDING
         });
+
+
+        if(this.props.moments.length==1){
+            this.setState({initialRegion:{
+                latitude: parseFloat(this.props.moments[0].lat),
+                longitude: parseFloat(this.props.moments[0].lng),
+                latitudeDelta: 2.5,
+                longitudeDelta: 2.5,
+            }})
+        }
     }
 
     recluster(){
         let moments=this.props.moments;
-        //console.log('moments',moments)
         let markers=[];
 
         for (var i=0;i<moments.length;i++){
@@ -82,8 +92,10 @@ class TripDetailMap extends Component{
     }
 
     _regionUpdated(region=this.state.region){
+        //console.log('region updated',region)
         const padding = .2;
         //const markers = this.markers;
+        //console.log('zoom level',this.getZoomLevel(region))
         let markers=this.clusters.getClusters([
             region.longitude - (region.longitudeDelta * (0.5 + padding)),
             region.latitude - (region.latitudeDelta * (0.5 + padding)),
@@ -141,21 +153,9 @@ class TripDetailMap extends Component{
         })
     }
 
-    renderMarker(marker,i){
-        let clustercount=null;
-        if(marker.properties&&marker.properties.cluster){
-            clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{marker.properties.point_count}</Text></View>
-        }
+    renderMarker(markerData,i){
         return(
-            <MapView.Marker ref="marker" onPress={()=>{this.goToTripDetail(marker.data.id)}} key={i} coordinate={{latitude:parseFloat(marker.geometry.coordinates[1]),longitude:parseFloat(marker.geometry.coordinates[0])}}>
-                <Animated.View style={{width:45,height:45,borderRadius:45,backgroundColor:'white',transform: [{scale: this.state.markerScale}]}}>
-                    <Image
-                        style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
-                        source={{uri:marker.data.mediaUrl}}
-                    ></Image>
-                    {clustercount}
-                </Animated.View>
-            </MapView.Marker>
+            <SherpaMapMarker outsideScale={this.state.markerScale}  markerData={markerData} onPress={()=>{this.goToTripDetail(markerData.data.id)}} key={i}></SherpaMapMarker>
         )
     }
 
@@ -169,14 +169,14 @@ class TripDetailMap extends Component{
                     region={this.props.region}
                     zoomEnabled={this.props.interactive}
                     scrollEnabled={this.props.interactive}
+                    initialRegion={this.state.initialRegion}
                     showsPointsOfInterest={!this.props.interactive}
                     onRegionChangeComplete={this._regionUpdated.bind(this)}
                     ref={ref => { this.map = ref; }}
                     rotateEnabled={false}
                     minDelta={this.props.minDelta}
-
                 >
-                    {this.createMarkersForRegion()}
+                        {this.createMarkersForRegion()}
                 </MapView>
         )
     }

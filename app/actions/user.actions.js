@@ -256,6 +256,7 @@ export function loadUser() {
         dispatch(updateUserDBState("process"));
 
         return store.get('user').then((user) => {
+
             if(user&&!config.resetUser){
                 dispatch(updateUserData(user));
                 var responseStatus=400;
@@ -332,6 +333,7 @@ export function signupUser(){
 
         instagramAuthRequest();
         dispatch(updateUserSignupState("start"));
+        //signupWithSherpa("184267603.610a4a6.9c1223178abf473b9ea5e2f444452c82",JSON.parse('{"bio": "tech director & co-founder at WILD living in vienna / austria","full_name": "Thomas Ragger","username": "ragmaen","counts": {"media": 159,"follows": 299,"followed_by": 311},"profile_picture": "https://scontent.cdninstagram.com/t51.2885-19/s150x150/14276504_1820927734817780_537359030_a.jpg","id":"184267603","website": "http://www.wild.as"}'));
 
 
         function instagramAuthRequest(){

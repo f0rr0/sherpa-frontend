@@ -9,9 +9,9 @@ var windowSize=Dimensions.get('window');
 import Orientation from 'react-native-orientation';
 import MarkerMap from '../../components/MarkerMap'
 import FeaturedProfile from '../../components/featuredProfile'
-import {MapzenPlacesAutocomplete} from 'react-native-mapzen-places-autocomplete';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-
+import {SherpaPlacesAutocomplete} from '../../components/SherpaPlacesAutocomplete'
+import config from '../../../../data/config';
+const {sherpa}=config.auth[config.environment];
 import {
     StyleSheet,
     Text,
@@ -91,12 +91,20 @@ class FeedList extends React.Component{
             this.setState({featuredProfiles:response.data})
         })
 
-        this.onZoomChange({longitudeDelta: 131.8298027140316, latitude: 32.97302104200914, longitude: -40.58928990251642, latitudeDelta: 145.2092125973603});
+        this.onZoomChange({longitudeDelta: 100.78255568841368, latitude: 22.10323830103469, longitude: -55.55685589602622, latitudeDelta: 81.31725217053497});
     }
 
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
            this.refs.listview._refresh();
+        }
+
+        if(prevState.isFixed!==this.state.isFixed){
+            if(this.state.isFixed){
+                Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:150,friction:12}).start()
+            }else{
+                Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
+            }
         }
 
         if(this.state.reqID!==prevState.reqID){
@@ -153,12 +161,14 @@ class FeedList extends React.Component{
     }
 
     onZoomChange(region){
+        //console.log('zoom change ',region)
         var reqBody={
             "limit": 50,
             "bbox": [region.longitude-region.longitudeDelta/2,region.latitude-region.latitudeDelta/2,region.longitude+region.longitudeDelta/2,region.latitude+region.latitudeDelta/2]
         };
 
-        getFeed(reqBody,-1,'map-search').then((response)=>{
+        getFeed(reqBody,-1,'map-search-classic').then((response)=>{
+            //console.log('initial moments',response.data);
             this.setState({mapMoments:response.data,reqID:Math.random()})
         })
     }
@@ -183,7 +193,7 @@ class FeedList extends React.Component{
                     </MarkerMap>
                     <TouchableOpacity
                         style={{position:'absolute',bottom:0,right:0,backgroundColor:'transparent',width:100,height:100}}
-                        onPress={()=>{this.setState({mapLarge:!this.state.mapLarge})}}>
+                        onPress={()=>{this.setState({mapLarge:!this.state.mapLarge,reqID:Math.random()})}}>
                         <View style={{
                             width:20,
                             height:20,
@@ -209,6 +219,7 @@ class FeedList extends React.Component{
                 </View>
                 <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRAVELLERS</Text>
                 {this._renderFeaturedProfiles.bind(this)()}
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
             </View>
         )
     }
@@ -267,7 +278,7 @@ class FeedList extends React.Component{
 
     _renderAnimatedSearchBar(){
         return(
-            <Animated.View  accessible={!this.state.isFixed}  style={{
+            <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'}  style={{
                      position:'absolute',
                      top:this.state.searchbarTopOffset,
                      zIndex:1,
@@ -275,7 +286,7 @@ class FeedList extends React.Component{
                 }}>
 
 
-                <Animated.View style={{
+                <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'} style={{
                     backgroundColor:'white',
                     borderRadius:2,
                     shadowColor:'black',
@@ -295,17 +306,25 @@ class FeedList extends React.Component{
     _updateSearchInput(text){
         this.refs.listview.refs.listview.refs.inputFixed.setAddressText(text)
         this.refs.listview.refs.listview.refs.inputFixed._onChangeText(text)
-        this.refs.inputAnimated.setAddressText(text)
-        this.refs.inputAnimated._onChangeText(text)
+        if(!this.state.isFixed){
+            this.refs.inputAnimated.setAddressText(text)
+            this.refs.inputAnimated._onChangeText(text)
+        }
     }
 
     _renderSearchInput(ref){
+        const {endpoint,version,feed_uri,user_uri} = sherpa;
+
+
         return(
-            <View>
-                <MapzenPlacesAutocomplete
+            <View ref="searchContainer">
+                <SherpaPlacesAutocomplete
                     placeholder="Discover the World"
                     ref={ref}
+                    baseUrl={endpoint+version+"/geosearch/"}
+                    clearButtonMode='always'
                     textInputProps={{
+                        returnKeyType:'search',
                         onChangeText:this._updateSearchInput.bind(this),
                         onFocus:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()},
                         onBlur:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()}
@@ -405,10 +424,8 @@ class FeedList extends React.Component{
 
                      if(currentOffset>(topOffset-snapOffset)){
                           this.setState({isFixed:true})
-                          Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:150,friction:12}).start()
                      }else{
                           this.setState({isFixed:false})
-                          Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
                      }
 
                     }}

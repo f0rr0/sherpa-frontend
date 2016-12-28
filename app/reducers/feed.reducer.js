@@ -1,5 +1,5 @@
 import * as types from '../constants/feed.actiontypes';
-
+import {moveArrayPos} from './../actions/feed.actions'
 const initialState={
     trips:{},
     userTrips:{},
@@ -11,24 +11,10 @@ const initialState={
     feedPage:1
 };
 
-function moveArravPos(arr,old_index, new_index) {
-    while (old_index < 0) {
-        old_index += arr.length;
-    }
-    while (new_index < 0) {
-        new_index += arr.length;
-    }
-    if (new_index >= arr.length) {
-        var k = new_index - arr.length;
-        while ((k--) + 1) {
-            arr.push(undefined);
-        }
-    }
-    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
-    return arr; // for testing purposes
-};
+
 
 export default function feedReducer(state=initialState,action){
+    //console.log('feed reducer',action.type);
     switch(action.type){
         case types.CLEAR_FEED:
             return Object.assign({}, state, {
@@ -39,9 +25,7 @@ export default function feedReducer(state=initialState,action){
             if(action.feedData.type!='search'&&action.feedData.type!='location-search'){
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
-
                     let currentTrip=action.feedData.trips[index];
-
                     var moments=currentTrip.moments.reverse();
                     var name=currentTrip.name;
                     var coverIndex=0;
@@ -51,17 +35,11 @@ export default function feedReducer(state=initialState,action){
                         for(var i=0;i<moments.length;i++){
                             if(moments[i].type==='image')currentTrip.moments.push(moments[i]);
                             if(currentTrip.coverMoment&&moments[i].id==currentTrip.coverMoment.id){
-                                //currentTrip.moments.unshift(currentTrip.coverMoment);
                                 coverIndex=i;
                             }
                         }
 
-
-                        moveArravPos(currentTrip.moments,coverIndex,0);
-                        //console.log('cover index',coverIndex)
-
-
-                        //if(currentTrip.coverMoment)currentTrip.moments.unshift(currentTrip.coverMoment);
+                        moveArrayPos(currentTrip.moments,coverIndex,0);
                         cleanTrips.push(currentTrip);
                     }
                 }

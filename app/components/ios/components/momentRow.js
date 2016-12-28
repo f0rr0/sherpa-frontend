@@ -93,7 +93,7 @@ class MomentRow extends Component{
                             unfilledColor: 'rgba(200, 200, 200, 0.2)'
                         }}
                             //tripData.serviceJson.images.thumbnail.url
-                            source={{uri:tripData.serviceJson.images.thumbnail.url||tripData.mediaUrl}}
+                            source={{uri:tripData.serviceJson?tripData.serviceJson.images.thumbnail.url:tripData.mediaUrl}}
                             onLoad={() => {
                             }}
                             onError={()=>{

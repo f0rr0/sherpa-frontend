@@ -38,7 +38,8 @@ import {
     PanResponder,
     Animated,
     ScrollView,
-    TouchableOpacity
+    TouchableOpacity,
+    DeviceEventEmitter
 
 } from 'react-native';
 import React, { Component } from 'react';
@@ -49,6 +50,11 @@ const CARD_MARGIN = 3;
 const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
+
+var {
+    Gyroscope,
+    Magnetometer
+    } = require('NativeModules');
 
 var styles = StyleSheet.create({
     map: {
@@ -98,10 +104,10 @@ var styles = StyleSheet.create({
     row:{flexDirection: 'row'},
     headerContainer:{flex:1,height:windowSize.height+190},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
-    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:35,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
@@ -129,6 +135,7 @@ class FeedTrip extends Component {
             organizedMoments=props.trip.organizedMoments;
         }
 
+        this.scrollY=new Animated.Value(0);
 
         this.state= {
             dataSource: this.ds.cloneWithRows(organizedMoments),
@@ -148,9 +155,28 @@ class FeedTrip extends Component {
             shouldHideDetailView:true,
             didHideDetailView:true,
             didShowDetailView:false,
-            scroll: new Animated.Value(0)
+            scroll: new Animated.Value(0),
+            scrollY:new Animated.Value(0)
         };
 
+        Magnetometer.setMagnetometerUpdateInterval(0.8); // in seconds
+
+        DeviceEventEmitter.addListener('MagnetometerData', function (data) {
+            /**
+             * data.rotationRate.x
+             * data.rotationRate.y
+             * data.rotationRate.z
+             **/
+            console.log(data.magneticField)
+        });
+
+
+        Magnetometer.startMagnetometerUpdates();
+
+    }
+
+    componentWillUnmount(){
+        Magnetometer.stopMagnetometerUpdates();
     }
 
     navActionRight(){
@@ -195,6 +221,7 @@ class FeedTrip extends Component {
     }
 
     render(){
+        console.log('render');
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
 
         const completeHeader=
@@ -206,8 +233,13 @@ class FeedTrip extends Component {
                     contentContainerStyle={styles.listView}
                     renderHeader={this._renderHeader.bind(this)}
                     ref="listview"
+                    scrollEventThrottle={8}
                     onScroll={(event)=>{
+                        Animated.event(
+                          [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                        )(event);
                          var currentOffset = event.nativeEvent.contentOffset.y;
+                         //Animated.timing(this.state.scrollY,{duration:0,toValue:currentOffset}).start()
                          var direction = currentOffset > this.offset ? 'down' : 'up';
                          this.offset = currentOffset;
                          if(direction=='down'||currentOffset<30){
@@ -228,13 +260,14 @@ class FeedTrip extends Component {
                             tripData:this.props.trip,
                             sceneConfig:"bottom-nodrag"
                       });
-                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
 
             </View>
         return completeHeader;
     }
 
     deleteTripAlert(){
+        //console.log('delete trips',this.props.trip);
             Alert.alert(
                 'Delete Trip',
                 'Are you sure you want to delete this trip?',
@@ -270,6 +303,7 @@ class FeedTrip extends Component {
         this.props.navigator.push({
             id: "tripDetailMap",
             trip,
+            title:trip.name,
             sceneConfig:"right-nodrag"
         });
     }
@@ -286,37 +320,55 @@ class FeedTrip extends Component {
 
         if(country)tripLocation=country.name;
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
+        let windowHeight=windowSize.height;
         return (
             <View style={styles.headerContainer}>
-                <View maskImage='mask-test' style={[styles.headerMaskedView,{height:windowSize.height}]} >
+                <View style={[styles.headerMaskedView,{height:windowSize.height}]} >
 
-
-                        <View style={{position:'absolute',left:0,top:0}}>
-                            <Animated.Image
-                                style={[styles.headerImage,{opacity:1}]}
-                                resizeMode="cover"
-                                onLoad={()=>{
+                    <View style={{position:'absolute',left:0,top:0}}>
+                        <Animated.Image
+                            style={[styles.headerImage,{opacity:1}]}
+                            resizeMode="cover"
+                            onLoad={()=>{
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
-                                source={{uri:this.state.moments[0].serviceJson.images.thumbnail.url||this.state.moments[0].mediaUrl}}
-                            >
-                                <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
-                            </Animated.Image>
-                        </View>
+                            source={{uri:this.state.moments[0].serviceJson.images.thumbnail.url||this.state.moments[0].mediaUrl}}
+                        >
+                            <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                        </Animated.Image>
+                    </View>
+
+                        <Animated.View style={{position:'absolute',left:0,
+                            opacity:this.state.headerLoadedOpacity,
+                            }}>
 
 
-                        <Animated.View style={{position:'absolute',left:0,top:0,opacity:this.state.headerLoadedOpacity}}>
-                            <View
-                                style={styles.headerDarkBG}
-                            />
-                            <Image
-                                style={styles.headerImage}
+                            <Animated.Image
+                                style={[styles.headerImage,{
+                                transform: [,{
+                        scale: this.state.scrollY.interpolate({
+                            inputRange: [ -windowHeight, 0],
+                            outputRange: [3, 1.1],
+                             extrapolate: 'clamp'
+                        })
+                    },{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -windowHeight,0],
+                                                    outputRange: [-40, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                                }]}
                                 resizeMode="cover"
                                 onLoad={()=>{
                                     Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
                                 }}
                                 source={{uri:this.state.moments[0].highresUrl||this.state.moments[0].mediaUrl}}
-                            />
+                            >
+
+                            <View
+                                    style={styles.headerDarkBG}
+                                />
+
+                            </Animated.Image>
                         </Animated.View>
 
 
@@ -331,7 +383,9 @@ class FeedTrip extends Component {
                         <View style={styles.subTitleContainer}>
                             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
                              <UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                                <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,fontWeight:"800"}}>{this.props.trip.owner.serviceFullName}</Text>
+                                <TouchableOpacity  onPress={() => this.showUserProfile(this.props.trip)}>
+                                    <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,marginTop:-8,fontWeight:"800"}}>{this.props.trip.owner.serviceFullName}</Text>
+                                </TouchableOpacity>
                             </View>
                             <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
                         </View>
@@ -344,8 +398,17 @@ class FeedTrip extends Component {
                     </TouchableOpacity>
                 </View>
 
+
                 {/* <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>*/}
-                <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
+                <Animated.View style={{flex:1,position:'absolute',top:0,
+                  transform: [{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -windowHeight,0],
+                                                    outputRange: [-windowHeight, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                }}>
+                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
+                </Animated.View>
             </View>
         )
     }

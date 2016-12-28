@@ -166,6 +166,8 @@ class FeedDestination extends Component {
         this.props.navigator.push({
             id: "tripDetailMap",
             trip,
+            title:trip.name,
+
             sceneConfig:"right-nodrag"
         });
     }
@@ -189,7 +191,7 @@ class FeedDestination extends Component {
         return (
             <View style={{width:windowSize.width,alignItems:'center'}}>
                 <TouchableOpacity  style={styles.mapMaskedView} onPress={()=>{this.showTripMap(this.props.trip)}}>
-                    <MarkerMap moments={this.props.trip.moments} interactive={false}></MarkerMap>
+                    <MarkerMap ref="markermap" moments={this.props.trip.moments} interactive={false}></MarkerMap>
                 </TouchableOpacity>
                 <View style={{width:windowSize.width,marginTop:15,marginBottom:12}}>
                     <Text style={{marginLeft:14,fontWeight:"600",fontSize:10,fontFamily:"TSTAR"}}>{this.props.trip.moments.length} MOMENTS SAVED</Text>

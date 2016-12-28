@@ -152,6 +152,10 @@ export function getFeed(query,page=1,type='') {
                         searchBody = query;
                     break;
                     case "map-search":
+                        feedRequestURI = endpoint + version + "/search";
+                        searchBody = query
+                    break;
+                    case "map-search-classic":
                         feedRequestURI = endpoint + version + "/search/bbox";
                         searchBody = query
                     break;
@@ -195,11 +199,11 @@ export function getFeed(query,page=1,type='') {
                 let sherpaHeaders = new Headers();
                 let finalToken=user?user.sherpaToken:sherpaToken;
                 let reqBody;
-                //console.log(feedRequestURI);
 
                 sherpaHeaders.append("token", finalToken);
                 switch(type){
                     case 'map-search':
+                    case 'map-search-classic':
                         sherpaHeaders.append("Content-Type", "application/json");
                         reqBody={
                             method: 'post',
@@ -225,17 +229,14 @@ export function getFeed(query,page=1,type='') {
 
                 }
 
-                //console.log(type,'::feed req uri',feedRequestURI,':: feed req body',reqBody,':: query',query);
-
-
 
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
-                        //console.log('raw response',rawSherpaResponse)
                         switch (rawSherpaResponse.status) {
                             case 200:
+                            case 500:
                                 return rawSherpaResponse.text()
-                                break;
+                            break;
                             case 400:
                                 return '{}';
                             break;
@@ -248,40 +249,51 @@ export function getFeed(query,page=1,type='') {
                     })
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
-                        //console.log(rawSherpaResponseFinal)
                         let parsedResponse=JSON.parse(rawSherpaResponseFinal);
-                        let trips = parsedResponse.trips;
-                        //console.log('final response',type,"::",parsedResponse)
+                        let trips = parsedResponse.trips || parsedResponse;
+                        let cleanTrips=[];
+                        for(let index in trips){
+                            let currentTrip=trips[index];
+                            if(currentTrip&&currentTrip.moments){
+                                let moments=currentTrip.moments.reverse();
+                                let name=currentTrip.name;
+                                let coverIndex=0;
+                                if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
+                                if(moments.length>0){
+                                    currentTrip.moments=[];
+                                    for(let i=0;i<moments.length;i++){
+                                        if(moments[i].type==='image')currentTrip.moments.push(moments[i]);
+                                        if(currentTrip.coverMoment&&moments[i].id==currentTrip.coverMoment.id){
+                                            coverIndex=i;
+                                        }
+                                    }
+
+                                    moveArrayPos(currentTrip.moments,coverIndex,0);
+                                    cleanTrips.push(currentTrip);
+                                }
+                            }else{
+                                cleanTrips.push(currentTrip);
+                            }
+                        }
+
+
+
                         switch(type){
-                            case "user":
+                            case "featured-profiles":
                             case "moment":
                             case "trip":
-                            case "location":
-                            case "featured-profiles":
-                            case "profile":
                             case "map-search":
+                            case "map-search-classic":
                                 fulfill({data:parsedResponse, page, type});
                             break;
-
-
+                            case "user":
+                            case "location":
+                            case "profile":
+                                fulfill({data:cleanTrips, page, type});
+                            break;
                             case "suitcase-list":
                             case "single-suitcase-feed":
                             case "feed":
-                                let cleanTrips=[];
-                                for(let index in trips){
-                                    let moments=trips[index].moments.reverse();
-                                    let name=trips[index].name;
-                                    if(name.indexOf("Trip to ")>-1)trips[index].name= name.split("Trip to ")[1];
-                                    if(moments.length>0){
-                                        trips[index].moments=[];
-                                        for(let i=0;i<moments.length;i++){
-                                            if(moments[i].type==='image')trips[index].moments.push(moments[i]);
-                                        }
-                                        cleanTrips.push(trips[index]);
-                                    }
-                                }
-
-
                                 fulfill({trips:cleanTrips, page, type});
                             break;
                             case "search":
@@ -335,3 +347,20 @@ export function udpateFeed(feedData){
         feedData
     }
 }
+
+export function moveArrayPos(arr,old_index, new_index) {
+    while (old_index < 0) {
+        old_index += arr.length;
+    }
+    while (new_index < 0) {
+        new_index += arr.length;
+    }
+    if (new_index >= arr.length) {
+        var k = new_index - arr.length;
+        while ((k--) + 1) {
+            arr.push(undefined);
+        }
+    }
+    arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+    return arr; // for testing purposes
+};

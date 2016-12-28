@@ -12,7 +12,7 @@ export default class SimpleButton extends React.Component {
     static propTypes = {
         text: React.PropTypes.string,
         onPress: React.PropTypes.func,
-        icon: React.PropTypes.string
+        icon: React.PropTypes.string,
     }
 
     static defaultProps={
@@ -41,7 +41,7 @@ export default class SimpleButton extends React.Component {
                     customStyle.height=12;
                 break;
             }
-            return <Image style={[styles.buttonIcon,customStyle]} resizeMode="contain" source={image} />
+            return <Image style={[styles.buttonIcon,customStyle,{opacity:this.props.disabled?.5:1}]} resizeMode="contain" source={image} />
         }
 
         return null;
@@ -50,9 +50,9 @@ export default class SimpleButton extends React.Component {
     render () {
         return (
                 <TouchableWithoutFeedback disabled={this.props.disabled} style={[this.props.stateStyle]} onPress={this.props.onPress}>
-                    <Animated.View style={[styles.button, this.props.style,{opacity:this.props.disabled?.5:this.props.style?this.props.style.opacity:1}]} >
+                    <Animated.View style={[styles.button, this.props.style,{}]} >
                         {this._renderIcon()}
-                        <Text style={[styles.buttonText,this.props.textStyle]}>{this.props.text && this.props.text.toUpperCase()}</Text>
+                        <Text style={[styles.buttonText,this.props.textStyle,{opacity:this.props.disabled?.6:1}]}>{this.props.text && this.props.text.toUpperCase()}</Text>
                     </Animated.View>
                 </TouchableWithoutFeedback>
         )

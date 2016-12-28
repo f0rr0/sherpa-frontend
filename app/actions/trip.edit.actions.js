@@ -185,6 +185,7 @@ export function createTrip(tripBlob,tripLocation) {
                 };
 
 
+
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");

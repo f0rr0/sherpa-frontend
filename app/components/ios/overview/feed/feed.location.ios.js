@@ -5,7 +5,7 @@ import countries from "./../../../../data/countries";
 import moment from 'moment';
 import { connect } from 'react-redux';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import {loadFeed,getFeed} from '../../../../actions/feed.actions';
+import {loadFeed,getFeed,deleteMoment} from '../../../../actions/feed.actions';
 import FeedTrip from './feed.trip.ios'
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
@@ -70,6 +70,8 @@ class FeedLocation extends Component {
         this.props.navigator.push({
             id: "tripDetailMap",
             trip,
+            regionData:this.props.trip,
+            title:this.props.trip.name,
             regionMap:true,
             sceneConfig:"right-nodrag"
         });
@@ -115,7 +117,7 @@ class FeedLocation extends Component {
                     }
 
 
-                if(page==1)this.setState({moments:organizedMoments,originalMoments:response.moments});
+                if(page==1)this.setState({moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
                 var settings=response.moments.length==0?{
                     allLoaded: true
                 }:{};
@@ -184,19 +186,19 @@ class FeedLocation extends Component {
         )
     }
 
+    resetHeaderMoment(){
+        console.log('reset header moment')
+        this.setState({headerMoment:this.state.moments[Math.floor(Math.random()*this.state.moments.length)][0]})
+    }
+
 
     _renderHeader(){
         var tripData=this.props.trip;
         var moments=this.state.moments;
         if(moments.length==0)return null
-        var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
+        //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
-        var randomMoment=moments[Math.floor(Math.random()*moments.length)][0];
-        //console.log(mapURI)
-
-        //console.log(this.state.moments);
-
-        //console.log(this.props.trip)
+        console.log('get header moment',this.state.headerMoment)
         return (
             <View style={{flex:1}}>
                 <View style={{height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
@@ -209,7 +211,12 @@ class FeedLocation extends Component {
                             onLoad={()=>{
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
-                            source={{uri:randomMoment.serviceJson.images.thumbnail.url||randomMoment.mediaUrl}}
+                            onError={(e)=>{
+                            console.log('delete ',this.state.headerMoment.id)
+                                deleteMoment(this.state.headerMoment.id);
+                                this.resetHeaderMoment();
+                            }}
+                            source={{uri:this.state.headerMoment.serviceJson?this.state.headerMoment.serviceJson.images.thumbnail.url:this.state.headerMoment.mediaUrl}}
                         >
                             <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
                         </Animated.Image>
@@ -226,7 +233,9 @@ class FeedLocation extends Component {
                             onLoad={()=>{
                                     Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
                                 }}
-                            source={{uri:randomMoment.highresUrl||randomMoment.mediaUrl}}
+                            onError={(e)=>{
+                            }}
+                            source={{uri:this.state.headerMoment.highresUrl||this.state.headerMoment.mediaUrl}}
                         />
                     </Animated.View>
 
@@ -254,10 +263,12 @@ class FeedLocation extends Component {
 
     _renderRow(rowData,sectionID,rowID){
         var index=0;
-        var items = rowData.map((item) => {moment
+        var items = rowData.map((item) => {
             if (item === null || item.type!=='image') {
                 return null;
             }
+
+            //console.log('moment',item);
 
             index++;
             return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>

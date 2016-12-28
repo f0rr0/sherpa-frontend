@@ -43,7 +43,7 @@ class EditMomentNames extends React.Component {
 
     componentDidMount(){
         //console.log(this.props.momentData)
-        this.makeCoverPhoto(1);
+        this.makeCoverPhoto(0);
     }
 
     _renderHeader(){

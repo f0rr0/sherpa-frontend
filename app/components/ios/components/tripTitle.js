@@ -22,7 +22,7 @@ class TripTitle extends Component {
         let tripTitle="";
         switch(props.type){
             case 'trip':
-                tripTitle="TRIP";
+                tripTitle="WENT TO";
             break;
         }
 

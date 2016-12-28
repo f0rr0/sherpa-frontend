@@ -37,7 +37,7 @@ class FoursquareInfoBox extends Component {
 
         let venueInfo=this.props.data;
 
-        if(venueInfo){
+        if(venueInfo&&venueInfo.categories.length>0){
             var venueObject={
                 category:venueInfo.categories[0]?venueInfo.categories[0].name:"",
                 rating:venueInfo.rating||undefined,
@@ -48,6 +48,7 @@ class FoursquareInfoBox extends Component {
 
             this.setState({venue:venueObject,foursquareURL:venueInfo.canonicalUrl});
         }
+
     }
 
     getFoursquareData(query){
@@ -151,6 +152,7 @@ class FoursquareInfoBox extends Component {
                 pricing=<View></View>
             }
 
+        console.log('venue icon',this.state.venue.icon)
         return(
                 <View style={boxStyle.infoBoxContainer} >
                     <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openFoursquare()}}>
@@ -159,11 +161,10 @@ class FoursquareInfoBox extends Component {
                             <View style={foursquareStyle.venueContainer}>
                                 <View>
                                     <View style={foursquareStyle.venueIconContainer}>
-                                        <Image
-                                            style={foursquareStyle.venueIcon}
-                                            resizeMode="contain"
-                                            source={{uri:this.state.venue.icon}}
-                                        />
+                                            <Image
+                                                style={foursquareStyle.venueIcon}
+                                                resizeMode="contain"
+                                                source={{uri:this.state.venue.icon}}></Image>
                                     </View>
                                 </View>
                                 <View style={foursquareStyle.pricingContainer}>

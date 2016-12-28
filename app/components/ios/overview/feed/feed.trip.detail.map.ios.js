@@ -18,9 +18,15 @@ class TripDetailMap extends Component{
     onZoomChange(region){
         if(this.props.regionMap){
             var reqBody={
+                "type": this.props.regionData.type,
+                "country": this.props.regionData[this.props.regionData.type],
                 "limit": 50,
-                "bbox": [region.longitude-region.longitudeDelta/2,region.latitude-region.latitudeDelta/2,region.longitude+region.longitudeDelta/2,region.latitude+region.latitudeDelta/2]
+                "bbox": {
+                    "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+                    "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+                }
             };
+
 
             //console.log('get map momnets');
             getFeed(reqBody,-1,'map-search').then((response)=>{

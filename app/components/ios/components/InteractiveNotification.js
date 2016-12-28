@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, View, Animated, Image } from 'react-native'
+import { TouchableOpacity, Text, View, Animated, Image,TouchableWithoutFeedback } from 'react-native'
 import notificationStyles from './styles/interactiveNotificationStyle'
 import { Fonts, Colors } from '../../../Themes/'
 
@@ -34,13 +34,14 @@ export default class InteractiveNotification extends React.Component {
 
     render () {
         return (
-
-            <TouchableOpacity onPress={this.hide.bind(this)} style={[notificationStyles.errorContainer,{backgroundColor:'red',marginTop:this.state.offsetTop}]}>
-                <Animated.View style={[notificationStyles.errorContainer,{backgroundColor:this.props.success?Colors.highlight:Colors.error}]}>
-                    <Image resizeMode="contain" style={notificationStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
-                    <Text style={notificationStyles.errorMessage}>{this.props.notificationMessage.toUpperCase()}</Text>
-                </Animated.View>
-            </TouchableOpacity>
+            <Animated.View style={[notificationStyles.errorContainer,{backgroundColor:'red',marginTop:this.state.offsetTop}]}>
+                <TouchableWithoutFeedback onPress={this.hide.bind(this)}>
+                    <View style={[notificationStyles.errorContainer,{backgroundColor:this.props.success?Colors.highlight:Colors.error}]}>
+                        <Image resizeMode="contain" style={notificationStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
+                        <Text style={notificationStyles.errorMessage}>{this.props.notificationMessage.toUpperCase()}</Text>
+                    </View>
+                </TouchableWithoutFeedback>
+            </Animated.View>
         )
     }
 }

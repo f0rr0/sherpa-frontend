@@ -9,6 +9,7 @@ import React, { Component } from 'react';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import styles from './styles/headerStyle'
+import countries from './../../../data/countries'
 
 class Header extends Component {
     constructor(props) {
@@ -46,7 +47,17 @@ class Header extends Component {
 
     render() {
 
-        var title=this.state.routeName.substring(0,30);
+        let title={name:this.state.routeName};
+
+        let country = countries.filter(function(country) {
+            return country["alpha-2"] === title.name;
+        })[0];
+
+        if(!country)country={name:title.name};
+        let countryOrState=(title.name.toUpperCase()==="US")?title.state:country.name;
+
+
+        title=countryOrState.substring(0,30);
         if(this.state.routeName.length>30)title+="...";
         title=title.trim().toUpperCase();
 
@@ -63,7 +74,7 @@ class Header extends Component {
         var topShadow=this.state.settings.topShadow?<Image style={{position:'absolute',top:0,left:0,width:windowSize.width,height:140}} resizeMode="cover" source={require('../../../Images/shadow-top.png')}></Image>:null;
 
         return (
-            <View ref="navigation" style={[styles.navigationContainer,{backgroundColor:this.state.settings.opaque?'white':'transparent'}]}>
+            <View ref="navigation" style={[styles.navigationContainer,{backgroundColor:this.state.settings.opaque?'white':'transparent'},this.props.style]}>
                 {topShadow}
                 {backButton}
                 <Text style={[{color:this.state.settings.color},styles.navigationTitle]}>{title}</Text>

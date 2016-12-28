@@ -88,6 +88,8 @@ class EditTripName extends React.Component {
 
                     //console.log('start date',startDate);
                     //console.log('end date',endDate);
+
+
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {

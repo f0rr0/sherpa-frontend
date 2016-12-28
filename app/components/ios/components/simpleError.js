@@ -1,5 +1,5 @@
 import React from 'react'
-import { TouchableOpacity, Text, View, Animated, Image } from 'react-native'
+import { TouchableOpacity, Text, View, Animated, Image,TouchableWithoutFeedback } from 'react-native'
 import errorStyles from './styles/simpleErrorStyle'
 
 export default class SimpleError extends React.Component {
@@ -33,12 +33,14 @@ export default class SimpleError extends React.Component {
 
     render () {
         return (
-        <TouchableOpacity onPress={this.hide.bind(this)} style={[errorStyles.errorContainer,{marginTop:this.state.offsetTop}]}>
-            <Animated.View style={errorStyles.errorContainer}>
-                <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
-                <Text style={errorStyles.errorMessage}>{this.props.errorMessage.toUpperCase()}</Text>
+            <Animated.View style={[errorStyles.errorContainer,{top:this.state.offsetTop}]}>
+            <TouchableWithoutFeedback onPress={this.hide.bind(this)} style={[errorStyles.errorContainer]}>
+                <View style={errorStyles.errorContainer}>
+                    <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
+                    <Text style={errorStyles.errorMessage}>{this.props.errorMessage.toUpperCase()}</Text>
+                </View>
+            </TouchableWithoutFeedback>
             </Animated.View>
-        </TouchableOpacity>
         )
     }
 }

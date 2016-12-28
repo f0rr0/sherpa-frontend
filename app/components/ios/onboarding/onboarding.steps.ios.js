@@ -227,7 +227,7 @@ class OnboardingSteps extends Component {
                                  }}/>
                              </View>
                              <View style={{position:"absolute",top:130,flex:1,width:windowSize.width*.8,left:windowSize.width*.1}}>
-                                <Text style={styles.textStyleNormal}>IS THIS YOUR HOMETOWN?</Text>
+                                <Text style={styles.textStyleNormal}>{"Is this your\nhome base?".toUpperCase()}</Text>
                                 <Text style={[styles.textStyleNormal,{fontSize:9,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
                              </View>
                          </View>
@@ -240,8 +240,8 @@ class OnboardingSteps extends Component {
                         backgroundImage={require('./../../../Images/onboarding-notification.png')}
                         continueButton={
                             <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
-                                <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#bcbec4'}]} onPress={this._onRegister.bind(me)} text="maybe later"></SimpleButton>
-                                <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(me)} text="ok got it"></SimpleButton>
+                                <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#2E2F31'}]} onPress={this._onRegister.bind(me)} text="skip"></SimpleButton>
+                                <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(me)} text="enable"></SimpleButton>
                             </View>
                         }
                     />

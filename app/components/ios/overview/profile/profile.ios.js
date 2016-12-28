@@ -113,6 +113,10 @@ class OwnUserProfile extends React.Component {
         })
     }
 
+    refreshCurrentScene(){
+        this.refresh();
+    }
+
     refresh(){
         this.ready=false;
         this._onFetch();
