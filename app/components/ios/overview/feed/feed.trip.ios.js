@@ -218,6 +218,7 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
+        console.log('trip data:: ',this.props.trip);
     }
 
     render(){

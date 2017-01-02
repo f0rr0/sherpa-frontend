@@ -103,6 +103,7 @@ class OwnUserProfile extends React.Component {
                 if(parsedResponse.scrapeState!=='completed'){
                     this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
                 }else if(parsedResponse.scrapeState=='completed'){
+                    this.isRescraping=false;
                     clearTimeout(this.checkScrapeTimeout);
                     setTimeout(()=> {
                         this.ready=false;
@@ -135,7 +136,6 @@ class OwnUserProfile extends React.Component {
 
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
-        console.log('get feed')
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
             callback(response.data);
             this.setState({trips:response.data})
@@ -234,8 +234,7 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderHeader(){
-        if(Object.keys(this.state.trips).length==0)return;
-        var trips=this.state.trips?this.state.trips["1"]:[];
+        var trips=this.state.trips;
         var moments=0;
         if(trips){
             for(var i=0;i<trips.length;i++){
@@ -244,9 +243,10 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
+        console.log(trips.length)
         var status=!this.isRescraping?
-            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:300,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,marginTop:400,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
+            <View style={{opacity:trips.length>0?0:1,justifyContent: 'center', height:400,position:'absolute',top:0,left:0,width:windowSize.width,alignItems: 'center'}}>
+                <Text style={{color:"#bcbec4",width:250,marginTop:300,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
             </View>:
             <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
                 <View style={{flex:1,justifyContent:'center',height:50,marginTop:300,width:50,alignItems:'center'}}>

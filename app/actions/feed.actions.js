@@ -204,6 +204,9 @@ export function getFeed(query,page=1,type='') {
                 switch(type){
                     case 'map-search':
                     case 'map-search-classic':
+                        //console.log('map search :: ',type);
+                        //console.log('search content :: ',searchBody);
+
                         sherpaHeaders.append("Content-Type", "application/json");
                         reqBody={
                             method: 'post',
@@ -213,6 +216,9 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case 'location':
                     case 'search-places':
+                        //console.log('other search :: ',type);
+                        //console.log('search content :: ',searchBody);
+
                         sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                         reqBody={
                             method: 'post',

@@ -122,6 +122,8 @@ class FeedLocation extends Component {
                     allLoaded: true
                 }:{};
 
+                console.log(organizedMoments)
+
                 callback(organizedMoments,settings);
             }
         })
@@ -187,7 +189,7 @@ class FeedLocation extends Component {
     }
 
     resetHeaderMoment(){
-        console.log('reset header moment')
+        //console.log('reset header moment')
         this.setState({headerMoment:this.state.moments[Math.floor(Math.random()*this.state.moments.length)][0]})
     }
 
@@ -198,7 +200,7 @@ class FeedLocation extends Component {
         if(moments.length==0)return null
         //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
-        console.log('get header moment',this.state.headerMoment)
+        //console.log('get header moment',this.state.headerMoment)
         return (
             <View style={{flex:1}}>
                 <View style={{height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
@@ -212,7 +214,7 @@ class FeedLocation extends Component {
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
                             onError={(e)=>{
-                            console.log('delete ',this.state.headerMoment.id)
+                            //console.log('delete ',this.state.headerMoment.id)
                                 deleteMoment(this.state.headerMoment.id);
                                 this.resetHeaderMoment();
                             }}
