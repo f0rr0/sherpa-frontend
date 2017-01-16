@@ -18,13 +18,13 @@ Animated
 import React, { Component } from 'react';
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
-
+import {updateUserData,storeUser} from '../../../actions/user.actions'
 
 var styles = StyleSheet.create({
     listItemContainer:{
         flex:1,
         marginBottom:10,
-        alignItems:"stretch",
+        alignItems:"stretch"
     }
 });
 
@@ -34,7 +34,8 @@ class MomentRow extends Component{
         this.state={
             suitcased:props.tripData.suitcased||props.isSuitcased,
             available:true,
-            loadedImageOpacity:new Animated.Value(0)
+            loadedImageOpacity:new Animated.Value(0),
+            tooltipOpacity:new Animated.Value(1)
         }
 
     }
@@ -44,12 +45,20 @@ class MomentRow extends Component{
 
     suiteCaseTrip(){
         this.setState({suitcased:true});
+        this.hideTooltip();
+
         addMomentToSuitcase(this.props.tripData.id);
     }
 
     unSuiteCaseTrip(){
         this.setState({suitcased:false});
         removeMomentFromSuitcase(this.props.tripData.id);
+    }
+
+    hideTooltip(){
+        Animated.timing(this.state.tooltipOpacity,{toValue:0,duration:100}).start();
+        this.props.dispatch(updateUserData({usedSuitcase:true}))
+        this.props.dispatch(storeUser())
     }
 
     showTripDetail(momentID){
@@ -72,13 +81,15 @@ class MomentRow extends Component{
         var tripData = this.props.tripData;
         var imageMargin=10;
         var baseWidth=(this.props.containerWidth - (imageMargin*(this.props.itemsPerRow-1)) ) / this.props.itemsPerRow;
+        const tooltip=this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
+
         return(
             this.state.available?
 
                 <View style={[styles.listItemContainer,{width:baseWidth,height:baseWidth,marginRight:this.props.itemsPerRow>1&&this.props.itemRowIndex<this.props.itemsPerRow?imageMargin:0,marginBottom:50,position:'relative'}]}>
 
                 <TouchableOpacity
-
+                    activeOpacity={1}
                     style={{...StyleSheet.absoluteFillObject,opacity:1}}
                     onPress={()=>{
                                 this.showTripDetail(tripData.id);
@@ -145,6 +156,7 @@ class MomentRow extends Component{
                                     source={require('./../../../Images/suitcase-tapped.png')}
                                 />
                             </TouchableOpacity>
+                        {tooltip}
                     </View>
             </View>
                :<View></View>

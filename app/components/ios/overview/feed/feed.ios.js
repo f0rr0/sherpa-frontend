@@ -187,7 +187,7 @@ class Feed extends Component {
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
@@ -199,7 +199,7 @@ class Feed extends Component {
             break;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9},topRightImage:require('./../../../../Images/icon-settings.png')})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "settings":
                 showNav=true;

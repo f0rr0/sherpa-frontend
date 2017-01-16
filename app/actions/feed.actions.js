@@ -256,6 +256,7 @@ export function getFeed(query,page=1,type='') {
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
                         let parsedResponse=JSON.parse(rawSherpaResponseFinal);
+                        //console.log(parsedResponse);
                         let trips = parsedResponse.trips || parsedResponse;
                         let cleanTrips=[];
                         for(let index in trips){

@@ -62,7 +62,7 @@ class Header extends Component {
         title=title.trim().toUpperCase();
 
         var backButton=this.state.settings.hideBack?null:
-            <TouchableOpacity underlayColor="#ececec" style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>
+            <TouchableOpacity style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>
                 <Image style={[styles.navigationBackImage,this.state.settings.topLeftImageStyle]} source={this.state.topLeftImage} resizeMode="contain" />
             </TouchableOpacity>;
 

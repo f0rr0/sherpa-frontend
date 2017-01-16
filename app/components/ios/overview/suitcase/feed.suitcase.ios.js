@@ -21,7 +21,7 @@ import {
     Text,
     Image,
     Animated,
-    TouchableHighlight
+    TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -206,7 +206,7 @@ class Suitecase extends React.Component {
         var countryOrState=(tripData.name.toUpperCase()==="US")?tripData.state:country.name;
 
         return (
-            <TouchableHighlight style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
+            <TouchableOpacity activeOpacity={1} style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
                 <View style={styles.listItem}>
                     <Animated.Image
                         style={[styles.listItemImage,{opacity:this.state.smallImageOpacity}]}
@@ -238,7 +238,7 @@ class Suitecase extends React.Component {
                         <Text style={styles.suitcaseCopyLarge}>{countryOrState.toUpperCase()}</Text>
                     </Animated.View>
                 </View>
-            </TouchableHighlight>
+            </TouchableOpacity>
         );
     }
 }

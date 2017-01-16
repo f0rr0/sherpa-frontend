@@ -6,6 +6,8 @@ const initialState={
     fullName:"",
     profilePicture:"",
     email:"",
+    bio:"",
+    website:"",
     serviceToken:"",
     sherpaToken:"",
     inviteCode:"xxx",
@@ -19,19 +21,25 @@ const initialState={
     whiteListed:false,
     notificationToken:"",
     isExistingLogin:false,
-    profileID:-1
+    profileID:-1,
+    usedSuitcase:false,
+    usedAddTrip:false
 };
 
 export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
             return Object.assign({}, state, {
+                usedSuitcase:       action.userData.usedSuitcase || state.usedSuitcase,
+                usedAddTrip:        action.userData.usedAddTrip || state.usedAddTrip,
                 serviceID:          action.userData.serviceID || state.serviceID,
                 sherpaID:           action.userData.sherpaID || state.sherpaID,
                 profileID:          action.userData.profileID || state.profileID,
                 fullName:           action.userData.fullName || state.fullName,
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
+                bio:                action.userData.bio || state.bio,
+                website:             action.userData.website || state.website,
                 serviceToken:       action.userData.serviceToken || state.serviceToken,
                 sherpaToken:        action.userData.sherpaToken || state.sherpaToken,
                 inviteCode:         action.userData.inviteCode || state.inviteCode,

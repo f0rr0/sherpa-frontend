@@ -237,9 +237,13 @@ class OnboardingSteps extends Component {
 
 
                     <OnboardingScreen
-                        backgroundImage={require('./../../../Images/onboarding-notification.png')}
+                        backgroundImage={require('./../../../Images/onboarding-notification_empty.png')}
                         continueButton={
                             <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
+                                <View style={{left:0,right:0,top:-250,position:'absolute',alignItems:'center'}}>
+                                    <Text style={{fontSize:33,letterSpacing:1,color:'white',fontFamily:"TSTAR",fontWeight:"800",textAlign:'center',width:300}}>SHERPA IS BETTER WITH NOTIFICATIONS</Text>
+                                    <Text style={{fontSize:12,letterSpacing:1,color:'white',fontFamily:"TSTAR",fontWeight:"600",textAlign:'center',width:300}}>WE PROMISE NOT TO BLOW UP YOUR PHONE</Text>
+                                </View>
                                 <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#2E2F31'}]} onPress={this._onRegister.bind(me)} text="skip"></SimpleButton>
                                 <SimpleButton style={[styles.buttonHalf]} onPress={this.allowNotifications.bind(me)} text="enable"></SimpleButton>
                             </View>

@@ -11,6 +11,8 @@ import MarkerMap from '../../components/MarkerMap'
 import FeaturedProfile from '../../components/featuredProfile'
 import {SherpaPlacesAutocomplete} from '../../components/SherpaPlacesAutocomplete'
 import config from '../../../../data/config';
+import dismissKeyboard from 'dismissKeyboard'
+
 const {sherpa}=config.auth[config.environment];
 import {
     StyleSheet,
@@ -57,7 +59,8 @@ class FeedList extends React.Component{
             searchbarTopOffset:new Animated.Value(snapOffset),
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
-            mapMoments:[]
+            mapMoments:[],
+            isFixed:false
         };
     }
 
@@ -217,9 +220,9 @@ class FeedList extends React.Component{
                 <View style={{position:'absolute',top:30,left:0,width:windowSize.width,alignItems:'center',zIndex:3}}>
                     <Image style={{width: 73, height: 15}} source={require('./../../../../Images/sherpa-map-logo.png')} />
                 </View>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRAVELLERS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRAVELERS</Text>
                 {this._renderFeaturedProfiles.bind(this)()}
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRIPS</Text>
             </View>
         )
     }
@@ -263,7 +266,7 @@ class FeedList extends React.Component{
 
     _renderFixedSearchBar(){
         return(
-            <Animated.View accessible={this.state.isFixed} style={{
+            <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
                         position:'absolute',
                         marginTop:this.state.inputFocusOffset,
                         top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
@@ -327,7 +330,10 @@ class FeedList extends React.Component{
                         returnKeyType:'search',
                         onChangeText:this._updateSearchInput.bind(this),
                         onFocus:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()},
-                        onBlur:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()}
+                        onBlur:()=>{
+                        Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()
+                        dismissKeyboard();
+                        }
                     }}
                     onPress={this.showTripLocation.bind(this)}
                     styles={{

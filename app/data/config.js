@@ -6,9 +6,9 @@ module.exports = {
             minTripCount:10
         }
     },
-    shareBaseURL:"http://www.trysherpa.com/share.html#",
     auth:{
             debug:{
+                shareBaseURL:"http://web.staging.trysherpa.com/",
                 instagram: {
                     endpoint:"https://api.instagram.com/",
                     client_id:"6c93234fa3544a6592b382a0a814e555",
@@ -31,6 +31,7 @@ module.exports = {
                 }
             },
             dev:{
+                shareBaseURL:"http://web.staging.trysherpa.com/",
                 foursquare:{
                     client_id:"FXV0BDXP5FOLFJKKPXYD1QPPHQF1RFKOADFMIYH2W54P5AEO",
                     client_secret:"SPB1E1WKWXKWEDRW3IP3IUQWB0LOBWFKOZI1JXGNFNRYC4SX",
@@ -49,7 +50,7 @@ module.exports = {
                     response_type_web:"token"
                 },
                 sherpa: {
-                    endpoint:"http://sherpa-api-staging.us-east-1.elasticbeanstalk.com/api/",
+                    endpoint:"http://api.staging.trysherpa.com/api/",
                     version:"v1",
                     login_uri:"/login",
                     job_uri:"/job",
@@ -58,6 +59,7 @@ module.exports = {
                 }
             },
             live:{
+                shareBaseURL:"http://share.trysherpa.com/",
                 foursquare:{
                     client_id:"FXV0BDXP5FOLFJKKPXYD1QPPHQF1RFKOADFMIYH2W54P5AEO",
                     client_secret:"SPB1E1WKWXKWEDRW3IP3IUQWB0LOBWFKOZI1JXGNFNRYC4SX",

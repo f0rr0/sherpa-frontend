@@ -304,6 +304,8 @@ var SherpaGiftedListview = React.createClass({
         return (
             <ListView
                 ref="listview"
+                keyboardDismissMode="on-drag"
+                keyboardShouldPersistTaps={false}
                 dataSource={this.state.dataSource}
                 renderRow={this.props.rowView}
                 renderSectionHeader={this.props.sectionHeaderView}

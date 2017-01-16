@@ -120,6 +120,15 @@ class PopOver extends Component {
                 <Text style={[styles.buttonCopy]}>REPORT ABUSE</Text>
             </TouchableHighlight>:null;
 
+        var settingsButton=this.props.showSettings?
+            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
+              this.props.openSettings();
+              this._setAnimation(false)
+          }}>
+                <Text style={styles.buttonCopy}>SETTINGS</Text>
+            </TouchableHighlight>:null;
+
+
         return (
             <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
                 {editTripButton}
@@ -127,6 +136,7 @@ class PopOver extends Component {
                 {shareButton}
                 {reportPhotoButton}
                 {profileSettingsButton}
+                {settingsButton}
                 {emailFeedbackButton}
                 {cancelButton}
             </Animated.View>

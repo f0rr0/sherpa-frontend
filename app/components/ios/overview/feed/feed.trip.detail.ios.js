@@ -100,6 +100,11 @@ class TripDetail extends React.Component{
 
     }
 
+
+    navActionRight(){
+        this.refs.popover._setAnimation("toggle");
+    }
+
     showTripDetail(){
         //console.log('this is trip detail');
     }
@@ -156,18 +161,19 @@ class TripDetail extends React.Component{
 
     render(){
         var momentData=this.state.momentData;
+        //console.log(momentData)
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
 
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
         var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={3}>{momentData.caption}</Text>:null;
 
-        console.log('momentData',momentData);
-        console.log('initial region',{
-            latitude: parseFloat(momentData.lat),
-            longitude: parseFloat(momentData.lng),
-            latitudeDelta: .01,
-            longitudeDelta: .01,
-        })
+        //console.log('momentData',momentData);
+        //console.log('initial region',{
+        //    latitude: parseFloat(momentData.lat),
+        //    longitude: parseFloat(momentData.lng),
+        //    latitudeDelta: .01,
+        //    longitudeDelta: .01,
+        //})
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                     <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
@@ -224,9 +230,9 @@ class TripDetail extends React.Component{
                             </MapView.Marker>
                         </MapView>
                     </View>
-                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:true}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.props.navActionRight}></Header>
+                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
                 </ScrollView>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/trip/"+momentData.trip+"/"+this.props.user.sherpaToken} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
+                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
             </View>
 
         )

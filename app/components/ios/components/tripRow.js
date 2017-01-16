@@ -5,6 +5,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+TouchableWithoutFeedback,
 Animated
 } from 'react-native';
 import React, { Component } from 'react';
@@ -64,12 +65,12 @@ class TripRow extends Component {
 
 
         return(
-        <TouchableOpacity style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
+        <TouchableOpacity activeOpacity={1} style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
             <View style={styles.listItem}>
                 <Image
                     style={[styles.imageProgressBar]}
                     resizeMode="cover"
-                    source={{uri:tripData.moments[0].serviceJson.images.thumbnail.url||tripData.moments[0].mediaUrl}}
+                    source={{uri:tripData.moments[0].serviceJson?tripData.moments[0].serviceJson.images.thumbnail.url:tripData.moments[0].mediaUrl}}
                 >
                     <View style={styles.darkener}></View>
                     <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
@@ -94,7 +95,7 @@ class TripRow extends Component {
                 <Animated.View style={[styles.imageRowContainer,{opacity:this.state.imageLoadedOpacity}]}>
 
 
-                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername+"'s "}></TripTitle>
+                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername}></TripTitle>
 
                     <View style={styles.tripDataFootnoteContainer}>
                         <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>

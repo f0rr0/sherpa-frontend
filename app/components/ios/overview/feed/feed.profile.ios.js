@@ -67,6 +67,7 @@ class FeedProfile extends React.Component {
 
         this.state= {
             trips:[],
+            headerTrips:[],
             annotations:[]
         };
 
@@ -88,6 +89,7 @@ class FeedProfile extends React.Component {
         this.itemsLoadedCallback=callback;
         getFeed(this.props.trip.owner.id,page,'profile').then((response)=>{
             this.setState({trips:response.data})
+            if(page==1)this.setState({headerTrips:response.data})
             callback(response.data);
         });
     }
@@ -128,7 +130,7 @@ class FeedProfile extends React.Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" showShare={false}></PopOver>
+                <PopOver ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.trip.owner.id}></PopOver>
 
             </View>
         )
@@ -146,17 +148,11 @@ class FeedProfile extends React.Component {
 
 
     _renderHeader(){
-        if(Object.keys(this.state.trips).length==0)return;
-        var trips=this.state.trips["1"];
-        var tripDuration=trips.length;
-        var tripS=tripDuration>1?"TRIPS":"TRIP";
+        var trips=this.state.headerTrips;
         var moments=0;
         for(var i=0;i<trips.length;i++){
             moments+=trips[i].moments.length;
         }
-        var photoOrPhotos=moments>1?"PHOTOS":"PHOTO";
-
-        var trips = this.state.trips["1"]
         var markers = [];
 
         for (var i = 0; i < trips.length; i++) {
@@ -201,7 +197,7 @@ class FeedProfile extends React.Component {
                     <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
                     <View style={{flexDirection:'column',alignItems:'center'}}>
                         <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:5}} resizeMode="contain"></Image>
-                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {photoOrPhotos}</Text>
+                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {phopoporPhotos}</Text>
                     </View>
                 </View>*/}
 

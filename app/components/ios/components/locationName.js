@@ -92,6 +92,7 @@ class LocationName extends Component{
                     placeholder='Enter photo location'
                     ref="googlesearch"
                     minLength={2} // minimum length of text to search
+                    onTapOutside={ this.moveDown.bind(this)}
                     autoFocus={false}
 
 
@@ -173,9 +174,12 @@ class LocationName extends Component{
                                                  borderBottomColor:"#e5e5e5",
                                                  borderTopColor:"#e5e5e5",
                                              },
+                                             listView:{
+                                                backgroundColor:'#FFF'
+                                             },
                                              container:{
                                                  backgroundColor:'#FFFFFF',
-                                                 //maxHeight:100,
+                                                 //maxHeight:300,
                                                  left:0,
                                                  marginTop:10
                                              },

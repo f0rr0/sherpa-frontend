@@ -119,16 +119,18 @@ class FeedTrip extends Component {
         super(props);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
 
-        const itemsPerRow=2;
+        let itemsPerRow=2;
         let organizedMoments=[];
         let data=props.trip.moments;
 
-
         if(!props.trip.organizedMoments){
+            let globalIndex=0;
             for(var i=0;i<props.trip.moments.length;i++){
-                let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+
+                let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
                 organizedMoments.push(data.slice(i, endIndex));
                 i = endIndex-1;
+                globalIndex++;
             }
             props.trip.organizedMoments=organizedMoments;
         }else{
@@ -167,7 +169,6 @@ class FeedTrip extends Component {
              * data.rotationRate.y
              * data.rotationRate.z
              **/
-            console.log(data.magneticField)
         });
 
 
@@ -218,11 +219,9 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        console.log('trip data:: ',this.props.trip);
     }
 
     render(){
-        console.log('render');
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
 
         const completeHeader=
@@ -261,7 +260,7 @@ class FeedTrip extends Component {
                             tripData:this.props.trip,
                             sceneConfig:"bottom-nodrag"
                       });
-                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.shareBaseURL+"/trip/"+this.props.trip.id+"/"+this.props.user.sherpaToken}></PopOver>
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.props.trip.id}></PopOver>
 
             </View>
         return completeHeader;
@@ -333,7 +332,7 @@ class FeedTrip extends Component {
                             onLoad={()=>{
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
-                            source={{uri:this.state.moments[0].serviceJson.images.thumbnail.url||this.state.moments[0].mediaUrl}}
+                            source={{uri:this.state.moments[0].serviceJson?this.state.moments[0].serviceJson.images.thumbnail.url:this.state.moments[0].mediaUrl}}
                         >
                             <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
                         </Animated.Image>
@@ -554,7 +553,7 @@ class FeedTrip extends Component {
             }
 
             index++;
-            return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
 
         return (

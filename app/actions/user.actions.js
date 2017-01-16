@@ -376,7 +376,7 @@ export function signupUser(){
 
             let code = event.code;
             const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
-            console.log({client_id, client_secret, grant_type, redirect_uri, code})
+            //console.log({client_id, client_secret, grant_type, redirect_uri, code})
             dispatch(updateUserSignupState("service_token_request"));
 
             fetch(endpoint+token_uri, {
@@ -388,7 +388,7 @@ export function signupUser(){
             }).then((rawServiceResponse)=>{
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
-                console.log('raw sherpa response',rawSherpaResponse)
+                //console.log('raw sherpa response',rawSherpaResponse)
                 var info=JSON.parse(rawSherpaResponse);
                 signupWithSherpa(info.access_token,info.user);
             }).catch(error => {
@@ -445,6 +445,7 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
+            //console.log(endpoint+version+login_uri,'login uri')
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -465,8 +466,10 @@ export function signupUser(){
                     jobID:sherpaResponse.jobId,
                     email,
                     fullName,
+                    bio:userData.bio,
+                    website:userData.website,
+                    profilePicture:userData.profile_picture,
                     username,
-                    profilePicture,
                     hometown,
                     serviceObject:userData,
                     whiteListed:sherpaResponse.whitelisted,

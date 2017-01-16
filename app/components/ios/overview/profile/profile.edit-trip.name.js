@@ -15,6 +15,7 @@ import SimpleButton from '../../components/simpleButton';
 import Dimensions from 'Dimensions';
 import { Fonts, Colors } from '../../../../Themes/'
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
+const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 import {AutoGrowingTextInput} from 'react-native-autogrow-textinput';
 import {createMoment,uploadMoment,getGps,createTrip,getTripLocation} from "../../../../actions/trip.edit.actions"
 import SimpleError from '../../components/simpleError';
@@ -136,19 +137,23 @@ class EditTripName extends React.Component {
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white',width:SCREEN_WIDTH,justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
-                <AutoGrowingTextInput clearTextOnFocus={true}
+            <View style={{backgroundColor:'white',width:SCREEN_WIDTH,height:SCREEN_HEIGHT,justifyContent:"center",alignItems:"center",flexDirection:"column"}}>
+                <TextInput clearTextOnFocus={true}
                            clearButtonMode="while-editing"
                            style={
                                 {
                                     fontSize:35,
+                                    backgroundColor:'white',
                                     color:"black",
                                     fontWeight:"500",
                                     fontFamily:Fonts.type.headline,
                                     marginTop:-190,
                                     textAlign:"center",
                                     letterSpacing:1,
-                                    marginBottom:10
+                                    width:SCREEN_WIDTH,
+                                    marginBottom:10,
+                                    height:50,
+                                    alignItems:"center"
                                 }
                             }
                                       maxLength={30}
@@ -158,7 +163,7 @@ class EditTripName extends React.Component {
                                       value={this.state.text}
                                       placeholder={'NAME YOUR TRIP'}
                 >
-                </AutoGrowingTextInput>
+                </TextInput>
                 <Text style={{color:"#999999",fontFamily:Fonts.type.headline,fontSize:10,letterSpacing:.5}}>EDIT YOUR TRIP NAME HERE ({this.state.remainingCharacters})</Text>
                 {this.props.navigation.default}
                 <Animated.View style={{position:'absolute',bottom:this.state.positionBottom,left:7,flex:1}}>

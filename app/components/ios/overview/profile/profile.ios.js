@@ -5,6 +5,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
+import {updateUserData,storeUser} from '../../../../actions/user.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -26,6 +27,7 @@ import {
     Image,
     TouchableHighlight,
     Linking,
+Animated,
 TouchableOpacity
 } from 'react-native';
 import React, { Component } from 'react';
@@ -77,6 +79,7 @@ class OwnUserProfile extends React.Component {
         this.state= {
             annotations:[],
             trips:[],
+            tooltipOpacity:new Animated.Value(1),
             isRescraping:false,
         };
         this.isScraping=false;
@@ -142,9 +145,22 @@ class OwnUserProfile extends React.Component {
         });
     }
 
+    hideTooltip(){
+        Animated.timing(this.state.tooltipOpacity,{duration:100,toValue:0}).start(()=>{
+            this.setState({hideTooltip:true})
+        });
+        this.props.dispatch(updateUserData({usedAddTrip:true}))
+        this.props.dispatch(storeUser())
+    }
+
     render(){
+        const tooltipTouchable=this.state.hideTooltip||this.props.user.usedAddTrip?null:
+            <TouchableOpacity onPress={this.hideTooltip.bind(this)} style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></TouchableOpacity>
+
+
         return(
         <View style={{flex:1,backgroundColor:'white'}}>
+
             <SherpaGiftedListview
                 enableEmptySections={true}
                 rowView={this._renderRow.bind(this)}
@@ -172,6 +188,8 @@ class OwnUserProfile extends React.Component {
                     actionsLabel:styles.listViewLabel
                 }}
             />
+            {tooltipTouchable}
+            <PopOver ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
         </View>
@@ -206,12 +224,23 @@ class OwnUserProfile extends React.Component {
             });
     }
 
-    navActionRight(){
+    openSettings(){
         this.props.navigator.push({
             id: "profile-settings",
             sceneConfig:"bottom-nodrag",
             hideNav:true
         });
+        this.refs.popover._setAnimation("toggle");
+    }
+    navActionRight(){
+        //this.props.navigator.push({
+        //    id: "profile-settings",
+        //    sceneConfig:"bottom-nodrag",
+        //    hideNav:true
+        //});
+
+        this.refs.popover._setAnimation("toggle");
+
     }
 
     navActionLeft(){
@@ -243,7 +272,6 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
-        console.log(trips.length)
         var status=!this.isRescraping?
             <View style={{opacity:trips.length>0?0:1,justifyContent: 'center', height:400,position:'absolute',top:0,left:0,width:windowSize.width,alignItems: 'center'}}>
                 <Text style={{color:"#bcbec4",width:250,marginTop:300,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
@@ -254,6 +282,11 @@ class OwnUserProfile extends React.Component {
                 </View>
                 <Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
             </View>;
+
+        const tooltip=!this.props.user.usedAddTrip?
+                <TouchableOpacity style={{position:'absolute',left:5,top:50}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image></TouchableOpacity>
+            : null;
+
 
 
         return (
@@ -268,14 +301,16 @@ class OwnUserProfile extends React.Component {
                         <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.hometown}</Text>
 
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject.profile.serviceBio}</Text>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.bio}</Text>
                         </Hyperlink>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.serviceObject["website"]}</Text>
+                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.website}</Text>
                         </Hyperlink>
                     </View>
                     {status}
                 </View>
+                {tooltip}
+
 
                 {this.props.navigation.default}
             </View>

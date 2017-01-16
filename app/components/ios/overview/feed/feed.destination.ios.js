@@ -86,10 +86,12 @@ class FeedDestination extends Component {
         let data=props.trip.moments;
 
         if(!props.trip.organizedMoments){
+            let globalIndex=0;
             for(var i=0;i<props.trip.moments.length;i++){
-                let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+                let endIndex=Math.random()>.5||globalIndex==0?1+i:itemsPerRow+i;
                 organizedMoments.push(data.slice(i, endIndex));
                 i = endIndex-1;
+                globalIndex++;
             }
             props.trip.organizedMoments=organizedMoments;
         }else{
@@ -141,7 +143,7 @@ class FeedDestination extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareURL={config.shareBaseURL+"/suitcase/"+this.props.trip.id+"-"+this.props.user.sherpaID+"/"+this.props.user.sherpaToken}></PopOver>
+                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"suitcases/"+this.props.trip.id}></PopOver>
 
             </View>
         )

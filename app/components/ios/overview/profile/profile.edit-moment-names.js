@@ -109,7 +109,6 @@ class EditMomentNames extends React.Component {
     render(){
         return(
             <View style={{backgroundColor:'white'}}>
-
                 {/* //error message here */}
 
                 <PagedScrollView
@@ -121,6 +120,7 @@ class EditMomentNames extends React.Component {
                     snapToInterval={CARD_WIDTH + CARD_MARGIN*2}
                     snapToAlignment="start"
                     contentContainerStyle={styles.content}
+                    keyboardShouldPersistTaps={true}
                     showsHorizontalScrollIndicator={false}
                     onPageChange={this.handlePageChange.bind(this)}
                 >

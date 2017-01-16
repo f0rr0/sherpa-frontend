@@ -46,6 +46,8 @@ class FeedLocation extends Component {
             headerPreviewLoadedOpacity:new Animated.Value(0),
             headerLoadedOpacity:new Animated.Value(0),
         }
+
+        //console.log('location props',props)
     }
 
     componentDidMount(){
@@ -109,11 +111,12 @@ class FeedLocation extends Component {
                 const itemsPerRow=2;
                 let organizedMoments=[];
                 let data=response.moments;
-
+                    let globalIndex=0;
                     for(var i=0;i<data.length;i++){
-                        let endIndex=Math.random()>.5?itemsPerRow+i:1+i;
+                        let endIndex=Math.random()>.5||globalIndex==0?1+i:itemsPerRow+i;
                         organizedMoments.push(data.slice(i, endIndex));
                         i = endIndex-1;
+                        globalIndex++;
                     }
 
 
@@ -122,7 +125,7 @@ class FeedLocation extends Component {
                     allLoaded: true
                 }:{};
 
-                console.log(organizedMoments)
+                //console.log(organizedMoments)
 
                 callback(organizedMoments,settings);
             }
@@ -183,7 +186,7 @@ class FeedLocation extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.shareBaseURL+"/location/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
+                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
             </View>
         )
     }
