@@ -50,6 +50,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
 
 
 
+
             let reqBody=searchBody?{
                 method:'post',
                 headers:sherpaHeaders,
@@ -200,6 +201,8 @@ export function getFeed(query,page=1,type='') {
                 let finalToken=user?user.sherpaToken:sherpaToken;
                 let reqBody;
 
+                //console.log(finalToken);
+
                 sherpaHeaders.append("token", finalToken);
                 switch(type){
                     case 'map-search':
@@ -218,12 +221,12 @@ export function getFeed(query,page=1,type='') {
                     case 'search-places':
                         //console.log('other search :: ',type);
                         //console.log('search content :: ',searchBody);
+                        //console.log('search content :: ',encodeQueryData(searchBody));
 
-                        sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
                         reqBody={
                             method: 'post',
                             headers: sherpaHeaders,
-                            body: encodeQueryData(searchBody)
+                            body: JSON.stringify(searchBody)
                         }
 
                     break;
@@ -238,13 +241,15 @@ export function getFeed(query,page=1,type='') {
 
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
+                        //console.log('raw response',rawSherpaResponse)
                         switch (rawSherpaResponse.status) {
                             case 200:
-                            case 500:
                                 return rawSherpaResponse.text()
                             break;
+                            case 500:
                             case 400:
-                                return '{}';
+                                //console.log('reject reject reject')
+                                reject();
                             break;
                             case 401:
                                 store.delete('user').then(()=>{
@@ -285,6 +290,7 @@ export function getFeed(query,page=1,type='') {
 
 
 
+                        if(type=='feed')console.log('feed',parsedResponse)
                         switch(type){
                             case "featured-profiles":
                             case "moment":
@@ -320,7 +326,7 @@ export function getFeed(query,page=1,type='') {
                             break;
 
                         }
-                    }).catch((err)=>console.log(err))
+                    }).catch((err)=>console.log('err',err))
             })
     });
 }

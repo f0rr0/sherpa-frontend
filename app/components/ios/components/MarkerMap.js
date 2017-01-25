@@ -7,6 +7,10 @@ import StickyHeader from './stickyHeader';
 import Header from './header'
 import SherpaMapMarker from './SherpaMapMarker';
 import ReactTransitionGroup  from 'react-addons-transition-group';
+import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
+
+
 import {
     StyleSheet,
     View,
@@ -27,15 +31,28 @@ class TripDetailMap extends Component{
 
     constructor(props){
         super(props);
+        let initialRegion=props.initialRegion;
+        if(props.moments.length==1){
+            initialRegion =
+            {
+                latitude: parseFloat(props.moments[0].lat),
+                longitude: parseFloat(props.moments[0].lng),
+                latitudeDelta: 2.5,
+                longitudeDelta: 2.5
+            }
+        }
+
+
         this.state={
-            region:null,
-            markers:[],
-            markerScale:new Animated.Value(1)
+            markers:this.recluster(),
+            markerScale:new Animated.Value(1),
+            region:initialRegion,
+            mapType:'default',
+            changeState:'never',
+            initialRegion:initialRegion,
+            locator:false
         };
-
-        this.recluster()
-
-
+        this.isLeaving=false;
     }
 
     componentDidMount(){
@@ -49,19 +66,13 @@ class TripDetailMap extends Component{
             this.showMarkers().start()
         }
 
-        this.map.fitToCoordinates(this.markers, {
-            edgePadding: DEFAULT_PADDING
-        });
-
-
-        if(this.props.moments.length==1){
-            this.setState({initialRegion:{
-                latitude: parseFloat(this.props.moments[0].lat),
-                longitude: parseFloat(this.props.moments[0].lng),
-                latitudeDelta: 2.5,
-                longitudeDelta: 2.5,
-            }})
+        if(!this.region){
+            this.map.fitToCoordinates(this.markers, {
+                edgePadding: DEFAULT_PADDING
+            });
         }
+
+
     }
 
     recluster(){
@@ -78,24 +89,60 @@ class TripDetailMap extends Component{
             });
         }
 
+
         this.clusters = supercluster({
             radius: 60,
             maxZoom: 16
         });
         this.clusters.load(markers);
         this.markers=markers;
-        //console.log('did re-cluster',markers);
         return markers
     }
 
-    componentDidUpdate(){
+    componentDidUpdate(prevProps,prevState){
+        if(this.state.changeState=='first'&&prevState.changeState=='never'){
+            this.updatePins();
+        }
+
+        if(this.region&&this.getZoomLevel(this.region)!==this.state.zoomLevel){
+            this.props.zoomChanged(this.state.zoomLevel);
+        }
     }
 
-    _regionUpdated(region=this.state.region){
-        //console.log('region updated',region)
+    componentWillUnmount(){
+        this.isLeaving=true;
+    }
+
+    _regionUpdated(region){
+        if(this.isLeaving)return;
+        let changeState;
+        if(this.state.changeState=='never'){
+            this.props.loadFromRegion(region)
+            this.updatePins(region);
+            changeState='first';
+        }else{
+            changeState='changed';
+            this.props.regionChanged(region);
+            this.updatePins(region);
+        }
+
+        this.region=region;
+        this.setState({zoomLevel:this.getZoomLevel(region),changeState})
+    }
+
+    _onRegionChange(region) {
+    }
+
+    changeRegion(region){
+        this.map.animateToRegion(region);
+    }
+
+    updatePins(region=this.region){
         const padding = .2;
-        //const markers = this.markers;
-        //console.log('zoom level',this.getZoomLevel(region))
+        this.recluster();
+
+
+        //get clusters for area
         let markers=this.clusters.getClusters([
             region.longitude - (region.longitudeDelta * (0.5 + padding)),
             region.latitude - (region.latitudeDelta * (0.5 + padding)),
@@ -103,16 +150,14 @@ class TripDetailMap extends Component{
             region.latitude + (region.latitudeDelta * (0.5 + padding)),
         ], this.getZoomLevel(region));
 
-        var newZoomLevel=this.getZoomLevel(region);
-        if(newZoomLevel!==this.state.zoomLevel){
-            this.props.zoomChanged(region);
-        }
-
-        this.props.regionChanged(region);
-        this.setState({markers,zoomLevel:newZoomLevel,region});
+        this.setState({markers:markers});
     }
 
-    getZoomLevel(region = this.state.region) {
+    activateLocator(){
+        this.setState({locator:true})
+    }
+
+    getZoomLevel(region = this.region) {
         // http://stackoverflow.com/a/6055653
         const angle = region.longitudeDelta;
 
@@ -121,15 +166,14 @@ class TripDetailMap extends Component{
     }
 
     createMarkersForRegion() {
-        if (this.state.markers) {
-            //console.log('did render new markers',this.state.markers)
+        if (this.state.markers&&this.state.markers.length>0) {
             return this.state.markers.map((marker,i) => this.renderMarker(marker,i));
         }
         return [];
     }
 
     goToTripDetail(momentID){
-        if(!this.props.navigator)return;
+        if(!this.props.navigator||this.props.disablePins)return;
         this.props.navigator.push({
             id: "tripDetail",
             momentID,
@@ -147,13 +191,13 @@ class TripDetailMap extends Component{
 
 
     hideMarkers(){
-        return Animated.timing(this.state.markerScale, {
-            toValue: 0,
-            duration:0
+        return Animated.spring(this.state.markerScale, {
+            toValue: 0
         })
     }
 
     renderMarker(markerData,i){
+
         return(
             <SherpaMapMarker outsideScale={this.state.markerScale}  markerData={markerData} onPress={()=>{this.goToTripDetail(markerData.data.id)}} key={i}></SherpaMapMarker>
         )
@@ -161,19 +205,20 @@ class TripDetailMap extends Component{
 
 
     render(){
-
         return(
 
                 <MapView
                     style={styles.map}
-                    region={this.props.region}
+                    //region={this.region}
                     zoomEnabled={this.props.interactive}
                     scrollEnabled={this.props.interactive}
                     initialRegion={this.state.initialRegion}
                     showsPointsOfInterest={!this.props.interactive}
+                    onRegionChange={this._onRegionChange.bind(this)}
                     onRegionChangeComplete={this._regionUpdated.bind(this)}
                     ref={ref => { this.map = ref; }}
                     rotateEnabled={false}
+                    showsUserLocation={this.state.locator}
                     minDelta={this.props.minDelta}
                 >
                         {this.createMarkersForRegion()}
@@ -184,7 +229,13 @@ class TripDetailMap extends Component{
 
 var styles = StyleSheet.create({
     map: {
-        ...StyleSheet.absoluteFillObject
+        backgroundColor:'white',
+        ...StyleSheet.absoluteFillObject,
+        //left:0,
+        //top:0,
+        //position:'absolute',
+        //width:windowSize.width,
+        //height:windowSize.height
     },
 })
 
@@ -193,9 +244,11 @@ TripDetailMap.defaultProps={
     interactive:true,
     moments:[],
     hideOnInit:false,
+    mapType:'default',
     onLeave:function(){},
     zoomChanged:function(){},
-    regionChanged:function(){}
+    regionChanged:function(){},
+    loadFromRegion:function(){}
 }
 
 export default TripDetailMap;

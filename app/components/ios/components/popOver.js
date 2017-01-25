@@ -111,7 +111,7 @@ class PopOver extends Component {
             </TouchableHighlight>;
 
         var emailFeedbackButton=
-            <TouchableHighlight style={styles.button} onPress={()=>{Communications.email(['paul@trysherpa.com'], null, null, "Feedback", null)}}>
+            <TouchableHighlight  underlayColor="#ececec" style={styles.button} onPress={()=>{Communications.email(['paul@trysherpa.com'], null, null, "Feedback", null)}}>
                 <Text style={styles.buttonCopy}>FEEDBACK</Text>
             </TouchableHighlight>;
 
@@ -130,16 +130,16 @@ class PopOver extends Component {
 
 
         return (
-            <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
-                {editTripButton}
-                {deleteTripButton}
-                {shareButton}
-                {reportPhotoButton}
-                {profileSettingsButton}
-                {settingsButton}
-                {emailFeedbackButton}
-                {cancelButton}
-            </Animated.View>
+                <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
+                    {editTripButton}
+                    {deleteTripButton}
+                    {shareButton}
+                    {reportPhotoButton}
+                    {profileSettingsButton}
+                    {settingsButton}
+                    {emailFeedbackButton}
+                    {cancelButton}
+                </Animated.View>
         );
     }
 }

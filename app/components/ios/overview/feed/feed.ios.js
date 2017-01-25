@@ -40,6 +40,7 @@ import React, { Component } from 'react';
 var styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor:'white'
     },
     centeredContainer:{
         flex: 1,
@@ -64,7 +65,7 @@ const FloatFromBottom = {
     gestures: {
         pop: {
             ...Navigator.SceneConfigs.FloatFromBottom.gestures.pop,
-            edgeHitWidth: SCREEN_HEIGHT,
+            edgeHitWidth: 50,
         },
     },
 };
@@ -167,7 +168,7 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:route.id,fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
@@ -179,7 +180,7 @@ class Feed extends Component {
             break;
             case "tripDetailMap":
                 showNav=true;
-                sceneContent = <TripDetailMap regionData={route.regionData} regionMap={route.regionMap} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetailMap isFullscreen={route.isFullscreen} disablePins={route.disablePins} initialRegion={route.initialRegion} regionData={route.regionData} mapType={route.mapType} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;
@@ -265,6 +266,13 @@ class Feed extends Component {
 
     }
 
+    sceneDidEnter(route){
+        this.sceneChange(route);
+        if(this.navigator&&this.navigator.refs[this.currentRenderScene]&&this.navigator.refs[this.currentRenderScene].onDidEnter){
+            this.navigator.refs[this.currentRenderScene].onDidEnter();
+        }
+    }
+
     sceneChange(route){
 
 
@@ -289,7 +297,7 @@ class Feed extends Component {
                     sceneStyle={styles.container}
                     ref={(navigator) => { this.navigator = navigator; }}
                     renderScene={this.renderScene.bind(this)}
-                    onDidFocus={this.sceneChange.bind(this)}
+                    onDidFocus={this.sceneDidEnter.bind(this)}
                     onWillFocus={this.sceneChange.bind(this)}
                     configureScene={(route) => {
 

@@ -131,14 +131,16 @@ class Overview extends React.Component {
     }
 
     render() {
-        var tabBar =    <TabNavigator tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset}]}  sceneStyle={{paddingBottom:0}}>
+        var tabBar =    <TabNavigator titleStyle={{backgroundColor:'red'}} tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset,backgroundColor:'white',borderTopWidth:1,borderTopColor:'#EFF1F2'}]}  sceneStyle={{paddingBottom:0}}>
                             <TabNavigator.Item
+                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === PROFILE}
                                 renderIcon={() => <Image source={require('./../../../Images/icon-profil.png')} />}
                                 onPress={()=>this.updateTabTo(PROFILE)}>
                                 <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} headerProgress={this.refs.headerProgress} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
+                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === FEED}
                                 renderIcon={() => <Image style={{width:19,height:22,marginBottom:-.5}} source={require('./../../../Images/explore-icon.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>

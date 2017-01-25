@@ -233,14 +233,7 @@ class OwnUserProfile extends React.Component {
         this.refs.popover._setAnimation("toggle");
     }
     navActionRight(){
-        //this.props.navigator.push({
-        //    id: "profile-settings",
-        //    sceneConfig:"bottom-nodrag",
-        //    hideNav:true
-        //});
-
         this.refs.popover._setAnimation("toggle");
-
     }
 
     navActionLeft(){

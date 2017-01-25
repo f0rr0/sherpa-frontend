@@ -169,8 +169,8 @@ class FeedDestination extends Component {
             id: "tripDetailMap",
             trip,
             title:trip.name,
-
-            sceneConfig:"right-nodrag"
+            sceneConfig:"bottom-nodrag",
+            hideNav:true
         });
     }
 

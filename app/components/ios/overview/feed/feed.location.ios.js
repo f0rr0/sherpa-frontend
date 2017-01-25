@@ -45,6 +45,7 @@ class FeedLocation extends Component {
             originalMoments:[],
             headerPreviewLoadedOpacity:new Animated.Value(0),
             headerLoadedOpacity:new Animated.Value(0),
+            scrollY:new Animated.Value(0)
         }
 
         //console.log('location props',props)
@@ -69,13 +70,15 @@ class FeedLocation extends Component {
 
 
     showTripMap(trip){
+
         this.props.navigator.push({
             id: "tripDetailMap",
             trip,
             regionData:this.props.trip,
             title:this.props.trip.name,
-            regionMap:true,
-            sceneConfig:"right-nodrag"
+            sceneConfig:"bottom",
+            mapType:"region",
+            hideNav:true
         });
     }
 
@@ -95,7 +98,12 @@ class FeedLocation extends Component {
             req[data.type]=this.props.trip[data.type];
             searchType='search-places';
         }
+
+        //console.log('req::',req);
+        //console.log('searchType::',searchType);
+
         getFeed(req,page,searchType).then((response)=>{
+            //console.log(response)
             if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
@@ -166,10 +174,15 @@ class FeedLocation extends Component {
                     onEndReachedThreshold={1200}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     removeClippedSubviews={false}
+                    scrollEventThrottle={8}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
                     onScroll={(event)=>{
+                    Animated.event(
+                          [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                        )(event);
+
                          var currentOffset = event.nativeEvent.contentOffset.y;
                          var direction = currentOffset > this.offset ? 'down' : 'up';
                          this.offset = currentOffset;
@@ -203,10 +216,11 @@ class FeedLocation extends Component {
         if(moments.length==0)return null
         //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
+        let windowHeight=windowSize.height;
         //console.log('get header moment',this.state.headerMoment)
         return (
             <View style={{flex:1}}>
-                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:180,alignItems:'center',flex:1}} >
+                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:160,alignItems:'center',flex:1}} >
 
 
                     <View style={{position:'absolute',left:0,top:0}}>
@@ -229,11 +243,21 @@ class FeedLocation extends Component {
 
 
                     <Animated.View style={{position:'absolute',left:0,top:0,opacity:this.state.headerLoadedOpacity}}>
-                        <View
-                            style={styles.headerDarkBG}
-                        />
-                        <Image
-                            style={styles.headerImage}
+
+                        <Animated.Image
+                            style={[styles.headerImage,{
+                                transform: [,{
+                        scale: this.state.scrollY.interpolate({
+                            inputRange: [ -windowHeight, 0],
+                            outputRange: [3, 1.1],
+                             extrapolate: 'clamp'
+                        })
+                    },{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -windowHeight,0],
+                                                    outputRange: [-40, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                                }]}
                             resizeMode="cover"
                             onLoad={()=>{
                                     Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
@@ -241,7 +265,11 @@ class FeedLocation extends Component {
                             onError={(e)=>{
                             }}
                             source={{uri:this.state.headerMoment.highresUrl||this.state.headerMoment.mediaUrl}}
-                        />
+                        >
+                            <View
+                                style={styles.headerDarkBG}
+                            />
+                        </Animated.Image>
                     </Animated.View>
 
 
@@ -255,12 +283,22 @@ class FeedLocation extends Component {
                     </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'white',flex:1,position:'absolute',top:windowSize.height*.85}}>
-                    <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap({moments:this.state.originalMoments})}}>
+                    <TouchableOpacity style={styles.map} onPress={()=>{
+                    this.showTripMap({moments:this.state.originalMoments}
+                    )}}>
                         <MarkerMap interactive={false} moments={this.state.originalMoments}></MarkerMap>
                     </TouchableOpacity>
                 </View>
                 <WikipediaInfoBox isLocationView={true} type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
+                <Animated.View style={{flex:1,position:'absolute',top:0,
+                  transform: [{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -windowHeight,0],
+                                                    outputRange: [-windowHeight, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                }}>
                 {this.props.navigation.default}
+                    </Animated.View>
 
             </View>
         )
@@ -311,8 +349,8 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6 },
-    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1,backgroundColor:'black' },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width },
+    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
 
     map: {
         ...StyleSheet.absoluteFillObject

@@ -10,6 +10,7 @@ import SimpleError from '../components/simpleError';
 var windowSize=Dimensions.get('window');
 import dismissKeyboard from 'react-native-dismiss-keyboard';
 import { Fonts, Colors } from '../../../Themes/'
+import Swiper from 'react-native-swiper';
 
 
 import {
@@ -41,9 +42,8 @@ var styles = StyleSheet.create({
         height:windowSize.height
     },
     login:{
-        padding:15,
         justifyContent:'center',
-        alignItems:'center'
+        alignItems:'center',
     },
     overlay:{
         flex:1,
@@ -64,41 +64,102 @@ var styles = StyleSheet.create({
         right:0,
         left:0,
         alignItems:'center'
+    },
+    dot:{
+        width: 4,
+        height: 4,
+        borderRadius: 2,
+        marginLeft: 2,
+        marginRight: 2,
+        marginTop: 2,
+        marginBottom: 2,
+        backgroundColor:Colors.white
+    },
+    dotHover:{
+        backgroundColor: Colors.highlight
     }
 });
 
 class Login extends Component {
     constructor(props){
         super(props);
-        this.state={showError:false,isValid:false,inviteCode:"everest",email:"",inputBottomMargin: new Animated.Value(0),overlayOpacity:new Animated.Value(0),headlineOpacity:new Animated.Value(1)};
+        this.state={
+            showErrorEmail:false,
+            showErrorInvite:false,
+            isEmailValid:false,
+            isInviteValid:false,
+
+            inviteCode:"",
+            email:"",
+            deniedMessage:"You're not invited yet",
+
+            inputBottomMargin: new Animated.Value(0),
+            overlayOpacity:new Animated.Value(0),
+            headlineOpacity:new Animated.Value(1)
+        };
+
+        this.isRequest=false;
     }
 
     onSubmit = () => {
-        if(this.state.isValid){
-            this.connectWithService.bind(this)();
+
+        var validateInvite = this.isRequest?true:this.validate(this.state.inviteCode,'invite');
+        var validateEmail  = this.validate(this.state.email,'email');
+
+
+        if(validateInvite&&validateEmail){
+            this.connectWithService.bind(this)(this.isRequest);
             this.refs.emailError.hide();
-        }else{
-            this.setState({showError:true})
+            this.refs.inviteError.hide();
+            return;
+        }
+
+        if(!validateInvite){
+            this.refs.inviteError.show();
+        }
+
+        if(!validateEmail){
             this.refs.emailError.show();
         }
     }
 
-    validate = (email) =>{
-        if (this.validateEmail(email)) {
-            this.setState({email,isValid:true,showError:false})
-        }else{
-            this.setState({email,isValid:false,showError:false})
+    validate = (content,type) =>{
+        //console.log('validation function',content,'type::',type);
+        var isValid=false;
+        switch(type){
+            case 'email':
+                if (this.validateEmail(content)) {
+                    this.setState({email:content,isEmailValid:true,showErrorEmail:false})
+                    isValid=true;
+                    //console.log('set state email valid');
+                }else{
+                    //console.log('set state email invalid')
+                    this.setState({email:content,isEmailValid:false,showErrorEmail:true})
+                }
+            break;
+            case 'invite':
+                if (content.length>0) {
+                    this.setState({inviteCode:content,isInviteValid:true,showErrorInvite:false})
+                    isValid=true;
+                    //console.log('invite valid');
+                }else{
+                    this.setState({inviteCode:content,isInviteValid:false,showErrorInvite:true})
+                    //console.log('invite invalid');
+                }
+            break;
+            default:
         }
+        return isValid;
     }
 
-    connectWithService(){
+    connectWithService(isRequest){
         this.props.dispatch(updateUserDBState("waiting"));
-        this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode}));
+        this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode,intent:isRequest?"request-invite":"login"}));
         this.props.dispatch(signupUser());
     }
 
     moveUp(){
-        Animated.spring(this.state.inputBottomMargin, {toValue: 310, friction:8}).start();
+        Animated.spring(this.state.inputBottomMargin, {toValue: 260, friction:8}).start();
         Animated.spring(this.state.overlayOpacity, {toValue: .5,friction:8}).start();
         Animated.spring(this.state.headlineOpacity, {toValue: 0,friction:8}).start();
     }
@@ -116,62 +177,132 @@ class Login extends Component {
     };
 
     componentDidMount(){
-        //console.log("user:: ",this.props.user);
-        if(this.props.denied)this.refs.notInvitedError.show();
+        console.log(this.props,'login props')
+        if(this.props.denied){
+            //this.refs.loginslider.scrollBy(1)
+            this.refs.inviteError.show();
+        }
+
+        switch(this.props.user.invite){
+            case "invalid":
+                this.setState({deniedMessage:"Not a valid invite code"})
+            break;
+            case "expired":
+                this.setState({deniedMessage:"That invite code has expired"})
+            break;
+            default:
+                this.setState({deniedMessage:"A valid invite code is required"})
+        }
     }
 
     alreadyInvited(){
-            //this.refs.notInvitedError.show();
-        this.props.dispatch(updateUserData({isExistingLogin:true}));
+        this.isRequest=false;
+        this.props.dispatch(updateUserData({isExistingLogin:true,intent:"login"}));
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(signupUser());
     }
 
     render() {
         return (
-            <View style={styles.container}>
-                <Image
-                    style={styles.bg}
-                    source={require('./../../../Images/intro_bg.png')}
-                    resizeMode="cover"
-                />
-
-                <Animated.Image
-                    style={[styles.bg,{opacity:this.state.headlineOpacity}]}
-                    source={require('./../../../Images/intro_title.png')}
-                    resizeMode="contain"
-                />
-
-                <TouchableOpacity onPress={this.moveDown.bind(this)} style={styles.overlay}>
-                    <Animated.View style={[styles.overlay,{opacity:this.state.overlayOpacity,backgroundColor:'black'}]}></Animated.View>
-                </TouchableOpacity>
-
-                <View style={styles.logoContainer}>
+            <Swiper ref="loginslider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+                <View style={styles.container}>
                     <Image
-                        style={styles.logo}
-                        source={require('./../../../Images/intro_logo.png')}
+                        style={styles.bg}
+                        source={require('./../../../Images/intro_bg.png')}
+                        resizeMode="cover"
+                    />
+
+                    <Animated.Image
+                        style={[styles.bg,{opacity:this.state.headlineOpacity}]}
+                        source={require('./../../../Images/intro_title.png')}
                         resizeMode="contain"
                     />
+
+
+
+                    <TouchableOpacity onPress={this.moveDown.bind(this)} style={styles.overlay}>
+                        <Animated.View style={[styles.overlay,{opacity:this.state.overlayOpacity,backgroundColor:'black'}]}></Animated.View>
+                    </TouchableOpacity>
+
+                    <View style={styles.logoContainer}>
+                        <Image
+                            style={styles.logo}
+                            source={require('./../../../Images/intro_logo.png')}
+                            resizeMode="contain"
+                        />
+                    </View>
+
+                    <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin,flex:1}]}>
+                        <View style={{width:windowSize.width-30}}>
+
+                            <SimpleInput ref="inviteCodeInput" onStart={this.moveUp.bind(this)} onChange={(text)=>{this.validate(text,'invite')}} placeholder="Your invite code" style={{color:this.state.showErrorInvite?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
+                            <SimpleInput keyboardType='email-address' ref="emailInput" onStart={this.moveUp.bind(this)} onChange={(text)=>{this.validate(text,'email')}} placeholder="Enter your email" style={{color:this.state.showErrorEmail?Colors.error:Colors.darkPlaceholder,marginTop:13}}></SimpleInput>
+                            <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Connect with Instagram"></SimpleButton>
+                        </View>
+                        <View style={{flexDirection:"row"}}>
+                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:1,borderColor:'rgba(255,255,255,.2)',width:windowSize.width/2,marginTop:15}} onPress={()=>{this.isRequest=true;this.refs.loginslider.scrollBy(1)}}>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Request an Invite".toUpperCase()}</Text>
+                            </TouchableOpacity>
+                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderTopColor:'rgba(255,255,255,.2)',width:windowSize.width/2,marginTop:15}} onPress={()=>{this.isRequest=false;console.log('is request',this.isRequest);this.alreadyInvited.bind(this)()}}>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Login".toUpperCase()}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </Animated.View>
+
+                    <SimpleError ref="emailError" errorMessage="Valid email address is required"></SimpleError>
+                    <SimpleError ref="inviteError" errorMessage={this.state.deniedMessage}></SimpleError>
+                </View>
+                <View style={styles.container}>
+                    <Image
+                        style={styles.bg}
+                        source={require('./../../../Images/intro_bg.png')}
+                        resizeMode="cover"
+                    />
+
+                    <Animated.Image
+                        style={[styles.bg,{opacity:this.state.headlineOpacity}]}
+                        source={require('./../../../Images/intro_title.png')}
+                        resizeMode="contain"
+                    />
+
+                    <TouchableOpacity onPress={this.moveDown.bind(this)} style={styles.overlay}>
+                        <Animated.View style={[styles.overlay,{opacity:this.state.overlayOpacity,backgroundColor:'black'}]}></Animated.View>
+                    </TouchableOpacity>
+
+                    <View style={styles.logoContainer}>
+                        <Image
+                            style={styles.logo}
+                            source={require('./../../../Images/intro_logo.png')}
+                            resizeMode="contain"
+                        />
+                    </View>
+
+                    <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin,flex:1}]}>
+                        <View style={{width:windowSize.width-30,marginBottom:15}}>
+                            <SimpleInput keyboardType='email-address' ref="emailInput" onStart={this.moveUp.bind(this)} onEnd={this.moveDown.bind(this)} onChange={(text)=>{this.validate(text,'email')}} placeholder="Enter your email" style={{color:this.state.showErrorEmail?Colors.error:Colors.darkPlaceholder,marginTop:13}}></SimpleInput>
+                            <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Request an invite"></SimpleButton>
+                        </View>
+                    </Animated.View>
+                    <TouchableOpacity
+                        onPress={()=>{this.isRequest=false;this.refs.loginslider.scrollBy(-1)}}
+                        style={{position:'absolute',top:0,left:0,padding:25}}
+                    >
+
+                        <Image
+                            source={require('./../../../Images/icons/back.png')}
+                            resizeMode="cover"
+                        />
+                    </TouchableOpacity>
                 </View>
 
-                <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin,justifyContent:'center',alignItems:'center',flex:1}]}>
-                    <View style={{width:windowSize.width-30}}>
-
-                    <SimpleInput ref="emailInput" onStart={this.moveUp.bind(this)} onEnd={this.moveDown.bind(this)} onChange={(text)=>{this.validate(text)}} placeholder="Enter your email" style={{color:this.state.showError?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
-                    <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Request an invite"></SimpleButton>
-                    </View>
-                        <TouchableOpacity style={{borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}} onPress={()=>{this.alreadyInvited.bind(this)()}}>
-                            <Text style={{color:'white',marginTop:18,fontFamily:"TSTAR-bold",fontWeight:"800",fontSize:9,letterSpacing:.6,textAlign:"center"}}>I'M ALREADY INVITED</Text>
-                        </TouchableOpacity>
-                </Animated.View>
-
-                <SimpleError ref="emailError" errorMessage="Valid email address is required"></SimpleError>
-                <SimpleError ref="notInvitedError" errorMessage="You're not invited yet"></SimpleError>
-            </View>
+            </Swiper>
         );
     }
 }
 
+Login.defaultProps= {
+    denied: false,
+}
 
 
 export default Login;

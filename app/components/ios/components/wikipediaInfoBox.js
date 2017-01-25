@@ -174,16 +174,16 @@ class WikpediaInfoBox extends Component {
     }
 
     openWikipedia(){
-        Linking.openURL('http://'+this.state.wikiURL);
+        //Linking.openURL('http://'+this.state.wikiURL);
     }
 
     render() {
         var wikipedia=this.state.wikipediaDescription.length>0?
                 <View style={styles.infoBoxContainer}>
                     <Text style={styles.infoBoxTitle}>WIKIPEDIA</Text>
-                    <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openWikipedia()}}>
+                    {/*<TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openWikipedia()}}>*/}
                         <Text style={styles.infoBoxCopy}>{this.state.wikipediaDescription}</Text>
-                    </TouchableHighlight>
+                    {/*</TouchableHighlight>*/}
                 </View>
             :null;
         return(

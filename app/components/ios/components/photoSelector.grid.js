@@ -132,7 +132,6 @@ const styles = StyleSheet.create({
         marginTop: 5,
         fontWeight: 'bold',
         position:'absolute',
-        color:'red',
         top:0
     }
 });

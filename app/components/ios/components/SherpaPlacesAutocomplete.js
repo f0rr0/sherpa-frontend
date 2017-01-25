@@ -134,8 +134,11 @@ const SherpaPlacesAutocomplete = React.createClass({
             text: this.props.getDefaultValue(),
             dataSource: ds.cloneWithRows(this.buildRowsFromResults([])),
             listViewDisplayed: false,
+            uiState:'clear'
         };
     },
+
+
 
     setAddressText(address) {
         this.setState({ text: address })
@@ -145,7 +148,7 @@ const SherpaPlacesAutocomplete = React.createClass({
         var res = null;
         results=results.slice(0,4);
 
-
+        //console.log(results.length,':: resultss')
 
         if (results.length === 0 || this.props.predefinedPlacesAlwaysVisible === true) {
             res = [...this.props.predefinedPlaces];
@@ -168,6 +171,41 @@ const SherpaPlacesAutocomplete = React.createClass({
         });
 
         return [...res, ...results];
+    },
+
+    componentDidUpdate(prevProps,prevState){
+          if(this.state.uiState!==prevState.uiState){
+
+          }
+    },
+
+    _renderHelperRow(){
+        let helperRowContent=null;
+        switch(this.state.uiState){
+            case "results":
+            case "clear":
+                helperRowContent=null;
+            break;
+            case "searching":
+                helperRowContent=
+                    <View style={[defaultStyles.row, this.props.styles.row,{}]}>
+                        <Image style={{marginRight:20,marginTop:-7,width: 16, height: 16}} source={require('./../../../Images/loader@2x.gif')} />
+                        <Text style={[defaultStyles.description, this.props.styles.description,{opacity:.5,fontSize:12}]} numberOfLines={1}>
+                            Searching for {this.state.text} ...
+                        </Text>
+                    </View>
+            break;
+            case "noresults":
+                helperRowContent=
+                    <View style={[defaultStyles.row, this.props.styles.row,{alignItems:'center'}]}>
+                        <Text style={[defaultStyles.description, this.props.styles.description,{opacity:.8,fontSize:12,alignItems:'center',marginLeft:14}]} numberOfLines={1}>
+                            No results for "{this.state.text}"
+                        </Text>
+                    </View>
+            break;
+        }
+
+        return helperRowContent
     },
 
     componentWillUnmount() {
@@ -390,6 +428,11 @@ const SherpaPlacesAutocomplete = React.createClass({
 
     _requestNearby(latitude, longitude) {
         this._abortRequests();
+
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults([])),
+        });
+
         if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
             const request = new XMLHttpRequest();
             this._requests.push(request);
@@ -413,7 +456,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                         }
                     }
                     if (typeof responseJSON.error_message !== 'undefined') {
-                        console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
+                        //console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
                     }
                 } else {
                     // console.warn("mapzen places autocomplete: request could not be completed or has been aborted");
@@ -438,7 +481,16 @@ const SherpaPlacesAutocomplete = React.createClass({
 
     _request(text) {
         this._abortRequests();
-        if (text.length >= this.props.minLength) {
+
+        this._results = [];
+        this.setState({
+            dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults([])),
+        });
+
+        this.setState({uiState:'searching'});
+
+
+        if (text.length > this.props.minLength) {
             const request = new XMLHttpRequest();
             this._requests.push(request);
             request.timeout = this.props.timeout;
@@ -452,16 +504,24 @@ const SherpaPlacesAutocomplete = React.createClass({
                     // console.log(responseJSON.features[0].properties);
                     if (typeof responseJSON.features !== 'undefined') {
                         if (this.isMounted()) {
-                            this._results = responseJSON.geocoding.features;
+                            this._results = responseJSON.features;
                             this.setState({
+                                results:this._results,
                                 dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.features)),
                             });
+                            //console.log(responseJSON.features.length)
+                            if(responseJSON.features.length==0){
+                                this.setState({uiState:'noresults'});
+                            }else{
+                                this.setState({uiState:'results'});
+                            }
                         }
                     }
                     if (typeof responseJSON.error_message !== 'undefined') {
                         console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
                     }
                 } else {
+
                     // console.warn("mapzen places autocomplete: request could not be completed or has been aborted");
                 }
             };
@@ -471,11 +531,8 @@ const SherpaPlacesAutocomplete = React.createClass({
             //console.log('search query',encodeURIComponent(text))
             request.open('GET', mapzenSearch);
             request.send();
-        } else {
-            this._results = [];
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults([])),
-            });
+        }else{
+            this.setState({uiState:'clear'});
         }
     },
     _onChangeText(text) {
@@ -497,6 +554,7 @@ const SherpaPlacesAutocomplete = React.createClass({
 
     _renderLoader(rowData) {
         if (rowData.isLoading === true) {
+        //    console.log('render row loader');
             return (
                 <View
                     style={[defaultStyles.loader, this.props.styles.loader]}
@@ -583,6 +641,9 @@ const SherpaPlacesAutocomplete = React.createClass({
                     <TextInput
                         { ...userProps }
                         ref="textInput"
+                        onSubmitEditing={()=>{
+                           if(this._results.length==1) this.props.onSubmitEditing(this._results[0])
+                        }}
                         autoFocus={this.props.autoFocus}
                         style={[defaultStyles.textInput, this.props.styles.textInput]}
                         onChangeText={onChangeText ? text => {this._onChangeText(text); onChangeText(text)} : this._onChangeText}
@@ -593,6 +654,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                         clearButtonMode="always"
                     />
                 </Animated.View>
+                {this._renderHelperRow()}
                 {this._getListView()}
             </Animated.View>
         );

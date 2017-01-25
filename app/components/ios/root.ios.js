@@ -24,6 +24,7 @@ import {
 
 var styles = StyleSheet.create({
     container: {
+        backgroundColor:"black"
     }
 });
 
@@ -52,7 +53,6 @@ class Root extends Component {
     }
 
     _handleAppStateChange(currentAppState) {
-        console.log('handle app state change')
         this.setState({ currentAppState })
     }
 
@@ -103,6 +103,7 @@ class Root extends Component {
 
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+            if(this.state.currentView==='not-whitelisted')this.navigator.replace({id:"login"});
             if(this.props.user.whiteListed)return;
             this.feedStuff();
         }else if((prevState.currentView!=this.state.currentView)){

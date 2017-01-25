@@ -11,6 +11,7 @@ const initialState={
     serviceToken:"",
     sherpaToken:"",
     inviteCode:"xxx",
+    invite:"",
     username:"",
     jobID:"",
     hometown:"",
@@ -30,6 +31,7 @@ export default function userReducer(state=initialState,action){
     switch(action.type){
         case types.USER_UPDATE:
             return Object.assign({}, state, {
+                intent:             action.userData.intent || state.intent,
                 usedSuitcase:       action.userData.usedSuitcase || state.usedSuitcase,
                 usedAddTrip:        action.userData.usedAddTrip || state.usedAddTrip,
                 serviceID:          action.userData.serviceID || state.serviceID,
@@ -39,7 +41,8 @@ export default function userReducer(state=initialState,action){
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
                 bio:                action.userData.bio || state.bio,
-                website:             action.userData.website || state.website,
+                invite:             action.userData.invite || state.invite,
+                website:            action.userData.website || state.website,
                 serviceToken:       action.userData.serviceToken || state.serviceToken,
                 sherpaToken:        action.userData.sherpaToken || state.sherpaToken,
                 inviteCode:         action.userData.inviteCode || state.inviteCode,

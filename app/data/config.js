@@ -1,6 +1,6 @@
 module.exports = {
     resetUser:false,
-    environment:'live',
+    environment:'dev',
     settings:{
         parser:{
             minTripCount:10

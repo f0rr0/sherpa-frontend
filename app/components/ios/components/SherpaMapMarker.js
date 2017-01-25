@@ -75,6 +75,7 @@ class SherpaMapMarker extends Component{
                             source={{uri:markerData.data.mediaUrl}}
                             onLoad={()=>{if(!this.props.hideOnInit)this.showMarker.bind(this)().start()}}
                         ></Image>
+                        {clustercount}
                     </Animated.View>
                 </Animated.View>
             </MapView.Marker>

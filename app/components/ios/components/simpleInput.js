@@ -33,9 +33,10 @@ export default class SimpleInput extends React.Component {
         return this.state.text;
     }
 
+
     render () {
         return (
-            <TextInput clearTextOnFocus={true}
+            <TextInput clearTextOnFocus={false}
                        clearButtonMode="while-editing"
                        style={[
                             buttonStyles.button,
@@ -44,8 +45,14 @@ export default class SimpleInput extends React.Component {
                             inputStyles.inputText,
                             this.props.style
                        ]}
-                       onFocus={this.props.onStart}
-                       onBlur={this.props.onEnd}
+                       onFocus={()=>{
+                         if(this.props.onStart)this.props.onStart();
+                         if(this.state.text==this.props.placeholder)this.setState({text:""});
+                       }}
+                       onBlur={()=>{
+                        if(this.props.onEnd)this.props.onEnd();
+                        if(this.state.text=='')this.setState({text:this.props.placeholder})
+                       }}
                        onChangeText={(text) =>{this.setState({text});this.props.onChange(text)}}
                        onSubmitEditing={this.props.onSubmitEditing}
                        keyboardType={this.state.keyboardType}

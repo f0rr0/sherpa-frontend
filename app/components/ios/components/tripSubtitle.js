@@ -61,7 +61,7 @@ class TripSubtitle extends Component {
         var subTitle=[]
         let initialNode={type:tripData.type,name:tripData.name}
         initialNode[tripData.type]=tripData[tripData.type];
-        subTitle.push(initialNode);
+        //subTitle.push(initialNode);
 
         if(isTripNameContinent){
             //subTitle="";

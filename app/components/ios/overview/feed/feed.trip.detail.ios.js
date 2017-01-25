@@ -16,6 +16,7 @@ import { Fonts, Colors } from '../../../../Themes/'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import Header from '../../components/header'
 import MapView from 'react-native-maps'
+import MarkerMap from '../../components/MarkerMap'
 import {
     StyleSheet,
     View,
@@ -23,6 +24,7 @@ import {
     Image,
     ScrollView,
     TouchableHighlight,
+Animated,
 Linking,
 TouchableOpacity
 } from 'react-native';
@@ -76,7 +78,8 @@ class TripDetail extends React.Component{
         this.state= {
             suitcased: props.isSuitcased?true:(props.trip?props.trip.suitcased:false),
             momentData: null,
-            routeName:"TRIP"
+            routeName:"TRIP",
+            scrollY:new Animated.Value(0)
         }
 
 
@@ -88,18 +91,21 @@ class TripDetail extends React.Component{
             })
         })
 
-
     }
 
     componentDidMount(){
-        //checkSuitcased(this.props.momentID).then((res)=>{
-        //    this.setState({
-        //        suitcased:res
-        //    })
-        //})
-
     }
 
+    showTripMap(momentData){
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            trip:{moments:[momentData]},
+            title:momentData.venue,
+            sceneConfig:"bottom-nodrag",
+            hideNav:true,
+            disablePins:true
+        });
+    }
 
     navActionRight(){
         this.refs.popover._setAnimation("toggle");
@@ -163,17 +169,9 @@ class TripDetail extends React.Component{
         var momentData=this.state.momentData;
         //console.log(momentData)
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
-
+        let windowHeight=windowSize.height;
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
         var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={3}>{momentData.caption}</Text>:null;
-
-        //console.log('momentData',momentData);
-        //console.log('initial region',{
-        //    latitude: parseFloat(momentData.lat),
-        //    longitude: parseFloat(momentData.lng),
-        //    latitudeDelta: .01,
-        //    longitudeDelta: .01,
-        //})
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                     <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
@@ -194,10 +192,27 @@ class TripDetail extends React.Component{
             </View>:null;
         return (
             <View style={{flex:1}}>
-                <ScrollView style={{flex:1,backgroundColor:'white'}}>
+                <ScrollView  scrollEventThrottle={8} style={{flex:1,backgroundColor:'white'}} onScroll={(event)=>{
+                 Animated.event(
+                          [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                        )(event);
+                }}>
 
-                    <Image
-                        style={{height:windowSize.width,width:windowSize.width }}
+                    <Animated.Image
+                        style={[{height:windowSize.width,width:windowSize.width },
+                        {
+                                transform: [,{
+                        scale: this.state.scrollY.interpolate({
+                            inputRange: [ -windowSize.width, 0],
+                            outputRange: [3, 1.1],
+                             extrapolate: 'clamp'
+                        })
+                    },{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -windowSize.width,0],
+                                                    outputRange: [-40, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                                }]}
                         resizeMode="cover"
                         source={{uri:momentData.mediaUrl}}
                     />
@@ -208,30 +223,12 @@ class TripDetail extends React.Component{
                     <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
-                    <View style={{height:250,left:0,flex:1}} >
-                        <MapView
-                            style={styles.map} ref={ref => { this.map = ref; }}
-                            scrollEnabled={false}
-                            zoomEnabled={false}
-                            initialRegion={{
-                                    latitude: parseFloat(momentData.lat),
-                                    longitude: parseFloat(momentData.lng),
-                                    latitudeDelta: .01,
-                                    longitudeDelta: .01,
-                                }}
-                        >
-                            <MapView.Marker onPress={()=>{}} coordinate={{latitude:parseFloat(momentData.lat),longitude:parseFloat(momentData.lng)}}>
-                                <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
-                                    <Image
-                                        style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
-                                        source={{uri:momentData.mediaUrl}}
-                                    ></Image>
-                                </View>
-                            </MapView.Marker>
-                        </MapView>
-                    </View>
-                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
+                    <TouchableOpacity style={{height:250,left:0,flex:1}}  onPress={()=>{this.showTripMap(momentData)}}>
+                        <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
+                    </TouchableOpacity>
+
                 </ScrollView>
+                    <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
                 <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
             </View>
 

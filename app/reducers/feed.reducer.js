@@ -14,7 +14,6 @@ const initialState={
 
 
 export default function feedReducer(state=initialState,action){
-    //console.log('feed reducer',action.type);
     switch(action.type){
         case types.CLEAR_FEED:
             return Object.assign({}, state, {

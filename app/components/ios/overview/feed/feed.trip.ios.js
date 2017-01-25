@@ -77,7 +77,7 @@ var styles = StyleSheet.create({
         justifyContent:"center",
         paddingBottom:0,
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:-4,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:-7,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:8},
 
     button:{
         backgroundColor:'#001545',
@@ -96,17 +96,18 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    iconImages:{height:7,marginBottom:3},
     card: {
         width: CARD_WIDTH,
         position:'relative'
     },
     subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
     row:{flexDirection: 'row'},
-    headerContainer:{flex:1,height:windowSize.height+190},
+    headerContainer:{flex:1,height:windowSize.height+160},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
-    headerTripTo:{color:"#FFFFFF",fontSize:14,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
+    headerTripTo:{color:"#FFFFFF",fontSize:14,marginBottom:-8,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
     headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
@@ -147,11 +148,10 @@ class FeedTrip extends Component {
             moments:props.trip.moments,
             shouldUpdate:true,
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
-            routeName:"TRIP",
+            routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
             itemsPerRow:itemsPerRow,
             containerWidth:windowSize.width-30,
             region:null,
-            isPortrait:true,
             momentDetailsOffsetY:new Animated.Value(windowSize.height),
             momentDetailsBackground:new Animated.Value(0),
             shouldHideDetailView:true,
@@ -210,12 +210,7 @@ class FeedTrip extends Component {
 
                 this.setState({didHideDetailView:false});
             }
-            //if(this.state.isPortrait)this.props.toggleTabBar(!showTabBar);
-        }else if(this.state.isPortrait!==prevState.isPortrait){
-            //this.props.toggleTabBar(this.state.isPortrait);
-            //console.log('toggle tab if portrait');
         }
-
     }
 
     componentDidMount(){
@@ -242,7 +237,7 @@ class FeedTrip extends Component {
                          //Animated.timing(this.state.scrollY,{duration:0,toValue:currentOffset}).start()
                          var direction = currentOffset > this.offset ? 'down' : 'up';
                          this.offset = currentOffset;
-                         if(direction=='down'||currentOffset<30){
+                         if(direction=='down'||currentOffset<100){
                             this.refs.stickyHeader._setAnimation(false);
                          }else{
                             this.refs.stickyHeader._setAnimation(true);
@@ -293,6 +288,7 @@ class FeedTrip extends Component {
     }
 
     showTripLocation(trip){
+        //console.log('show location',trip)
         this.props.navigator.push({
             id: "location",
             trip
@@ -304,7 +300,8 @@ class FeedTrip extends Component {
             id: "tripDetailMap",
             trip,
             title:trip.name,
-            sceneConfig:"right-nodrag"
+            sceneConfig:"bottom",
+            hideNav:true
         });
     }
 
@@ -375,19 +372,25 @@ class FeedTrip extends Component {
 
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                            {/*<Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOUR TRIP ":this.props.trip.owner.serviceUsername.toUpperCase()+'S TRIP'}</Text>*/}
+                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOU WENT TO":this.props.trip.owner.serviceUsername.toUpperCase()+' WENT TO'}</Text>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                                    <TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>
+                            {/*<TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>*/}
                             </View>
 
                         <View style={styles.subTitleContainer}>
                             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
                              <UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
-                                <TouchableOpacity  onPress={() => this.showUserProfile(this.props.trip)}>
-                                    <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,marginTop:-8,fontWeight:"800"}}>{this.props.trip.owner.serviceFullName}</Text>
-                                </TouchableOpacity>
+                                <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
+
+                                {/*<TouchableOpacity  onPress={() => this.showUserProfile(this.props.trip)}>
+                                    <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,marginTop:-8,fontWeight:"800"}}>{this.props.trip.owner.serviceUsername}</Text>
+                                </TouchableOpacity>*/}
                             </View>
-                            <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
+                            {/*<Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>*/}
+                            <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1}}>
+                                <Image source={require('image!icon-images')} style={styles.iconImages} resizeMode="contain"></Image>
+                                <Text style={{color:"#FFFFFF",fontSize:10, marginTop:0,fontFamily:"TSTAR",backgroundColor:"transparent",fontWeight:"500"}}>{this.props.trip.moments.length}</Text>
+                            </View>
                         </View>
                 </View>
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
@@ -398,8 +401,6 @@ class FeedTrip extends Component {
                     </TouchableOpacity>
                 </View>
 
-
-                {/* <SimpleButton style={{width:windowSize.width-30,marginLeft:15,marginBottom:15,position:'absolute',top:windowSize.height+105}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"explore "+tripLocation}></SimpleButton>*/}
                 <Animated.View style={{flex:1,position:'absolute',top:0,
                   transform: [{translateY:this.state.scrollY.interpolate({
                                                     inputRange: [ -windowHeight,0],
@@ -412,138 +413,6 @@ class FeedTrip extends Component {
             </View>
         )
     }
-
-    //renderTripDetails(){
-    //    let currentIndex=0;
-    //    var currentMoment=this.props.trip.moments[0];
-    //
-    //    return(
-    //        this.state.didHideDetailView?null:<Animated.View style={[styles.tripDetailContainer,{backgroundColor:this.state.momentDetailsOffsetY.interpolate({extrapolate:'clamp',inputRange:[0,windowSize.height],outputRange:['rgba(0,0,0,.8)','rgba(0,0,0,0)']})}]}>
-    //                <PanController
-    //                            horizontal
-    //                            vertical
-    //                            xBounds={[-(this.props.trip.moments.length-1) * (CARD_WIDTH + CARD_MARGIN*2),0]}
-    //                            yBounds={[-20,this.state.shouldHideDetailView?9999:60]}
-    //                            snapSpacingX={CARD_WIDTH + CARD_MARGIN*2}
-    //                            xMode="snap"
-    //                            panX={this.state.scroll}
-    //                            panY={this.state.momentDetailsOffsetY}
-    //                            overshootY='spring'
-    //                            overshootReductionFactor={2}
-    //                            pageCount={this.props.trip.moments.length}
-    //                            onPanResponderMove={(_,{dx,dy,x0,y0})=>{
-    //                            }}
-    //                            onReleaseY={({ vx, vy, dx, dy })=>{
-    //                               let currentPosY=this.state.momentDetailsOffsetY._offset+dy;
-    //                               if(currentPosY>0&&currentPosY<250){
-    //                                     Animated.timing(this.state.momentDetailsOffsetY, {toValue:50,duration:200}).start();
-    //                               }else if(currentPosY>250){
-    //                                     this.setState({shouldHideDetailView:true});
-    //                               }
-    //                            }}
-    //                >
-    //                    <Animated.View style={{top:this.state.momentDetailsOffsetY}}>
-    //
-    //                        <Animated.View style={{marginLeft:CARD_PREVIEW_WIDTH,left:this.state.scroll,flexDirection:'row',backgroundColor:'red'}}>
-    //
-    //                            {this.props.trip.moments.map((momentData)=>{
-    //                                currentIndex++;
-    //
-    //                                var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
-    //                                var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{momentData.caption}</Text>:null;
-    //
-    //
-    //                                var profilePic= this.props.trip.owner.serviceProfilePicture?
-    //                                    <View style={{height:CARD_WIDTH,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
-    //                                        <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
-    //
-    //                                        <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-    //                                        <UserImage onPress={()=>{this.showUserProfile({owner:moment.profile})}} radius={30} userID={momentData.profile.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
-    //                                            <View style={{marginLeft:20,}}>
-    //                                                <TouchableOpacity onPress={()=>{Linking.openURL(momentData.serviceJson.link)}}>
-    //                                                    {description}
-    //                                                </TouchableOpacity>
-    //                                                <View style={{flexDirection:'row',alignItems:'center'}}>
-    //                                                    <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-    //                                                    <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
-    //                                                </View>
-    //                                            </View>
-    //                                        </View>
-    //                                    </View>:null;
-    //
-    //                                return (
-    //                                    <ImageProgress
-    //                                            style={[styles.card,
-    //                                                {
-    //                                                    backgroundColor:'grey',
-    //                                                    width:CARD_WIDTH,
-    //                                                    height:CARD_WIDTH,
-    //                                                    marginHorizontal:CARD_MARGIN,
-    //                                                    position:'absolute',
-    //                                                    left:(currentIndex-1)*(CARD_WIDTH+CARD_MARGIN*2)
-    //                                            }]}
-    //                                            resizeMode="cover"
-    //                                            key={"moment-"+momentData.id}
-    //                                            indicator={Progress.Circle}
-    //                                            indicatorProps={{
-    //                                                color: 'rgba(150, 150, 150, 1)',
-    //                                                unfilledColor: 'rgba(200, 200, 200, 0.2)'
-    //                                            }}
-    //                                            source={{uri:momentData.mediaUrl}}
-    //                                        >
-    //                                        {profilePic}
-    //                                        </ImageProgress>
-    //
-    //                                )
-    //                            })}
-    //
-    //                        </Animated.View>
-    //
-    //                        <View style={{height:CARD_WIDTH,width:CARD_WIDTH,top:CARD_WIDTH,left:CARD_PREVIEW_WIDTH+CARD_MARGIN}} >
-    //                            {this._renderSuitcaseButton()}
-    //                            <View style={{height:CARD_WIDTH,width:CARD_WIDTH,backgroundColor:'grey'}}>
-    //                                {this.state.didShowDetailView?this._renderMap(currentMoment):null}
-    //                            </View>
-    //                        </View>
-    //
-    //                    </Animated.View>
-    //                </PanController>
-    //        </Animated.View>
-    //    )
-    //}
-    //_renderMap(currentMoment){
-    //    return(
-    //            <MapView
-    //                style={styles.map} ref={ref => { this.map = ref; }}
-    //                initialRegion={{
-    //                                    latitude: parseFloat(currentMoment.lat),
-    //                                    longitude: parseFloat(currentMoment.lng),
-    //                                    latitudeDelta: 1,
-    //                                    longitudeDelta: 1,
-    //                                }}
-    //                scrollEnabled={false}
-    //            >
-    //                <MapView.Marker coordinate={{latitude:parseFloat(currentMoment.lat),longitude:parseFloat(currentMoment.lng)}}>
-    //                    <View style={{width:45,height:45,borderRadius:45,backgroundColor:'white'}}>
-    //                        <Image
-    //                            style={{width:39,height:39,borderRadius:20,marginLeft:3,marginTop:3}}
-    //                            source={{uri:currentMoment.mediaUrl}}
-    //                        ></Image>
-    //                    </View>
-    //                </MapView.Marker>
-    //            </MapView>
-    //    )
-    //}
-    //
-    //_renderSuitcaseButton(){
-    //    return(
-    //        <Animated.View style={{marginTop:this.props.gap,marginBottom:this.props.gap,borderRadius:this.props.borderRadius,overflow:'hidden'}}>
-    //            <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white,borderRadius:0}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
-    //            <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip()}} text="ADD TO YOUR SUITCASE"></SimpleButton>
-    //        </Animated.View>
-    //    )
-    //}
-
 
     _renderRow(rowData,sectionID,rowID) {
         var index=0;

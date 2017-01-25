@@ -28,7 +28,7 @@ class Settings extends React.Component {
 
     render(){
         return(
-            <View style={{backgroundColor:'red',flex:1}}>
+            <View style={{flex:1}}>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
                 <Text>SETTINGS</Text>
             </View>

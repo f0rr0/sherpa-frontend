@@ -113,7 +113,6 @@ var styles = StyleSheet.create({
         flex:1
     },
     card: {
-        backgroundColor: 'red',
         width: CARD_WIDTH,
         height: CARD_WIDTH,
         margin: CARD_MARGIN,

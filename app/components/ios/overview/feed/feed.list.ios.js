@@ -3,15 +3,16 @@ import FeedTrip from './feed.trip.ios'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import TripRow from '../../components/tripRow'
 import Dimensions from 'Dimensions';
+var windowSize=Dimensions.get('window');
 import StickyHeader from '../../components/stickyHeader';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-var windowSize=Dimensions.get('window');
 import Orientation from 'react-native-orientation';
 import MarkerMap from '../../components/MarkerMap'
 import FeaturedProfile from '../../components/featuredProfile'
 import {SherpaPlacesAutocomplete} from '../../components/SherpaPlacesAutocomplete'
 import config from '../../../../data/config';
 import dismissKeyboard from 'dismissKeyboard'
+import ToolTipp from '../../components/toolTipp'
 
 const {sherpa}=config.auth[config.environment];
 import {
@@ -23,6 +24,7 @@ import {
     Alert,
     Image,
     TouchableOpacity,
+    TouchableWithoutFeedback,
     Animated,
     PixelRatio,
     ScrollView
@@ -43,9 +45,9 @@ var styles=StyleSheet.create({
 });
 
 const snapOffset=20;
-const topOffset=100;
+const topOffset=90;
 const mediumOffset=100;
-const mapBaseHeight=240;
+const mapBaseHeight=228;
 
 class FeedList extends React.Component{
 
@@ -94,7 +96,6 @@ class FeedList extends React.Component{
             this.setState({featuredProfiles:response.data})
         })
 
-        this.onZoomChange({longitudeDelta: 100.78255568841368, latitude: 22.10323830103469, longitude: -55.55685589602622, latitudeDelta: 81.31725217053497});
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -108,10 +109,6 @@ class FeedList extends React.Component{
             }else{
                 Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
             }
-        }
-
-        if(this.state.reqID!==prevState.reqID){
-            if(this.refs.listview.refs.listview.refs.feedlistmap)this.refs.listview.refs.listview.refs.feedlistmap.recluster()
         }
 
         if(prevState.mapLarge!==this.state.mapLarge){
@@ -142,6 +139,7 @@ class FeedList extends React.Component{
     }
 
     showTripDetail(trip) {
+        console.log(trip);
         this.props.navigator.push({
             id: "trip",
             trip
@@ -163,66 +161,33 @@ class FeedList extends React.Component{
         })
     }
 
-    onZoomChange(region){
-        //console.log('zoom change ',region)
-        var reqBody={
-            "limit": 50,
-            "bbox": [region.longitude-region.longitudeDelta/2,region.latitude-region.latitudeDelta/2,region.longitude+region.longitudeDelta/2,region.latitude+region.latitudeDelta/2]
-        };
-
-        getFeed(reqBody,-1,'map-search-classic').then((response)=>{
-            //console.log('initial moments',response.data);
-            this.setState({mapMoments:response.data,reqID:Math.random()})
-        })
-    }
-
-    refreshCurrentScene(){
-       this.updateMapSize();
+    openMap(){
+        this.refs.listview.refs.listview.refs.mapToolTipp.hide();
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            sceneConfig:"bottom-nodrag",
+            hideNav:true,
+            isFullscreen:true,
+            mapType:"global",
+            initialRegion:{latitude:29.78001123617821,latitudeDelta:91.95378261860259,longitude:-96.12217477285078,longitudeDelta:65.1293491325775}
+        });
     }
 
     _renderHeader(){
-        const mapIcon=this.state.mapLarge?<Image style={{width: 6, height: 6}} source={require('./../../../../Images/close-map-button.png')} />:<Image style={{width: 6, height: 6}} source={require('./../../../../Images/open-map-button.png')} />;
         return (
             <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start',zIndex:1}}>
-                <Animated.View style={{overflow:'visible',alignItems:'center',height:this.state.mapHeight,width:windowSize.width,marginBottom:30,zIndex:2}}>
-                    <MarkerMap
-                        //onLeave={()=>{this.setState({mapLarge:false})}}
-                        ref="feedlistmap"
-                        hideOnInit={true}
-                        navigator={this.props.navigator}
-                        interactive={this.state.mapLarge}
-                        regionChanged={this.onZoomChange.bind(this)}
-                        moments={this.state.mapMoments}>
-                    </MarkerMap>
-                    <TouchableOpacity
-                        style={{position:'absolute',bottom:0,right:0,backgroundColor:'transparent',width:100,height:100}}
-                        onPress={()=>{this.setState({mapLarge:!this.state.mapLarge,reqID:Math.random()})}}>
-                        <View style={{
-                            width:20,
-                            height:20,
-                            backgroundColor:'white',
-                            borderRadius:10,
-                            shadowColor:'black',
-                            shadowRadius:1,
-                            shadowOpacity:.14,
-                            shadowOffset:{width:0,height:2},
-                            justifyContent:'center',
-                            alignItems:'center',
-                            position:'absolute',
-                            right:15,
-                            bottom:15
-                        }}>
-                            {mapIcon}
-                        </View>
-                    </TouchableOpacity>
-                    {this._renderFixedSearchBar()}
-                </Animated.View>
-                <View style={{position:'absolute',top:30,left:0,width:windowSize.width,alignItems:'center',zIndex:3}}>
-                    <Image style={{width: 73, height: 15}} source={require('./../../../../Images/sherpa-map-logo.png')} />
-                </View>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRAVELERS</Text>
+                <TouchableWithoutFeedback onPress={this.openMap.bind(this)}>
+                    <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:this.state.mapHeight,width:windowSize.width,marginBottom:30,zIndex:2}}>
+                       <Image source={require('./../../../../Images/feed-map.png')} resizeMode="cover" style={{height:mapBaseHeight,width:windowSize.width}}></Image>
+                       <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
+                            <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
+                       </View>
+                        {this._renderFixedSearchBar()}
+                    </Animated.View>
+                </TouchableWithoutFeedback>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
                 {this._renderFeaturedProfiles.bind(this)()}
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.4,top:-12,fontWeight:"500"}}>FEATURED TRIPS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
             </View>
         )
     }
@@ -244,12 +209,12 @@ class FeedList extends React.Component{
 
     _renderFeaturedProfiles(){
         return(
-            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:40}}>
+            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:30}}>
                 {this.state.featuredProfiles.map((profile,index)=> {
                     return (
                         <FeaturedProfile
                             key={"profile"+index}
-                            style={{width:75,height:75,flexDirection:'row',marginLeft:index==0?15:5,marginRight:index==this.state.featuredProfiles.length-1?15:0}}
+                            style={{width:75,height:75,borderRadius:75,overflow:"hidden",flexDirection:'row',marginLeft:index==0?15:10,marginRight:index==this.state.featuredProfiles.length-1?15:0}}
                             onPress={()=>{this.showUserProfile(profile)}}
                             profileImageUrl={profile.serviceProfilePicture}
                         >
@@ -268,6 +233,11 @@ class FeedList extends React.Component{
         return(
             <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
                         position:'absolute',
+                        backgroundColor:'white',
+                         shadowColor:'black',
+                    shadowRadius:4,
+                    shadowOpacity:.1,
+                    shadowOffset:{width:0,height:1},
                         marginTop:this.state.inputFocusOffset,
                         top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
                         width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
@@ -317,6 +287,7 @@ class FeedList extends React.Component{
 
     _renderSearchInput(ref){
         const {endpoint,version,feed_uri,user_uri} = sherpa;
+        const workPlace = {properties:{label:"No results"}};
 
 
         return(
@@ -324,10 +295,12 @@ class FeedList extends React.Component{
                 <SherpaPlacesAutocomplete
                     placeholder="Discover the World"
                     ref={ref}
+                    placeholderTextColor={'rgba(0,0,0,.5)'}
                     baseUrl={endpoint+version+"/geosearch/"}
                     clearButtonMode='always'
+                    onSubmitEditing={this.showTripLocation.bind(this)}
                     textInputProps={{
-                        returnKeyType:'search',
+                        returnKeyType:'go',
                         onChangeText:this._updateSearchInput.bind(this),
                         onFocus:()=>{Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()},
                         onBlur:()=>{
@@ -348,10 +321,11 @@ class FeedList extends React.Component{
                                 textInput: {
                                     backgroundColor: 'white',
                                     borderRadius: 0,
-                                    fontSize: 11,
-                                    color:'#001645',
-                                    fontFamily:"TSTAR",
+                                    fontSize: 12,
+                                    color:'rgba(0,0,0,1)',
+                                    fontFamily:"TSTAR-medium",
                                     height:49,
+                                    letterSpacing:.8,
                                     marginLeft:0,
                                     marginRight:15,
                                     marginBottom:0,
@@ -414,7 +388,7 @@ class FeedList extends React.Component{
                     pagination={true} // enable infinite scrolling using touch to load more
                     refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
-                    headerView={this._renderHeader.bind(this)}
+                    headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
                     scrollEnabled={!this.state.mapLarge}
