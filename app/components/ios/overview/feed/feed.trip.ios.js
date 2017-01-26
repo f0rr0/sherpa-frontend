@@ -123,7 +123,7 @@ class FeedTrip extends Component {
         let itemsPerRow=2;
         let organizedMoments=[];
         let data=props.trip.moments;
-
+        this.direction='down';
         if(!props.trip.organizedMoments){
             let globalIndex=0;
             for(var i=0;i<props.trip.moments.length;i++){
@@ -235,9 +235,12 @@ class FeedTrip extends Component {
                         )(event);
                          var currentOffset = event.nativeEvent.contentOffset.y;
                          //Animated.timing(this.state.scrollY,{duration:0,toValue:currentOffset}).start()
-                         var direction = currentOffset > this.offset ? 'down' : 'up';
+                         var direction=currentOffset-this.offset>0?'down':'up';
+                         var isDown=((direction=='down'&&this.direction=='down')  || (direction=='up' && this.direction=='down'));
                          this.offset = currentOffset;
-                         if(direction=='down'||currentOffset<100){
+                         this.direction=direction;
+
+                         if(isDown||currentOffset<300){
                             this.refs.stickyHeader._setAnimation(false);
                          }else{
                             this.refs.stickyHeader._setAnimation(true);

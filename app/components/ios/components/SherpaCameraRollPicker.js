@@ -20,6 +20,7 @@ class SherpaCameraRollPicker extends Component {
     constructor(props) {
         super(props);
 
+
         this.state = {
             images: [],
             selected: this.props.selected,

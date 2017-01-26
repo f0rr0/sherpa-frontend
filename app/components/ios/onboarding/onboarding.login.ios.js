@@ -124,16 +124,13 @@ class Login extends Component {
     }
 
     validate = (content,type) =>{
-        //console.log('validation function',content,'type::',type);
         var isValid=false;
         switch(type){
             case 'email':
                 if (this.validateEmail(content)) {
                     this.setState({email:content,isEmailValid:true,showErrorEmail:false})
                     isValid=true;
-                    //console.log('set state email valid');
                 }else{
-                    //console.log('set state email invalid')
                     this.setState({email:content,isEmailValid:false,showErrorEmail:true})
                 }
             break;
@@ -141,10 +138,8 @@ class Login extends Component {
                 if (content.length>0) {
                     this.setState({inviteCode:content,isInviteValid:true,showErrorInvite:false})
                     isValid=true;
-                    //console.log('invite valid');
                 }else{
                     this.setState({inviteCode:content,isInviteValid:false,showErrorInvite:true})
-                    //console.log('invite invalid');
                 }
             break;
             default:
@@ -177,11 +172,11 @@ class Login extends Component {
     };
 
     componentDidMount(){
-        console.log(this.props,'login props')
         if(this.props.denied){
             //this.refs.loginslider.scrollBy(1)
             this.refs.inviteError.show();
         }
+
 
         switch(this.props.user.invite){
             case "invalid":
@@ -189,6 +184,9 @@ class Login extends Component {
             break;
             case "expired":
                 this.setState({deniedMessage:"That invite code has expired"})
+            break;
+            case "not-invited":
+                this.setState({deniedMessage:"Your are not invited yet,please request an invite code."})
             break;
             default:
                 this.setState({deniedMessage:"A valid invite code is required"})
@@ -237,13 +235,13 @@ class Login extends Component {
 
                             <SimpleInput ref="inviteCodeInput" onStart={this.moveUp.bind(this)} onChange={(text)=>{this.validate(text,'invite')}} placeholder="Your invite code" style={{color:this.state.showErrorInvite?Colors.error:Colors.darkPlaceholder}}></SimpleInput>
                             <SimpleInput keyboardType='email-address' ref="emailInput" onStart={this.moveUp.bind(this)} onChange={(text)=>{this.validate(text,'email')}} placeholder="Enter your email" style={{color:this.state.showErrorEmail?Colors.error:Colors.darkPlaceholder,marginTop:13}}></SimpleInput>
-                            <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Connect with Instagram"></SimpleButton>
+                            <SimpleButton onPress={()=>{this.onSubmit()}} icon="instagram" text="Sign up with Instagram"></SimpleButton>
                         </View>
                         <View style={{flexDirection:"row"}}>
                             <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:1,borderColor:'rgba(255,255,255,.2)',width:windowSize.width/2,marginTop:15}} onPress={()=>{this.isRequest=true;this.refs.loginslider.scrollBy(1)}}>
                                 <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Request an Invite".toUpperCase()}</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderTopColor:'rgba(255,255,255,.2)',width:windowSize.width/2,marginTop:15}} onPress={()=>{this.isRequest=false;console.log('is request',this.isRequest);this.alreadyInvited.bind(this)()}}>
+                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderTopColor:'rgba(255,255,255,.2)',width:windowSize.width/2,marginTop:15}} onPress={()=>{this.isRequest=false;;this.alreadyInvited.bind(this)()}}>
                                 <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Login".toUpperCase()}</Text>
                             </TouchableOpacity>
                         </View>

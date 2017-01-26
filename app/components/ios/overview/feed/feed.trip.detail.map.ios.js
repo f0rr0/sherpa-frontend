@@ -76,7 +76,6 @@ class TripDetailMap extends Component{
         switch(this.props.mapType){
             case "region":
 
-                console.log(this.props.regionData)
                 var reqBody={
                     "type": this.props.regionData.type,
                     "limit": 50,

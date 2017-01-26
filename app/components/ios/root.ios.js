@@ -104,7 +104,6 @@ class Root extends Component {
     componentDidUpdate(prevProps,prevState){
         if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
             if(this.state.currentView==='not-whitelisted')this.navigator.replace({id:"login"});
-            if(this.props.user.whiteListed)return;
             this.feedStuff();
         }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});

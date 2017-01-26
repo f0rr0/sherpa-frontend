@@ -134,6 +134,19 @@ class ProfileSettings extends React.Component {
         });
     }
 
+    deleteAccount(){
+        Alert.alert(
+            'Delete Account',
+            'Are you sure you want to delete your account?',
+            [
+                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                {text: 'OK', onPress: () => {
+                    this.props.dispatch(deleteUser())
+                }}
+            ]
+        )
+    }
+
     setContactSetting(value, label) {
         const {endpoint,version} = sherpa;
         let setting = _.findWhere(this.props.user.allContactSettings, {label: label});
@@ -305,18 +318,7 @@ class ProfileSettings extends React.Component {
                         <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,,styles.toggleRowLow,{borderTopWidth:1,borderTopColor:"#e5e5e5",marginTop:10}]} onPress={() => {this.props.dispatch(logoutUser())}}>
                             <Text style={styles.toggleCopy}>Logout</Text>
                         </TouchableHighlight>
-                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={() => {
-                             Alert.alert(
-                              'Delete Account',
-                              'Are you sure you want to delete your account?',
-                              [
-                                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
-                                {text: 'OK', onPress: () => {
-                                        this.props.dispatch(deleteUser())
-                                }}
-                                ]
-                            )
-                        }}>
+                        <TouchableHighlight underlayColor="#ececec" style={[styles.toggleRow,styles.toggleRowLow]} onPress={this.deleteAccount.bind(this)}>
                             <Text style={styles.toggleCopy}>Delete Account</Text>
                         </TouchableHighlight>
                     </View>

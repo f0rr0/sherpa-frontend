@@ -290,7 +290,7 @@ export function getFeed(query,page=1,type='') {
 
 
 
-                        if(type=='feed')console.log('feed',parsedResponse)
+                        //if(type=='feed')console.log('feed',parsedResponse)
                         switch(type){
                             case "featured-profiles":
                             case "moment":

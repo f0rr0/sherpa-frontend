@@ -253,68 +253,75 @@ export function setUserHometown(hometown){
 
 export function loadUser() {
     return function (dispatch, getState) {
-        dispatch(updateUserDBState("process"));
-
+        //dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-
-            if(user&&!config.resetUser){
-                dispatch(updateUserData(user));
-                var responseStatus=400;
-                const {endpoint,version,user_uri} = sherpa;
-                var sherpaHeaders = new Headers();
-                sherpaHeaders.append("token", user.sherpaToken);
-
-                fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
-                    method:'get',
-                    headers:sherpaHeaders
-                }).
-                then((rawServiceResponse)=>{
-                    responseStatus=rawServiceResponse.status;
-                    return rawServiceResponse.text();
-                }).then((rawSherpaResponse)=>{
-                    switch(responseStatus){
-
-                        case 200:
-                            var responseJSON = JSON.parse(rawSherpaResponse);
-                            dispatch(updateUserData({
-                                serviceObject:responseJSON,
-                                profileID:responseJSON.profile.id,
-                                profilePicture:responseJSON.profile.serviceProfilePicture,
-                                bio:responseJSON.profile.serviceBio,
-                                allowScrape: responseJSON.allowScrape,
-                                userContactSettings: responseJSON.contactSettings,
-                                allContactSettings: responseJSON.allContactSettings,
-                            }));
-
-                            if(!user.whiteListed){
-                                dispatch(updateUserDBState("empty"));
-                            }else if(user.username===responseJSON.username) {
-                                dispatch(updateUserDBState("available-existing"));
-                            }else{
-                                dispatch(updateUserDBState("empty"));
-                            }
-
-                            dispatch(storeUser());
-                        break;
-                        case 400:
-                        case 401:
-                        case 500:
-                        case 506:
-                            store.delete('user').then(()=>{
-                                dispatch(updateUserDBState("empty"));
-                            })
-                        break;
-                    }
-                }).catch((err)=>{
-                    store.delete('user').then(()=>{
-                        dispatch(updateUserDBState("empty"));
-                    })
-                });
+        //
+            if(user&&!config.resetUser) {
+                //setTimeout(()=>{
+                    dispatch(updateUserDBState("available-existing"));
+                    dispatch(updateUserData(user));
+                //},800)
             }else{
                 store.delete('user').then(()=>{
                     dispatch(updateUserDBState("empty"));
                 })
             }
+        //        var responseStatus=400;
+        //        const {endpoint,version,user_uri} = sherpa;
+        //        var sherpaHeaders = new Headers();
+        //        sherpaHeaders.append("token", user.sherpaToken);
+        //
+        //        fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
+        //            method:'get',
+        //            headers:sherpaHeaders
+        //        }).
+        //        then((rawServiceResponse)=>{
+        //            responseStatus=rawServiceResponse.status;
+        //            return rawServiceResponse.text();
+        //        }).then((rawSherpaResponse)=>{
+        //            switch(responseStatus){
+        //
+        //                case 200:
+        //                    var responseJSON = JSON.parse(rawSherpaResponse);
+        //                    dispatch(updateUserData({
+        //                        serviceObject:responseJSON,
+        //                        profileID:responseJSON.profile.id,
+        //                        profilePicture:responseJSON.profile.serviceProfilePicture,
+        //                        bio:responseJSON.profile.serviceBio,
+        //                        allowScrape: responseJSON.allowScrape,
+        //                        userContactSettings: responseJSON.contactSettings,
+        //                        allContactSettings: responseJSON.allContactSettings,
+        //                    }));
+        //
+        //                    if(!user.whiteListed){
+        //                        dispatch(updateUserDBState("empty"));
+        //                    }else if(user.username===responseJSON.username) {
+        //                        dispatch(updateUserDBState("available-existing"));
+        //                    }else{
+        //                        dispatch(updateUserDBState("empty"));
+        //                    }
+        //
+        //                    dispatch(storeUser());
+        //                break;
+        //                case 400:
+        //                case 401:
+        //                case 500:
+        //                case 506:
+        //                    store.delete('user').then(()=>{
+        //                        dispatch(updateUserDBState("empty"));
+        //                    })
+        //                break;
+        //            }
+        //        }).catch((err)=>{
+        //            store.delete('user').then(()=>{
+        //                dispatch(updateUserDBState("empty"));
+        //            })
+        //        });
+        //    }else{
+        //        store.delete('user').then(()=>{
+        //            dispatch(updateUserDBState("empty"));
+        //        })
+        //    }
         });
     }
 }
@@ -428,26 +435,29 @@ export function signupUser(){
             };
 
 
-            const queryData = encodeQueryData({
+
+            let queryObject={
                 email:userReducer.email,
-                inviteCode:userReducer.inviteCode,
                 intent:userReducer.intent,
                 service:userReducer.service,
                 token:instagramToken,
                 serviceData:JSON.stringify(userData),
                 deviceData:JSON.stringify(deviceData)
-            });
+            }
+
+            if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
+            const queryData = encodeQueryData(queryObject);
 
 
-            console.log({
-                email:userReducer.email,
-                inviteCode:userReducer.inviteCode,
-                intent:userReducer.intent,
-                service:userReducer.service,
-                token:instagramToken,
-                serviceData:JSON.stringify(userData),
-                deviceData:JSON.stringify(deviceData)
-            })
+            //console.log({
+            //    email:userReducer.email,
+            //    inviteCode:userReducer.inviteCode,
+            //    intent:userReducer.intent,
+            //    service:userReducer.service,
+            //    token:instagramToken,
+            //    serviceData:JSON.stringify(userData),
+            //    deviceData:JSON.stringify(deviceData)
+            //})
 
             dispatch(updateUserData({
                 serviceToken:instagramToken
@@ -466,7 +476,7 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
-                console.log('sherpa response',sherpaResponse)
+                //console.log('sherpa response',sherpaResponse)
                 const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings} = sherpaResponse.user;
 
                 dispatch(updateUserData({
@@ -491,10 +501,10 @@ export function signupUser(){
                 }));
 
                 dispatch(storeUser());
-                console.log(sherpaResponse.invitation," invite resposne")
+                //console.log(sherpaResponse," invite resposne")
                 if(
                     //!sherpaResponse.whitelisted&&
-                    sherpaResponse.invitation=="expired"|| sherpaResponse.invitation=="invalid"
+                    sherpaResponse.invitation=="expired"|| sherpaResponse.invitation=="invalid" || sherpaResponse.invitation=="not-invited"
                 ) {
                     store.get('user').then((user) => {
                         //if(user.isExistingLogin){

@@ -165,7 +165,7 @@ class FeedList extends React.Component{
         this.refs.listview.refs.listview.refs.mapToolTipp.hide();
         this.props.navigator.push({
             id: "tripDetailMap",
-            sceneConfig:"bottom-nodrag",
+            sceneConfig:"bottom",
             hideNav:true,
             isFullscreen:true,
             mapType:"global",
@@ -194,7 +194,7 @@ class FeedList extends React.Component{
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:200,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
