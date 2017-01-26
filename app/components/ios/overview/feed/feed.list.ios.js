@@ -129,8 +129,6 @@ class FeedList extends React.Component{
     }
 
     showTripLocation(data){
-        //console.log('trip location data',data);
-
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -139,7 +137,6 @@ class FeedList extends React.Component{
     }
 
     showTripDetail(trip) {
-        console.log(trip);
         this.props.navigator.push({
             id: "trip",
             trip
@@ -381,6 +378,7 @@ class FeedList extends React.Component{
                     // Fixes feed-rendering anomaly, issue #3 but may cause performance issues w/ memory usage
                     removeClippedSubviews={false}
                     //
+                    renderHeaderOnInit={true}
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}

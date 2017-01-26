@@ -126,7 +126,8 @@ var SherpaGiftedListview = React.createClass({
         );
     },
     headerView() {
-        if (!this.props.headerView){
+        if(this.props.renderHeaderOnInit)return this.props.headerView();
+        if (this.state.paginationStatus === 'firstLoad' || !this.props.headerView){
             return null;
         }
         return this.props.headerView();

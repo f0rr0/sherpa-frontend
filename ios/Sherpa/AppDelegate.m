@@ -17,14 +17,10 @@
 #import <Crashlytics/Crashlytics.h>
 #import <asl.h>
 #import "RCTLog.h"
-#import "Orientation.h" // <--- import
 
 
 @implementation AppDelegate
 
-- (UIInterfaceOrientationMask)application:(UIApplication *)application supportedInterfaceOrientationsForWindow:(UIWindow *)window {
-  return [Orientation getOrientation];
-}
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
