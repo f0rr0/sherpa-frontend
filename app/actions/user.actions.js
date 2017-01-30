@@ -164,6 +164,8 @@ export function deleteUser(){
             if (user) {
                 const {endpoint,version,user_uri} = sherpa;
 
+
+
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");

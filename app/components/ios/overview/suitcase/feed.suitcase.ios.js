@@ -185,13 +185,6 @@ class Suitecase extends React.Component {
         var photoOrPhotos=moments>1||moments==0?"PLACES":"PLACE";
         return (
         <View style={styles.suitcaseHeaderContainer}>
-            {/* <View style={styles.suitcaseHeaderInfo}>
-                    <Image source={require('image!icon-countries-negative')} style={styles.iconCountries} resizeMode="contain"></Image>
-                    <Text style={styles.suitcaseHeaderInfoCopy}>{tripDuration} {citieS}</Text>
-                    <Image source={require('image!icon-divider')} style={styles.iconDivider} resizeMode="contain"></Image>
-                    <Image source={require('image!icon-images-negative')} style={styles.iconImages} resizeMode="contain"></Image>
-                    <Text style={styles.suitcaseHeaderInfoCopy}>{moments} {photoOrPhotos}</Text>
-                </View>*/}
                 {this.props.navigation.default}
             </View>
         )

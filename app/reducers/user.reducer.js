@@ -5,7 +5,7 @@ const initialState={
     sherpaID:-1,
     fullName:"",
     profilePicture:"",
-    email:"rag@wild.as",
+    email:"noreply@trysherpa.com",
     bio:"",
     website:"",
     serviceToken:"",
@@ -41,14 +41,14 @@ export default function userReducer(state=initialState,action){
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
                 bio:                action.userData.bio || state.bio,
-                invite:             action.userData.invite || state.invite,
+                invite:             action.userData.invite == undefined? state.invite : action.userData.invite,
                 website:            action.userData.website || state.website,
                 serviceToken:       action.userData.serviceToken || state.serviceToken,
                 sherpaToken:        action.userData.sherpaToken || state.sherpaToken,
                 inviteCode:         action.userData.inviteCode || state.inviteCode,
                 username:           action.userData.username || state.username,
                 jobID:              action.userData.jobID || state.jobID,
-                hometown:           action.userData.hometown || state.hometown,
+                hometown:           action.userData.hometown == undefined ? state.hometown:action.userData.hometown,
                 whiteListed:        action.userData.whiteListed == undefined ?state.whiteListed:action.userData.whiteListed,
                 isExistingLogin:    action.userData.isExistingLogin == undefined ?state.isExistingLogin:action.userData.isExistingLogin,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
@@ -57,6 +57,7 @@ export default function userReducer(state=initialState,action){
                 userContactSettings: action.userData.userContactSettings || state.userContactSettings,
                 allContactSettings: action.userData.allContactSettings || state.allContactSettings,
             });
+
         break;
         case types.USER_SIGNUP_UPDATE_STATE:
             return Object.assign({}, state, {

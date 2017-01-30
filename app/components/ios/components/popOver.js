@@ -150,7 +150,7 @@ PopOver.defaultProps = {
     showDelete:false,
     showReset:false,
     shareURL:"http://trysherpa.com/",
-    shareCopy:"SHARE VIA WEBPAGE",
+    shareCopy:"SHARE",
     reportPhoto:false
 };
 

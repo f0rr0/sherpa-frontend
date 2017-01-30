@@ -199,7 +199,7 @@ class FeedLocation extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.name+"/"+this.props.user.sherpaToken}></PopOver>
+                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.source_id}></PopOver>
             </View>
         )
     }
