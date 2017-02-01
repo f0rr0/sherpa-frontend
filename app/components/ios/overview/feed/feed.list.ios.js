@@ -93,7 +93,7 @@ class FeedList extends React.Component{
         Orientation.lockToPortrait();
 
         getFeed(this.props.user.sherpaID,-1,'featured-profiles').then((response)=>{
-            console.log(response.data);
+            //console.log(response.data);
             this.setState({featuredProfiles:response.data})
         })
 
@@ -130,6 +130,7 @@ class FeedList extends React.Component{
     }
 
     showTripLocation(data){
+        //console.log(data)
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -201,7 +202,7 @@ class FeedList extends React.Component{
     }
 
     showUserProfile(user){
-        console.log('user',user);
+        //console.log('user',user);
         this.props.navigator.push({
             id: "profile",
             trip:{owner:user}
@@ -216,7 +217,7 @@ class FeedList extends React.Component{
                         <FeaturedProfile
                             key={"profile"+index}
                             style={{width:75,height:75,borderRadius:75,overflow:"hidden",flexDirection:'row',marginLeft:index==0?15:10,marginRight:index==this.state.featuredProfiles.length-1?15:0}}
-                            onPress={()=>{console.log('profile',profile);this.showUserProfile(profile)}}
+                            onPress={()=>{this.showUserProfile(profile)}}
                             profileImageUrl={profile.serviceProfilePicture}
                         >
                         </FeaturedProfile>
@@ -287,7 +288,7 @@ class FeedList extends React.Component{
     }
 
     refreshCurrentScene(){
-        console.log('refresh current scene feed');
+        //console.log('refresh current scene feed');
     }
 
     _renderSearchInput(ref){

@@ -180,7 +180,7 @@ export function getFeed(query,page=1,type='') {
                         searchBody = query;
                     break;
                     case "search-places-v2":
-                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&page="+page;
+                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&location&page="+page;
                     break;
                     case "search-people":
                         feedRequestURI = endpoint + version + "/search/users?text=" + query;
@@ -317,15 +317,16 @@ export function getFeed(query,page=1,type='') {
                             case "search-places-v2":
                             case "search-people":
                             case "location-search":
+
                                 let cleanMoments=[];
-                                let moments=parsedResponse;
+                                let moments=type=="search-places-v2"?parsedResponse.moments:parsedResponse;
                                 if(moments.length>0){
                                     for(let i=0;i<moments.length;i++){
                                         if(moments[i].type==='image')cleanMoments.push(moments[i]);
                                     }
                                 }
 
-                                fulfill({moments:cleanMoments, page, type});
+                                fulfill({rawData:parsedResponse,moments:cleanMoments, page, type});
                             break;
 
                         }

@@ -39,6 +39,7 @@ var SherpaGiftedListview = React.createClass({
             firstLoader: true,
             pagination: true,
             refreshable: true,
+            footerView:function(){},
             refreshableColors: undefined,
             refreshableProgressBackgroundColor: undefined,
             refreshableSize: undefined,
@@ -108,7 +109,7 @@ var SherpaGiftedListview = React.createClass({
         }
 
         return (
-            <View> <Text>all loaded</Text></View>
+            <View>{this.props.footerView()}</View>
             //<View style={[this.defaultStyles.paginationView, this.props.customStyles.paginationView]}>
             //  <Text style={[this.defaultStyles.actionsLabel, this.props.customStyles.actionsLabel]}>
             //    ~

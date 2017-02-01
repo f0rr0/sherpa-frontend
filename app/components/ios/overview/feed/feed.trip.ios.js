@@ -58,7 +58,11 @@ var {
 
 var styles = StyleSheet.create({
     map: {
-        ...StyleSheet.absoluteFillObject
+        ...StyleSheet.absoluteFillObject,
+        borderTopLeftRadius:3,
+        borderTopRightRadius:3,
+        backgroundColor:'transparent',
+        overflow:'hidden'
     },
     listViewContainer:{flex:1,backgroundColor:'white',paddingBottom:60},
     container: {
@@ -108,7 +112,7 @@ var styles = StyleSheet.create({
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,marginBottom:-8,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.8,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.99,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
@@ -180,6 +184,34 @@ class FeedTrip extends Component {
         Magnetometer.stopMagnetometerUpdates();
     }
 
+
+
+    _renderFooterView(){
+        return <View style={{marginBottom:20}}>
+            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.exploreLocation()}} text="Explore"></SimpleButton>
+        </View>
+    }
+
+    exploreLocation(){
+
+        var locus=this.props.trip.locus.country_gid.split(":");
+        var locationData={
+            layer:locus[1],
+            source:locus[0],
+            source_id:locus[2]
+        }
+
+        this.props.trip.layer=locus[1];
+        this.props.trip.source=locus[0];
+        this.props.trip.source_id=locus[2];
+
+        this.props.navigator.push({
+            id: "location",
+            trip:this.props.trip,
+            version:"v2"
+        });
+    }
+
     navActionRight(){
        this.refs.popover._setAnimation("toggle");
     }
@@ -215,7 +247,7 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        console.log('trip data',this.props)
+        //console.log('trip data',this.props)
     }
 
     render(){
@@ -230,6 +262,7 @@ class FeedTrip extends Component {
                     contentContainerStyle={styles.listView}
                     renderHeader={this._renderHeader.bind(this)}
                     ref="listview"
+                    renderFooter={this._renderFooterView.bind(this)}
                     scrollEventThrottle={8}
                     onScroll={(event)=>{
                         Animated.event(
@@ -398,7 +431,7 @@ class FeedTrip extends Component {
                             </View>
                         </View>
                 </View>
-                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'black',flex:1,position:'absolute',top:windowSize.height*.85}}>
+                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'transparent',flex:1,position:'absolute',top:windowSize.height*.85}}>
                     <View style={[{backgroundColor:'white'},styles.map]}></View>
 
                     <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap(this.props.trip)}}>

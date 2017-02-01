@@ -14,6 +14,7 @@ const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
+import UserImage from '../../components/userImage';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
@@ -61,7 +62,7 @@ class FeedLocation extends Component {
     componentDidUpdate(prevProps,prevState){
         //console.log(prevState.lastRefresh,"::",this.state.lastRefresh)
         if(prevState.lastRefresh!==this.state.lastRefresh){
-            console.log('refresh rows',this.refs.listview.refs.listview);
+            //console.log('refresh rows',this.refs.listview.refs.listview);
             for(var i=0;i<this.currentRows.length;i++){
                 if(this.refs.listview.refs[this.currentRows[i]]){
                     this.refs.listview.refs[this.currentRows[i]].checkSuitcased();
@@ -116,6 +117,7 @@ class FeedLocation extends Component {
         }
 
         getFeed(req,page,searchType).then((response)=>{
+            //console.log('response::',response)
             if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
@@ -140,7 +142,7 @@ class FeedLocation extends Component {
                     }
 
 
-                if(page==1)this.setState({moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+                if(page==1)this.setState({rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
                 var settings=response.moments.length==0?{
                     allLoaded: true
                 }:{};
@@ -172,6 +174,22 @@ class FeedLocation extends Component {
 
         var tripLocation=tripData.name;
         return {location:tripLocation,country:country,countryCode:tripData.country};
+    }
+
+    renderProfiles(){
+        console.log(this.state.rawData,':: raw data');
+        const profiles=this.state.rawData.location.relatedData.topProfiles;
+        return(
+            <View style={{flexDirection:'row',alignItems:'center',height:26,justifyContent:'flex-start',width:windowSize.width-30}}>
+
+                <View style={{flexDirection:'row',marginRight:20}}>
+                    {profiles.map((data)=>{
+                        return <UserImage style={{marginRight:-20}} radius={26} userID={data.id} imageURL={data.serviceProfilePicture}></UserImage>
+                    })}
+                </View>
+                <Text style={{backgroundColor:'transparent',fontSize:12,fontWeight:"600",marginTop:5,marginLeft:5,color:"white",fontFamily:"TSTAR"}}>{this.state.rawData.moments.length} Trips to {this.props.trip.name}</Text>
+            </View>
+        )
     }
 
     render(){
@@ -227,13 +245,13 @@ class FeedLocation extends Component {
 
 
     _renderHeader(){
+        //console.log(this.state)
         var tripData=this.props.trip;
         var moments=this.state.moments;
         if(moments.length==0)return null
         //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
         let windowHeight=windowSize.height;
-        //console.log('get header moment',this.state.headerMoment)
         return (
             <View style={{flex:1}}>
                 <View style={{height:windowSize.height, width:windowSize.width, marginBottom:160,alignItems:'center',flex:1}} >
@@ -297,15 +315,20 @@ class FeedLocation extends Component {
                         <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
                         </View>
                     </View>
+
+                    <View style={{position:'absolute',bottom:160,left:15,width:50,height:20}}>
+                        {this.renderProfiles()}
+                    </View>
                 </View>
-                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'white',flex:1,position:'absolute',top:windowSize.height*.85}}>
+                <WikipediaInfoBox style={{marginTop:-300,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>
+                <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'white',flex:1}}>
                     <TouchableOpacity style={styles.map} onPress={()=>{
                     this.showTripMap({moments:this.state.originalMoments}
                     )}}>
                         <MarkerMap interactive={false} moments={this.state.originalMoments}></MarkerMap>
                     </TouchableOpacity>
                 </View>
-                <WikipediaInfoBox isLocationView={true} type={this.props.isCountry?"country":"location"} country={country} countryCode={tripData.country} location={tripData.name} coordinates={{lat:this.state.moments[0].lat,lng:this.state.moments[0].lng}}></WikipediaInfoBox>
+
                 <Animated.View style={{flex:1,position:'absolute',top:0,
                   transform: [{translateY:this.state.scrollY.interpolate({
                                                     inputRange: [ -windowHeight,0],

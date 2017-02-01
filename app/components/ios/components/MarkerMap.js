@@ -229,7 +229,7 @@ class TripDetailMap extends Component{
 
 var styles = StyleSheet.create({
     map: {
-        backgroundColor:'white',
+        backgroundColor:'transparent',
         ...StyleSheet.absoluteFillObject,
         //left:0,
         //top:0,
