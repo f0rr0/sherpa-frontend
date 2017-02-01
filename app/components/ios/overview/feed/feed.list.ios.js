@@ -93,7 +93,6 @@ class FeedList extends React.Component{
         Orientation.lockToPortrait();
 
         getFeed(this.props.user.sherpaID,-1,'featured-profiles').then((response)=>{
-            //console.log(response.data);
             this.setState({featuredProfiles:response.data})
         })
 
@@ -130,7 +129,6 @@ class FeedList extends React.Component{
     }
 
     showTripLocation(data){
-        //console.log(data)
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -202,7 +200,6 @@ class FeedList extends React.Component{
     }
 
     showUserProfile(user){
-        //console.log('user',user);
         this.props.navigator.push({
             id: "profile",
             trip:{owner:user}
@@ -288,7 +285,7 @@ class FeedList extends React.Component{
     }
 
     refreshCurrentScene(){
-        //console.log('refresh current scene feed');
+        if(this.refs.inputAnimated)this.refs.inputAnimated._onBlur();
     }
 
     _renderSearchInput(ref){
@@ -312,6 +309,8 @@ class FeedList extends React.Component{
                         onBlur:()=>{
                         Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()
                         dismissKeyboard();
+                            if(this.refs.inputAnimated)this.refs.inputAnimated._onBlur();
+                            if(this.refs.inputFixed)this.refs.inputFixed._onBlur();
                         }
                     }}
                     onPressProfile={(data)=>{
@@ -413,8 +412,8 @@ class FeedList extends React.Component{
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      this.offset = currentOffset;
-                            this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
-                            this.refs.inputAnimated.triggerBlur();
+                            this.refs.listview.refs.listview.refs.inputFixed._onBlur();
+                            this.refs.inputAnimated._onBlur();
 
                      if(currentOffset>(topOffset-snapOffset)){
                           this.setState({isFixed:true})

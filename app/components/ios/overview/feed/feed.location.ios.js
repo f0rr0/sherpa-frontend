@@ -177,7 +177,7 @@ class FeedLocation extends Component {
     }
 
     renderProfiles(){
-        console.log(this.state.rawData,':: raw data');
+        //console.log(this.state.rawData,':: raw data');
         const profiles=this.state.rawData.location.relatedData.topProfiles;
         return(
             <View style={{flexDirection:'row',alignItems:'center',height:26,justifyContent:'flex-start',width:windowSize.width-30}}>

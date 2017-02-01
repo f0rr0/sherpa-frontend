@@ -365,7 +365,7 @@ const SherpaPlacesAutocomplete = React.createClass({
             }
             if (request.status === 200) {
                 const responseJSON = JSON.parse(request.responseText);
-                console.log('people response',responseJSON);
+                //console.log('people response',responseJSON);
                 // console.log(responseJSON.features[0].properties);
                 //if (typeof responseJSON.features !== 'undefined') {
                     if (this.isMounted()) {
@@ -388,7 +388,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                     }
                 //}
                 if (typeof responseJSON.error_message !== 'undefined') {
-                    console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
+                    //console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
                 }
             } else {
 
@@ -478,6 +478,35 @@ const SherpaPlacesAutocomplete = React.createClass({
     },
 
     _renderLocationRow(rowData){
+
+        let locationLayer;
+
+        switch(rowData.properties.layer){
+            case "neighborhood":
+                locationLayer="Neighborhood";
+            break;
+            case "locality":
+                locationLayer="City";
+                break;
+            case "borough":
+                locationLayer="Borough";
+            break;
+            case "region":
+                locationLayer="State / Province";
+            break;
+            case "macro-region":
+                locationLayer="Region";
+            break;
+            case "country":
+                locationLayer="Country";
+            break;
+            case "continent":
+                locationLayer="Continent";
+            break;
+            default:
+                locationLayer="";
+        }
+
         return(
             <TouchableHighlight
                 onPress={() =>
@@ -491,14 +520,14 @@ const SherpaPlacesAutocomplete = React.createClass({
                         <View style={{flexDirection:"row"}}>
                             <Image style={{marginRight:16,marginLeft:8,marginTop:0}} source={require('../../../Images/icons/pin.png')}></Image>
                         </View>
-                        <View style={[{flex:1,height:20}]}>
+                        <View style={[{flex:1,height:20,top:locationLayer.length==0?4:0}]}>
                             <Text
                                 style={[ defaultStyles.description, this.props.styles.description]}
                                 numberOfLines={1}
                             >
                                 {rowData.properties.label}
                             </Text>
-                            <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>{rowData.properties.layer}</Text>
+                            <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>{locationLayer}</Text>
                         </View>
                     </View>
                 </View>
