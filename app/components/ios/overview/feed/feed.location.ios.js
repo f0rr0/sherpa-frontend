@@ -48,11 +48,27 @@ class FeedLocation extends Component {
             scrollY:new Animated.Value(0)
         }
 
+        this.currentRows=[];
+
+
         //console.log('location props',props)
     }
 
     componentDidMount(){
         //console.log('trip location');
+    }
+
+    componentDidUpdate(prevProps,prevState){
+        //console.log(prevState.lastRefresh,"::",this.state.lastRefresh)
+        if(prevState.lastRefresh!==this.state.lastRefresh){
+            console.log('refresh rows',this.refs.listview.refs.listview);
+            for(var i=0;i<this.currentRows.length;i++){
+                if(this.refs.listview.refs[this.currentRows[i]]){
+                    this.refs.listview.refs[this.currentRows[i]].checkSuitcased();
+                }
+            }
+            //this.refs.listview._refresh();
+        }
     }
     navActionRight(){
         this.refs.popover._setAnimation("toggle");
@@ -99,11 +115,7 @@ class FeedLocation extends Component {
             searchType='search-places';
         }
 
-        //console.log('req::',req);
-        //console.log('searchType::',searchType);
-
         getFeed(req,page,searchType).then((response)=>{
-            //console.log(response)
             if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
@@ -138,6 +150,10 @@ class FeedLocation extends Component {
                 callback(organizedMoments,settings);
             }
         })
+    }
+
+    refreshCurrentScene(){
+        this.setState({lastRefresh:Date.now()})
     }
 
 
@@ -311,7 +327,7 @@ class FeedLocation extends Component {
                 return null;
             }
 
-            //console.log('moment',item);
+            this.currentRows.push("row-"+rowID+"-"+sectionID)
 
             index++;
             return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>

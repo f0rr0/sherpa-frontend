@@ -108,7 +108,7 @@ var SherpaGiftedListview = React.createClass({
         }
 
         return (
-            <View></View>
+            <View> <Text>all loaded</Text></View>
             //<View style={[this.defaultStyles.paginationView, this.props.customStyles.paginationView]}>
             //  <Text style={[this.defaultStyles.actionsLabel, this.props.customStyles.actionsLabel]}>
             //    ~

@@ -34,7 +34,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                     searchBody=feedTarget;
                 break;
                 case "search-people":
-                    feedRequestURI=endpoint+version+"/search/users?text="+feedTarget;
+                    feedRequestURI=endpoint+version+"/search/profile/autocomplete"+feedTarget;
                 break;
                 case "user":
                 default:
@@ -168,10 +168,13 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "suitcase-list":
                         feedRequestURI = endpoint + version + "/user/" + query + "/suitcases?page=" + page;
-                        break;
+                    break;
                     case "single-suitcase-feed":
                         feedRequestURI = endpoint + version + "/suitcase/" + query;
-                        break;
+                    break;
+                    case "search-user":
+                        feedRequestURI = endpoint + version + "/search/profile/autocomplete";
+                    break;
                     case "search-places":
                         feedRequestURI = endpoint + version + "/search";
                         searchBody = query;

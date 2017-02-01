@@ -102,6 +102,9 @@ class Overview extends React.Component {
         if(this.state.selectedTab!==prevState.selectedTab){
             this.props.dispatch(udpateFeedState("reset"));
             this.props.dispatch(updateTab(this.state.selectedTab));
+            if(this.refs[this.state.selectedTab]){
+                this.refs[this.state.selectedTab].refreshCurrentScene();
+            }
         }
 
         if(this.state.selectedView!==prevState.selectedView){

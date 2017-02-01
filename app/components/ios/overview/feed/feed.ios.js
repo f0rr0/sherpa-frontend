@@ -285,8 +285,10 @@ class Feed extends Component {
         this.refreshCurrentScene()
     }
 
-    refreshCurrentScene(){
+     refreshCurrentScene(){
+         //console.log('try refresh current scene',this.navigator.refs[this.currentRenderScene]);
         if(this.navigator&&this.navigator.refs[this.currentRenderScene]&&this.navigator.refs[this.currentRenderScene].refreshCurrentScene){
+            //console.log('::refrsh current scene from feed')
             this.navigator.refs[this.currentRenderScene].refreshCurrentScene();
         }
     }

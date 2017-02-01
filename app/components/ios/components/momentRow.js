@@ -37,10 +37,14 @@ class MomentRow extends Component{
             loadedImageOpacity:new Animated.Value(0),
             tooltipOpacity:new Animated.Value(1)
         }
+        this.unmounting=false;
 
     }
 
     componentDidMount(){
+        checkSuitcased(this.props.tripData.id).then((res)=>{
+            this.setState({suitcased:res==='true'})
+        })
     }
 
     suiteCaseTrip(){
@@ -48,6 +52,10 @@ class MomentRow extends Component{
         this.hideTooltip();
 
         addMomentToSuitcase(this.props.tripData.id);
+    }
+
+    componentWillUnmount(){
+        this.unmounting=true;
     }
 
     unSuiteCaseTrip(){
@@ -59,6 +67,14 @@ class MomentRow extends Component{
         Animated.timing(this.state.tooltipOpacity,{toValue:0,duration:100}).start();
         this.props.dispatch(updateUserData({usedSuitcase:true}))
         this.props.dispatch(storeUser())
+    }
+
+
+    checkSuitcased(){
+        console.log('check suitcased');
+        checkSuitcased(this.props.tripData.id).then((res)=>{
+            if(!this.unmounting)this.setState({suitcased:res==='true'})
+        })
     }
 
     showTripDetail(momentID){
@@ -75,6 +91,8 @@ class MomentRow extends Component{
     }
 
     componentDidUpdate(prevProps,prevState){
+        if(this.unmounting)return;
+        if(prevState.suitcased!==this.state.suitcased)return;
     }
 
     render(){

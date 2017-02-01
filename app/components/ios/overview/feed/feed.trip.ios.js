@@ -189,6 +189,7 @@ class FeedTrip extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
+
         var showTabBar=true;
         if(this.state.shouldHideDetailView!==prevState.shouldHideDetailView){
             if(this.state.shouldHideDetailView){

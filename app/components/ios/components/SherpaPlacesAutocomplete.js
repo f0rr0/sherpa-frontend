@@ -1,6 +1,5 @@
 import React, { PropTypes } from 'react';
-import { TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight, TouchableWithoutFeedback, Platform, ActivityIndicator, PixelRatio,Animated } from 'react-native';
-
+import { TextInput, View, ListView, Image, Text, Dimensions, TouchableHighlight,TouchableOpacity, TouchableWithoutFeedback, Platform, ActivityIndicator, PixelRatio,Animated } from 'react-native';
 const defaultStyles = {
     container: {
         flex: 1,
@@ -38,7 +37,7 @@ const defaultStyles = {
     },
     row: {
         padding: 13,
-        height: 44,
+        height: 40,
         flexDirection: 'row',
     },
     separator: {
@@ -64,6 +63,7 @@ const SherpaPlacesAutocomplete = React.createClass({
         placeholder: React.PropTypes.string,
         placeholderTextColor: React.PropTypes.string,
         onPress: React.PropTypes.func,
+        onPressProfile: React.PropTypes.func,
         minLength: React.PropTypes.number,
         fetchDetails: React.PropTypes.bool,
         autoFocus: React.PropTypes.bool,
@@ -213,10 +213,15 @@ const SherpaPlacesAutocomplete = React.createClass({
     },
 
     _abortRequests() {
-        for (let i = 0; i < this._requests.length; i++) {
-            this._requests[i].abort();
+        for (let i = 0; i < this._placeRequests.length; i++) {
+            this._placeRequests[i].abort();
         }
-        this._requests = [];
+        this._placeRequests = [];
+
+        for (let i = 0; i < this._peopleRequests.length; i++) {
+            this._peopleRequests[i].abort();
+        }
+        this._peopleRequests = [];
     },
 
     /**
@@ -235,40 +240,7 @@ const SherpaPlacesAutocomplete = React.createClass({
         if (this.refs.textInput) this.refs.textInput.blur();
     },
 
-    getCurrentLocation() {
-        var self = this;
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    self._requestNearby(position.coords.latitude, position.coords.longitude);
-
-                    alert("current position is : LAT : " + position.coords.latitude + " / LNG : " + position.coords.longitude);
-                },
-                (error) => alert(error.message),
-                {enableHighAccuracy: true, timeout: 10000, maximumAge: 1000}
-            );
-        };
-    },
-
-    // getCurrentLocation() {
-    // navigator.geolocation.getCurrentPosition(
-    //   (position) => {
-    //     // this._requestNearby(position.coords.latitude, position.coords.longitude);
-    //   },
-    //   (error) => {
-    //     this._disableRowLoaders();
-    //     if (error.code <= 2) { // timeout
-    //       alert("you have no gps or other problem - high accuracy");
-    //     }
-    //     if (error.code == 3) { // timeout
-    //       alert("search timed out");
-    //       this.getLowAccuracyLocation();
-    //     }
-    //   },
-    //   {enableHighAccuracy: true, timeout: 5000, maximumAge: 1000}
-    // );
-    // },
-
+ 
     getLowAccuracyLocation() {
         navigator.geolocation.getCurrentPosition(
             (position) => {
@@ -312,71 +284,6 @@ const SherpaPlacesAutocomplete = React.createClass({
         }
     },
     _onPress(rowData) {
-        // console.log(rowData.isPredefinedPlace);
-        // if (rowData.isPredefinedPlace !== true && this.props.fetchDetails === true) {
-        //this.props.onPress(rowData, "MYTEST");
-        if (false) {
-            // if (rowData.isLoading === true) {
-            //   // already requesting
-            //   return;
-            // }
-            //
-            // this._abortRequests();
-            //
-            // // display loader
-            // this._enableRowLoader(rowData);
-            //
-            // // fetch details
-            // const request = new XMLHttpRequest();
-            // this._requests.push(request);
-            // request.timeout = this.props.timeout;
-            // request.ontimeout = this.props.onTimeout;
-            // request.onreadystatechange = () => {
-            //   if (request.readyState !== 4) {
-            //     return;
-            //   }
-            //   if (request.status === 200) {
-            //     const responseJSON = JSON.parse(request.responseText);
-            //     if (responseJSON.status === 'OK') {
-            //       if (this.isMounted()) {
-            //         const details = responseJSON.result;
-            //         this._disableRowLoaders();
-            //         this._onBlur();
-            //
-            //         this.setState({
-            //           text: rowData.properties.label,
-            //         });
-            //
-            //         delete rowData.isLoading;
-            //         this.props.onPress(rowData, details);
-            //       }
-            //     } else {
-            //       this._disableRowLoaders();
-            //       console.warn('mapzen places autocomplete: ' + responseJSON.status);
-            //     }
-            //   } else {
-            //     this._disableRowLoaders();
-            //     console.warn('mapzen places autocomplete: request could not be completed or has been aborted');
-            //   }
-            // };
-            // request.open('GET', 'https://pelias.trysherpa.com/v1/autocomplete?api_key=search-XXXXXX&focus.point.lat=48.1&focus.point.lon=11.4&text=Am%20Sulzbogen%2020');
-            // request.send();
-        } else if (rowData.isCurrentLocation === true) {
-
-            // display loader
-            this._enableRowLoader(rowData);
-
-
-            this.setState({
-                text: rowData.properties.label,
-            });
-            this.triggerBlur(); // hide keyboard but not the results
-
-            delete rowData.isLoading;
-
-            this.getCurrentLocation();
-
-        } else {
             this.setState({
                 text: rowData.properties.label,
             });
@@ -389,10 +296,14 @@ const SherpaPlacesAutocomplete = React.createClass({
 
             // sending predefinedPlace as details for predefined places
             this.props.onPress(predefinedPlace, predefinedPlace);
-        }
+    },
+    _onPressProfile(rowData) {
+        this._onBlur();
+        this.props.onPressProfile(rowData);
     },
     _results: [],
-    _requests: [],
+    _placeRequests: [],
+    _peopleRequests: [],
 
     _getPredefinedPlace(rowData) {
         if (rowData.isPredefinedPlace !== true) {
@@ -425,61 +336,7 @@ const SherpaPlacesAutocomplete = React.createClass({
         return results;
     },
 
-
-    _requestNearby(latitude, longitude) {
-        this._abortRequests();
-
-        this.setState({
-            dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults([])),
-        });
-
-        if (latitude !== undefined && longitude !== undefined && latitude !== null && longitude !== null) {
-            const request = new XMLHttpRequest();
-            this._requests.push(request);
-            request.timeout = this.props.timeout;
-            request.ontimeout = this.props.onTimeout;
-            request.onreadystatechange = () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    const responseJSON = JSON.parse(request.responseText);
-
-                    this._disableRowLoaders();
-                    // console.log(responseJSON.features[0].properties);
-                    if (typeof responseJSON.features !== 'undefined') {
-                        if (this.isMounted()) {
-                            this._results = responseJSON.geocoding.features;
-                            this.setState({
-                                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.features)),
-                            });
-                        }
-                    }
-                    if (typeof responseJSON.error_message !== 'undefined') {
-                        //console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
-                    }
-                } else {
-                    // console.warn("mapzen places autocomplete: request could not be completed or has been aborted");
-                }
-            };
-
-            // https://mapzen.com/documentation/search/reverse/#distance-confidence-scores-for-the-results
-            var mapzenSearch = this.props.baseUrl+"autocomplete?layers=borough,locality,county,macrocounty,region,macroregion,country&point.lat="+ latitude + "&point.lon=" + longitude;
-             //console.log(mapzenSearch);
-            request.open('GET', mapzenSearch);
-            request.send();
-        } else {
-            this._results = [];
-            this.setState({
-                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults([])),
-            });
-        }
-    },
-
-
-
-
-    _request(text) {
+    _request(text){
         this._abortRequests();
 
         this._results = [];
@@ -489,10 +346,64 @@ const SherpaPlacesAutocomplete = React.createClass({
 
         this.setState({uiState:'searching'});
 
-
         if (text.length > this.props.minLength) {
+            this._requestPeople(text);
+            this._requestPlaces(text);
+        }else{
+            this.setState({uiState:'clear'});
+        }
+    },
+
+    _requestPeople(text){
+        const request = new XMLHttpRequest();
+        this._placeRequests.push(request);
+        request.timeout = this.props.timeout;
+        request.ontimeout = this.props.onTimeout;
+        request.onreadystatechange = () => {
+            if (request.readyState !== 4) {
+                return;
+            }
+            if (request.status === 200) {
+                const responseJSON = JSON.parse(request.responseText);
+                console.log('people response',responseJSON);
+                // console.log(responseJSON.features[0].properties);
+                //if (typeof responseJSON.features !== 'undefined') {
+                    if (this.isMounted()) {
+                        for(var i=0;i<responseJSON.profiles.length;i++){
+                            var profile=responseJSON.profiles[i];
+                            profile.type='profile';
+                            if(i<2)this._results.push(profile);
+                        }
+                        //this._results=this._results.concat(responseJSON.features);
+
+                        this.setState({
+                            results:this._results,
+                            dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults( this._results)),
+                        });
+                        if(this._results.length==0){
+                            this.setState({uiState:'noresults'});
+                        }else{
+                            this.setState({uiState:'results'});
+                        }
+                    }
+                //}
+                if (typeof responseJSON.error_message !== 'undefined') {
+                    console.warn('mapzen places autocomplete: ' + responseJSON.error_message);
+                }
+            } else {
+
+                // console.warn("mapzen places autocomplete: request could not be completed or has been aborted");
+            }
+        };
+
+        var mapzenSearch = this.props.baseUrl+'/search/profile/autocomplete?size=2&q='+encodeURIComponent(text);
+        request.open('GET', mapzenSearch);
+        request.send();
+    },
+
+    _requestPlaces(text) {
             const request = new XMLHttpRequest();
-            this._requests.push(request);
+            this._placeRequests.push(request);
             request.timeout = this.props.timeout;
             request.ontimeout = this.props.onTimeout;
             request.onreadystatechange = () => {
@@ -504,13 +415,18 @@ const SherpaPlacesAutocomplete = React.createClass({
                     // console.log(responseJSON.features[0].properties);
                     if (typeof responseJSON.features !== 'undefined') {
                         if (this.isMounted()) {
-                            this._results = responseJSON.features;
+                            for(var i=0;i<responseJSON.features.length;i++){
+                                let feature=responseJSON.features[i];
+                                feature.type='location';
+                                if(i<2)this._results.unshift(feature);
+                            }
+                            //this._results=this._results.concat(responseJSON.features);
                             this.setState({
                                 results:this._results,
-                                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(responseJSON.features)),
+                                dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(this._results)),
                             });
                             //console.log(responseJSON.features.length)
-                            if(responseJSON.features.length==0){
+                            if(this._results.length==0){
                                 this.setState({uiState:'noresults'});
                             }else{
                                 this.setState({uiState:'results'});
@@ -525,15 +441,10 @@ const SherpaPlacesAutocomplete = React.createClass({
                     // console.warn("mapzen places autocomplete: request could not be completed or has been aborted");
                 }
             };
-            var mapzenSearch = this.props.baseUrl+'autocomplete?layers=borough,locality,county,macrocounty,region,macroregion,country&text=' +encodeURIComponent(text);
 
-            //console.log(mapzenSearch);
-            //console.log('search query',encodeURIComponent(text))
+            var mapzenSearch = this.props.baseUrl+'/geosearch/autocomplete?layers=borough,locality,county,macrocounty,region,macroregion,country&text=' +encodeURIComponent(text);
             request.open('GET', mapzenSearch);
             request.send();
-        }else{
-            this.setState({uiState:'clear'});
-        }
     },
     _onChangeText(text) {
         this._request(text);
@@ -566,10 +477,8 @@ const SherpaPlacesAutocomplete = React.createClass({
         return null;
     },
 
-    _renderRow(rowData = {}) {
-        // rowData.properties.name = rowData.properties.name || rowData.formatted_address || rowData.properties.region;
-        // console.log(rowData);
-        return (
+    _renderLocationRow(rowData){
+        return(
             <TouchableHighlight
                 onPress={() =>
           this._onPress(rowData)
@@ -578,18 +487,71 @@ const SherpaPlacesAutocomplete = React.createClass({
             >
                 <View>
                     <View style={[defaultStyles.separator, this.props.styles.separator]} />
-                    <View style={[defaultStyles.row, this.props.styles.row, rowData.isPredefinedPlace ? this.props.styles.specialItemRow : {}]}>
-                        <Text
-                            style={[{flex: 1}, defaultStyles.description, this.props.styles.description, rowData.isPredefinedPlace ? this.props.styles.predefinedPlacesDescription : {}]}
-                            numberOfLines={1}
-                        >
-                            {rowData.properties.label}
-                        </Text>
-                        {this._renderLoader(rowData)}
+                    <View style={[defaultStyles.row, this.props.styles.row]}>
+                        <View style={{flexDirection:"row"}}>
+                            <Image style={{marginRight:16,marginLeft:8,marginTop:0}} source={require('../../../Images/icons/pin.png')}></Image>
+                        </View>
+                        <View style={[{flex:1,height:20}]}>
+                            <Text
+                                style={[ defaultStyles.description, this.props.styles.description]}
+                                numberOfLines={1}
+                            >
+                                {rowData.properties.label}
+                            </Text>
+                            <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>{rowData.properties.layer}</Text>
+                        </View>
                     </View>
                 </View>
             </TouchableHighlight>
-        );
+        )
+    },
+
+    _renderProfileRow(rowData){
+        //console.log(rowData)
+        return(
+            <TouchableOpacity
+                activeOpacity={1}
+                onPress={() =>
+          this._onPressProfile(rowData)
+        }
+                underlayColor="#c8c7cc"
+            >
+                <View>
+                    <View style={[defaultStyles.separator, this.props.styles.separator]} />
+                    <View style={[defaultStyles.row, this.props.styles.row]}>
+                        <View style={{flexDirection:"row"}}>
+                            <Image style={{marginRight:10,marginTop:0,width:25,height:25,borderRadius:12,overflow:"hidden"}} source={{uri:rowData.payload.serviceProfilePicture}}></Image>
+                            <View style={[{flex:1,height:20}]}>
+                                <Text
+                                    style={[ defaultStyles.description, this.props.styles.description]}
+                                    numberOfLines={1}
+                                >
+                                    {rowData.payload.serviceFullName}
+                                </Text>
+                                <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>@{rowData.payload.serviceUsername}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            </TouchableOpacity>
+        )
+    },
+
+    _renderRow(rowData = {}) {
+
+        //console.log(rowData);
+        // rowData.properties.name = rowData.properties.name || rowData.formatted_address || rowData.properties.region;
+
+        switch(rowData.type){
+            case 'location':
+                return this._renderLocationRow(rowData);
+                break;
+            case 'profile':
+                return this._renderProfileRow(rowData);
+                break;
+
+        }
+
     },
 
     _onBlur() {

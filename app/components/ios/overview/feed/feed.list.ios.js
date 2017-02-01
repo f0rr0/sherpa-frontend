@@ -93,6 +93,7 @@ class FeedList extends React.Component{
         Orientation.lockToPortrait();
 
         getFeed(this.props.user.sherpaID,-1,'featured-profiles').then((response)=>{
+            console.log(response.data);
             this.setState({featuredProfiles:response.data})
         })
 
@@ -142,6 +143,8 @@ class FeedList extends React.Component{
             trip
         });
     }
+
+
 
     _onFetch(page=1,callback){
         getFeed(this.props.user.sherpaID,page,'feed').then((response)=>{
@@ -198,6 +201,7 @@ class FeedList extends React.Component{
     }
 
     showUserProfile(user){
+        console.log('user',user);
         this.props.navigator.push({
             id: "profile",
             trip:{owner:user}
@@ -212,7 +216,7 @@ class FeedList extends React.Component{
                         <FeaturedProfile
                             key={"profile"+index}
                             style={{width:75,height:75,borderRadius:75,overflow:"hidden",flexDirection:'row',marginLeft:index==0?15:10,marginRight:index==this.state.featuredProfiles.length-1?15:0}}
-                            onPress={()=>{this.showUserProfile(profile)}}
+                            onPress={()=>{console.log('profile',profile);this.showUserProfile(profile)}}
                             profileImageUrl={profile.serviceProfilePicture}
                         >
                         </FeaturedProfile>
@@ -282,6 +286,10 @@ class FeedList extends React.Component{
         }
     }
 
+    refreshCurrentScene(){
+        console.log('refresh current scene feed');
+    }
+
     _renderSearchInput(ref){
         const {endpoint,version,feed_uri,user_uri} = sherpa;
         const workPlace = {properties:{label:"No results"}};
@@ -293,7 +301,7 @@ class FeedList extends React.Component{
                     placeholder="Discover the World"
                     ref={ref}
                     placeholderTextColor={'rgba(0,0,0,.5)'}
-                    baseUrl={endpoint+version+"/geosearch/"}
+                    baseUrl={endpoint+version}
                     clearButtonMode='always'
                     onSubmitEditing={this.showTripLocation.bind(this)}
                     textInputProps={{
@@ -305,6 +313,10 @@ class FeedList extends React.Component{
                         dismissKeyboard();
                         }
                     }}
+                    onPressProfile={(data)=>{
+                      //map data
+                     this.showUserProfile.bind(this)(data.payload)
+                    }}
                     onPress={this.showTripLocation.bind(this)}
                     styles={{
                                 listView:{
@@ -313,7 +325,9 @@ class FeedList extends React.Component{
                                  description: {
                                     fontWeight: 'normal',
                                     fontFamily:"TSTAR-bold",
-                                    fontSize:12
+                                    fontSize:12,
+                                    fontWeight:"600",
+                                    letterSpacing:.2
                                 },
                                 textInput: {
                                     backgroundColor: 'white',
@@ -347,9 +361,10 @@ class FeedList extends React.Component{
                                 row:{
                                    height:75,
                                    alignItems:'center',
+
                                    padding:0,
                                    backgroundColor:'white',
-                                   paddingLeft:20,
+                                   paddingLeft:15,
                                    marginBottom:-2
                                 },
                                 listView:{

@@ -53,6 +53,8 @@ export function addMomentToSuitcase(momentID){
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
+                console.log('added to suitcase')
+
             }).catch(err=>console.log(err));
         }
     });
@@ -74,7 +76,7 @@ export function checkSuitcased(momentID){
                         return rawServiceResponse.text();
                     }).then((response)=> {
                     fulfill(response);
-                }).catch(err=>console.log(err));
+                }).catch(err=>reject(err));
             }
         });
     })
@@ -97,6 +99,7 @@ export function removeMomentFromSuitcase(momentID){
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
+                    console.log('successfully removed moment suitcase',response);
             }).catch(err=>console.log(err));
         }
     });
