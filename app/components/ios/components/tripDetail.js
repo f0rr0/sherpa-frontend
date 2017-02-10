@@ -98,15 +98,6 @@ class TripDetail extends React.Component{
     }
 
 
-    suiteCaseTrip(){
-        this.setState({suitcased:!this.state.suitcased});
-        if(!this.state.suitcased){
-            this.props.suitcase?this.props.suitcase():this.suitecaseMoment();
-        }else{
-            this.props.unsuitcase?this.props.unsuitcase():this.unsuitecaseMoment();
-        }
-    }
-
     reset(){
         return true;
     }
@@ -114,27 +105,19 @@ class TripDetail extends React.Component{
     _renderSuitcaseButton(){
         return(
             <Animated.View style={{marginTop:this.props.gap,marginBottom:this.props.gap,borderRadius:this.props.borderRadius,overflow:'hidden'}}>
-                <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white,borderRadius:0}} textStyle={{color:Colors.highlight}} onPress={()=>{this.suiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
-                <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.suiteCaseTrip()}} text="ADD TO YOUR SUITCASE"></SimpleButton>
+                <SimpleButton icon="is-suitcased-button"  style={{marginTop:0,backgroundColor:Colors.white,borderRadius:0}} textStyle={{color:Colors.highlight}} onPress={()=>{this.props.unSuiteCaseTrip()}} text="ADDED TO YOUR SUITCASE"></SimpleButton>
+                <SimpleButton icon="suitcase-button" style={{marginTop:-55,opacity:this.state.suitcased?0:1}} onPress={()=>{this.props.suiteCaseTrip()}} text="ADD TO YOUR SUITCASE"></SimpleButton>
             </Animated.View>
         )
     }
 
 
     render(){
-        console.log('moment data',this.state.momentData)
         var momentData=this.state.momentData;
         if(!momentData)return null;
 
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
         var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{momentData.caption}</Text>:null;
-
-        console.log({
-            latitude: parseFloat(momentData.lat),
-            longitude: parseFloat(momentData.lng),
-            latitudeDelta: 1,
-            longitudeDelta: 1,
-        })
 
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,

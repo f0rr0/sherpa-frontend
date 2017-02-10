@@ -12,6 +12,7 @@ import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import Dimensions from 'Dimensions';
 import UserImage from '../../components/userImage'
+import MarkerMap from '../../components/MarkerMap'
 var windowSize=Dimensions.get('window');
 import config from '../../../../data/config';
 import store from 'react-native-simple-store';
@@ -77,6 +78,7 @@ class OwnUserProfile extends React.Component {
         this.state= {
             annotations:[],
             trips:[],
+            hometownGuide:null,
             tooltipOpacity:new Animated.Value(1),
             isRescraping:false
         };
@@ -139,7 +141,9 @@ class OwnUserProfile extends React.Component {
         this.itemsLoadedCallback=callback;
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
             callback(response.data);
-            this.setState({trips:response.data,feedReady:true})
+            let trips=response.data;
+            let hometownGuide=trips.shift();
+            this.setState({hometownGuide,trips,feedReady:true})
         });
     }
 
@@ -172,7 +176,6 @@ class OwnUserProfile extends React.Component {
                 paginationFetchingView={this._renderEmpty.bind(this)}
                 footerView={()=>{
                     let activeView=null
-                    console.log(this.props.user.scrapeFromInstagram)
                     if(!this.props.user.scrapeFromInstagram){
                         activeView=
                         <SimpleButton onPress={()=>{
@@ -298,14 +301,28 @@ class OwnUserProfile extends React.Component {
         )
     }
 
+    showProfileMap(moments){
+        this.props.navigator.push({
+             id: "tripDetailMap",
+             trip:{moments},
+             title:this.props.user.username.toUpperCase()+"'S TRAVELS",
+             sceneConfig:"bottom",
+             hideNav:true
+        });
+    }
+
     _renderHeader(){
         var trips=this.state.trips;
-        var moments=0;
+        var moments=[];
+
         if(trips){
             for(var i=0;i<trips.length;i++){
-                moments+=trips[i].moments.length;
+                Array.prototype.push.apply(moments,trips[i].moments)
             }
         }
+
+        if(this.state.hometownGuide)Array.prototype.push.apply(moments,this.state.hometownGuide.moments);
+
         var hasDescriptionCopy=true;
 
 
@@ -314,6 +331,15 @@ class OwnUserProfile extends React.Component {
             : null;
 
 
+
+
+        const hometownGuide=this.state.hometownGuide?
+            <View>
+                <TripRow tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRAVELS</Text>
+                <TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}><MarkerMap moments={moments} interactive={false}></MarkerMap></TouchableOpacity>
+            </View>
+            :null;
 
         return (
             <View>
@@ -335,14 +361,14 @@ class OwnUserProfile extends React.Component {
                     </View>
                 </View>
                 {tooltip}
-
-
+                {hometownGuide}
                 {this.props.navigation.default}
             </View>
         )
     }
 
     _renderRow(tripData) {
+        if(!tripData)return null;
         return (
             <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
         );

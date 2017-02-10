@@ -184,7 +184,7 @@ class Feed extends Component {
             break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suitcase} unsuitcase={route.unsuitcase} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
             break;
             case "profile":
                 showNav=true;

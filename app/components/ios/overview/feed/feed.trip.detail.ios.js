@@ -2,7 +2,7 @@ import { connect } from 'react-redux';
 import countries from './../../../../data/countries'
 import moment from 'moment';
 //import Mapbox from "react-native-mapbox-gl";
-import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
+import {checkSuitcased} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
@@ -128,12 +128,12 @@ class TripDetail extends React.Component{
 
     suitecaseMoment(){
         this.setState({suitcased:true});
-        addMomentToSuitcase(this.props.momentID);
+        this.props.suiteCaseTrip();
     }
 
     unsuitecaseMoment(){
         this.setState({suitcased:false});
-        removeMomentFromSuitcase(this.props.momentID);
+        this.props.unSuiteCaseTrip();
     }
 
 

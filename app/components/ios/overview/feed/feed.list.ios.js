@@ -41,7 +41,8 @@ var styles=StyleSheet.create({
         alignItems:'center',
         justifyContent:"center",
         paddingBottom:50,
-    }
+    },
+    headerImage:{position:"absolute",top:0,left:0,flex:1,height:228,width:windowSize.width,opacity:1 },
 });
 
 const snapOffset=20;
@@ -62,7 +63,8 @@ class FeedList extends React.Component{
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
             mapMoments:[],
-            isFixed:true
+            isFixed:true,
+            scrollY:new Animated.Value(0)
         };
     }
 
@@ -174,20 +176,37 @@ class FeedList extends React.Component{
     }
 
     _renderHeader(){
+        let windowHeight=windowSize.height;
         return (
-            <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start',zIndex:1}}>
-                <TouchableWithoutFeedback onPress={this.openMap.bind(this)}>
-                    <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:this.state.mapHeight,width:windowSize.width,marginBottom:30,zIndex:2}}>
-                       <Image source={require('./../../../../Images/feed-map.png')} resizeMode="cover" style={{height:mapBaseHeight,width:windowSize.width}}></Image>
+            <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start'}}>
+                <TouchableOpacity style={{backgroundColor:'blue'}} onPress={this.openMap.bind(this)}>
+                    <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
+                       <Animated.Image source={require('./../../../../Images/feed-map.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
+                        ,{
+                                transform: [,{
+                        scale: this.state.scrollY.interpolate({
+                            inputRange: [ -mapBaseHeight, 0],
+                            outputRange: [3, 1.1],
+                             extrapolate: 'clamp'
+                        })
+                    },{translateY:this.state.scrollY.interpolate({
+                                                    inputRange: [ -mapBaseHeight,0],
+                                                    outputRange: [-40, 0],
+                                                    extrapolate: 'clamp',
+                                                })}]
+                                }
+                       ]}></Animated.Image>
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
                             <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
                        </View>
                         {/*{this._renderFixedSearchBar()}*/}
                     </Animated.View>
-                </TouchableWithoutFeedback>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
-                {this._renderFeaturedProfiles.bind(this)()}
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
+                </TouchableOpacity>
+                <View style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
+                    {this._renderFeaturedProfiles.bind(this)()}
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
+                </View>
             </View>
         )
     }
@@ -390,20 +409,19 @@ class FeedList extends React.Component{
             <View>
                 {this._renderAnimatedSearchBar()}
                 <SherpaGiftedListview
-                    // Fixes feed-rendering anomaly, issue #3 but may cause performance issues w/ memory usage
                     removeClippedSubviews={false}
-                    //
                     renderHeaderOnInit={true}
                     enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
                     pagination={true} // enable infinite scrolling using touch to load more
-                    refreshable={true} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
+                    scrollEventThrottle={8}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
@@ -411,6 +429,11 @@ class FeedList extends React.Component{
                     }}
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
+
+                      Animated.event(
+                          [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                        )(event);
+
                      this.offset = currentOffset;
                             //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
                             this.refs.inputAnimated._onBlur();

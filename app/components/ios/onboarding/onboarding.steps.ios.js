@@ -138,7 +138,7 @@ class OnboardingSteps extends Component {
         super(props);
         this.state={
             hometown:{'name':this.props.user.hometown},
-            hometownBG:{uri:"http://www.thomasragger.com/fallback.png"},
+            hometownBG:{uri:""},
             darken:false
         }
     }
@@ -148,7 +148,7 @@ class OnboardingSteps extends Component {
             sherpaHeaders.append("token", this.props.user.sherpaToken);
             const {endpoint,version,user_uri} = sherpa;
 
-            fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/lasthometownmoment/",{
+            fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/most-liked/",{
                 method:'get',
                 headers:sherpaHeaders
             }).then((rawServiceResponse)=>{

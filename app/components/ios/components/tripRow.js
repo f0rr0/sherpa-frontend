@@ -73,11 +73,10 @@ class TripRow extends Component {
 
         //console.log('trip data',tripData);
 
-        const featuredMap=tripData.isHometown?<View style={{left:15,height:260,width:windowSize.width-30}}><MarkerMap interactive="false" moments={tripData.moments}></MarkerMap></View>:null
 
 
         return(
-        <TouchableOpacity onPress={() => this.props.showTripDetail(tripData)} activeOpacity={1} style={{height:tripData.isHometown?725:windowSize.width-30,marginBottom:14}} >
+        <TouchableOpacity onPress={() => this.props.showTripDetail(tripData)} activeOpacity={1} style={{height:tripData.isHometown?450:windowSize.width-30,marginBottom:10}} >
             <View style={tripData.isHometown?styles.listItemContainerFeatured:styles.listItemContainer} >
                 <View style={styles.listItem}>
                     <Image
@@ -119,7 +118,6 @@ class TripRow extends Component {
                     </Animated.View>
                 </View>
             </View>
-                {featuredMap}
         </TouchableOpacity>
         )
     }
