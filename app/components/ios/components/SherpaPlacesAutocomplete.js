@@ -372,7 +372,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                         for(var i=0;i<responseJSON.profiles.length;i++){
                             var profile=responseJSON.profiles[i];
                             profile.type='profile';
-                            if(i<2)this._results.push(profile);
+                            if(i<3)this._results.push(profile);
                         }
                         //this._results=this._results.concat(responseJSON.features);
 
@@ -418,7 +418,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                             for(var i=0;i<responseJSON.features.length;i++){
                                 let feature=responseJSON.features[i];
                                 feature.type='location';
-                                if(i<2)this._results.unshift(feature);
+                                if(i<3)this._results.unshift(feature);
                             }
                             //this._results=this._results.concat(responseJSON.features);
                             this.setState({

@@ -188,28 +188,8 @@ class FeedTrip extends Component {
 
     _renderFooterView(){
         return <View style={{marginBottom:20}}>
-            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.exploreLocation()}} text="Explore"></SimpleButton>
+            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"Explore "+this.props.trip.locus.country}></SimpleButton>
         </View>
-    }
-
-    exploreLocation(){
-
-        var locus=this.props.trip.locus.country_gid.split(":");
-        var locationData={
-            layer:locus[1],
-            source:locus[0],
-            source_id:locus[2]
-        }
-
-        this.props.trip.layer=locus[1];
-        this.props.trip.source=locus[0];
-        this.props.trip.source_id=locus[2];
-
-        this.props.navigator.push({
-            id: "location",
-            trip:this.props.trip,
-            version:"v2"
-        });
     }
 
     navActionRight(){
@@ -325,11 +305,26 @@ class FeedTrip extends Component {
         });
     }
 
-    showTripLocation(trip){
-        //console.log('show location',trip)
+    showTripLocation(data){
+        let locus=data.locus.split(":");
+        var locationData={
+            layer:locus[1],
+            source:locus[0],
+            source_id:locus[2]
+        };
+        console.log('show trip location',{name:data.name,...locationData})
+
+
+        this.props.trip.layer=locus[1];
+        this.props.trip.source=locus[0];
+        this.props.trip.source_id=locus[2];
+
+
+
         this.props.navigator.push({
             id: "location",
-            trip
+            trip:{name:data.name,...locationData},
+            version:"v2"
         });
     }
 
@@ -352,6 +347,7 @@ class FeedTrip extends Component {
         var country = countries.filter(function(country) {
             return country["alpha-2"].toLowerCase() === tripLocation.toLowerCase();
         })[0];
+
 
         if(country)tripLocation=country.name;
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
@@ -412,7 +408,7 @@ class FeedTrip extends Component {
 
                             <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOU WENT TO":this.props.trip.owner.serviceUsername.toUpperCase()+' WENT TO'}</Text>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                            {/*<TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>*/}
+                            <TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>
                             </View>
 
                         <View style={styles.subTitleContainer}>

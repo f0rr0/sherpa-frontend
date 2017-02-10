@@ -1,6 +1,6 @@
 'use strict';
 
-import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState} from '../../../actions/user.actions';
+import {addNotificationsDeviceToken,setUserHometown,updateUserData,updateUserDBState,enableScraping} from '../../../actions/user.actions';
 import { connect } from 'react-redux';
 import Dimensions from 'Dimensions';
 import Swiper from 'react-native-swiper';
@@ -18,6 +18,7 @@ import {
     StyleSheet,
     View,
     Text,
+    TouchableOpacity,
     TouchableHighlight,
 } from 'react-native';
 
@@ -93,7 +94,7 @@ var styles = StyleSheet.create({
         height:50,
         alignItems:'center',
         justifyContent:'center',
-        width:windowSize.width*.8
+        width:windowSize.width-30
     },
     buttonHalf:{
         width:windowSize.width*.4
@@ -120,11 +121,12 @@ var styles = StyleSheet.create({
         color:"#FFFFFF"
     },
     textStyleNormal:{
-        fontSize:30,
+        fontSize:32,
         letterSpacing:2,
         fontFamily:"TSTAR-bold",
         color:'white',
-        textAlign:'center'
+        textAlign:'center',
+        left:0,
     },
     textStyleHighlight:{
         color:Colors.highlight
@@ -174,6 +176,11 @@ class OnboardingSteps extends Component {
         }
     }
 
+    _enableScraping(enable){
+        this.props.dispatch(enableScraping(enable));
+        this.refs.onboardingSlider.scrollBy(1);
+    }
+
     render() {
         var me=this;
         return (
@@ -181,7 +188,7 @@ class OnboardingSteps extends Component {
                 <OnboardingScreen
                     darken={this.state.darken}
                     backgroundImage={this.state.hometownBG}
-                        continueButton={<SimpleButton style={{width:windowSize.width*.8}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
+                        continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
                         <View>
                             <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
@@ -226,14 +233,31 @@ class OnboardingSteps extends Component {
                                      }
                                  }}/>
                              </View>
-                             <View style={{position:"absolute",top:130,flex:1,width:windowSize.width*.8,left:windowSize.width*.1}}>
+                             <View style={{position:"absolute",top:130,flex:1,width:windowSize.width-30,left:15}}>
                                 <Text style={styles.textStyleNormal}>{"Is this your\nhome base?".toUpperCase()}</Text>
-                                <Text style={[styles.textStyleNormal,{fontSize:9,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
+                                <Text style={[styles.textStyleNormal,{fontWeight:"900",fontSize:10,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
                              </View>
                          </View>
                         }
 
                     />
+
+                    <OnboardingScreen
+                        darken={true}
+                        topAreaStyle={{top:220}}
+                        headline={"Let's show\nthe world where you've been"}
+                        description="create your profile via instagram?"
+                        backgroundImage={require('./../../../Images/onboarding-scrape-permission.png')}
+                        continueButton={
+                        <View>
+                            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this._enableScraping.bind(this)(true)}} text="yep, let's do this"></SimpleButton>
+                              <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }>
+
+                    </OnboardingScreen>
 
 
                     <OnboardingScreen

@@ -62,7 +62,7 @@ class FeedList extends React.Component{
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
             mapMoments:[],
-            isFixed:false
+            isFixed:true
         };
     }
 
@@ -129,6 +129,7 @@ class FeedList extends React.Component{
     }
 
     showTripLocation(data){
+        console.log('data properties :',data.properties);
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -181,7 +182,7 @@ class FeedList extends React.Component{
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
                             <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
                        </View>
-                        {this._renderFixedSearchBar()}
+                        {/*{this._renderFixedSearchBar()}*/}
                     </Animated.View>
                 </TouchableWithoutFeedback>
                 <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
@@ -250,15 +251,14 @@ class FeedList extends React.Component{
 
     _renderAnimatedSearchBar(){
         return(
-            <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'}  style={{
+            <Animated.View  pointerEvents={this.state.isFixed?'auto':'auto'}  style={{
                      position:'absolute',
                      top:this.state.searchbarTopOffset,
-                     zIndex:1,
-                     opacity:this.state.isFixed?1:0
+                     zIndex:1
                 }}>
 
 
-                <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'} style={{
+                <Animated.View  pointerEvents={this.state.isFixed?'auto':'auto'} style={{
                     backgroundColor:'white',
                     borderRadius:2,
                     shadowColor:'black',
@@ -276,8 +276,8 @@ class FeedList extends React.Component{
     }
 
     _updateSearchInput(text){
-        this.refs.listview.refs.listview.refs.inputFixed.setAddressText(text)
-        this.refs.listview.refs.listview.refs.inputFixed._onChangeText(text)
+        //this.refs.listview.refs.listview.refs.inputFixed.setAddressText(text)
+        //this.refs.listview.refs.listview.refs.inputFixed._onChangeText(text)
         if(!this.state.isFixed){
             this.refs.inputAnimated.setAddressText(text)
             this.refs.inputAnimated._onChangeText(text)
@@ -310,7 +310,7 @@ class FeedList extends React.Component{
                         Animated.spring(this.state.inputFocusOffset,{toValue:0}).start()
                         dismissKeyboard();
                             if(this.refs.inputAnimated)this.refs.inputAnimated._onBlur();
-                            if(this.refs.inputFixed)this.refs.inputFixed._onBlur();
+                            //if(this.refs.inputFixed)this.refs.inputFixed._onBlur();
                         }
                     }}
                     onPressProfile={(data)=>{
@@ -412,7 +412,7 @@ class FeedList extends React.Component{
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      this.offset = currentOffset;
-                            this.refs.listview.refs.listview.refs.inputFixed._onBlur();
+                            //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
                             this.refs.inputAnimated._onBlur();
 
                      if(currentOffset>(topOffset-snapOffset)){

@@ -65,6 +65,8 @@ class Root extends Component {
             case "available-new":
                 this.setState({currentView:"onboarding-steps"});
             break;
+            case "request-invite":
+            break;
             case "not-whitelisted":
                 this.setState({currentView:"not-whitelisted"});
             break;

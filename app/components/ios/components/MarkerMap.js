@@ -210,8 +210,8 @@ class TripDetailMap extends Component{
                 <MapView
                     style={styles.map}
                     //region={this.region}
-                    zoomEnabled={this.props.interactive}
-                    scrollEnabled={this.props.interactive}
+                    zoomEnabled={!!this.props.interactive}
+                    scrollEnabled={!!this.props.interactive}
                     initialRegion={this.state.initialRegion}
                     showsPointsOfInterest={!this.props.interactive}
                     onRegionChange={this._onRegionChange.bind(this)}

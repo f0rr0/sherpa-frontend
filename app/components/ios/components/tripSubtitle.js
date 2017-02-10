@@ -17,75 +17,17 @@ class TripSubtitle extends Component {
     }
 
     render() {
-        var tripData=this.props.tripData;
-        var tripName=tripData.name.trim();
+        var locuses=this.props.tripData.locus;
+        let subTitle=[];
 
-
-        var continents=["europe","asia","africa","america","united states","australia","antarctica"];
-        var country = countries.filter(function(country) {
-            return country["alpha-2"] === tripData.country;
-        })[0];
-
-
-        var tripCountry=tripData.country;
-        if(tripData.country.length==2){
-            tripCountry=country.name=countries.filter(function(country) {
-                return country["alpha-2"].toLowerCase() === tripData.country.toLowerCase();
-            })[0].name;
+        for (var key in locuses) {
+            if(key.indexOf("_gid")>-1){
+                let type=key.split("_")[0];
+                subTitle.push({name:locuses[type],locus:locuses[key]})
+            }
         }
 
-
-        if(!country)country={name:tripCountry||""};
-
-
-        var isTripNameCountry = countries.filter(function(country) {
-            return country["name"].toLowerCase() === tripName.toLowerCase();
-        })[0];
-
-        var isTripNameContinent = false;
-
-        for(var i=0;i<continents.length;i++){
-            if(tripName.toLowerCase()==continents[i].toLowerCase())isTripNameContinent=true;
-        }
-
-
-
-        var isState=tripData.type=='state';
-        var isInAmerica=tripData.country=="US"||((country["alpha-2"]&&country["alpha-2"].toUpperCase()==="US")||country.name.toLowerCase()=='united states'||country.name.toLowerCase()=='america'||tripData.name.toUpperCase().indexOf("AMERICA")>-1);
-        var countryOrState=isState?tripData.state:country.name;
-
-        if(tripData.type=='location')countryOrState=isInAmerica?tripData.state:country.name;
-        if(tripData.type=='state')countryOrState=country.name;
-
-
-        var subTitle=[]
-        let initialNode={type:tripData.type,name:tripData.name}
-        initialNode[tripData.type]=tripData[tripData.type];
-        //subTitle.push(initialNode);
-
-        if(isTripNameContinent){
-            //subTitle="";
-        } else if(((tripData.type=='state'&&!isInAmerica) || tripData.type=='region' || tripData.type=='location' )&&countryOrState!=tripData.continent){
-            let countryStateType=isState?'state':'country';
-            let countryStateNode={name:countryOrState,type:countryStateType}
-            countryStateNode[countryStateType]=countryOrState;
-
-            subTitle.push(countryStateNode);
-            subTitle.push({name:tripData.continent,type:'continent',continent:tripData.continent});
-        }
-        else if(isTripNameCountry||isState||countryOrState===tripData.continent){
-            if(tripData.continent)subTitle.push({type:'continent',name:tripData.continent,continent:tripData.continent})
-        }else{
-            let countryStateType=isState?'state':'country';
-            let countryStateNode={name:countryOrState,type:countryStateType}
-            countryStateNode[countryStateType]=countryOrState;
-
-            subTitle.push(countryStateNode);
-            subTitle.push({name:tripData.continent,type:'continent',continent:tripData.continent});
-        }
-
-
-        return (
+        return(
             <View style={{flexDirection:'row'}}>
                 {subTitle.map((el,index)=>{
                     const divider=index<subTitle.length-1?<Text style={[styles.subtitle,{marginHorizontal:2}]}>/</Text>:null;

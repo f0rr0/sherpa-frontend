@@ -5,7 +5,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
-import {updateUserData,storeUser} from '../../../../actions/user.actions';
+import {updateUserData,storeUser,enableScraping} from '../../../../actions/user.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -60,19 +60,17 @@ var styles = StyleSheet.create({
         fontSize:12
     },
     button:{
-        backgroundColor:'#001545',
-        height:50,
         width:windowSize.width-30,
         flex:1,
-        justifyContent:'center',
-        alignItems:'center'
+        marginTop:0,
+        marginBottom:20
     },
     listViewLabel:{fontSize:12}
 });
 
 class OwnUserProfile extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.itemsLoadedCallback=null;
         this.ready=false;
 
@@ -80,7 +78,7 @@ class OwnUserProfile extends React.Component {
             annotations:[],
             trips:[],
             tooltipOpacity:new Animated.Value(1),
-            isRescraping:false,
+            isRescraping:false
         };
         this.isScraping=false;
     }
@@ -141,7 +139,7 @@ class OwnUserProfile extends React.Component {
         this.itemsLoadedCallback=callback;
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
             callback(response.data);
-            this.setState({trips:response.data})
+            this.setState({trips:response.data,feedReady:true})
         });
     }
 
@@ -165,13 +163,30 @@ class OwnUserProfile extends React.Component {
                 enableEmptySections={true}
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
+                renderHeaderOnInit={true}
                 firstLoader={true}  // display a loader for the first fetching
                 pagination={false}  // enable infinite scrolling using touch to load more
                 refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                 withSections={false}// enable sections
                 ref="listview"
                 paginationFetchingView={this._renderEmpty.bind(this)}
-
+                footerView={()=>{
+                    let activeView=null
+                    console.log(this.props.user.scrapeFromInstagram)
+                    if(!this.props.user.scrapeFromInstagram){
+                        activeView=
+                        <SimpleButton onPress={()=>{
+                            this.isRescraping=true;
+                            this.props.dispatch(enableScraping(true));
+                            this.checkScrapeStatus();
+                        }} style={[styles.button]}text="create your travel profile via instagram"></SimpleButton>
+                    }
+                    return(
+                        <View style={{flex:1,justifyContent:'flex-start',alignItems:'center'}}>
+                            {activeView}
+                        </View>
+                    )
+                }}
                 onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
                      var direction = currentOffset > this.offset ? 'down' : 'up';
@@ -245,13 +260,41 @@ class OwnUserProfile extends React.Component {
     }
 
 
-
-
     _renderEmpty(){
+
+        let status;
+
+        if(this.isRescraping){
+            status=this._renderStillScraping();
+        }else if(this.state.trips.length==0){
+            status=
+                <View style={{justifyContent: 'center', width:windowSize.width,alignItems: 'center'}}>
+                    <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
+                </View>
+        }else if(this.state.trips.length>0){
+            status=
+                <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
+                    <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                </View>
+        }
+
         return (
-            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
-                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
-            </View>
+            this.props.user.scrapeFromInstagram?status:null
+        )
+    }
+
+    _renderStillScraping(){
+        let trips=this.state.trips;
+        let scrapeMessage=
+            this.isRescraping?
+                <View style={{flex:1,justifyContent: 'center',alignItems: 'center'}}>
+                    <View style={{flex:1,justifyContent:'center',height:50,width:50,alignItems:'center'}}>
+                        <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                    </View>
+                    <Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are scraping your profile. Please check back soon!</Text>
+                </View>:null;
+        return(
+           scrapeMessage
         )
     }
 
@@ -265,16 +308,6 @@ class OwnUserProfile extends React.Component {
         }
         var hasDescriptionCopy=true;
 
-        var status=!this.isRescraping?
-            <View style={{opacity:trips.length>0?0:1,justifyContent: 'center', height:400,position:'absolute',top:0,left:0,width:windowSize.width,alignItems: 'center'}}>
-                <Text style={{color:"#bcbec4",width:250,marginTop:300,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
-            </View>:
-            <View style={{opacity:trips[0]?0:1,flex:1,justifyContent: 'center', height:400,position:'absolute',top:0,width:windowSize.width,alignItems: 'center'}}>
-                <View style={{flex:1,justifyContent:'center',height:50,marginTop:300,width:50,alignItems:'center'}}>
-                    <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
-                </View>
-                <Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are still scraping your profile. Please check back soon!</Text>
-            </View>;
 
         const tooltip=!this.props.user.usedAddTrip?
                 <TouchableOpacity style={{position:'absolute',left:5,top:50}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image></TouchableOpacity>
@@ -300,7 +333,6 @@ class OwnUserProfile extends React.Component {
                             <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.website}</Text>
                         </Hyperlink>
                     </View>
-                    {status}
                 </View>
                 {tooltip}
 

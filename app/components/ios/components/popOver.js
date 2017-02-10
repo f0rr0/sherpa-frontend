@@ -3,6 +3,7 @@ import {
     View,
     TouchableHighlight,
     Text,
+    TouchableOpacity,
     StyleSheet
 } from 'react-native';
 
@@ -15,7 +16,6 @@ var styles = StyleSheet.create({
         borderStyle:"solid",
         borderTopWidth:1,
         borderColor:"#d8d8d8",
-        paddingLeft:20,
         height:70,
         flex:1,
         justifyContent:"center"
@@ -26,24 +26,33 @@ var styles = StyleSheet.create({
     buttonCopy:{
         fontFamily:"TSTAR",
         letterSpacing:1,
-        fontSize:11,
+        fontSize:13,
+        textAlign:'center',
         fontWeight:"600"
     },
     container:{
         backgroundColor:'white',
-        left:0,
+        left:5,
         flex:1,
-        right:0,
+        right:5,
+        borderRadius:4,
+        overflow:'hidden',
         position:'absolute',
-        paddingBottom:100
+        shadowColor:'black',
+        shadowRadius:4,
+        shadowOpacity:.2,
+        shadowOffset:{width:0,height:-5},
+        paddingBottom:100,
     }
 });
 
 class PopOver extends Component {
     constructor(props) {
         super(props);
-        this.bottomOffset = new Animated.Value(-400);
-        this.enabled=false;
+        this.state={
+            enabled:false,
+            bottomOffset:new Animated.Value(-400)
+        }
     }
 
     componentDidMount(){
@@ -53,7 +62,8 @@ class PopOver extends Component {
         if(enable=="toggle")enable=!this.enabled;
         if(this.enabled!=enable){
             this.enabled=enable;
-            Animated.spring(this.bottomOffset, {
+            this.setState({enabled:this.enabled})
+            Animated.spring(this.state.bottomOffset, {
                 toValue: enable?-40:-400   // return to start
             }).start()
         }
@@ -130,7 +140,10 @@ class PopOver extends Component {
 
 
         return (
-                <Animated.View style={[styles.container,{bottom: this.bottomOffset}]}>
+            <Animated.View style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:this.state.bottomOffset.interpolate({inputRange:[-400,-40],outputRange:['rgba(0,0,0,0)','rgba(0,0,0,.3)'],extrapolate:'clamp'})}} pointerEvents={this.state.enabled?"auto":"none"} >
+            <TouchableOpacity onPress={()=>{this._setAnimation(false)}} activeOpacity={1} style={{position:'absolute',top:0,left:0,bottom:0,right:0}}>
+
+                <Animated.View style={[styles.container,{bottom: this.state.bottomOffset}]}>
                     {editTripButton}
                     {deleteTripButton}
                     {shareButton}
@@ -140,6 +153,8 @@ class PopOver extends Component {
                     {emailFeedbackButton}
                     {cancelButton}
                 </Animated.View>
+            </TouchableOpacity>
+            </Animated.View>
         );
     }
 }

@@ -116,8 +116,11 @@ class FeedLocation extends Component {
             searchType='search-places';
         }
 
+        console.log('request location data',req);
+
         getFeed(req,page,searchType).then((response)=>{
             //console.log('response::',response)
+            console.log('response',response);
             if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
@@ -177,7 +180,7 @@ class FeedLocation extends Component {
     }
 
     renderProfiles(){
-        //console.log(this.state.rawData,':: raw data');
+        console.log(this.state.rawData,':: raw data');
         const profiles=this.state.rawData.location.relatedData.topProfiles;
         return(
             <View style={{flexDirection:'row',alignItems:'center',height:26,justifyContent:'flex-start',width:windowSize.width-30}}>

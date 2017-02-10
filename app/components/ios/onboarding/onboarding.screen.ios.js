@@ -24,24 +24,18 @@ var styles = StyleSheet.create({
         textAlign:"center"
     },
     headline:{
+        fontSize:32,
+        letterSpacing:2,
         fontFamily:"TSTAR-bold",
-        fontSize:13,
-        marginTop:40,
-        letterSpacing:.5
+        color:'white',
+        textAlign:'center',
+        left:0,
     },
     buttonText:{
         fontFamily:"TSTAR-bold",
         color:"#FFFFFF"
     },
-    description:{
-        fontFamily:"Avenir LT Std",
-        fontSize:12,
-        lineHeight:14,
-        letterSpacing:.25,
-        color:"#38383a",
-        marginTop:15,
-        width:windowSize.width*.7>400?400:windowSize.width*.7
-    },
+    description:{fontWeight:"900",fontSize:10,marginTop:2,letterSpacing:.8,opacity:.8},
     topArea:{
         alignItems:"center",
         height:windowSize.height*.25,
@@ -54,8 +48,8 @@ var styles = StyleSheet.create({
     },
     bottomArea:{
         alignItems:"center",
-        justifyContent:"center",
-        height:windowSize.height*.25
+        justifyContent:"flex-end",
+        height:windowSize.height*.25,
     },
     button:{
         backgroundColor:'#001545',
@@ -95,9 +89,9 @@ class OnboardingScreen extends Component {
                 )
                 }})()}
 
-                <View style={styles.topArea}>
-                    <Text style={[styles.baseText,styles.headline]}>{this.props.headline}</Text>
-                    <Text style={[styles.baseText,styles.description]}>{this.props.description}</Text>
+                <View style={[styles.topArea,this.props.topAreaStyle]}>
+                    <Text style={[styles.baseText,styles.headline]}>{this.props.headline.toUpperCase()}</Text>
+                    <Text style={[styles.baseText,styles.headline,styles.description]}>{this.props.description.toUpperCase()}</Text>
                 </View>
 
                 <View style={styles.middleArea}>
@@ -117,5 +111,9 @@ class OnboardingScreen extends Component {
 }
 
 
+OnboardingScreen.defaultProps={
+    headline:"",
+    description:""
+}
 
 export default OnboardingScreen;

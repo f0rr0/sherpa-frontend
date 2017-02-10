@@ -14,6 +14,7 @@ import moment from 'moment';
 
 import TripTitle from "./tripTitle";
 import UserImage from "./userImage";
+import MarkerMap from "./MarkerMap";
 var windowSize=Dimensions.get('window');
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
@@ -24,13 +25,20 @@ var styles=StyleSheet.create({
         flex: 1,
         //backgroundColor: "#fcfcfc",
         justifyContent: "center",
-        alignItems: 'center'
+        alignItems: 'center',
     },
     listItemContainer: {
         flex: 1,
         width: windowSize.width - 30,
         height: windowSize.width - 30,
         marginBottom: 14
+    },
+
+    listItemContainerFeatured:{
+        height:450,
+        width: windowSize.width,
+        marginBottom: 14,
+        //backgroundColor:'red'
     },
 
     imageRowContainer:{flex:1,width:windowSize.width-30},
@@ -42,7 +50,7 @@ var styles=StyleSheet.create({
     darkener:{flex:1, backgroundColor:"rgba(0,0,0,.2)"},
     userImageContainer:{position:'absolute',bottom:15,left:15,flex:1,alignItems:'center',backgroundColor:'transparent'},
 
-    imageProgressBar:{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}
+    tripImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.width-30,width:windowSize.width-30,opacity:1}
 });
 
 class TripRow extends Component {
@@ -63,48 +71,55 @@ class TripRow extends Component {
         if(!tripData.moments[0])return null;
         if(!tripData.country || !tripData.continent || !tripData.name)return null;
 
+        //console.log('trip data',tripData);
+
+        const featuredMap=tripData.isHometown?<View style={{left:15,height:260,width:windowSize.width-30}}><MarkerMap interactive="false" moments={tripData.moments}></MarkerMap></View>:null
+
 
         return(
-        <TouchableOpacity activeOpacity={1} style={styles.listItemContainer} onPress={() => this.props.showTripDetail(tripData)}>
-            <View style={styles.listItem}>
-                <Image
-                    style={[styles.imageProgressBar]}
-                    resizeMode="cover"
-                    source={{uri:tripData.moments[0].serviceJson?tripData.moments[0].serviceJson.images.thumbnail.url:tripData.moments[0].mediaUrl}}
-                >
-                    <View style={styles.darkener}></View>
-                    <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
-                </Image>
+        <TouchableOpacity onPress={() => this.props.showTripDetail(tripData)} activeOpacity={1} style={{height:tripData.isHometown?725:windowSize.width-30,marginBottom:14}} >
+            <View style={tripData.isHometown?styles.listItemContainerFeatured:styles.listItemContainer} >
+                <View style={styles.listItem}>
+                    <Image
+                        style={[styles.tripImage,{height:tripData.isHometown?450:windowSize.width-30,width:tripData.isHometown?windowSize.width:windowSize.width-30}]}
+                        resizeMode="cover"
+                        source={{uri:tripData.moments[0].serviceJson?tripData.moments[0].serviceJson.images.thumbnail.url:tripData.moments[0].mediaUrl}}
+                    >
+                        <View style={styles.darkener}></View>
+                        <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                    </Image>
 
-                <Animated.Image
-                    style={[styles.imageProgressBar,{opacity:this.state.imageLoadedOpacity}]}
-                    resizeMode="cover"
-                    source={{uri:tripData.moments[0].mediaUrl}}
-                    onLoad={() => {
-                         Animated.timing(this.state.imageLoadedOpacity,{toValue:1,duration:200}).start()
-                    }}
+                    <Animated.Image
+                        style={[styles.tripImage,{opacity:this.state.imageLoadedOpacity,height:tripData.isHometown?450:windowSize.width-30,width:tripData.isHometown?windowSize.width:windowSize.width-30}]}
+                        resizeMode="cover"
+                        source={{uri:tripData.moments[0].mediaUrl}}
+                        onLoad={() => {
+                             Animated.timing(this.state.imageLoadedOpacity,{toValue:1,duration:200}).start()
+                        }}
 
-                >
-                    <View style={styles.darkener}></View>
-                </Animated.Image>
+                    >
+                        <View style={styles.darkener}></View>
+                    </Animated.Image>
 
-                <Animated.View style={[styles.userImageContainer,{opacity:this.state.imageLoadedOpacity}]}>
-                    <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
-                </Animated.View>
+                    <Animated.View style={[styles.userImageContainer,{opacity:this.state.imageLoadedOpacity}]}>
+                        <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
+                    </Animated.View>
 
-                <Animated.View style={[styles.imageRowContainer,{opacity:this.state.imageLoadedOpacity}]}>
+                    <Animated.View style={[styles.imageRowContainer,{opacity:this.state.imageLoadedOpacity}]}>
 
 
-                    <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername}></TripTitle>
+                        <TripTitle tripData={tripData} tripOwner={tripData.owner.serviceUsername}></TripTitle>
 
-                    <View style={styles.tripDataFootnoteContainer}>
-                        <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{tripData.moments.length}</Text>
-                        <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
-                    </View>
-                </Animated.View>
+                        <View style={styles.tripDataFootnoteContainer}>
+                            <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                            <Text style={styles.tripDataFootnoteCopy}>{tripData.moments.length}</Text>
+                            <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                            <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
+                        </View>
+                    </Animated.View>
+                </View>
             </View>
+                {featuredMap}
         </TouchableOpacity>
         )
     }

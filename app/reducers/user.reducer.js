@@ -24,7 +24,8 @@ const initialState={
     isExistingLogin:false,
     profileID:-1,
     usedSuitcase:false,
-    usedAddTrip:false
+    usedAddTrip:false,
+    scrapeFromInstagram:true
 };
 
 export default function userReducer(state=initialState,action){
@@ -50,6 +51,7 @@ export default function userReducer(state=initialState,action){
                 jobID:              action.userData.jobID || state.jobID,
                 hometown:           action.userData.hometown == undefined ? state.hometown:action.userData.hometown,
                 whiteListed:        action.userData.whiteListed == undefined ?state.whiteListed:action.userData.whiteListed,
+                scrapeFromInstagram:action.userData.scrapeFromInstagram == undefined ?state.scrapeFromInstagram:action.userData.scrapeFromInstagram,
                 isExistingLogin:    action.userData.isExistingLogin == undefined ?state.isExistingLogin:action.userData.isExistingLogin,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
                 notificationToken:  action.userData.notificationToken || state.notificationToken,

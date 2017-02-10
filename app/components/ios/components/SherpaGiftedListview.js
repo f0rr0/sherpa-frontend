@@ -39,7 +39,6 @@ var SherpaGiftedListview = React.createClass({
             firstLoader: true,
             pagination: true,
             refreshable: true,
-            footerView:function(){},
             refreshableColors: undefined,
             refreshableProgressBackgroundColor: undefined,
             refreshableSize: undefined,
@@ -51,7 +50,7 @@ var SherpaGiftedListview = React.createClass({
             scrollEnabled: true,
             withSections: false,
             onFetch(page, callback, options) { callback([]); },
-
+            footerView:()=>{return <View></View>},
             paginationFetchingView: null,
             paginationAllLoadedView: null,
             paginationWaitingView: null,
@@ -109,7 +108,7 @@ var SherpaGiftedListview = React.createClass({
         }
 
         return (
-            <View>{this.props.footerView()}</View>
+            <View></View>
             //<View style={[this.defaultStyles.paginationView, this.props.customStyles.paginationView]}>
             //  <Text style={[this.defaultStyles.actionsLabel, this.props.customStyles.actionsLabel]}>
             //    ~
@@ -272,17 +271,27 @@ var SherpaGiftedListview = React.createClass({
     },
 
     _renderPaginationView() {
+        let pagedFooterView=null;
         if ((this.state.paginationStatus === 'fetching' && this.props.pagination === true) || (this.state.paginationStatus === 'firstLoad' && this.props.firstLoader === true)) {
-            return this.paginationFetchingView();
+            pagedFooterView= this.paginationFetchingView();
         } else if (this.state.paginationStatus === 'waiting' && this.props.pagination === true && (this.props.withSections === true || this._getRows().length > 0)) {
-            return this.paginationWaitingView(this._onPaginate);
+            pagedFooterView= this.paginationWaitingView(this._onPaginate);
         } else if (this.state.paginationStatus === 'allLoaded' && this.props.pagination === true) {
-            return this.paginationAllLoadedView();
+            pagedFooterView= this.paginationAllLoadedView();
         } else if (this._getRows().length === 0) {
-            return this.emptyView(this._onRefresh);
+            pagedFooterView= this.emptyView(this._onRefresh);
         } else {
-            return null;
+            pagedFooterView= null;
         }
+
+        //console.log(this.props.footerView());
+
+        return(
+            <View style={{flex:1}}>
+                {this.props.footerView()}
+                {pagedFooterView}
+            </View>
+        )
     },
 
     renderRefreshControl() {

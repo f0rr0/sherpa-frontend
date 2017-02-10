@@ -38,6 +38,30 @@ export function updateUserDBState(userDBState){
     };
 }
 
+export function enableScraping(enable){
+    return function (dispatch, getState) {
+        return store.get('user').then((user) => {
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token",user.sherpaToken);
+            const {endpoint,version,user_uri} = sherpa;
+
+            fetch(endpoint + "v1/profile/" +user.serviceID + "/opt-in", {
+                method: 'post',
+                headers: sherpaHeaders,
+                body: JSON.stringify({
+                    "value": enable
+                })
+            }).then((rawServiceResponse)=> {
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=> {
+                console.log('opt in response',rawSherpaResponse)
+            });
+            console.log('update reducer enable:: ', enable)
+            dispatch(updateUserData({scrapeFromInstagram: enable}))
+        })
+    }
+}
+
 export function addMomentToSuitcase(momentID){
     return store.get('user').then((user) => {
         if(user){
@@ -53,7 +77,7 @@ export function addMomentToSuitcase(momentID){
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
-                console.log('added to suitcase')
+                //console.log('added to suitcase')
 
             }).catch(err=>console.log(err));
         }
@@ -99,7 +123,7 @@ export function removeMomentFromSuitcase(momentID){
                 .then((rawServiceResponse)=>{
                     return rawServiceResponse.text();
                 }).then((response)=>{
-                    console.log('successfully removed moment suitcase',response);
+                    //console.log('successfully removed moment suitcase',response);
             }).catch(err=>console.log(err));
         }
     });
@@ -260,11 +284,12 @@ export function loadUser() {
     return function (dispatch, getState) {
         //dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-        //
+            //console.log(user.userDBState,'initial user db state');
             if(user&&!config.resetUser) {
                 //setTimeout(()=>{
                     dispatch(updateUserDBState("available-existing"));
                     dispatch(updateUserData(user));
+                //console.log('user',user);
                 //},800)
             }else{
                 store.delete('user').then(()=>{
@@ -333,9 +358,9 @@ export function loadUser() {
 
 export function storeUser() {
     return function (dispatch, getState) {
-        dispatch(updateUserDBState("process"));
         const { userReducer } = getState();
         store.save('user', userReducer);
+        dispatch(updateUserDBState("process"));
     }
 }
 
@@ -453,7 +478,6 @@ export function signupUser(){
             if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
             const queryData = encodeQueryData(queryObject);
 
-
             //console.log({
             //    email:userReducer.email,
             //    inviteCode:userReducer.inviteCode,
@@ -483,6 +507,8 @@ export function signupUser(){
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 //console.log('sherpa response',sherpaResponse)
                 const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings} = sherpaResponse.user;
+
+                //console.log('user resposne',rawSherpaResponse)
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -515,15 +541,18 @@ export function signupUser(){
                         //if(user.isExistingLogin){
                             dispatch(updateUserDBState("login-denied"));
                             dispatch(updateUserData({isExistingLogin:false}))
+                            dispatch(storeUser());
                         //}else{
                         //    dispatch(updateUserDBState("not-whitelisted"));
                         //}
                     })
                 }else if(sherpaResponse.invitation=="requested"){
                     dispatch(updateUserDBState("not-whitelisted"));
+                    dispatch(storeUser());
                 }else{
                     dispatch(updateUserSignupState("sherpa_token_complete"));
                     dispatch(updateUserDBState("available-new"));
+                    dispatch(storeUser());
                 }
 
 
