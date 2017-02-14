@@ -27,20 +27,19 @@ export default class SimpleError extends React.Component {
     }
 
     show(){
-        Animated.spring(this.state.offsetTop, {toValue: 0,friction:8}).start();
+        Animated.spring(this.state.offsetTop, {toValue: 5,friction:8}).start();
     }
 
 
     render () {
         return (
-            <Animated.View style={[errorStyles.errorContainer,{top:this.state.offsetTop}]}>
-            <TouchableWithoutFeedback onPress={this.hide.bind(this)} style={[errorStyles.errorContainer]}>
-                <View style={errorStyles.errorContainer}>
-                    <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
-                    <Text style={errorStyles.errorMessage}>{this.props.errorMessage.toUpperCase()}</Text>
-                </View>
+            <TouchableWithoutFeedback onPress={this.hide.bind(this)} >
+
+                <Animated.View style={[errorStyles.errorContainer,{top:this.state.offsetTop}]}>
+                        <Text style={errorStyles.errorMessage}>{this.props.errorMessage.toUpperCase()}</Text>
+                        <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
+                </Animated.View>
             </TouchableWithoutFeedback>
-            </Animated.View>
         )
     }
 }

@@ -13,9 +13,9 @@ import SimpleButton from './simpleButton';
 import RNFetchBlob from 'react-native-fetch-blob';
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
-import Dimensions from 'Dimensions';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import { Fonts, Colors } from '../../../Themes/'
+import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import dismissKeyboard from 'react-native-dismiss-keyboard';
 
@@ -102,10 +102,17 @@ class LocationName extends Component{
                                             },
                                             onBlur:(e)=>{
                                                 //this.moveDown();
+                                            },
+                                            onChangeText:(text)=>{
+                                                if(text.length==0){
+                                                    this.props.moment.venue=""
+                                                }
                                             }
                                          }}
 
                     fetchDetails={true}
+
+
                     onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                                             var result=details.address_components;
                                             var info={};

@@ -156,6 +156,9 @@ export function getFeed(query,page=1,type='') {
                         feedRequestURI = endpoint + version + "/search";
                         searchBody = query
                     break;
+                    case "map-search-v2":
+                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
+                    break;
                     case "map-search-classic":
                         feedRequestURI = endpoint + version + "/search/bbox";
                         searchBody = query
@@ -317,6 +320,7 @@ export function getFeed(query,page=1,type='') {
                             case "search-places-v2":
                             case "search-people":
                             case "location-search":
+                            case "map-search-v2":
 
                                 let cleanMoments=[];
                                 let moments=type=="search-places-v2"?parsedResponse.moments:parsedResponse;

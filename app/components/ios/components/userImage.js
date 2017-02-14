@@ -69,7 +69,7 @@ class UserImage extends Component {
         return(
             <TouchableOpacity onPress={()=>{this.props.onPress()}} style={this.props.style}>
                 <View style={{height:this.props.radius,width:this.props.radius}}>
-                    <BlurImageLoader imageStyle={{height:this.props.radius,width:this.props.radius,borderWidth:1.5,borderColor:"#FFFFFF",borderRadius:this.props.radius/2}} thumbUrl={imageURL.replace("s150x150","s50x50")} largeUrl={imageURL} style={this.props.style}  />
+                    <BlurImageLoader imageStyle={{height:this.props.radius,width:this.props.radius,borderWidth:1.5,borderColor:this.props.border?"#FFFFFF":'transparent',borderRadius:this.props.radius/2}} thumbUrl={imageURL.replace("s150x150","s50x50")} largeUrl={imageURL} style={this.props.style}  />
                 </View>
             </TouchableOpacity>
         )
@@ -80,6 +80,7 @@ UserImage.defaultProps={
     radius:50,
     imageURL:"",
     userID:"",
+    border:true,
     onPress:function(){return}
 }
 

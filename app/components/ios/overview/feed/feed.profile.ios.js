@@ -172,19 +172,19 @@ class FeedProfile extends React.Component {
 
         return (
             <View style={{marginBottom:15}}>
-                <View style={{backgroundColor:'#FFFFFF', height:600, width:windowSize.width,marginBottom:-290,marginTop:100}} >
+                <View style={{backgroundColor:'#FFFFFF', height:600, width:windowSize.width,marginBottom:-290,marginTop:75}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
                         <UserImage onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
                         }} radius={80} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
 
-                        <Text style={{color:"#282b33",fontSize:20,marginBottom:0, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.hometown}</Text>
+                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:25,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
+                            <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
                         </Hyperlink>
+                        <Text style={{color:"#949494",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.props.trip.owner.hometown}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["website"]}</Text>
+                            <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10,marginTop:5, fontFamily:"TSTAR", textAlign:'center', fontWeight:"600",backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["website"].replace("http://","").replace("https://","")}</Text>
                         </Hyperlink>
                     </View>
                 </View>

@@ -75,7 +75,7 @@ class SherpaInstagramPicker extends Component {
             fetchParams.after = this.state.lastCursor;
         }
 
-        getUserInstagramPhotos()
+        getUserInstagramPhotos(this.state.images.length?this.state.images[this.state.images.length-1].node.image.id:null)
             .then((data) => this._appendImages(data), (e) => console.log(e));
     }
 
@@ -98,11 +98,14 @@ class SherpaInstagramPicker extends Component {
             loadingMore: false,
         };
 
-        this.setState({})
+
+        //console.log('this state images :: ',this.state.images);
 
         //if (!data.page_info.has_next_page) {
-            newState.noMore = true;
+        //    newState.noMore = true;
         //}
+
+        //console.log(assets,'::',assets.length)
         if (assets.length > 0) {
             var images=[];
             for(var i=0;i<assets.length;i++){
@@ -119,6 +122,7 @@ class SherpaInstagramPicker extends Component {
                                 "venue": asset.location ? asset.location.name : null,
                                 "location": asset.location ? asset.location.name : null,
                                 "state": "",
+                                "id":asset.id,
                                 "country": "",
                                 "caption": asset.caption ? asset.caption.text : null,
                                 "serviceJson": _.pick(asset, [
@@ -142,13 +146,14 @@ class SherpaInstagramPicker extends Component {
                     });
                 }
             }
-
             //newState.lastCursor = data.page_info.end_cursor;
             newState.images = this.state.images.concat(images);
             //console.log('data source->append images');
             newState.dataSource = this.state.dataSource.cloneWithRows(
                 this._nEveryRow(newState.images, this.props.imagesPerRow)
             );
+        }else{
+            newState.noMore = true;
         }
 
         this.setState(newState);
@@ -264,6 +269,7 @@ class SherpaInstagramPicker extends Component {
     }
 
     _onEndReached() {
+        //console.log('load more instagram')
         if (!this.state.noMore) {
             this.fetch();
         }

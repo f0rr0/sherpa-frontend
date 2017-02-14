@@ -61,16 +61,11 @@ class AddTrip extends React.Component {
             var momentBlobs=this.props.momentData||[];
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
-                //console.log(exifData);
 
                 let gps=exifData['gps'];
                 let lat=gps?gps['Latitude']:0;
                 let lng=gps?gps['Longitude']:0;
                 let dateTime=new Date();
-                //Alert.alert(
-                //    'Exif data',
-                //    exifData.exif.DateTimeOriginal
-                //)
 
                 if(exifData.exif.DateTimeOriginal){
                     dateTime=exifData.exif.DateTimeOriginal.split(' ');
@@ -78,16 +73,6 @@ class AddTrip extends React.Component {
                     dateTime[0] = dateTime[0].replace(regex, '-');
                 }
 
-                //console.log('moment date',new Date(dateTime).getTime());
-                //Alert.alert(
-                //    'processed datetime',
-                //    dateTime.toString()
-                //)
-                //
-                //Alert.alert(
-                //    'Exif data',
-                //    (new Date(dateTime[0]).getTime()/1000).toString()
-                //)
 
                 momentBlobs.push({
                     "lat":lat,

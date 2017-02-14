@@ -152,9 +152,11 @@ class OnboardingSteps extends Component {
                 method:'get',
                 headers:sherpaHeaders
             }).then((rawServiceResponse)=>{
+                console.log('raw sercvice response',rawServiceResponse)
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
+                console.log(parsedResponse);
                 this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
             });
     }
@@ -177,12 +179,46 @@ class OnboardingSteps extends Component {
     }
 
     _enableScraping(enable){
+        console.log('enable scraping',enable)
         this.props.dispatch(enableScraping(enable));
         this.refs.onboardingSlider.scrollBy(1);
     }
 
+    _renderScrapingPermission(){
+
+    }
+
+    _renderNotificationPermission(){
+
+    }
+
+    _renderHometownSelection(){
+
+    }
+
+
     render() {
         var me=this;
+
+        const onboardingPermission=
+            <OnboardingScreen
+                darken={true}
+                topAreaStyle={{top:220}}
+                headline={"Let's show\nthe world where you've been"}
+                description="create your profile via instagram?"
+                backgroundImage={require('./../../../Images/onboarding-scrape-permission.png')}
+                continueButton={
+                        <View>
+                            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this._enableScraping.bind(this)(true)}} text="yep, let's do this"></SimpleButton>
+                              <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
+                            </TouchableOpacity>
+                        </View>
+                    }>
+
+            </OnboardingScreen>;
+
+
         return (
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
                 <OnboardingScreen
@@ -242,22 +278,7 @@ class OnboardingSteps extends Component {
 
                     />
 
-                    <OnboardingScreen
-                        darken={true}
-                        topAreaStyle={{top:220}}
-                        headline={"Let's show\nthe world where you've been"}
-                        description="create your profile via instagram?"
-                        backgroundImage={require('./../../../Images/onboarding-scrape-permission.png')}
-                        continueButton={
-                        <View>
-                            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this._enableScraping.bind(this)(true)}} text="yep, let's do this"></SimpleButton>
-                              <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
-                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }>
-
-                    </OnboardingScreen>
+                {onboardingPermission}
 
 
                     <OnboardingScreen

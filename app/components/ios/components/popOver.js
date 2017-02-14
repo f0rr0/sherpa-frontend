@@ -15,8 +15,8 @@ var styles = StyleSheet.create({
     button:{
         borderStyle:"solid",
         borderTopWidth:1,
-        borderColor:"#d8d8d8",
-        height:70,
+        borderColor:"#e6e6e6",
+        height:50,
         flex:1,
         justifyContent:"center"
     },
@@ -27,8 +27,10 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR",
         letterSpacing:1,
         fontSize:13,
+        color:"#161616",
+        marginTop:4,
         textAlign:'center',
-        fontWeight:"600"
+        fontWeight:"800"
     },
     container:{
         backgroundColor:'white',
@@ -96,8 +98,19 @@ class PopOver extends Component {
 
         var deleteTripButton=this.props.showDeleteTrip?
             <TouchableHighlight onPress={this.props.onDeleteTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
-                <Text style={styles.buttonCopy}>DELETE TRIP</Text>
+                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>DELETE TRIP</Text>
             </TouchableHighlight>:null;
+
+        var deleteMomentButton=this.props.showDeleteMoment?
+            <TouchableHighlight onPress={this.props.onDeleteMoment.bind(this)} underlayColor="#ececec" style={styles.button}>
+                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>REMOVE FROM PROFILE</Text>
+            </TouchableHighlight>:null;
+
+        var editMomentButton=this.props.showEditMoment?
+            <TouchableHighlight onPress={this.props.onEditMoment.bind(this)} underlayColor="#ececec" style={styles.button}>
+                <Text style={[styles.buttonCopy]}>EDIT LOCATION</Text>
+            </TouchableHighlight>:null;
+
 
         var resetProfileButton=this.props.showReset?
           <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
@@ -116,8 +129,8 @@ class PopOver extends Component {
           </TouchableHighlight> : null;
 
         var cancelButton=
-            <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {this._setAnimation(false)}}>
-                <Text style={styles.buttonCopy}>CANCEL</Text>
+            <TouchableHighlight underlayColor="#ececec" style={[styles.button]} onPress={() => {this._setAnimation(false)}}>
+                <Text style={[styles.buttonCopy,{color:"#999999"}]}>CANCEL</Text>
             </TouchableHighlight>;
 
         var emailFeedbackButton=
@@ -145,12 +158,14 @@ class PopOver extends Component {
 
                 <Animated.View style={[styles.container,{bottom: this.state.bottomOffset}]}>
                     {editTripButton}
-                    {deleteTripButton}
                     {shareButton}
                     {reportPhotoButton}
                     {profileSettingsButton}
                     {settingsButton}
                     {emailFeedbackButton}
+                    {editMomentButton}
+                    {deleteMomentButton}
+                    {deleteTripButton}
                     {cancelButton}
                 </Animated.View>
             </TouchableOpacity>

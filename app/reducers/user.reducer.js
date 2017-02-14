@@ -25,10 +25,14 @@ const initialState={
     profileID:-1,
     usedSuitcase:false,
     usedAddTrip:false,
-    scrapeFromInstagram:true
+    initialGeoCount:-1,
+    scrapeFromInstagram:false
 };
 
 export default function userReducer(state=initialState,action){
+    //console.log('!! update',action);
+
+
     switch(action.type){
         case types.USER_UPDATE:
             return Object.assign({}, state, {
@@ -43,6 +47,7 @@ export default function userReducer(state=initialState,action){
                 email:              action.userData.email || state.email,
                 bio:                action.userData.bio || state.bio,
                 invite:             action.userData.invite == undefined? state.invite : action.userData.invite,
+                initialGeoCount:    !isNaN(action.userData.initialGeoCount)? action.userData.initialGeoCount : state.initialGeoCount,
                 website:            action.userData.website || state.website,
                 serviceToken:       action.userData.serviceToken || state.serviceToken,
                 sherpaToken:        action.userData.sherpaToken || state.sherpaToken,
@@ -55,7 +60,7 @@ export default function userReducer(state=initialState,action){
                 isExistingLogin:    action.userData.isExistingLogin == undefined ?state.isExistingLogin:action.userData.isExistingLogin,
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
                 notificationToken:  action.userData.notificationToken || state.notificationToken,
-                allowScrape:        action.userData.allowScrape || state.allowScrape,
+                allowScrape:        action.userData.allowScrape == undefined ?state.allowScrape:action.userData.allowScrape,
                 userContactSettings: action.userData.userContactSettings || state.userContactSettings,
                 allContactSettings: action.userData.allContactSettings || state.allContactSettings,
             });

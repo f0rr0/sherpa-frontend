@@ -152,7 +152,7 @@ class FoursquareInfoBox extends Component {
                 pricing=<View></View>
             }
 
-        console.log('venue icon',this.state.venue.icon)
+        //console.log('venue icon',this.state.venue.icon)
         return(
                 <View style={boxStyle.infoBoxContainer} >
                     <TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openFoursquare()}}>

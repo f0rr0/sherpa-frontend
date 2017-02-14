@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import supercluster from 'supercluster'
 import {getClusters} from './get-clusters';
-const DEFAULT_PADDING = { top: 100, right: 60, bottom: 100, left: 60 };
+const DEFAULT_PADDING = { top: 0, right: 60, bottom: 80, left: 60 };
 import StickyHeader from './stickyHeader';
 import Header from './header'
 import SherpaMapMarker from './SherpaMapMarker';
@@ -208,7 +208,7 @@ class TripDetailMap extends Component{
         return(
 
                 <MapView
-                    style={styles.map}
+                    style={[styles.map,this.props.style]}
                     //region={this.region}
                     zoomEnabled={!!this.props.interactive}
                     scrollEnabled={!!this.props.interactive}

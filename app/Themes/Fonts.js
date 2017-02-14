@@ -13,7 +13,7 @@ const size = {
     regular: 17,
     medium: 14,
     small: 12,
-    tiny: 11,
+    tiny: 10,
     button:11,
     input:12
 }

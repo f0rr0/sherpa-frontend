@@ -66,7 +66,7 @@ export function uploadMoment(momentBlob,momentData){
     return new Promise((fulfill,reject)=> {
         const {endpoint,version} = sherpa;
 
-        console.log(momentData,': moment data');
+        //console.log(momentData,': moment data');
 
         ImageResizer.createResizedImage(momentBlob.mediaUrl, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
             store.get('user').then((user) => {
@@ -116,7 +116,7 @@ export function getTripLocation(momentBlobs){
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
-                    console.log('cluster response',response)
+                    //console.log('cluster response',response)
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }else{
@@ -192,7 +192,7 @@ export function createTrip(tripBlob,tripLocation) {
 
                 var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create";
 
-                console.log('trip query data',queryData)
+                //console.log('trip query data',queryData)
 
                 fetch(endpoint + version + "/trip/"+createOrUpdate, {
                     method: tripBlob.trip?'put':'post',
@@ -226,10 +226,12 @@ export function getGps(exifCoord, hemi) {
     return flip * (degrees + minutes / 60 + seconds / 3600);
 }
 
-export function getUserInstagramPhotos(){
+export function getUserInstagramPhotos(maxID="1287786939763703288_184267603"){
     return new Promise((fulfill,reject)=> {
+        const max=maxID?'max_id='+maxID+'&':'';
         store.get('user').then((user) => {
-            fetch('https://api.instagram.com/v1/users/self/media/recent/?access_token='+user.serviceToken, {
+        //console.log('https://api.instagram.com/v1/users/self/media/recent/?'+max+'access_token='+user.serviceToken)
+            fetch('https://api.instagram.com/v1/users/self/media/recent/?'+max+'access_token='+user.serviceToken, {
                 method: 'get'
             }).then((rawServiceResponse)=> {
                 return rawServiceResponse.text();

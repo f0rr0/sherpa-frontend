@@ -42,7 +42,6 @@ class EditMomentNames extends React.Component {
     }
 
     componentDidMount(){
-        //console.log(this.props.momentData)
         this.makeCoverPhoto(0);
     }
 
@@ -75,7 +74,8 @@ class EditMomentNames extends React.Component {
 
         var isEmpty=false;
         for(var i=0;i<this.props.momentData.length;i++){
-            isEmpty=!this.props.momentData[i].location&&this.props.selection[i].selected;
+            isEmpty=this.props.momentData[i].venue.length==0&&this.props.selection[i].selected;
+            if(isEmpty)break;
         }
         return isEmpty;
     }

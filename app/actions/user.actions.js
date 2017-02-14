@@ -19,6 +19,7 @@ import SafariView from "react-native-safari-view";
 
 
 export function updateUserData(userData){
+    //console.log('update user data');
     return{
         type:types.USER_UPDATE,
         userData
@@ -41,6 +42,7 @@ export function updateUserDBState(userDBState){
 export function enableScraping(enable){
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
+            //console.log('request enable scrape change')
             var sherpaHeaders = new Headers();
             sherpaHeaders.append("token",user.sherpaToken);
             const {endpoint,version,user_uri} = sherpa;
@@ -54,9 +56,8 @@ export function enableScraping(enable){
             }).then((rawServiceResponse)=> {
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=> {
-                console.log('opt in response',rawSherpaResponse)
+            //console.log('update reducer enable:: ', rawSherpaResponse)
             });
-            console.log('update reducer enable:: ', enable)
             dispatch(updateUserData({scrapeFromInstagram: enable}))
         })
     }
@@ -506,9 +507,10 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 //console.log('sherpa response',sherpaResponse)
-                const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings} = sherpaResponse.user;
+                const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings,initialGeoCount} = sherpaResponse.user;
 
-                //console.log('user resposne',rawSherpaResponse)
+                //console.log('user resposne',sherpaResponse.user)
+
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -518,6 +520,7 @@ export function signupUser(){
                     jobID:sherpaResponse.jobId,
                     email,
                     fullName,
+                    initialGeoCount:0,
                     bio:userData.bio,
                     website:userData.website,
                     invite:sherpaResponse.invitation,
@@ -530,6 +533,8 @@ export function signupUser(){
                     userContactSettings: contactSettings,
                     allContactSettings: sherpaResponse.allContactSettings
                 }));
+
+
 
                 dispatch(storeUser());
                 //console.log(sherpaResponse," invite resposne")

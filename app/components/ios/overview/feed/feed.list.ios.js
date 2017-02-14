@@ -45,7 +45,7 @@ var styles=StyleSheet.create({
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:228,width:windowSize.width,opacity:1 },
 });
 
-const snapOffset=20;
+const snapOffset=75;
 const topOffset=90;
 const mediumOffset=100;
 const mapBaseHeight=228;
@@ -59,7 +59,7 @@ class FeedList extends React.Component{
             currentAppState:'undefined',
             mapLarge:false,
             mapHeight:new Animated.Value(mapBaseHeight),
-            searchbarTopOffset:new Animated.Value(snapOffset),
+            searchbarTopOffset:new Animated.Value(90),
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
             mapMoments:[],
@@ -131,7 +131,6 @@ class FeedList extends React.Component{
     }
 
     showTripLocation(data){
-        console.log('data properties :',data.properties);
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -179,7 +178,7 @@ class FeedList extends React.Component{
         let windowHeight=windowSize.height;
         return (
             <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start'}}>
-                <TouchableOpacity style={{backgroundColor:'blue'}} onPress={this.openMap.bind(this)}>
+                <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
                     <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
                        <Animated.Image source={require('./../../../../Images/feed-map.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
                         ,{
@@ -247,26 +246,26 @@ class FeedList extends React.Component{
     update(){
 
     }
-
-    _renderFixedSearchBar(){
-        return(
-            <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
-                        position:'absolute',
-                        backgroundColor:'white',
-                        shadowColor:'black',
-                        shadowRadius:4,
-                        shadowOpacity:.1,
-                        shadowOffset:{width:0,height:1},
-                        marginTop:this.state.inputFocusOffset,
-                        top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
-                        width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
-                        left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
-                        opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
-                    }}>
-                    {this._renderSearchInput('inputFixed')}
-            </Animated.View>
-        )
-    }
+    //
+    //_renderFixedSearchBar(){
+    //    return(
+    //        <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
+    //                    position:'absolute',
+    //                    backgroundColor:'white',
+    //                    shadowColor:'black',
+    //                    shadowRadius:4,
+    //                    shadowOpacity:.1,
+    //                    shadowOffset:{width:0,height:1},
+    //                    marginTop:this.state.inputFocusOffset,
+    //                    top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
+    //                    width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
+    //                    left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
+    //                    opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
+    //                }}>
+    //                {this._renderSearchInput('inputFixed')}
+    //        </Animated.View>
+    //    )
+    //}
 
     _renderAnimatedSearchBar(){
         return(

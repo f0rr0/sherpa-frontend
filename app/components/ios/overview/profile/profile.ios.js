@@ -160,6 +160,8 @@ class OwnUserProfile extends React.Component {
             <TouchableOpacity onPress={this.hideTooltip.bind(this)} style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></TouchableOpacity>
 
 
+        //console.log('scrape from isntagram',this.props.user.scrapeFromInstagram)
+
         return(
         <View style={{flex:1,backgroundColor:'white'}}>
 
@@ -180,6 +182,7 @@ class OwnUserProfile extends React.Component {
                         activeView=
                         <SimpleButton onPress={()=>{
                             this.isRescraping=true;
+                            this.setState({isRescraping:true})
                             this.props.dispatch(enableScraping(true));
                             this.checkScrapeStatus();
                         }} style={[styles.button]}text="create your travel profile via instagram"></SimpleButton>
@@ -266,20 +269,27 @@ class OwnUserProfile extends React.Component {
     _renderEmpty(){
 
         let status;
+        let message='0';
 
         if(this.isRescraping){
+
             status=this._renderStillScraping();
+            message='a';
         }else if(this.state.trips.length==0){
+            message='b';
             status=
                 <View style={{justifyContent: 'center', width:windowSize.width,alignItems: 'center'}}>
                     <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
                 </View>
         }else if(this.state.trips.length>0){
+            message='c';
             status=
                 <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
         }
+
+        //console.log('render empty == ',message);
 
         return (
             this.props.user.scrapeFromInstagram?status:null
@@ -348,15 +358,16 @@ class OwnUserProfile extends React.Component {
                         <UserImage
                           onPress={()=>{Linking.openURL("https://www.instagram.com/"+this.props.user.username);}}
                           radius={80}
+                          border={false}
                           userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
-                        <Text style={{color:"#282b33",fontSize:20,marginBottom:0, marginTop:30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
-                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:0,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.hometown}</Text>
+                        <Text style={{color:"#282b33",fontSize:20, marginTop:25,marginBottom:20,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
 
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:5, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.bio}</Text>
+                            <Text style={{color:"#000",width:300,fontSize:12,marginBottom:0, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.user.bio}</Text>
                         </Hyperlink>
+                        <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:0, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.user.hometown}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#a6a7a8",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", lineHeight:16,backgroundColor:"transparent"}}>{this.props.user.website}</Text>
+                            <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.props.user.website.replace("http://","").replace("https://","")}</Text>
                         </Hyperlink>
                     </View>
                 </View>

@@ -60,7 +60,7 @@ var styles = StyleSheet.create({
     emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
 
     suitcaseCopySmall:{marginLeft:30,color:"#FFFFFF",fontSize:10, fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent", marginTop:5},
-    suitcaseCopyLarge:{marginLeft:30,color:"#FFFFFF",fontSize:25, fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent"},
+    suitcaseCopyLarge:{marginLeft:30,color:"#FFFFFF",fontSize:25, marginTop:-1,fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent"},
     listViewLabel:{fontSize:12},
 
     suitcaseHeaderContainer:{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center',height:70},
@@ -226,7 +226,7 @@ class Suitecase extends React.Component {
 
                     </Animated.Image>
 
-                    <Animated.View style={{opacity:this.state.largeImageOpacity}}>
+                    <Animated.View style={{marginTop:3,opacity:this.state.largeImageOpacity}}>
                         <Text style={styles.suitcaseCopySmall}>{tripData.moments.length} {tripData.moments.length==1?"PLACE":"PLACES"} IN</Text>
                         <Text style={styles.suitcaseCopyLarge}>{countryOrState.toUpperCase()}</Text>
                     </Animated.View>

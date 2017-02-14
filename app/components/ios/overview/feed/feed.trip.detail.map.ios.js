@@ -77,8 +77,10 @@ class TripDetailMap extends Component{
             case "region":
 
                 var reqBody={
-                    "type": this.props.regionData.type,
-                    "limit": 50,
+                    "source":this.props.regionData.source,
+                    "source_id":this.props.regionData.source_id,
+                    "layer":this.props.regionData.layer,
+                    "page":1,
                     "bbox": {
                         "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
                         "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
@@ -86,17 +88,14 @@ class TripDetailMap extends Component{
                 };
 
 
-                reqBody[this.props.regionData.type]=this.props.regionData[this.props.regionData.type];
-
-
                 this.refs.feedlistmap.hideMarkers().start();
                 this.refs.reloadRegionButton.load();
 
-                getFeed(reqBody,-1,'map-search').then((response)=>{
+                getFeed(reqBody,-1,'map-search-v2').then((response)=>{
                     if(!this.isLeaving){
-                        this.setState({mapMoments:response.data,reqID:Math.random()})
+                        this.setState({mapMoments:response.rawData,reqID:Math.random()})
                         this.refs.feedlistmap.showMarkers().start();
-                        if(response.data.length==0){
+                        if(response.rawData.length==0){
                             this.refs.reloadRegionButton.nothing();
                         }else{
                             this.refs.reloadRegionButton.hide();

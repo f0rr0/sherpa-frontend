@@ -17,6 +17,8 @@ import {loadFeed,getFeed} from '../../../../actions/feed.actions';
 import Header from '../../components/header'
 import MapView from 'react-native-maps'
 import MarkerMap from '../../components/MarkerMap'
+import {BlurView} from 'react-native-blur';
+
 import {
     StyleSheet,
     View,
@@ -79,17 +81,21 @@ class TripDetail extends React.Component{
             suitcased: props.isSuitcased?true:(props.trip?props.trip.suitcased:false),
             momentData: null,
             routeName:"TRIP",
-            scrollY:new Animated.Value(0)
+            scrollY:new Animated.Value(0),
+            headerLoadedOpacity:new Animated.Value(0)
         }
 
+        console.log('trip detail',props.trip);
 
+        //get moment data
         getFeed(props.momentID,1,'moment').then((moment)=>{
-            //console.log(moment,'moment')
             this.setState({
                 momentData: moment.data,
                 routeName: moment.data.venue
             })
         })
+
+        //get trip data
 
     }
 
@@ -174,7 +180,8 @@ class TripDetail extends React.Component{
         var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={3}>{momentData.caption}</Text>:null;
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
-                    <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
+                <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
+
                 <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
                     <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} userID={momentData.profile.id} imageURL={momentData.profile.serviceProfilePicture}></UserImage>
                     <View style={{marginLeft:20,}}>
@@ -190,6 +197,7 @@ class TripDetail extends React.Component{
                     </View>
                 </View>
             </View>:null;
+
         return (
             <View style={{flex:1}}>
                 <ScrollView  scrollEventThrottle={8} style={{flex:1,backgroundColor:'white'}} onScroll={(event)=>{
@@ -198,8 +206,18 @@ class TripDetail extends React.Component{
                         )(event);
                 }}>
 
+                    <View style={{position:'absolute',left:0,top:0}}>
+                        <Animated.Image
+                            style={[{height:windowSize.width,width:windowSize.width,opacity:1}]}
+                            resizeMode="cover"
+                            source={{uri:momentData.serviceJson?momentData.serviceJson.images.low_resolution.url:momentData.mediaUrl}}
+                        >
+                            <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
+                        </Animated.Image>
+                    </View>
+
                     <Animated.Image
-                        style={[{height:windowSize.width,width:windowSize.width },
+                        style={[{height:windowSize.width,width:windowSize.width,opacity:this.state.headerLoadedOpacity },
                         {
                                 transform: [,{
                         scale: this.state.scrollY.interpolate({
@@ -214,6 +232,9 @@ class TripDetail extends React.Component{
                                                 })}]
                                 }]}
                         resizeMode="cover"
+                        onLoad={()=>{
+                            Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:100}).start()
+                        }}
                         source={{uri:momentData.mediaUrl}}
                     />
 
@@ -223,13 +244,13 @@ class TripDetail extends React.Component{
                     <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
-                    <TouchableOpacity style={{height:250,left:0,flex:1}}  onPress={()=>{this.showTripMap(momentData)}}>
-                        <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
+                    <TouchableOpacity style={{height:500,marginTop:-180,overflow:'hidden',left:0,flex:1,transform:[{translateY:180}]}}  onPress={()=>{this.showTripMap(momentData)}}>
+                        <MarkerMap style={{marginTop:-180}} interactive={false} moments={[momentData]}> </MarkerMap>
                     </TouchableOpacity>
 
                 </ScrollView>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
-                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} showShare={true} reportPhoto={true} momentID={momentData.id}></PopOver>
+                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{}} onDeleteMoment={()=>{}} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={true} showDeleteMoment={true}></PopOver>
             </View>
 
         )

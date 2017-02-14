@@ -232,6 +232,7 @@ class FeedTrip extends Component {
 
     render(){
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
+        //console.log(this.props.trip.moments);
 
         const completeHeader=
             <View style={styles.listViewContainer}>
@@ -264,6 +265,7 @@ class FeedTrip extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
+
 
                 <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} onEditTrip={()=>{
                       this.props.navigator.push({
@@ -312,7 +314,7 @@ class FeedTrip extends Component {
             source:locus[0],
             source_id:locus[2]
         };
-        console.log('show trip location',{name:data.name,...locationData})
+        //console.log('show trip location',{name:data.name,...locationData})
 
 
         this.props.trip.layer=locus[1];
