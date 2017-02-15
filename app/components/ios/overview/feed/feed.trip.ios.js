@@ -188,7 +188,7 @@ class FeedTrip extends Component {
 
     _renderFooterView(){
         return <View style={{marginBottom:20}}>
-            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"Explore "+this.props.trip.locus.country}></SimpleButton>
+            {this.props.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"Explore "+this.props.trip.locus.country}></SimpleButton>:null}
         </View>
     }
 

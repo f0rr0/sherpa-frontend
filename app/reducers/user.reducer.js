@@ -26,7 +26,13 @@ const initialState={
     usedSuitcase:false,
     usedAddTrip:false,
     initialGeoCount:-1,
-    scrapeFromInstagram:false
+    scrapeFromInstagram:false,
+    hometownLatitude:undefined,
+    hometownLongitude:undefined,
+    hometownImage:undefined,
+    hometownImageLowRes:undefined,
+    mostLikedImage:undefined,
+    mostLikedImageLowRes:undefined,
 };
 
 export default function userReducer(state=initialState,action){
@@ -61,8 +67,14 @@ export default function userReducer(state=initialState,action){
                 serviceObject:      action.userData.serviceObject || state.serviceObject,
                 notificationToken:  action.userData.notificationToken || state.notificationToken,
                 allowScrape:        action.userData.allowScrape == undefined ?state.allowScrape:action.userData.allowScrape,
-                userContactSettings: action.userData.userContactSettings || state.userContactSettings,
+                userContactSettings:action.userData.userContactSettings || state.userContactSettings,
                 allContactSettings: action.userData.allContactSettings || state.allContactSettings,
+                hometownLatitude:   action.userData.hometownLatitude || state.hometownLatitude,
+                hometownLongitude:  action.userData.hometownLongitude || state.hometownLongitude,
+                hometownImage:      action.userData.hometownImage || state.hometownImage,
+                hometownImageLowRes:action.userData.hometownImageLowRes || state.hometownImageLowRes,
+                mostLikedImage:     action.userData.mostLikedImage || state.mostLikedImage,
+                mostLikedImageLowRes:action.userData.mostLikedImageLowRes || state.mostLikedImageLowRes
             });
 
         break;

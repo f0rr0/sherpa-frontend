@@ -507,10 +507,25 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
                 //console.log('sherpa response',sherpaResponse)
-                const {email,id,fullName,profilePicture,profile,username,hometown, contactSettings,initialGeoCount} = sherpaResponse.user;
+                const {
+                    email,
+                    id,
+                    fullName,
+                    profilePicture,
+                    profile,
+                    username,
+                    hometown,
+                    contactSettings,
+                    initialGeoCount,
+                    hometownLatitude,
+                    hometownLongitude,
+                    hometownImage,
+                    hometownImageLowRes,
+                    mostLikedImage,
+                    mostLikedImageLowRes
+                } = sherpaResponse.user;
 
-                //console.log('user resposne',sherpaResponse.user)
-
+                console.log('user resposne',sherpaResponse.user)
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -527,6 +542,12 @@ export function signupUser(){
                     profilePicture:userData.profile_picture,
                     username,
                     hometown,
+                    hometownLatitude,
+                    hometownLongitude,
+                    hometownImage,
+                    hometownImageLowRes,
+                    mostLikedImage,
+                    mostLikedImageLowRes,
                     serviceObject:userData,
                     whiteListed:sherpaResponse.whitelisted,
                     allowScrape: sherpaResponse.allowScrape,

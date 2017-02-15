@@ -50,9 +50,9 @@ class EditTripName extends React.Component {
 
             //create moments or edit moments
             for(var i=0;i<this.props.momentData.length;i++){
-                //console.log('moment[i]',this.props.momentData[i]);
+                console.log('moment[i]',this.props.momentData[i]);
                 let momentPromise = createMoment(this.props.momentData[i]);
-
+                console.log('create moment promise')
                 moments.push(momentPromise)
             }
 
@@ -61,8 +61,9 @@ class EditTripName extends React.Component {
             this.props.headerProgress.startToMiddle();
 
             getTripLocation(this.props.momentData).then((tripLocation)=>{
-                //console.log('got trip location',tripLocation)
+                console.log('got trip location',tripLocation)
                 Promise.all(moments).then((momentsRes)=>{
+                    console.log('moments res',momentsRes);
 
                     var momentUploads=[];
                     var dates=[];
@@ -70,7 +71,9 @@ class EditTripName extends React.Component {
                     for(var i=0;i<  this.props.momentData.length;i++){
                         if(this.props.selection[i].selected){
                             momentIDs.push(momentsRes[i].id)
+                            console.log(this.props.selection[i],'selection')
                             if(this.props.selection[i].isCover){
+                                console.log('moment',momentsRes[i])
                                 coverMomentID=momentsRes[i].id;
                             }
                             this.props.selection[i].data=momentsRes[i];
@@ -94,7 +97,14 @@ class EditTripName extends React.Component {
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {
-                        console.log('uploaded moments');
+                        console.log('uploaded moments',{
+                            momentIDs,
+                            name: this.state.text,
+                            startDate,
+                            endDate,
+                            coverMomentID,
+                            trip: this.props.tripData
+                        },'trip location::',tripLocation);
                         createTrip({
                             momentIDs,
                             name: this.state.text,

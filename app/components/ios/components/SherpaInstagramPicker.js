@@ -75,7 +75,7 @@ class SherpaInstagramPicker extends Component {
             fetchParams.after = this.state.lastCursor;
         }
 
-        getUserInstagramPhotos(this.state.images.length?this.state.images[this.state.images.length-1].node.image.id:null)
+        getUserInstagramPhotos(this.state.images.length?this.state.images[this.state.images.length-1].node.image.instagram_id:null)
             .then((data) => this._appendImages(data), (e) => console.log(e));
     }
 
@@ -122,7 +122,7 @@ class SherpaInstagramPicker extends Component {
                                 "venue": asset.location ? asset.location.name : null,
                                 "location": asset.location ? asset.location.name : null,
                                 "state": "",
-                                "id":asset.id,
+                                "instagram_id":asset.id,
                                 "country": "",
                                 "caption": asset.caption ? asset.caption.text : null,
                                 "serviceJson": _.pick(asset, [

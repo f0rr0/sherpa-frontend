@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MapView from 'react-native-maps';
 import supercluster from 'supercluster'
 import {getClusters} from './get-clusters';
-const DEFAULT_PADDING = { top: 0, right: 60, bottom: 80, left: 60 };
+const DEFAULT_PADDING = { top: 60, right: 60, bottom: 80, left: 60 };
 import StickyHeader from './stickyHeader';
 import Header from './header'
 import SherpaMapMarker from './SherpaMapMarker';
