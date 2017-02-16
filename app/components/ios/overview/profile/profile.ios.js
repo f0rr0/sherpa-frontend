@@ -5,7 +5,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
-import {updateUserData,storeUser,enableScraping} from '../../../../actions/user.actions';
+import {updateUserData,storeUser,enableScraping,checkOptedIn} from '../../../../actions/user.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -86,6 +86,9 @@ class OwnUserProfile extends React.Component {
     }
 
     componentDidMount(){
+        checkOptedIn().then((res)=>{
+            this.props.dispatch(updateUserData({scrapeFromInstagram:res.optedIn}));
+        })
         this.checkScrapeStatus();
     }
 
@@ -96,6 +99,7 @@ class OwnUserProfile extends React.Component {
             const {endpoint} = sherpa;
             this.isRescraping=true;
 
+            console.log(this.props.user.scrapeState)
             fetch(endpoint+"v1/profile/"+user.serviceID+"/lastscrape/",{
                 method:'get',
                 headers:sherpaHeaders
@@ -105,8 +109,11 @@ class OwnUserProfile extends React.Component {
                 var parsedResponse=JSON.parse(rawSherpaResponse);
                 if(parsedResponse.scrapeState!=='completed'){
                     this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
+                    this.props.dispatch(updateUserData({scrapeState:'scraping'}));
+                    this.props.dispatch(storeUser());
                 }else if(parsedResponse.scrapeState=='completed'){
-                    this.isRescraping=false;
+                    this.props.dispatch(updateUserData({scrapeState:'completed'}));
+                    this.props.dispatch(storeUser());
                     clearTimeout(this.checkScrapeTimeout);
                     setTimeout(()=> {
                         this.ready=false;
@@ -143,6 +150,7 @@ class OwnUserProfile extends React.Component {
             callback(response.data);
             let trips=response.data;
             let hometownGuide=trips.length>0&&trips[0].isHometown?trips.shift():null;
+            this.isRescraping=false;
             this.setState({hometownGuide,trips,feedReady:true})
         });
     }
@@ -179,15 +187,18 @@ class OwnUserProfile extends React.Component {
                 footerView={()=>{
                     let activeView=null
 
-                    console.log(this.props.user.scrapeFromInstagram);
                     if(!this.props.user.scrapeFromInstagram){
                         activeView=
                         <SimpleButton onPress={()=>{
                             this.isRescraping=true;
                             this.setState({isRescraping:true})
                             this.props.dispatch(enableScraping(true));
+                            this.props.dispatch(updateUserData({scrapeFromInstagram:true}))
+                            this.props.dispatch(storeUser());
                             this.checkScrapeStatus();
                         }} style={[styles.button]}text="create your travel profile via instagram"></SimpleButton>
+                    }else if(this.props.user.scrapeFromInstagram&&this.isRescraping&&this.props.user.scrapeState!=='completed'){
+                        activeView=this._renderRescrapeMessage();
                     }
                     return(
                         <View style={{flex:1,justifyContent:'flex-start',alignItems:'center'}}>
@@ -301,15 +312,20 @@ class OwnUserProfile extends React.Component {
     _renderStillScraping(){
         let trips=this.state.trips;
         let scrapeMessage=
-            this.isRescraping?
-                <View style={{flex:1,justifyContent: 'center',alignItems: 'center'}}>
-                    <View style={{flex:1,justifyContent:'center',height:50,width:50,alignItems:'center'}}>
-                        <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
-                    </View>
-                    <Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are scraping your profile. Please check back soon!</Text>
-                </View>:null;
+            this.isRescraping? this._renderRescrapeMessage():null;
         return(
            scrapeMessage
+        )
+    }
+
+    _renderRescrapeMessage(){
+        return(
+            <View style={{flex:1,justifyContent: 'center',alignItems: 'center'}}>
+                <View style={{flex:1,justifyContent:'center',height:50,width:50,alignItems:'center'}}>
+                    <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+                </View>
+                {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are scraping your profile. Please check back soon!</Text>:null}
+            </View>
         )
     }
 
@@ -327,6 +343,7 @@ class OwnUserProfile extends React.Component {
         var trips=this.state.trips;
         var moments=[];
 
+        //console.log(this.state.trips)
         if(trips){
             for(var i=0;i<trips.length;i++){
                 Array.prototype.push.apply(moments,trips[i].moments)
@@ -352,7 +369,7 @@ class OwnUserProfile extends React.Component {
             </View>
             :null;
 
-        const map= this.state.feedReady?<TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}>
+        const map= this.state.feedReady&&this.state.trips.length>0?<TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}>
             <MarkerMap moments={moments} interactive={false}></MarkerMap>
         </TouchableOpacity>:null;
 

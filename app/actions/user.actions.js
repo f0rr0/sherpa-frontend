@@ -108,6 +108,31 @@ export function checkSuitcased(momentID){
 }
 
 
+export function checkOptedIn(){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+                fetch(endpoint + version + "/profile/" + user.serviceID+"/opt-in", {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(JSON.parse(response));
+                }).catch(err=>reject(err));
+            }
+        });
+    })
+}
+
+
+
 
 export function removeMomentFromSuitcase(momentID){
     return store.get('user').then((user) => {
@@ -190,6 +215,44 @@ export function deleteUser(){
         store.get('user').then((user) => {
 
             if (user) {
+
+                dispatch(updateUserData({
+                    serviceID:-1,
+                    sherpaID:-1,
+                    fullName:"",
+                    profilePicture:"",
+                    email:"noreply@trysherpa.com",
+                    bio:"",
+                    website:"",
+                    serviceToken:"",
+                    sherpaToken:"",
+                    inviteCode:"",
+                    invite:"",
+                    username:"",
+                    jobID:"",
+                    hometown:"",
+                    serviceObject:"",
+                    service:"instagram",
+                    signupState:"",
+                    userDBState:"none", //none, empty, available,
+                    whiteListed:false,
+                    notificationToken:"",
+                    isExistingLogin:false,
+                    profileID:-1,
+                    usedSuitcase:false,
+                    usedAddTrip:false,
+                    initialGeoCount:-1,
+                    scrapeFromInstagram:false,
+                    hometownLatitude:undefined,
+                    hometownLongitude:undefined,
+                    hometownImage:undefined,
+                    hometownImageLowRes:undefined,
+                    mostLikedImage:undefined,
+                    mostLikedImageLowRes:undefined,
+                }));
+
+                dispatch(storeUser())
+
                 const {endpoint,version,user_uri} = sherpa;
 
 
@@ -525,7 +588,7 @@ export function signupUser(){
                     mostLikedImageLowRes
                 } = sherpaResponse.user;
 
-                console.log('user resposne',sherpaResponse.user)
+                //console.log('user resposne',sherpaResponse.user)
 
                 dispatch(updateUserData({
                     sherpaID:id,

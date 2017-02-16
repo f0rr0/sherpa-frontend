@@ -21,6 +21,7 @@ import TripDetailMap from '../feed/feed.trip.detail.map.ios'
 
 import { connect } from 'react-redux';
 import {loadFeed,udpateFeedState} from '../../../../actions/feed.actions';
+import {checkOptedIn,updateUserData} from '../../../../actions/user.actions';
 import {updateTab} from '../../../../actions/app.actions';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 import config from "../../../../data/config"
@@ -103,6 +104,9 @@ class Feed extends Component {
     }
 
     componentDidMount(){
+        checkOptedIn().then((res)=>{
+            this.props.dispatch(updateUserData({scrapeFromInstagram:res.optedIn}));
+        })
     }
 
     setView(deepLinkObject){

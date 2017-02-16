@@ -138,7 +138,7 @@ class OnboardingSteps extends Component {
         super(props);
         this.state={
             hometown:{'name':this.props.user.hometown},
-            hometownBG:{uri:""},
+            hometownBG:{uri:this.props.user.hometownImage},
             darken:false
         }
     }
@@ -152,12 +152,12 @@ class OnboardingSteps extends Component {
                 method:'get',
                 headers:sherpaHeaders
             }).then((rawServiceResponse)=>{
-                console.log('raw sercvice response',rawServiceResponse)
+                //console.log('raw sercvice response',rawServiceResponse)
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
-                console.log(parsedResponse);
-                this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
+                //console.log(parsedResponse);
+                //this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
             });
     }
 
@@ -179,7 +179,7 @@ class OnboardingSteps extends Component {
     }
 
     _enableScraping(enable){
-        console.log('enable scraping',enable)
+        //console.log('enable scraping',enable)
         this.props.dispatch(enableScraping(enable));
         this.refs.onboardingSlider.scrollBy(1);
     }
@@ -206,7 +206,7 @@ class OnboardingSteps extends Component {
                 topAreaStyle={{top:220}}
                 headline={"Let's show\nthe world where you've been"}
                 description="create your profile via instagram?"
-                backgroundImage={require('./../../../Images/onboarding-scrape-permission.png')}
+                backgroundImage={{uri:this.props.user.mostLikedImage}}
                 continueButton={
                         <View>
                             <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this._enableScraping.bind(this)(true)}} text="yep, let's do this"></SimpleButton>
@@ -223,7 +223,7 @@ class OnboardingSteps extends Component {
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
                 <OnboardingScreen
                     darken={this.state.darken}
-                    backgroundImage={this.state.hometownBG}
+                    backgroundImage={{uri:this.props.user.hometownImage}}
                         continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
                         <View>

@@ -89,7 +89,7 @@ class AddTrip extends React.Component {
 
 
             momentBlobs=momentBlobs.concat(this.state.images.instagram);
-            console.log(this.state.images.instagram,'instagram');
+            //console.log(this.state.images.instagram,'instagram');
 
             this.props.navigator.push({
                 id: "editTripGrid",

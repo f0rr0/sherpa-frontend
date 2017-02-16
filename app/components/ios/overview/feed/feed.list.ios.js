@@ -45,7 +45,7 @@ var styles=StyleSheet.create({
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:228,width:windowSize.width,opacity:1 },
 });
 
-const snapOffset=75;
+const snapOffset=90;
 const topOffset=90;
 const mediumOffset=100;
 const mapBaseHeight=228;
@@ -107,8 +107,10 @@ class FeedList extends React.Component{
 
         if(prevState.isFixed!==this.state.isFixed){
             if(this.state.isFixed){
+                //console.log('spring up')
                 Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:150,friction:12}).start()
             }else{
+                //console.log('spring down')
                 Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
             }
         }
@@ -180,7 +182,7 @@ class FeedList extends React.Component{
             <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start'}}>
                 <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
                     <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
-                       <Animated.Image source={require('./../../../../Images/feed-map.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
+                       <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
                         ,{
                                 transform: [,{
                         scale: this.state.scrollY.interpolate({
@@ -190,7 +192,7 @@ class FeedList extends React.Component{
                         })
                     },{translateY:this.state.scrollY.interpolate({
                                                     inputRange: [ -mapBaseHeight,0],
-                                                    outputRange: [-40, 0],
+                                                    outputRange: [-50, 0],
                                                     extrapolate: 'clamp',
                                                 })}]
                                 }
@@ -198,7 +200,7 @@ class FeedList extends React.Component{
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
                             <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
                        </View>
-                        {/*{this._renderFixedSearchBar()}*/}
+                        {this._renderFixedSearchBar()}
                     </Animated.View>
                 </TouchableOpacity>
                 <View style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
@@ -246,32 +248,32 @@ class FeedList extends React.Component{
     update(){
 
     }
-    //
-    //_renderFixedSearchBar(){
-    //    return(
-    //        <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
-    //                    position:'absolute',
-    //                    backgroundColor:'white',
-    //                    shadowColor:'black',
-    //                    shadowRadius:4,
-    //                    shadowOpacity:.1,
-    //                    shadowOffset:{width:0,height:1},
-    //                    marginTop:this.state.inputFocusOffset,
-    //                    top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[topOffset-snapOffset,topOffset],extrapolate:'clamp'}),
-    //                    width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
-    //                    left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
-    //                    opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
-    //                }}>
-    //                {this._renderSearchInput('inputFixed')}
-    //        </Animated.View>
-    //    )
-    //}
+
+    _renderFixedSearchBar(){
+        return(
+            <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
+                        position:'absolute',
+                        backgroundColor:'white',
+                        shadowColor:'black',
+                        shadowRadius:4,
+                        shadowOpacity:.1,
+                        shadowOffset:{width:0,height:1},
+                        marginTop:this.state.inputFocusOffset,
+                        top:topOffset,
+                        width:windowSize.width*.85,
+                        left:windowSize.width*.075,
+                        opacity:1
+                    }}>
+                    {this._renderSearchInput('inputFixed')}
+            </Animated.View>
+        )
+    }
 
     _renderAnimatedSearchBar(){
         return(
             <Animated.View  pointerEvents={this.state.isFixed?'auto':'auto'}  style={{
                      position:'absolute',
-                     top:this.state.searchbarTopOffset,
+                     top:0,
                      zIndex:1
                 }}>
 
@@ -283,9 +285,9 @@ class FeedList extends React.Component{
                     shadowRadius:4,
                     shadowOpacity:.1,
                     shadowOffset:{width:0,height:1},
-                    width:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[windowSize.width,windowSize.width*.85],extrapolate:'clamp'}),
-                    left:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,windowSize.width*.075],extrapolate:'clamp'}),
-                    opacity:this.state.mapHeight.interpolate({inputRange:[mapBaseHeight,windowSize.height],outputRange:[1,0],extrapolate:'clamp'}),
+                     top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,-65],extrapolate:'clamp'}),
+                        width:windowSize.width,
+                        left:0
                 }}>
                     {this._renderSearchInput('inputAnimated')}
                 </Animated.View>
@@ -368,13 +370,13 @@ class FeedList extends React.Component{
                                 textInputContainer: {
                                    borderRadius:2,
                                     borderTopWidth:0,
-                                    height:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[65,50],extrapolate:'clamp'}),
+                                    height:ref=='inputAnimated'?65:50,
                                     backgroundColor:"white",
                                     paddingLeft:25,
                                      borderBottomWidth:1/PixelRatio.get(),
                                      borderBottomColor:"#F0F0F0",
                                      marginBottom:-2,
-                                     paddingTop:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[10,0],extrapolate:'clamp'}),
+                                     paddingTop:ref=='inputAnimated'?9:0,
                                 },
                                 row:{
                                    height:75,
@@ -393,7 +395,7 @@ class FeedList extends React.Component{
                 />
                 <Animated.Image
                     style={{width:11,height:11,left:15,
-                            top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[29,19],extrapolate:'clamp'}),
+                            top:ref=='inputAnimated'?29:19,
                             position:"absolute"}}
                     resizeMode="contain"
                     source={require('./../../../../Images/search.png')}
@@ -420,7 +422,7 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
-                    scrollEventThrottle={8}
+                    scrollEventThrottle={5}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
@@ -437,7 +439,7 @@ class FeedList extends React.Component{
                             //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
                             this.refs.inputAnimated._onBlur();
 
-                     if(currentOffset>(topOffset-snapOffset)){
+                     if(currentOffset>70){
                           this.setState({isFixed:true})
                      }else{
                           this.setState({isFixed:false})

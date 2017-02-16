@@ -2,7 +2,6 @@ import { connect } from 'react-redux';
 import countries from './../../../../data/countries'
 import moment from 'moment';
 //import Mapbox from "react-native-mapbox-gl";
-import {checkSuitcased} from '../../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
@@ -18,6 +17,7 @@ import Header from '../../components/header'
 import MapView from 'react-native-maps'
 import MarkerMap from '../../components/MarkerMap'
 import {BlurView} from 'react-native-blur';
+import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
 
 import {
     StyleSheet,
@@ -85,7 +85,6 @@ class TripDetail extends React.Component{
             headerLoadedOpacity:new Animated.Value(0)
         }
 
-        console.log('trip detail',props.trip);
 
         //get moment data
         getFeed(props.momentID,1,'moment').then((moment)=>{
@@ -95,11 +94,17 @@ class TripDetail extends React.Component{
             })
         })
 
+
         //get trip data
 
     }
 
     componentDidMount(){
+        if(this.props.isSuitcased==undefined){
+            checkSuitcased(this.props.momentID).then((res)=>{
+                this.setState({suitcased:res==='true'});
+            })
+        }
     }
 
     showTripMap(momentData){
@@ -134,12 +139,12 @@ class TripDetail extends React.Component{
 
     suitecaseMoment(){
         this.setState({suitcased:true});
-        this.props.suiteCaseTrip();
+        this.props.suiteCaseTrip?this.props.suiteCaseTrip():addMomentToSuitcase(this.props.momentID);;
     }
 
     unsuitecaseMoment(){
         this.setState({suitcased:false});
-        this.props.unSuiteCaseTrip();
+        this.props.unSuiteCaseTrip?this.props.unSuiteCaseTrip():removeMomentFromSuitcase(this.props.momentID);;
     }
 
 
@@ -255,6 +260,10 @@ class TripDetail extends React.Component{
 
         )
     }
+}
+
+TripDetail.defaultProps={
+    isSuitcased:undefined
 }
 
 export default TripDetail;

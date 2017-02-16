@@ -18,6 +18,7 @@ class TripTitle extends Component {
     constructor(props) {
         super(props);
 
+
         //define title
         let tripTitle="";
         switch(props.type){
@@ -25,6 +26,7 @@ class TripTitle extends Component {
                 tripTitle=props.tripData.isHometown?"S":" WENT TO";
             break;
         }
+
 
         //define styling
         let containerStyle=styles.tripTitleContainer;
@@ -39,6 +41,7 @@ class TripTitle extends Component {
 
 
     render() {
+
         var tripData=this.props.tripData;
 
         var country = countries.filter(function(country) {
@@ -52,9 +55,10 @@ class TripTitle extends Component {
 
         }
 
+
         return (
             <View style={[this.state.containerStyle,this.props.style]}>
-                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.state.tripTitle}</Text>
+                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?" LIVES IN":" WENT TO"}</Text>
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
             </View>
         );

@@ -35,25 +35,6 @@ export function createMoment(moment){
                     "scrapeTime": moment.scrapeTime || new Date()
                 };
 
-                console.log('triptriptrip',{
-                    "profile": user.profileID,
-                    "lat": moment.lat,
-                    "lng": moment.lng,
-                    "date": moment.date,
-                    "service":moment.service,
-                    "venue": moment.venue,
-                    "location": moment.location,
-                    "state": moment.state,
-                    "country": moment.country,
-                    "caption": moment.caption || "",
-                    "serviceJson":moment.serviceJson || null,
-                    "mediaUrl":moment.mediaUrl || null,
-                    "highresUrl":moment.highresUrl || null,
-                    "continent": moment.continent || "",
-                    "scrapeTime": moment.scrapeTime || new Date()
-                })
-
-                console.log('moment::',moment);
 
                 //Alert.alert('send up date',moment.date.toString())
 
@@ -63,7 +44,6 @@ export function createMoment(moment){
 
                 var createOrUpdate=moment.id?moment.id+"/update":"create";
 
-                console.log('endpoint:',endpoint + version + "/moment/"+createOrUpdate)
 
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
                     method: moment.id?'patch':'post',
@@ -74,7 +54,6 @@ export function createMoment(moment){
                 }).then((response)=> {
                     //Alert.alert('return date',JSON.parse(response).date.toString())
 
-                    console.log('moment create response',JSON.parse(response));
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }
@@ -88,7 +67,6 @@ export function uploadMoment(momentBlob,momentData){
     return new Promise((fulfill,reject)=> {
         const {endpoint,version} = sherpa;
 
-        //console.log(momentData,': moment data');
 
         ImageResizer.createResizedImage(momentBlob.mediaUrl, 1000, 1000, "JPEG", 80).then((resizedImageUri) => {
             store.get('user').then((user) => {
@@ -120,7 +98,6 @@ export function getTripLocation(momentBlobs){
                     coords.push({"lat":momentBlobs[i].lat,"lng":momentBlobs[i].lng});
                 }
 
-                console.log(user.serviceObject,user);
 
                 const {endpoint,version,user_uri} = sherpa;
                 const queryData = {
@@ -132,8 +109,6 @@ export function getTripLocation(momentBlobs){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
 
-                console.log(queryData);
-
                 fetch(endpoint + version + "/cluster", {
                     method: 'post',
                     headers: sherpaHeaders,
@@ -141,7 +116,6 @@ export function getTripLocation(momentBlobs){
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
-                    console.log('cluster response',response)
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }else{

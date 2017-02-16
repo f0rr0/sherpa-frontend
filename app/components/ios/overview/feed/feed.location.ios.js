@@ -187,10 +187,11 @@ class FeedLocation extends Component {
 
                 <View style={{flexDirection:'row',marginRight:20}}>
                     {profiles.map((data)=>{
+
                         return <UserImage style={{marginRight:-20}} radius={26} userID={data.id} imageURL={data.serviceProfilePicture}></UserImage>
                     })}
                 </View>
-                <Text style={{backgroundColor:'transparent',fontSize:12,fontWeight:"600",marginTop:5,marginLeft:5,color:"white",fontFamily:"TSTAR"}}>{this.state.rawData.moments.length} Trips to {this.props.trip.name}</Text>
+                <Text style={{backgroundColor:'transparent',fontSize:12,fontWeight:"600",marginTop:5,marginLeft:5,color:"white",fontFamily:"TSTAR"}}>{this.state.rawData.location.relatedData.visitorCount} Trips to {this.props.trip.name}</Text>
             </View>
         )
     }

@@ -130,7 +130,7 @@ class LocationName extends Component{
                                             this.props.moment.state=info.state;
                                             this.props.moment.country=info.country;
 
-                                            console.log(info);
+                                            //console.log(info);
 
                                             //console.log(this.props.moment);
 

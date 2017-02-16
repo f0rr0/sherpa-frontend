@@ -308,7 +308,7 @@ class FeedTrip extends Component {
     }
 
     showTripLocation(data){
-        let locus=data.locus.split(":");
+        let locus=data.locus[data.type+"_gid"].split(":");
         var locationData={
             layer:locus[1],
             source:locus[0],
@@ -408,7 +408,7 @@ class FeedTrip extends Component {
 
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOU WENT TO":this.props.trip.owner.serviceUsername.toUpperCase()+' WENT TO'}</Text>
+                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOU":this.props.trip.owner.serviceUsername.toUpperCase()}{tripData.isHometown?this.state.isCurrentUsersTrip?" LIVE IN":" LIVES IN":" WENT TO"}</Text>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                             <TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>
                             </View>
