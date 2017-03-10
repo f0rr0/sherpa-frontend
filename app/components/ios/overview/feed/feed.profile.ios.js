@@ -17,6 +17,7 @@ import TripRow from '../../components/tripRow'
 import Hyperlink from 'react-native-hyperlink';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
+import MarkerMap from '../../components/MarkerMap'
 
 
 import {
@@ -25,6 +26,7 @@ import {
     Text,
     Image,
     TouchableHighlight,
+    TouchableOpacity,
     Linking
 } from 'react-native';
 import React, { Component } from 'react';
@@ -88,7 +90,19 @@ class FeedProfile extends React.Component {
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
         getFeed(this.props.trip.owner.id,page,'profile').then((response)=>{
-            this.setState({trips:response.data})
+
+            let hometownGuide=null;
+            let trips=response.data;
+
+            for(var i=0;i<trips.length;i++){
+                let trip = trips[i];
+                if(trip.isHometown){
+                    hometownGuide=trips.splice(i,1)[0];
+                }
+            }
+            this.isRescraping=false;
+            this.setState({hometownGuide,trips,feedReady:true})
+
             if(page==1)this.setState({headerTrips:response.data})
             callback(response.data);
         });
@@ -146,29 +160,50 @@ class FeedProfile extends React.Component {
         )
     }
 
+    showProfileMap(moments){
+        this.props.navigator.push({
+            id: "tripDetailMap",
+            trip:{moments},
+            title:this.props.trip.owner.serviceUsername.toUpperCase()+"'S TRAVELS",
+            sceneConfig:"bottom",
+            hideNav:true
+        });
+    }
+
 
     _renderHeader(){
-        var trips=this.state.headerTrips;
-        var moments=0;
-        for(var i=0;i<trips.length;i++){
-            moments+=trips[i].moments.length;
-        }
-        var markers = [];
+        var trips=this.state.trips;
+        var moments=[];
 
-        for (var i = 0; i < trips.length; i++) {
-            markers.push({
-                coordinates: [trips[i].moments[0].lat, trips[i].moments[0].lng],
-                type: 'point',
-                title: trips[i].moments[0].venue,
-                annotationImage: {
-                    url: 'image!icon-pin',
-                    height: 7,
-                    width: 7
-                },
-                id: "markers" + i
-            })
+        //console.log(this.state.trips)
+        if(trips){
+            for(var i=0;i<trips.length;i++){
+                Array.prototype.push.apply(moments,trips[i].moments)
+            }
         }
 
+        if(this.state.hometownGuide)Array.prototype.push.apply(moments,this.state.hometownGuide.moments);
+
+        var hasDescriptionCopy=true;
+
+
+        const tooltip=!this.props.user.usedAddTrip?
+            <TouchableOpacity style={{position:'absolute',left:5,top:50}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image></TouchableOpacity>
+            : null;
+
+
+
+
+        const hometownGuide=this.state.hometownGuide?
+            <View>
+                <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRAVELS</Text>
+            </View>
+            :null;
+
+        const map= this.state.feedReady&&this.state.trips.length>0?<TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}>
+            <MarkerMap moments={moments} interactive={false}></MarkerMap>
+        </TouchableOpacity>:null;
 
         return (
             <View style={{marginBottom:15}}>
@@ -200,6 +235,8 @@ class FeedProfile extends React.Component {
                         <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {phopoporPhotos}</Text>
                     </View>
                 </View>*/}
+                {hometownGuide}
+                {map}
 
                 {this.props.navigation.default}
             </View>
@@ -208,7 +245,7 @@ class FeedProfile extends React.Component {
 
     _renderRow(tripData) {
         return (
-            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
+            <TripRow isProfile={true} tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
         );
     }
 }

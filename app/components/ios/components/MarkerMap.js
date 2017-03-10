@@ -80,13 +80,17 @@ class TripDetailMap extends Component{
         let markers=[];
 
         for (var i=0;i<moments.length;i++){
-            markers.push({
-                latitude:parseFloat(moments[i].lat),
-                longitude:parseFloat(moments[i].lng),
-                moment:moments[i],
-                data:moments[i],
-                geometry:{coordinates:[parseFloat(moments[i].lng),parseFloat(moments[i].lat)]}
-            });
+            //console.log(moments[i])
+            //console.log(moments[i].lat,'latitude')
+            if(moments[i].contentType=='moment'|| !moments[i].contentType){
+                markers.push({
+                    latitude:parseFloat(moments[i].lat),
+                    longitude:parseFloat(moments[i].lng),
+                    moment:moments[i],
+                    data:moments[i],
+                    geometry:{coordinates:[parseFloat(moments[i].lng),parseFloat(moments[i].lat)]}
+                });
+            }
         }
 
 

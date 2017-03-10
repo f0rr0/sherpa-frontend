@@ -48,7 +48,7 @@ class MomentRow extends Component{
     }
 
     suiteCaseTrip(){
-        console.log('suitcase trip')
+        //console.log('suitcase trip')
         this.setState({suitcased:true});
         this.hideTooltip();
 
@@ -60,7 +60,7 @@ class MomentRow extends Component{
     }
 
     unSuiteCaseTrip(){
-        console.log('unsuitcase trip')
+        //console.log('unsuitcase trip')
         this.setState({suitcased:false});
         removeMomentFromSuitcase(this.props.tripData.id);
     }
@@ -85,6 +85,7 @@ class MomentRow extends Component{
         this.props.navigator.push({
             id: "tripDetail",
             momentID,
+            refreshCurrentScene:this.props.refreshCurrentScene,
             suiteCaseTrip:this.suiteCaseTrip.bind(this),
             unSuiteCaseTrip:this.unSuiteCaseTrip.bind(this),
             isSuitcased:this.state.suitcased

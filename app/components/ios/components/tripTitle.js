@@ -28,6 +28,7 @@ class TripTitle extends Component {
         }
 
 
+
         //define styling
         let containerStyle=styles.tripTitleContainer;
         if(props.standalone)containerStyle=[styles.tripTitleContainer,styles.tripTitleStandaloneContainer];
@@ -58,7 +59,7 @@ class TripTitle extends Component {
 
         return (
             <View style={[this.state.containerStyle,this.props.style]}>
-                <Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?" LIVES IN":" WENT TO"}</Text>
+                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?" LIVES IN":" WENT TO"}</Text>:null}
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
             </View>
         );

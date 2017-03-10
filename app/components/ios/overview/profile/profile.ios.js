@@ -99,7 +99,7 @@ class OwnUserProfile extends React.Component {
             const {endpoint} = sherpa;
             this.isRescraping=true;
 
-            console.log(this.props.user.scrapeState)
+            //console.log(this.props.user.scrapeState)
             fetch(endpoint+"v1/profile/"+user.serviceID+"/lastscrape/",{
                 method:'get',
                 headers:sherpaHeaders
@@ -147,9 +147,16 @@ class OwnUserProfile extends React.Component {
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
+            //console.log(response)
             callback(response.data);
             let trips=response.data;
-            let hometownGuide=trips.length>0&&trips[0].isHometown?trips.shift():null;
+            let hometownGuide=null;
+            for(var i=0;i<trips.length;i++){
+                let trip = trips[i];
+                if(trip.isHometown){
+                    hometownGuide=trips.splice(i,1)[0];
+                }
+            }
             this.isRescraping=false;
             this.setState({hometownGuide,trips,feedReady:true})
         });
@@ -364,7 +371,7 @@ class OwnUserProfile extends React.Component {
 
         const hometownGuide=this.state.hometownGuide?
             <View>
-                <TripRow tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
+                <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
                 <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRAVELS</Text>
             </View>
             :null;
@@ -404,7 +411,7 @@ class OwnUserProfile extends React.Component {
     _renderRow(tripData) {
         if(!tripData)return null;
         return (
-            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
+            <TripRow key={"row"+tripData.id} tripData={tripData} isProfile={true} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
         );
     }
 }

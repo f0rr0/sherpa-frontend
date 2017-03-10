@@ -204,7 +204,7 @@ class OnboardingSteps extends Component {
             <OnboardingScreen
                 darken={true}
                 topAreaStyle={{top:220}}
-                headline={"Let's show\nthe world where you've been"}
+                headline={"Share where\nyou've been"}
                 description="create your profile via instagram?"
                 backgroundImage={{uri:this.props.user.mostLikedImage}}
                 continueButton={

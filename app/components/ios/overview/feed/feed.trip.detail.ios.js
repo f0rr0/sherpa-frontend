@@ -6,13 +6,14 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
 import UserImage from '../../components/userImage';
+import MomentRow from '../../components/momentRow';
 import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import FoursquareInfoBox from '../../components/foursquareInfoBox';
 import SimpleButton from '../../components/simpleButton';
 import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
-import {loadFeed,getFeed} from '../../../../actions/feed.actions';
+import {loadFeed,getFeed,deleteMoment} from '../../../../actions/feed.actions';
 import Header from '../../components/header'
 import MapView from 'react-native-maps'
 import MarkerMap from '../../components/MarkerMap'
@@ -26,6 +27,7 @@ import {
     Image,
     ScrollView,
     TouchableHighlight,
+Alert,
 Animated,
 Linking,
 TouchableOpacity
@@ -62,6 +64,8 @@ var styles = StyleSheet.create({
         justifyContent:'center',
         alignItems:'center'
     },
+    row:{flexDirection: 'row'},
+
     map: {
         ...StyleSheet.absoluteFillObject,
         height:250,width:windowSize.width
@@ -77,18 +81,34 @@ var styles = StyleSheet.create({
 class TripDetail extends React.Component{
     constructor(props){
         super();
+
+
         this.state= {
             suitcased: props.isSuitcased?true:(props.trip?props.trip.suitcased:false),
             momentData: null,
             routeName:"TRIP",
             scrollY:new Animated.Value(0),
-            headerLoadedOpacity:new Animated.Value(0)
+            headerLoadedOpacity:new Animated.Value(0),
+            containerWidth:windowSize.width-30,
         }
 
 
         //get moment data
         getFeed(props.momentID,1,'moment').then((moment)=>{
+            const itemsPerRow=2;
+            let organizedRelatedMoments=[];
+            let data=moment.data.related;
+            let globalIndex=0;
+            for(var i=0;i<data.length;i++){
+                let endIndex=Math.random()>.5||globalIndex==0?1+i:itemsPerRow+i;
+                organizedRelatedMoments.push(data.slice(i, endIndex));
+                i = endIndex-1;
+                globalIndex++;
+            }
+
+
             this.setState({
+                organizedRelatedMoments,
                 momentData: moment.data,
                 routeName: moment.data.venue
             })
@@ -175,6 +195,21 @@ class TripDetail extends React.Component{
         )
     }
 
+    onDeleteMoment(){
+        Alert.alert(
+            'Delete Trip',
+            'Are you sure you want to delete this trip?',
+            [
+                {text: 'Cancel', onPress: () => {}, style: 'cancel'},
+                {text: 'OK', onPress: () => {
+                    deleteMoment(this.state.momentData.id,true)
+                    this.props.navigator.pop()
+                }}
+            ]
+        )
+
+    }
+
 
     render(){
         var momentData=this.state.momentData;
@@ -182,7 +217,7 @@ class TripDetail extends React.Component{
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
         let windowHeight=windowSize.height;
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
-        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={3}>{momentData.caption}</Text>:null;
+        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={10}>{momentData.caption}</Text>:null;
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                 <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
@@ -202,6 +237,36 @@ class TripDetail extends React.Component{
                     </View>
                 </View>
             </View>:null;
+
+
+
+        let relatedMoments=this.state.organizedRelatedMoments.map((rowData,rowID)=>{
+            let index=0;
+            let items = rowData.map((item) => {
+                if (item === null || item.type!=='image') {
+                    return null;
+                }
+
+                index++;
+                return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            });
+
+            return (
+                <View key={"row"+rowID} style={[styles.row,{width:windowSize.width-30,marginLeft:15,marginBottom:0}]}>
+                    {items}
+                </View>
+            )
+        })
+
+        let relatedMomentContainer=this.state.momentData.related.length>0?
+            <View style={{marginBottom:55}}>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginTop:30,marginBottom:12,fontWeight:"500"}}>OTHER PHOTOS FROM THIS LOCATION</Text>
+                {relatedMoments}
+            </View>:null;
+
+
+
+
 
         return (
             <View style={{flex:1}}>
@@ -249,13 +314,16 @@ class TripDetail extends React.Component{
                     <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
-                    <TouchableOpacity style={{height:500,marginTop:-180,overflow:'hidden',left:0,flex:1,transform:[{translateY:180}]}}  onPress={()=>{this.showTripMap(momentData)}}>
-                        <MarkerMap style={{marginTop:-180}} interactive={false} moments={[momentData]}> </MarkerMap>
+                    <TouchableOpacity style={{height:260,left:0,flex:1}}  onPress={()=>{this.showTripMap(momentData)}}>
+                        <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
                     </TouchableOpacity>
+
+
+                    {relatedMomentContainer}
 
                 </ScrollView>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
-                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{}} onDeleteMoment={()=>{}} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={true} showDeleteMoment={true}></PopOver>
+                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={false} showDeleteMoment={true}></PopOver>
             </View>
 
         )

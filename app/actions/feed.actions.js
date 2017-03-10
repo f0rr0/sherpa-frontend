@@ -100,7 +100,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
     }
 }
 
-export function deleteMoment(momentID){
+export function deleteMoment(momentID,instant){
         return new Promise((fulfill,reject)=> {
             store.get('user').then((user) => {
                 let sherpaHeaders = new Headers();
@@ -110,10 +110,13 @@ export function deleteMoment(momentID){
                 let requestURI = endpoint + version + "/moment/"+momentID;
 
 
+                let body={};
+                if(!instant)body.reason="image-not-found";
+
                 let reqBody = {
                     method: 'delete',
                     headers: sherpaHeaders,
-                    body: encodeQueryData({reason: "image-not-found"})
+                    body: encodeQueryData()
                 };
 
 
@@ -134,6 +137,7 @@ export function deleteMoment(momentID){
                         }
                     })
                     .then((response)=> {
+                        //console.log('delete moment response',response)
                         fulfill();
                     }).catch((err)=>reject(err))
             })
@@ -157,7 +161,13 @@ export function getFeed(query,page=1,type='') {
                         searchBody = query
                     break;
                     case "map-search-v2":
-                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
+                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
+                    break;
+                    case "notifications":
+                        //http://api.trysherpa.com/api/v1/user/2278/notifications
+                        //query=2278;
+                        //console.log('get notifications',query)
+                        feedRequestURI = endpoint + version + "/user/" + query +"/notifications?page=" + page;
                     break;
                     case "map-search-classic":
                         feedRequestURI = endpoint + version + "/search/bbox";
@@ -165,7 +175,7 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "profile":
                         feedRequestURI = endpoint + version + "/profile/" + query + "/trips?page=" + page;
-                        break;
+                    break;
                     case "featured-profiles":
                         feedRequestURI = endpoint + version + "/profiles/featured";
                     break;
@@ -183,10 +193,18 @@ export function getFeed(query,page=1,type='') {
                         searchBody = query;
                     break;
                     case "search-places-v2":
-                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.source_id+"&location&page="+page;
+                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.sourceId+"&location&page="+page;
+                    console.log('search places v2',feedRequestURI)
+                    break;
+                    case "search-places-guides":
+                        feedRequestURI = endpoint + "v1" + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
                     break;
                     case "search-people":
                         feedRequestURI = endpoint + version + "/search/users?text=" + query;
+                    break;
+                    case "guide":
+                        feedRequestURI = endpoint + version + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
+                        console.log(feedRequestURI)
                     break;
                     case "user":
                         feedRequestURI = endpoint + version + user_uri + "/" + query;
@@ -196,6 +214,10 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "trip":
                         feedRequestURI=endpoint+version+"/trip/"+query;
+                        //console.log('tripfeed requ uro',feedRequestURI);
+                    break;
+                    case "feed-v2":
+                        feedRequestURI = endpoint + "v2" + feed_uri + "?page=" + page;
                     break;
                     case "feed":
                     default:
@@ -203,19 +225,17 @@ export function getFeed(query,page=1,type='') {
                     break;
                 }
 
+
+
                 let sherpaHeaders = new Headers();
                 let finalToken=user?user.sherpaToken:sherpaToken;
                 let reqBody;
 
-                //console.log(finalToken);
 
                 sherpaHeaders.append("token", finalToken);
                 switch(type){
                     case 'map-search':
                     case 'map-search-classic':
-                        //console.log('map search :: ',type);
-                        //console.log('search content :: ',searchBody);
-
                         sherpaHeaders.append("Content-Type", "application/json");
                         reqBody={
                             method: 'post',
@@ -225,10 +245,6 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case 'location':
                     case 'search-places':
-                        //console.log('other search :: ',type);
-                        //console.log('search content :: ',searchBody);
-                        //console.log('search content :: ',encodeQueryData(searchBody));
-
                         reqBody={
                             method: 'post',
                             headers: sherpaHeaders,
@@ -245,6 +261,7 @@ export function getFeed(query,page=1,type='') {
                 }
 
 
+                //console.log('feed request uri',feedRequestURI)
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         //console.log('raw response',rawSherpaResponse)
@@ -255,7 +272,7 @@ export function getFeed(query,page=1,type='') {
                             case 500:
                             case 400:
                                 //console.log('reject reject reject')
-                                reject();
+                                reject({errorCode:400});
                             break;
                             case 401:
                                 store.delete('user').then(()=>{
@@ -273,14 +290,14 @@ export function getFeed(query,page=1,type='') {
                         for(let index in trips){
                             let currentTrip=trips[index];
                             if(currentTrip&&currentTrip.moments){
-                                let moments=currentTrip.moments.reverse();
+                                let moments=currentTrip.moments;
                                 let name=currentTrip.name;
                                 let coverIndex=0;
                                 if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
                                 if(moments.length>0){
                                     currentTrip.moments=[];
                                     for(let i=0;i<moments.length;i++){
-                                        if(moments[i].type==='image')currentTrip.moments.push(moments[i]);
+                                        if(moments[i].type==='image'||moments[i].contentType=='guide')currentTrip.moments.push(moments[i]);
                                         if(currentTrip.coverMoment&&moments[i].id==currentTrip.coverMoment.id){
                                             coverIndex=i;
                                         }
@@ -296,19 +313,23 @@ export function getFeed(query,page=1,type='') {
 
 
 
-                        //if(type=='feed')console.log('feed',parsedResponse)
+                       //console.log('feed',type,'::',parsedResponse)
                         switch(type){
                             case "featured-profiles":
                             case "moment":
                             case "trip":
                             case "map-search":
                             case "map-search-classic":
+                            case "notifications":
                                 fulfill({data:parsedResponse, page, type});
                             break;
                             case "user":
                             case "location":
                             case "profile":
                                 fulfill({data:cleanTrips, page, type});
+                            break;
+                            case "feed-v2":
+                                fulfill({trips:parsedResponse.content, page, type});
                             break;
                             case "suitcase-list":
                             case "single-suitcase-feed":
@@ -321,12 +342,21 @@ export function getFeed(query,page=1,type='') {
                             case "search-people":
                             case "location-search":
                             case "map-search-v2":
+                            case "guide":
 
                                 let cleanMoments=[];
-                                let moments=type=="search-places-v2"?parsedResponse.moments:parsedResponse;
+                                let moments;
+                                if(type=="search-places-v2"){
+                                    moments=parsedResponse.moments
+                                }else if(type=='guide'){
+                                    moments=parsedResponse.content;
+                                }else{
+                                    moments=parsedResponse;
+                                }
+                                    console.log(type,' ++ moments response',moments,'parsed response',parsedResponse)
                                 if(moments.length>0){
                                     for(let i=0;i<moments.length;i++){
-                                        if(moments[i].type==='image')cleanMoments.push(moments[i]);
+                                        if(moments[i].type==='image'||moments[i].contentType=='guide')cleanMoments.push(moments[i]);
                                     }
                                 }
 

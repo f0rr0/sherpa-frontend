@@ -27,6 +27,8 @@ import TripDetail from '../../components/tripDetail'
 import { Fonts, Colors } from '../../../../Themes/'
 import MarkerMap from '../../components/MarkerMap'
 import {BlurView} from 'react-native-blur';
+import {getFeed} from '../../../../actions/feed.actions';
+
 import {
     StyleSheet,
     View,
@@ -130,10 +132,11 @@ class FeedTrip extends Component {
         this.direction='down';
         if(!props.trip.organizedMoments){
             let globalIndex=0;
-            for(var i=0;i<props.trip.moments.length;i++){
 
+            for(var i=0;i<props.trip.moments.length;i++){
                 let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
-                organizedMoments.push(data.slice(i, endIndex));
+                var currentMoment=data.slice(i, endIndex);
+                organizedMoments.push(currentMoment);
                 i = endIndex-1;
                 globalIndex++;
             }
@@ -141,6 +144,7 @@ class FeedTrip extends Component {
         }else{
             organizedMoments=props.trip.organizedMoments;
         }
+
 
         this.scrollY=new Animated.Value(0);
 
@@ -152,7 +156,8 @@ class FeedTrip extends Component {
             moments:props.trip.moments,
             shouldUpdate:true,
             isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
-            routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
+            //routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
+            routeName:"LOCATION",
             itemsPerRow:itemsPerRow,
             containerWidth:windowSize.width-30,
             region:null,
@@ -187,8 +192,11 @@ class FeedTrip extends Component {
 
 
     _renderFooterView(){
+        return;
         return <View style={{marginBottom:20}}>
-            {this.props.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this.showTripLocation(this.props.trip)}} text={"Explore "+this.props.trip.locus.country}></SimpleButton>:null}
+            {this.props.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
+            //console.log('type:',this.props.trip,'locus',this.props.trip.locus);
+            this.showTripLocation(this.props.trip.locus["region_gid"])}} text={"Explore "+this.props.trip.locus.region}></SimpleButton>:null}
         </View>
     }
 
@@ -227,12 +235,50 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        //console.log('trip data',this.props)
+        //console.log('trip data',this.props.trip.moments)
+    }
+
+    refreshCurrentScene(){
+        setTimeout(()=>{
+
+        getFeed(this.props.trip.id,1,'trip').then((result)=>{
+            let trip=result;
+            let globalIndex=0;
+            let itemsPerRow=2;
+            let organizedMoments=[];
+            //console.log('trip endpoint',result);
+            let data=trip.data.moments;
+
+            if(data.length!==this.props.trip.moments.length){
+                if(data.length==0){
+                    deleteTrip(this.props.trip.id).then(()=>{
+                        this.props.refreshCurrentScene();
+                        setTimeout(this.props.refreshCurrentScene,500)
+                    })
+                    this.props.navigator.pop();
+                }else{
+                    for(var i=0;i<data.length;i++){
+                        let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
+                        var currentMoment=data.slice(i, endIndex);
+                        organizedMoments.push(currentMoment);
+                        i = endIndex-1;
+                        globalIndex++;
+                    }
+                    this.props.trip.organizedMoments=organizedMoments;
+                    this.setState({dataSource: this.ds.cloneWithRows(organizedMoments)})
+                }
+            }
+        }).catch((error)=>{
+            this.props.navigator.pop();
+            this.props.refreshCurrentScene();
+            setTimeout(this.props.refreshCurrentScene,500)
+        })
+
+        },500)
     }
 
     render(){
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
-        //console.log(this.props.trip.moments);
 
         const completeHeader=
             <View style={styles.listViewContainer}>
@@ -265,14 +311,13 @@ class FeedTrip extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-
-
-                <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} onEditTrip={()=>{
+                <PopOver ref="popover" showEditTrip={true} onEditTrip={()=>{
                       this.props.navigator.push({
                             id: "editTripGrid",
                             hideNav:true,
                             momentData:this.props.trip.moments,
                             tripData:this.props.trip,
+                            name:"edit trip",
                             sceneConfig:"bottom-nodrag"
                       });
                 }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.props.trip.id}></PopOver>
@@ -308,24 +353,23 @@ class FeedTrip extends Component {
     }
 
     showTripLocation(data){
-        let locus=data.locus[data.type+"_gid"].split(":");
+        let locus=data.split(":");
         var locationData={
             layer:locus[1],
             source:locus[0],
-            source_id:locus[2]
+            sourceId:locus[2]
         };
-        //console.log('show trip location',{name:data.name,...locationData})
 
 
         this.props.trip.layer=locus[1];
         this.props.trip.source=locus[0];
-        this.props.trip.source_id=locus[2];
+        this.props.trip.sourceId=locus[2];
 
 
 
         this.props.navigator.push({
             id: "location",
-            trip:{name:data.name,...locationData},
+            trip:{name:this.props.trip.name,...locationData},
             version:"v2"
         });
     }
@@ -354,6 +398,44 @@ class FeedTrip extends Component {
         if(country)tripLocation=country.name;
         var timeAgo=moment(new Date(tripData.dateEnd*1000)).fromNow();
         let windowHeight=windowSize.height;
+        let fullBleed=tripData.isHometown || tripData.contentType=='guide'
+        let bottomLeft=null;
+        let momentCount;
+
+        let tripTitle;
+
+        switch(tripData.contentType){
+            case "trip":
+                bottomLeft=<UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+
+                let userName;
+                if(this.state.isCurrentUsersTrip){
+                    userName="YOU"
+                }else{
+                    userName=this.props.trip.owner.serviceUsername.toUpperCase()
+                }
+
+                let didWhat
+
+                if(fullBleed&&this.state.isCurrentUsersTrip){
+                    didWhat="LIVE IN"
+                }else if(fullBleed){
+                    didWhat="LIVES IN"
+                }else{
+                    didWhat="WENT TO"
+                }
+
+                tripTitle=userName+" "+didWhat;
+                momentCount=this.props.trip.moments.length
+            break;
+            case "guide":
+                tripTitle="EXPLORE"
+                momentCount=this.props.trip.venueCount;
+            break;
+        }
+
+
+
         return (
             <View style={styles.headerContainer}>
                 <View style={[styles.headerMaskedView,{height:windowSize.height}]} >
@@ -408,14 +490,14 @@ class FeedTrip extends Component {
 
                         <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                            <Text style={styles.headerTripTo}>{this.state.isCurrentUsersTrip?"YOU":this.props.trip.owner.serviceUsername.toUpperCase()}{tripData.isHometown?this.state.isCurrentUsersTrip?" LIVE IN":" LIVES IN":" WENT TO"}</Text>
+                            <Text style={styles.headerTripTo}>{tripTitle}</Text>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                            <TripSubtitle goLocation={this.showTripLocation.bind(this)} tripData={this.props.trip}></TripSubtitle>
+                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.props.trip}></TripSubtitle>
                             </View>
 
                         <View style={styles.subTitleContainer}>
                             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
-                             <UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+                                {bottomLeft}
                                 <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
 
                                 {/*<TouchableOpacity  onPress={() => this.showUserProfile(this.props.trip)}>
@@ -425,7 +507,7 @@ class FeedTrip extends Component {
                             {/*<Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>*/}
                             <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1}}>
                                 <Image source={require('image!icon-images')} style={styles.iconImages} resizeMode="contain"></Image>
-                                <Text style={{color:"#FFFFFF",fontSize:10, marginTop:0,fontFamily:"TSTAR",backgroundColor:"transparent",fontWeight:"500"}}>{this.props.trip.moments.length}</Text>
+                                <Text style={{color:"#FFFFFF",fontSize:10, marginTop:0,fontFamily:"TSTAR",backgroundColor:"transparent",fontWeight:"500"}}>{momentCount}</Text>
                             </View>
                         </View>
                 </View>

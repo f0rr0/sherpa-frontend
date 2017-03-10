@@ -482,7 +482,7 @@ const SherpaPlacesAutocomplete = React.createClass({
         let locationLayer;
 
         switch(rowData.properties.layer){
-            case "neighborhood":
+            case "neighbourhood":
                 locationLayer="Neighborhood";
             break;
             case "locality":

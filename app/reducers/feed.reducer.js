@@ -25,7 +25,7 @@ export default function feedReducer(state=initialState,action){
                 var cleanTrips=[];
                 for(var index in action.feedData.trips){
                     let currentTrip=action.feedData.trips[index];
-                    var moments=currentTrip.moments.reverse();
+                    var moments=currentTrip.moments;
                     var name=currentTrip.name;
                     var coverIndex=0;
                     if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];

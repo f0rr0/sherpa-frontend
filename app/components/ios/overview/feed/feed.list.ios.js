@@ -42,7 +42,7 @@ var styles=StyleSheet.create({
         justifyContent:"center",
         paddingBottom:50,
     },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:228,width:windowSize.width,opacity:1 },
+    headerImage:{position:"absolute",top:0,left:0,height:228,width:windowSize.width,opacity:1 },
 });
 
 const snapOffset=90;
@@ -68,35 +68,49 @@ class FeedList extends React.Component{
         };
     }
 
-    updateMapSize(){
-        this.props.toggleTabBar(!this.state.mapLarge)
-
-        if(this.state.mapLarge){
-            Animated.stagger(600, [
-                Animated.spring(this.state.mapHeight, {
-                    toValue: windowSize.height
-                }),
-                this.refs.listview.refs.listview.refs.feedlistmap.showMarkers()
-            ]).start()
-
-            this.reset();
-
-        }else{
-            Animated.spring(this.state.mapHeight, {
-                toValue: mapBaseHeight
-            }).start();
-            this.refs.listview.refs.listview.refs.feedlistmap.hideMarkers().start()
-        }
-
-    }
+    //updateMapSize(){
+    //    this.props.toggleTabBar(!this.state.mapLarge)
+    //
+    //    if(this.state.mapLarge){
+    //        Animated.stagger(600, [
+    //            Animated.spring(this.state.mapHeight, {
+    //                toValue: windowSize.height
+    //            }),
+    //            this.refs.listview.refs.listview.refs.feedlistmap.showMarkers()
+    //        ]).start()
+    //
+    //        this.reset();
+    //
+    //    }else{
+    //        Animated.spring(this.state.mapHeight, {
+    //            toValue: mapBaseHeight
+    //        }).start();
+    //        this.refs.listview.refs.listview.refs.feedlistmap.hideMarkers().start()
+    //    }
+    //
+    //}
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
         Orientation.lockToPortrait();
 
+        //this.state.scrollY.addListener((value) => this.handleScroll(value));
+        //console.log('add scrolly listener')
+
         getFeed(this.props.user.sherpaID,-1,'featured-profiles').then((response)=>{
             this.setState({featuredProfiles:response.data})
         })
+
+
+    }
+
+    handleScroll(pullDownDistance){
+            //console.log('yoyo',pullDownDistance.value)
+        if (pullDownDistance.value >= snapOffset) {
+            return this.setState({ isFixed: true })
+        }else{
+            return this.setState({ isFixed: false })
+        }
 
     }
 
@@ -115,9 +129,9 @@ class FeedList extends React.Component{
             }
         }
 
-        if(prevState.mapLarge!==this.state.mapLarge){
-            this.updateMapSize.bind(this)();
-        }
+        //if(prevState.mapLarge!==this.state.mapLarge){
+        //    this.updateMapSize.bind(this)();
+        //}
     }
 
     componentWillUnmount(){
@@ -132,7 +146,7 @@ class FeedList extends React.Component{
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true})
     }
 
-    showTripLocation(data){
+    showTripLocationOrGuide(data){
         this.props.navigator.push({
             id: "location",
             trip:data.properties,
@@ -148,18 +162,20 @@ class FeedList extends React.Component{
     }
 
 
-
     _onFetch(page=1,callback){
-        getFeed(this.props.user.sherpaID,page,'feed').then((response)=>{
-            let moments=[];
-            const trips=response.trips;
-            for(var i=0;i<response.trips.length;i++){
-                if(trips[i].featured){
-                    moments=moments.concat(trips[i].moments)
-                }
-            }
-
-            this.setState({moments})
+        getFeed(this.props.user.sherpaID,page,'feed-v2').then((response)=>{
+            //let moments=[];
+            //const trips=response.trips;
+            //console.log("trips ::",trips);
+            //for(var i=0;i<response.trips.length;i++){
+            //    if(trips[i].featured){
+            //        moments=moments.concat(trips[i].moments)
+            //    }
+            //}
+            //
+            //console.log('moments',moments)
+            //this.setState({moments})
+            //console.log('feed response',response)
             callback(response.trips);
         })
     }
@@ -179,19 +195,19 @@ class FeedList extends React.Component{
     _renderHeader(){
         let windowHeight=windowSize.height;
         return (
-            <View style={{overflow:'visible',flex:1,justifyContent:'center',width:windowSize.width,alignItems:'flex-start'}}>
+            <View style={{overflow:'visible',justifyContent:'center',zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
                 <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
                     <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
                        <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
                         ,{
                                 transform: [,{
                         scale: this.state.scrollY.interpolate({
-                            inputRange: [ -mapBaseHeight, 0],
+                            inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
                             outputRange: [3, 1.1],
                              extrapolate: 'clamp'
                         })
                     },{translateY:this.state.scrollY.interpolate({
-                                                    inputRange: [ -mapBaseHeight,0],
+                                                    inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
                                                     outputRange: [-50, 0],
                                                     extrapolate: 'clamp',
                                                 })}]
@@ -200,9 +216,9 @@ class FeedList extends React.Component{
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
                             <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
                        </View>
-                        {this._renderFixedSearchBar()}
                     </Animated.View>
                 </TouchableOpacity>
+                        {this._renderFixedSearchBar()}
                 <View style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
                     <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
                     {this._renderFeaturedProfiles.bind(this)()}
@@ -257,6 +273,7 @@ class FeedList extends React.Component{
                         shadowColor:'black',
                         shadowRadius:4,
                         shadowOpacity:.1,
+                        zIndex:1,
                         shadowOffset:{width:0,height:1},
                         marginTop:this.state.inputFocusOffset,
                         top:topOffset,
@@ -271,14 +288,16 @@ class FeedList extends React.Component{
 
     _renderAnimatedSearchBar(){
         return(
-            <Animated.View  pointerEvents={this.state.isFixed?'auto':'auto'}  style={{
+            <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'}  style={{
                      position:'absolute',
                      top:0,
-                     zIndex:1
+                     opacity:this.state.isFixed?1:0,
+                     zIndex:99
+
                 }}>
 
 
-                <Animated.View  pointerEvents={this.state.isFixed?'auto':'auto'} style={{
+                <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'} style={{
                     backgroundColor:'white',
                     borderRadius:2,
                     shadowColor:'black',
@@ -296,8 +315,8 @@ class FeedList extends React.Component{
     }
 
     _updateSearchInput(text){
-        //this.refs.listview.refs.listview.refs.inputFixed.setAddressText(text)
-        //this.refs.listview.refs.listview.refs.inputFixed._onChangeText(text)
+        this.refs.listview.refs.listview.refs.inputFixed.setAddressText(text)
+        this.refs.listview.refs.listview.refs.inputFixed._onChangeText(text)
         if(!this.state.isFixed){
             this.refs.inputAnimated.setAddressText(text)
             this.refs.inputAnimated._onChangeText(text)
@@ -316,12 +335,12 @@ class FeedList extends React.Component{
         return(
             <View ref="searchContainer">
                 <SherpaPlacesAutocomplete
-                    placeholder="Discover the World"
+                    placeholder="Where to?"
                     ref={ref}
                     placeholderTextColor={'rgba(0,0,0,.5)'}
                     baseUrl={endpoint+version}
                     clearButtonMode='always'
-                    onSubmitEditing={this.showTripLocation.bind(this)}
+                    onSubmitEditing={this.showTripLocationOrGuide.bind(this)}
                     textInputProps={{
                         returnKeyType:'go',
                         onChangeText:this._updateSearchInput.bind(this),
@@ -337,7 +356,7 @@ class FeedList extends React.Component{
                       //map data
                      this.showUserProfile.bind(this)(data.payload)
                     }}
-                    onPress={this.showTripLocation.bind(this)}
+                    onPress={this.showTripLocationOrGuide.bind(this)}
                     styles={{
                                 listView:{
                                    backgroundColor:"white",
@@ -422,28 +441,28 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
-                    scrollEventThrottle={5}
+                    scrollEventThrottle={30}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
                     onScroll={(event)=>{
-                     var currentOffset = event.nativeEvent.contentOffset.y;
-
+                     //var currentOffset = event.nativeEvent.contentOffset.y;
+                     //
                       Animated.event(
                           [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
                         )(event);
 
-                     this.offset = currentOffset;
-                            //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
-                            this.refs.inputAnimated._onBlur();
-
-                     if(currentOffset>70){
-                          this.setState({isFixed:true})
-                     }else{
-                          this.setState({isFixed:false})
-                     }
+                     //this.offset = currentOffset;
+                     //       //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
+                     //       this.refs.inputAnimated._onBlur();
+                     //
+                     //if(currentOffset>70){
+                     //     this.setState({isFixed:true})
+                     //}else{
+                     //     this.setState({isFixed:false})
+                     //}
 
                     }}
                     ref="listview"
@@ -458,8 +477,17 @@ class FeedList extends React.Component{
 
 
     _renderRow(tripData) {
+        let rowElement=null;
+        switch(tripData.contentType){
+            case "trip":
+                rowElement=<TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></TripRow>
+            break;
+            case "guide":
+                rowElement=<TripRow tripData={tripData} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...tripData, type:tripData.contentType,layer:tripData.layer,source:tripData.source,sourceId:tripData.sourceId}})}}></TripRow>
+            break;
+        }
         return (
-            <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></TripRow>
+            rowElement
         );
     }
 }

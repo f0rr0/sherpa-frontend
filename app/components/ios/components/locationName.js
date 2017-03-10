@@ -25,7 +25,8 @@ class LocationName extends Component{
         super();
         this.state={
             inputBottomMargin:new Animated.Value(0),
-            isCover:false
+            isCover:false,
+            moment:props.moment
         }
 
     }
@@ -57,7 +58,8 @@ class LocationName extends Component{
     }
 
     render(){
-        var moment = this.props.moment;
+        var moment = this.state.moment;
+        //console.log(moment);
         return(
             <Animated.View style={[this.props.style,{marginTop:this.state.inputBottomMargin}]}>
                 <View>
@@ -105,7 +107,9 @@ class LocationName extends Component{
                                             },
                                             onChangeText:(text)=>{
                                                 if(text.length==0){
-                                                    this.props.moment.venue=""
+                                                       this.props.updateInfo({
+                                                            venue:"",
+                                                    },this.props.locationIndex)
                                                 }
                                             }
                                          }}
@@ -123,21 +127,20 @@ class LocationName extends Component{
                                             }
 
 
-                                            this.props.moment.lat=details.geometry.location.lat;
-                                            this.props.moment.lng=details.geometry.location.lng;
-                                            this.props.moment.location=details.name;
-                                            this.props.moment.venue=details.name;
-                                            this.props.moment.state=info.state;
-                                            this.props.moment.country=info.country;
+                                            this.props.updateInfo({
+                                                    lat:details.geometry.location.lat,
+                                                    lng:details.geometry.location.lng,
+                                                    location:details.name,
+                                                    venue:details.name,
+                                                    state:info.state,
+                                                    country:info.country
+                                            },this.props.locationIndex)
 
-                                            //console.log(info);
-
-                                            //console.log(this.props.moment);
 
                                             this.moveDown();
                                          }}
                     getDefaultValue={() => {
-                                            return this.props.moment.venue;//this.state.hometown.name; // text input default value
+                                            return moment.venue;//this.state.hometown.name; // text input default value
                                          }}
                     query={{
                                              key: 'AIzaSyC8XIcEay54NdSsGEmTwt1TlfP7gXjlvXI',

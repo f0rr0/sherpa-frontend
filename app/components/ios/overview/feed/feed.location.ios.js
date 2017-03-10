@@ -18,6 +18,7 @@ import UserImage from '../../components/userImage';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
+import TripRow from '../../components/tripRow'
 import MarkerMap from '../../components/MarkerMap'
 
 
@@ -42,6 +43,7 @@ class FeedLocation extends Component {
         this.moments=[];
         this.state={
             moments:[],
+            isReady:false,
             containerWidth:windowSize.width-30,
             originalMoments:[],
             headerPreviewLoadedOpacity:new Animated.Value(0),
@@ -107,20 +109,19 @@ class FeedLocation extends Component {
             req={
                 layer:data.layer,
                 source:data.source,
-                source_id:data.source_id
+                sourceId:data.sourceId||data.source_id
             }
-            searchType='search-places-v2';
+            searchType=data.type&&data.type=='guide'?'guide':'guide';
+            //console.log(searchType,'search type')
         }else{
             req={type:data.type,page}
             req[data.type]=this.props.trip[data.type];
             searchType='search-places';
         }
 
-        console.log('request location data',req);
 
         getFeed(req,page,searchType).then((response)=>{
-            //console.log('response::',response)
-            console.log('response',response);
+
             if(page==1&&response.moments.length==0){
                 Alert.alert(
                     'Location is Empty',
@@ -132,27 +133,50 @@ class FeedLocation extends Component {
                 this.props.navigator.pop();
             }else{
 
-
                 const itemsPerRow=2;
                 let organizedMoments=[];
                 let data=response.moments;
                     let globalIndex=0;
                     for(var i=0;i<data.length;i++){
-                        let endIndex=Math.random()>.5||globalIndex==0?1+i:itemsPerRow+i;
-                        organizedMoments.push(data.slice(i, endIndex));
-                        i = endIndex-1;
+
+                            let endIndex;
+                           if((Math.random()>.5||globalIndex==0)){
+                               endIndex=1+i
+                           }else{
+                               if(data[i].contentType!=='guide'&&data[itemsPerRow+i-1].contentType!=='guide'){
+                                endIndex=itemsPerRow+i;
+
+                               }else{
+
+                               endIndex=1+i
+                               }
+                           }
+                            organizedMoments.push(data.slice(i, endIndex));
+                            i = endIndex-1;
                         globalIndex++;
                     }
 
 
-                if(page==1)this.setState({rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+
                 var settings=response.moments.length==0?{
                     allLoaded: true
                 }:{};
 
-                //console.log(organizedMoments)
+                if(page==1){
+                    console.log('get additional stuff',response);
+                        this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+                    callback(organizedMoments,settings);
+                    //getFeed(req,1,'search-places-v2').then((secondResponse)=>{
+                    //    callback(organizedMoments,settings);
+                    //});
+                }else{
+                    callback(organizedMoments,settings);
+                    //console.log('regular resposne')
+                }
 
-                callback(organizedMoments,settings);
+
+                //console.log('organized moments::',organizedMoments)
+
             }
         })
     }
@@ -164,7 +188,7 @@ class FeedLocation extends Component {
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
@@ -180,18 +204,18 @@ class FeedLocation extends Component {
     }
 
     renderProfiles(){
-        console.log(this.state.rawData,':: raw data');
         const profiles=this.state.rawData.location.relatedData.topProfiles;
+        const haveBeen=this.props.trip.contentType=="guide"?"have been":"Trips to "+this.props.trip.name
         return(
-            <View style={{flexDirection:'row',alignItems:'center',height:26,justifyContent:'flex-start',width:windowSize.width-30}}>
+            <View style={{flexDirection:'row',alignItems:'center',height:26,justifyContent:'center',width:windowSize.width-30}}>
 
                 <View style={{flexDirection:'row',marginRight:20}}>
-                    {profiles.map((data)=>{
+                    {profiles.map((data,index)=>{
 
-                        return <UserImage style={{marginRight:-20}} radius={26} userID={data.id} imageURL={data.serviceProfilePicture}></UserImage>
+                        return <UserImage key={"profile-"+index} style={{marginRight:-20}} radius={26} userID={data.id} imageURL={data.serviceProfilePicture}></UserImage>
                     })}
                 </View>
-                <Text style={{backgroundColor:'transparent',fontSize:12,fontWeight:"600",marginTop:5,marginLeft:5,color:"white",fontFamily:"TSTAR"}}>{this.state.rawData.location.relatedData.visitorCount} Trips to {this.props.trip.name}</Text>
+                <Text style={{backgroundColor:'transparent',fontSize:12,fontWeight:"600",marginTop:5,marginLeft:5,color:"white",fontFamily:"TSTAR"}}>{this.state.rawData.location.relatedData.visitorCount} {haveBeen}</Text>
             </View>
         )
     }
@@ -237,7 +261,7 @@ class FeedLocation extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.source_id}></PopOver>
+                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
             </View>
         )
     }
@@ -252,13 +276,29 @@ class FeedLocation extends Component {
         //console.log(this.state)
         var tripData=this.props.trip;
         var moments=this.state.moments;
+        //console.log(moments,'render header');
         if(moments.length==0)return null
         //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
         let windowHeight=windowSize.height;
+        let wikipediaInfo=null;
+        let bottomLeft=null
+
+        //switch(tripData.contentType){
+        //    case "guide":
+        //    break;
+        //    case "trip":
+        //    default:
+                bottomLeft=this.renderProfiles()
+                wikipediaInfo=this.state.rawData.location.wikipediaLocation?<WikipediaInfoBox style={{marginTop:-150,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>:null;
+            //break;
+        //}
+
+        //console.log('wiki info',wikipediaInfo);
+
         return (
             <View style={{flex:1}}>
-                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:160,alignItems:'center',flex:1}} >
+                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:15,alignItems:'center'}} >
 
 
                     <View style={{position:'absolute',left:0,top:0}}>
@@ -312,19 +352,19 @@ class FeedLocation extends Component {
 
 
 
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
+                    <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View>
                             <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
                         </View>
-                        <View style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
+                        <View style={{backgroundColor:'transparent',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
                         </View>
                     </View>
 
-                    <View style={{position:'absolute',bottom:160,left:15,width:50,height:20}}>
-                        {this.renderProfiles()}
+                    <View style={{position:'absolute',bottom:170,left:0,justifyContent:'center',alignItems:'center',width:windowSize.width,height:20}}>
+                        {bottomLeft}
                     </View>
                 </View>
-                <WikipediaInfoBox style={{marginTop:-300,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>
+                {wikipediaInfo}
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'white',flex:1}}>
                     <TouchableOpacity style={styles.map} onPress={()=>{
                     this.showTripMap({moments:this.state.originalMoments}
@@ -347,22 +387,49 @@ class FeedLocation extends Component {
         )
     }
 
+
+    showTripLocationOrGuide(data){
+        //console.log('data properties',data.properties)
+        this.props.navigator.push({
+            id: "location",
+            trip:data.properties,
+            version:"v2"
+        });
+    }
+
+
     _renderRow(rowData,sectionID,rowID){
         var index=0;
         var items = rowData.map((item) => {
-            if (item === null || item.type!=='image') {
+            //console.log(item.type);
+            if (item === null || (item.type!=='image'&&item.contentType!=='guide')) {
                 return null;
             }
-
             this.currentRows.push("row-"+rowID+"-"+sectionID)
 
             index++;
-            return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            //
+            let rowElement=null;
+
+
+            switch(item.contentType){
+                case "moment":
+                    rowElement=
+                            <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                    break;
+                case "guide":
+                    rowElement=<TripRow key={"tripRow"+rowID+"_"+index} tripData={item} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...item, type:item.contentType,layer:item.layer,source:item.source,sourceId:item.sourceId||item.sourceId}})}}></TripRow>
+                    break;
+
+            }
+            return rowElement
+
         });
 
 
+        //console.log('row data [0]',rowData[0])
         return (
-            <View style={[styles.row,{width:windowSize.width-30}]}>
+            <View key={sectionID="-"+rowID} style={[styles.row,{width:rowData[0].contentType=='guide'?windowSize.width:windowSize.width-30}]}>
                 {items}
             </View>
         );
@@ -371,11 +438,9 @@ class FeedLocation extends Component {
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1,
         backgroundColor:'white'
     },
     listItem:{
-        flex:1,
         backgroundColor:"black",
         justifyContent:"center",
         alignItems:'center',
@@ -392,8 +457,8 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
-    headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width },
-    headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
+    headerImage:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width },
+    headerDarkBG:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
 
     map: {
         ...StyleSheet.absoluteFillObject

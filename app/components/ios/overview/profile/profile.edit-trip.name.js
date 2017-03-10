@@ -31,6 +31,8 @@ class EditTripName extends React.Component {
             text:props.tripData?props.tripData.name:"",
             positionBottom:new Animated.Value(14)
         }
+
+        console.log(props.momentData)
     }
 
     componentDidMount(){

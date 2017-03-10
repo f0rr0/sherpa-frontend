@@ -30,6 +30,7 @@ const EXPLORE="explore";
 const FEED="feed";
 const PROFILE="own-profile";
 const SUITCASE="suitcase";
+const NOTIFICATIONS="notifications";
 
 var styles=StyleSheet.create({
     container:{
@@ -137,29 +138,31 @@ class Overview extends React.Component {
         var tabBar =    <TabNavigator titleStyle={{backgroundColor:'red'}} tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset,backgroundColor:'white',borderTopWidth:1,borderTopColor:'#EFF1F2'}]}  sceneStyle={{paddingBottom:0}}>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
-                                selected={this.state.selectedTab === PROFILE}
-                                renderIcon={() => <Image source={require('./../../../Images/icon-profil.png')} />}
-                                onPress={()=>this.updateTabTo(PROFILE)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} headerProgress={this.refs.headerProgress} ref={PROFILE} {...this.props}/>
-                            </TabNavigator.Item>
-                            <TabNavigator.Item
-                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === FEED}
-                                renderIcon={() => <Image style={{width:19,height:22,marginBottom:-.5}} source={require('./../../../Images/explore-icon.png')} />}
+                                renderIcon={() => <Image style={{width:19,height:22,marginBottom:-.5}} source={require('./../../../Images/icons/explore.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>
                                 <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={FEED} headerProgress={this.refs.headerProgress} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
-                            {/*<TabNavigator.Item
-                                selected={this.state.selectedTab === EXPLORE}
-                                renderIcon={() => <Image source={require('./../../../Images/icon-explore.png')} />}
-                                onPress={()=>this.updateTabTo(EXPLORE)}>
-                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={EXPLORE} headerProgress={this.refs.headerProgress} ref={EXPLORE} {...this.props}/>
-                            </TabNavigator.Item>*/}
                             <TabNavigator.Item
+                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === SUITCASE}
-                                renderIcon={() => <Image source={require('./../../../Images/icon-suitcase.png')} />}
+                                renderIcon={() => <Image source={require('./../../../Images/icons/suitcase-tabbar.png')} />}
                                 onPress={()=>this.updateTabTo(SUITCASE)}>
                                 <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={SUITCASE} headerProgress={this.refs.headerProgress} ref={SUITCASE} {...this.props}/>
+                            </TabNavigator.Item>
+                            <TabNavigator.Item
+                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
+                                selected={this.state.selectedTab === NOTIFICATIONS}
+                                renderIcon={() => <Image source={require('./../../../Images/icons/activity.png')} />}
+                                onPress={()=>this.updateTabTo(NOTIFICATIONS)}>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={NOTIFICATIONS} headerProgress={this.refs.headerProgress} ref={NOTIFICATIONS} {...this.props}/>
+                            </TabNavigator.Item>
+                            <TabNavigator.Item
+                                tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
+                                selected={this.state.selectedTab === PROFILE}
+                                renderIcon={() => <Image source={require('./../../../Images/icons/user.png')} />}
+                                onPress={()=>this.updateTabTo(PROFILE)}>
+                                <Feed toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} headerProgress={this.refs.headerProgress} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
                         </TabNavigator>
 

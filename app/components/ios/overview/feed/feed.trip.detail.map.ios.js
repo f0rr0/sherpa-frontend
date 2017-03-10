@@ -78,7 +78,7 @@ class TripDetailMap extends Component{
 
                 var reqBody={
                     "source":this.props.regionData.source,
-                    "source_id":this.props.regionData.source_id,
+                    "sourceId":this.props.regionData.sourceId,
                     "layer":this.props.regionData.layer,
                     "page":1,
                     "bbox": {

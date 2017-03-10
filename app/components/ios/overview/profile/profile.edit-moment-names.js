@@ -39,6 +39,8 @@ class EditMomentNames extends React.Component {
         this.state={
             navOpacity:new Animated.Value(1)
         }
+
+        this.momentData=props.momentData;
     }
 
     componentDidMount(){
@@ -63,7 +65,7 @@ class EditMomentNames extends React.Component {
                 id: "editTripName",
                 hideNav:true,
                 tripData:this.props.tripData,
-                momentData:this.props.momentData,
+                momentData:this.momentData,
                 sceneConfig:"right-nodrag",
                 selection:this.props.selection
             });
@@ -73,8 +75,8 @@ class EditMomentNames extends React.Component {
     checkEmpty(){
 
         var isEmpty=false;
-        for(var i=0;i<this.props.momentData.length;i++){
-            isEmpty=!this.props.momentData[i].venue||(this.props.momentData[i].venue.length==0&&this.props.selection[i].selected);
+        for(var i=0;i<this.momentData.length;i++){
+            isEmpty=!this.momentData[i].venue||(this.momentData[i].venue.length==0&&this.props.selection[i].selected);
             if(isEmpty)break;
         }
         return isEmpty;
@@ -89,7 +91,7 @@ class EditMomentNames extends React.Component {
     }
 
     makeCoverPhoto(targetIndex){
-        this.props.momentData.map((moment,index)=>{
+        this.momentData.map((moment,index)=>{
             if(this.props.selection[index].selected){
                 this.props.selection[index].isCover=(index===targetIndex);
                 this.refs["location-"+index].isCover(targetIndex===index);
@@ -99,16 +101,34 @@ class EditMomentNames extends React.Component {
     }
 
     handlePageChange(){
-        this.props.momentData.map((moment,index)=>{
+        this.momentData.map((moment,index)=>{
             if(this.props.selection[index].selected){
                 this.refs["location-"+index].moveDown();
             };
         })
     }
 
+    updateInfo(data,momentIndex){
+        this.momentData.map((moment,index)=>{
+            if(this.props.selection[index].selected&&index==momentIndex){
+                this.momentData[index] = Object.assign({}, moment, {
+                    lat:data.lat || moment.lat,
+                    lng:data.lng || moment.lng,
+                    location:data.name || moment.name,
+                    venue:data.venue || moment.venue,
+                    state:data.state || moment.state,
+                    country:data.country || moment.country
+                });
+                console.log('updated moment',moment)
+            }
+        })
+
+        console.log('first moment',this.momentData[0])
+    }
+
     render(){
         return(
-            <View style={{backgroundColor:'white'}}>
+            <View style={{backgroundColor:'red'}}>
                 {/* //error message here */}
 
                 <PagedScrollView
@@ -124,9 +144,8 @@ class EditMomentNames extends React.Component {
                     showsHorizontalScrollIndicator={false}
                     onPageChange={this.handlePageChange.bind(this)}
                 >
-
-                    {this.props.momentData.map((moment,index)=>{
-                        return this.props.selection[index].selected?(<LocationName makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
+                    {this.momentData.map((moment,index)=>{
+                        return this.props.selection[index].selected?(<LocationName updateInfo={this.updateInfo.bind(this)} makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>):null;
                     })}
                 </PagedScrollView>
                 <Animated.View style={[{flex:1,position:'absolute',top:0},{opacity:this.state.navOpacity}]}>

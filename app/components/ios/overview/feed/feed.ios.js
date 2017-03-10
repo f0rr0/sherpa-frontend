@@ -12,6 +12,7 @@ import Suitcase from './../suitcase/feed.suitcase.ios'
 import Search from './../explore/feed.search.ios'
 import Header from '../../components/header'
 import AddTrip from '../profile/profile.add-trip'
+import FeedNotifications from '../notifications/feed.notifications'
 import EditTripGrid from '../profile/profile.edit-trip-grid'
 import EditMomentNames from '../profile/profile.edit-moment-names'
 import EditTripName from '../profile/profile.edit-trip.name'
@@ -190,6 +191,10 @@ class Feed extends Component {
                 showNav=true;
                 sceneContent = <TripDetail ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
             break;
+            case "notifications":
+                showNav=true;
+                sceneContent=<FeedNotifications  ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
+            break;
             case "profile":
                 showNav=true;
                 sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
@@ -200,8 +205,6 @@ class Feed extends Component {
             break;
             case "explore":
                 showNav=true;
-                sceneContent = <Search ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.id,hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
-            break;
             case "own-profile":
                 showNav=true;
                 sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
@@ -216,7 +219,7 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid images={route.images} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid images={route.images} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
@@ -249,7 +252,8 @@ class Feed extends Component {
     }
 
     _navActionLeft(){
-        if(this.navigator.refs[this.currentRenderScene].navActionLeft){
+        //console.log(this.currentRenderScene,' +++ current render scene ');
+        if(this.navigator.refs[this.currentRenderScene]&&this.navigator.refs[this.currentRenderScene].navActionLeft){
             this.navigator.refs[this.currentRenderScene].navActionLeft();
         }else{
             this.navigator.pop();
@@ -279,6 +283,7 @@ class Feed extends Component {
 
     sceneChange(route){
 
+        //console.log(this.currentRenderScene,' +++ current render scene --- route id: ',route.id);
 
         if(this.currentRenderScene!==route.id||route.toggleTabBar){
             this.currentRenderScene=route.id;
