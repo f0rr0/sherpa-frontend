@@ -62,7 +62,6 @@ class FeedList extends React.Component{
             searchbarTopOffset:new Animated.Value(90),
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
-            mapMoments:[],
             isFixed:true,
             scrollY:new Animated.Value(0)
         };
@@ -203,7 +202,7 @@ class FeedList extends React.Component{
                                 transform: [,{
                         scale: this.state.scrollY.interpolate({
                             inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                            outputRange: [3, 1.1],
+                            outputRange: [3, 1.3],
                              extrapolate: 'clamp'
                         })
                     },{translateY:this.state.scrollY.interpolate({
@@ -220,7 +219,7 @@ class FeedList extends React.Component{
                 </TouchableOpacity>
                         {this._renderFixedSearchBar()}
                 <View style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED SHERPAS</Text>
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED TRAVELERS</Text>
                     {this._renderFeaturedProfiles.bind(this)()}
                     <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
                 </View>
@@ -441,28 +440,28 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
-                    scrollEventThrottle={30}
+                    //scrollEventThrottle={100}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
                          this.refs.listview._onPaginate();
                     }}
                     onScroll={(event)=>{
-                     //var currentOffset = event.nativeEvent.contentOffset.y;
+                     var currentOffset = event.nativeEvent.contentOffset.y;
                      //
-                      Animated.event(
-                          [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
-                        )(event);
+                     // Animated.event(
+                     //     [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                     //   )(event);
 
-                     //this.offset = currentOffset;
-                     //       //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
-                     //       this.refs.inputAnimated._onBlur();
-                     //
-                     //if(currentOffset>70){
-                     //     this.setState({isFixed:true})
-                     //}else{
-                     //     this.setState({isFixed:false})
-                     //}
+                     this.offset = currentOffset;
+                            //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
+                            //this.refs.inputAnimated._onBlur();
+
+                     if(currentOffset>70){
+                          this.setState({isFixed:true})
+                     }else{
+                          this.setState({isFixed:false})
+                     }
 
                     }}
                     ref="listview"

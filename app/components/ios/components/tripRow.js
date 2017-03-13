@@ -107,7 +107,7 @@ class TripRow extends Component {
                         locationLayer="";
                 }
 
-                let guideString=tripData.isHometown?"LOCAL GUIDE":" GUIDE"
+                let guideString=tripData.isHometown?"LOCAL":" GUIDE"
                 bottomLeftContent=
                     <View style={{flex:1,flexDirection:'row'}}>
                         <Image  source={require('./../../../Images/icons/guide-icon.png')}></Image>
@@ -116,10 +116,10 @@ class TripRow extends Component {
                 bottomRightContent= <
                     View style={styles.tripDataFootnoteContainer}>
                         <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||tripData.moments.length}</Text>
+                        <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||tripData.momentcount||tripData.moments.length}</Text>
                     </View>
                 tripTitle=  <View style={{alignItems:'center'}}>
-                                <Text style={styles.tripTitleLarge}>EXPLORE</Text>
+                                <Text style={styles.tripTitleLarge}>{tripData.isHometown?"":"EXPLORE"}</Text>
                                 <Text  style={styles.tripTitleSmall}>{tripData.name.toUpperCase()}</Text>
                             </View>
              break;
@@ -136,7 +136,7 @@ class TripRow extends Component {
                 bottomRightContent=(
                     <View style={styles.tripDataFootnoteContainer}>
                         <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{tripData.moments.length}</Text>
+                        <Text style={styles.tripDataFootnoteCopy}>{tripData.momentCount||tripData.moments.length}</Text>
                         <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                         <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                     </View>

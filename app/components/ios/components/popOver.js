@@ -103,7 +103,7 @@ class PopOver extends Component {
 
         var deleteMomentButton=this.props.showDeleteMoment?
             <TouchableHighlight onPress={this.props.onDeleteMoment.bind(this)} underlayColor="#ececec" style={styles.button}>
-                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>DELETE FROM PROFILE</Text>
+                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>DELETE</Text>
             </TouchableHighlight>:null;
 
         var editMomentButton=this.props.showEditMoment?

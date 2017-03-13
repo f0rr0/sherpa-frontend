@@ -162,6 +162,7 @@ class OnboardingSteps extends Component {
     }
 
     allowNotifications() {
+        //console.log('allow notifications');
         if(this.props.user.notificationToken==""){
             NotificationsIOS.addEventListener('remoteNotificationsRegistered', this._onRegister.bind(this));
             NotificationsIOS.requestPermissions();
@@ -171,6 +172,7 @@ class OnboardingSteps extends Component {
     }
 
     _onRegister(deviceToken){
+        //console.log('on register');
         if(deviceToken&&typeof deviceToken==='string'){
             this.props.dispatch(addNotificationsDeviceToken(deviceToken))
         }else{
@@ -180,8 +182,7 @@ class OnboardingSteps extends Component {
 
     _enableScraping(enable){
         //console.log('enable scraping',enable)
-        this.props.dispatch(enableScraping(enable));
-        this.refs.onboardingSlider.scrollBy(1);
+        //this.props.dispatch(enableScraping(enable));
     }
 
     _renderScrapingPermission(){
@@ -200,27 +201,11 @@ class OnboardingSteps extends Component {
     render() {
         var me=this;
 
-        const onboardingPermission=
-            <OnboardingScreen
-                darken={true}
-                topAreaStyle={{top:220}}
-                headline={"Share where\nyou've been"}
-                description="create your profile via instagram?"
-                backgroundImage={{uri:this.props.user.mostLikedImage}}
-                continueButton={
-                        <View>
-                            <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{this._enableScraping.bind(this)(true)}} text="yep, let's do this"></SimpleButton>
-                              <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
-                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
-                            </TouchableOpacity>
-                        </View>
-                    }>
-
-            </OnboardingScreen>;
 
 
         return (
-            <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+            <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false}  dot={<View style={styles.dot} />} showsButtons={false} loop={false} bounces={true} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+
                 <OnboardingScreen
                     darken={this.state.darken}
                     backgroundImage={{uri:this.props.user.hometownImage}}
@@ -278,7 +263,22 @@ class OnboardingSteps extends Component {
 
                     />
 
-                {onboardingPermission}
+                    <OnboardingScreen
+                        darken={true}
+                        topAreaStyle={{top:220}}
+                        headline={"Share where\nyou've been"}
+                        description="create your profile via instagram?"
+                        backgroundImage={{uri:this.props.user.mostLikedImage}}
+                        continueButton={
+                            <View>
+                                <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{console.log('on press'); this.refs.onboardingSlider.scrollBy(1);this._enableScraping(true)}} text="yep, let's do this"></SimpleButton>
+                                  <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
+                                    <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
+                                </TouchableOpacity>
+                            </View>
+                        }>
+
+                    </OnboardingScreen>
 
 
                     <OnboardingScreen

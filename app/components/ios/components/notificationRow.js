@@ -29,6 +29,7 @@ class NotificationRow extends Component {
         //console.log(this.props.data.sentTime)
         var timeAgo=moment(new Date(this.props.data.sentTime)).fromNow();
 
+        console.log(this.props.data);
         switch(this.props.data.type){
             case "trip_featured":
                 notification=
@@ -42,8 +43,12 @@ class NotificationRow extends Component {
                         </View>
                     </View>
             break;
+            case "profile_created":
+            case "trip_created":
             case "followed":
             case "suitcased":
+            default:
+                let description=this.props.data.description?this.props.data.description.toUpperCase():null;
                 notification=
                     <View style={{paddingHorizontal:20,flex:1,justifyContent:'space-between',alignItems:'center',flexDirection:'row'}}>
                         <UserImage
@@ -55,7 +60,7 @@ class NotificationRow extends Component {
                             <View style={{flexDirection:'row'}}>
                                 <Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.primaryHeadline}</Text><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}> {this.props.data.secondaryHeadline}</Text>
                             </View>
-                            <Text style={{fontFamily:"Akkurat",color:'black',fontSize:9,opacity:.7}}>{this.props.data.description}</Text>
+                            <Text style={{fontFamily:"Akkurat",color:'black',fontSize:9,opacity:.7}}>{description||timeAgo.toUpperCase()||""}</Text>
                         </View>
                         <Image source={{uri:this.props.data.secondaryImage||null}}  style={{width:30,height:30}}></Image>
                     </View>

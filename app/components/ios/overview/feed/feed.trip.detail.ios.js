@@ -197,8 +197,8 @@ class TripDetail extends React.Component{
 
     onDeleteMoment(){
         Alert.alert(
-            'Delete Trip',
-            'Are you sure you want to delete this trip?',
+            'Delete Photo?',
+            'Are you sure you want to delete this photo?',
             [
                 {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                 {text: 'OK', onPress: () => {

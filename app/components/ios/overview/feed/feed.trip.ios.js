@@ -236,11 +236,6 @@ class FeedTrip extends Component {
 
     componentDidMount(){
         //console.log('trip data',this.props.trip.moments)
-    }
-
-    refreshCurrentScene(){
-        setTimeout(()=>{
-
         getFeed(this.props.trip.id,1,'trip').then((result)=>{
             let trip=result;
             let globalIndex=0;
@@ -270,11 +265,48 @@ class FeedTrip extends Component {
             }
         }).catch((error)=>{
             this.props.navigator.pop();
-            this.props.refreshCurrentScene();
-            setTimeout(this.props.refreshCurrentScene,500)
+            //this.props.refreshCurrentScene();
+            //setTimeout(this.props.refreshCurrentScene,500)
         })
+    }
 
-        },500)
+    refreshCurrentScene(){
+        //setTimeout(()=>{
+        //
+        //getFeed(this.props.trip.id,1,'trip').then((result)=>{
+        //    let trip=result;
+        //    let globalIndex=0;
+        //    let itemsPerRow=2;
+        //    let organizedMoments=[];
+        //    //console.log('trip endpoint',result);
+        //    let data=trip.data.moments;
+        //
+        //    if(data.length!==this.props.trip.moments.length){
+        //        if(data.length==0){
+        //            deleteTrip(this.props.trip.id).then(()=>{
+        //                this.props.refreshCurrentScene();
+        //                setTimeout(this.props.refreshCurrentScene,500)
+        //            })
+        //            this.props.navigator.pop();
+        //        }else{
+        //            for(var i=0;i<data.length;i++){
+        //                let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
+        //                var currentMoment=data.slice(i, endIndex);
+        //                organizedMoments.push(currentMoment);
+        //                i = endIndex-1;
+        //                globalIndex++;
+        //            }
+        //            this.props.trip.organizedMoments=organizedMoments;
+        //            this.setState({dataSource: this.ds.cloneWithRows(organizedMoments)})
+        //        }
+        //    }
+        //}).catch((error)=>{
+        //    this.props.navigator.pop();
+        //    this.props.refreshCurrentScene();
+        //    setTimeout(this.props.refreshCurrentScene,500)
+        //})
+        //
+        //},500)
     }
 
     render(){
@@ -417,19 +449,20 @@ class FeedTrip extends Component {
 
                 let didWhat
 
-                if(fullBleed&&this.state.isCurrentUsersTrip){
-                    didWhat="LIVE IN"
+                if(fullBleed&&this.state.isCurrentUsersTrip||this.state.isCurrentUsersTrip){
                 }else if(fullBleed){
                     didWhat="LIVES IN"
+                    //didWhat=""
+                    //userName=""
                 }else{
                     didWhat="WENT TO"
                 }
 
                 tripTitle=userName+" "+didWhat;
-                momentCount=this.props.trip.moments.length
+                momentCount=this.props.trip.momentCount||this.props.trip.moments.length
             break;
             case "guide":
-                tripTitle="EXPLORE"
+                tripTitle=this.state.isCurrentUsersTrip?"":"EXPLORE"
                 momentCount=this.props.trip.venueCount;
             break;
         }
