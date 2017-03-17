@@ -128,7 +128,7 @@ class EditMomentNames extends React.Component {
 
     render(){
         return(
-            <View style={{backgroundColor:'red'}}>
+            <View style={{backgroundColor:'white'}}>
                 {/* //error message here */}
 
                 <PagedScrollView

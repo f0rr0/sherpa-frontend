@@ -169,12 +169,16 @@ export function getFeed(query,page=1,type='') {
                         //console.log('get notifications',query)
                         feedRequestURI = endpoint + version + "/user/" + query +"/notifications?page=" + page;
                     break;
+                    case 'reset-notifications':
+                        feedRequestURI = endpoint + version + "/user/" + query +"/notifications/view"
+                    break;
                     case "map-search-classic":
                         feedRequestURI = endpoint + version + "/search/bbox";
                         searchBody = query
                     break;
                     case "profile":
-                        feedRequestURI = endpoint + version + "/profile/" + query + "/trips?page=" + page;
+                        feedRequestURI = endpoint + "v2" + "/profile/" + query + "/trips?page=" + page;
+                        //console.log(feedRequestURI,'get profile')
                     break;
                     case "featured-profiles":
                         feedRequestURI = endpoint + version + "/profiles/featured";
@@ -194,7 +198,7 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "search-places-v2":
                         feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.sourceId+"&location&page="+page;
-                    console.log('search places v2',feedRequestURI)
+                    //console.log('search places v2',feedRequestURI)
                     break;
                     case "search-places-guides":
                         feedRequestURI = endpoint + "v1" + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
@@ -204,10 +208,11 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "guide":
                         feedRequestURI = endpoint + version + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
-                        console.log(feedRequestURI)
+                        //console.log(feedRequestURI)
                     break;
                     case "user":
                         feedRequestURI = endpoint + version + user_uri + "/" + query;
+                        console.log('get user', feedRequestURI)
                     break;
                     case "moment":
                         feedRequestURI=endpoint+version+"/moment/"+query;
@@ -252,6 +257,12 @@ export function getFeed(query,page=1,type='') {
                         }
 
                     break;
+                    case 'reset-notifications':
+                        reqBody={
+                            method: 'post',
+                            headers: sherpaHeaders,
+                        }
+                    break;
                     default:
                         reqBody={
                             method: 'get',
@@ -272,7 +283,7 @@ export function getFeed(query,page=1,type='') {
                             case 500:
                             case 400:
                                 //console.log('reject reject reject')
-                                reject({errorCode:400});
+                                reject({errorCode:rawSherpaResponse.status});
                             break;
                             case 401:
                                 store.delete('user').then(()=>{
@@ -321,12 +332,13 @@ export function getFeed(query,page=1,type='') {
                             case "map-search":
                             case "map-search-classic":
                             case "notifications":
+                            case "reset-notifications":
+                            case "user":
                                 fulfill({data:parsedResponse, page, type});
                             break;
-                            case "user":
                             case "location":
                             case "profile":
-                                fulfill({data:cleanTrips, page, type});
+                                fulfill({data:cleanTrips,profile:parsedResponse.profile, page, type});
                             break;
                             case "feed-v2":
                                 fulfill({trips:parsedResponse.content, page, type});
@@ -344,6 +356,7 @@ export function getFeed(query,page=1,type='') {
                             case "map-search-v2":
                             case "guide":
 
+
                                 let cleanMoments=[];
                                 let moments;
                                 if(type=="search-places-v2"){
@@ -353,7 +366,7 @@ export function getFeed(query,page=1,type='') {
                                 }else{
                                     moments=parsedResponse;
                                 }
-                                    console.log(type,' ++ moments response',moments,'parsed response',parsedResponse)
+                                    //console.log(type,' ++ moments response',moments,'parsed response',parsedResponse)
                                 if(moments.length>0){
                                     for(let i=0;i<moments.length;i++){
                                         if(moments[i].type==='image'||moments[i].contentType=='guide')cleanMoments.push(moments[i]);

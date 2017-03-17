@@ -10,6 +10,7 @@ import store from 'react-native-simple-store';
 import DeviceInfo from 'react-native-device-info/deviceinfo';
 let simpleAuthClient = require('react-native-simple-auth');
 import SafariView from "react-native-safari-view";
+import {getFeed} from './feed.actions'
 
 
 /**
@@ -19,7 +20,7 @@ import SafariView from "react-native-safari-view";
 
 
 export function updateUserData(userData){
-    //console.log('update user data');
+    //console.log('update user data',userData);
     return{
         type:types.USER_UPDATE,
         userData
@@ -62,6 +63,8 @@ export function enableScraping(enable){
         })
     }
 }
+
+
 
 export function addMomentToSuitcase(momentID){
     return store.get('user').then((user) => {
@@ -132,6 +135,20 @@ export function checkOptedIn(){
 }
 
 
+export function updateNotificationCount(){
+    return function (dispatch, getState) {
+        return store.get('user').then((user) => {
+            if (user) {
+                getFeed(user.sherpaID,1,'notifications').then((response)=>{
+                    //dispatch(updateUserData({notificationCount:30}))
+                    dispatch(updateUserData({notificationCount:response.data.counts.unviewedCount}))
+                    dispatch(storeUser())
+                }).catch((err)=>{
+                });
+            }
+        });
+    }
+}
 
 
 export function removeMomentFromSuitcase(momentID){

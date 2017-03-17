@@ -16,7 +16,6 @@ import FeedNotifications from '../notifications/feed.notifications'
 import EditTripGrid from '../profile/profile.edit-trip-grid'
 import EditMomentNames from '../profile/profile.edit-moment-names'
 import EditTripName from '../profile/profile.edit-trip.name'
-import Settings from '../profile/profile.settings'
 
 import TripDetailMap from '../feed/feed.trip.detail.map.ios'
 
@@ -94,6 +93,13 @@ const FloatFromRightNoDrag = {
     },
 };
 
+const NoBackSwipe ={
+    ...Navigator.SceneConfigs.HorizontalSwipeJump,
+    gestures: {
+        pop: {},
+    },
+};
+
 class Feed extends Component {
 
     constructor(){
@@ -102,6 +108,8 @@ class Feed extends Component {
         this.state={
             renderScene:""
         }
+
+        this.navigatorEnabled=true;
     }
 
     componentDidMount(){
@@ -169,53 +177,49 @@ class Feed extends Component {
         switch (route.id) {
             case 'feed':
                 showNav=false;
-                sceneContent = <FeedList toggleTabBar={this.props.toggleTabBar}  refreshCurrentScene={this.refreshCurrentScene.bind(this)}  ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation({routeName:"LATEST TRIPS",hideBack:true,fixedHeader:true,hideNav:true})}/>;
+                sceneContent = <FeedList enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar}  refreshCurrentScene={this.refreshCurrentScene.bind(this)}  ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation({routeName:"LATEST TRIPS",hideBack:true,fixedHeader:true,hideNav:true})}/>;
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
-                sceneContent = <FeedTrip toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "tripDetailMap":
                 showNav=true;
-                sceneContent = <TripDetailMap isFullscreen={route.isFullscreen} disablePins={route.disablePins} initialRegion={route.initialRegion} regionData={route.regionData} mapType={route.mapType} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetailMap enableNavigator={this.enableNavigator.bind(this)} isFullscreen={route.isFullscreen} disablePins={route.disablePins} initialRegion={route.initialRegion} regionData={route.regionData} mapType={route.mapType} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
                 showNav=true;
-                sceneContent = <TripDetail ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
             break;
             case "notifications":
                 showNav=true;
-                sceneContent=<FeedNotifications  ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
+                sceneContent=<FeedNotifications navigator={navigator}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
-            break;
-            case "settings":
-                showNav=true;
-                sceneContent = <Settings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Settings",hideNav:true,fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <OwnUserProfile enableNavigator={this.enableNavigator.bind(this)} refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "addTrip":
                 showNav=true;
-                sceneContent = <AddTrip images={route.images} tripData={route.tripData} momentData={route.momentData} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <AddTrip enableNavigator={this.enableNavigator.bind(this)} images={route.images} tripData={route.tripData} momentData={route.momentData} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripGrid":
                 showNav=true;
@@ -282,9 +286,6 @@ class Feed extends Component {
     }
 
     sceneChange(route){
-
-        //console.log(this.currentRenderScene,' +++ current render scene --- route id: ',route.id);
-
         if(this.currentRenderScene!==route.id||route.toggleTabBar){
             this.currentRenderScene=route.id;
             this.props.toggleTabBar(!route.hideNav);
@@ -302,6 +303,35 @@ class Feed extends Component {
         }
     }
 
+    enableNavigator(enableNavigator,ignoreTabBar){
+        if(!ignoreTabBar){
+            this.navigatorEnabled=enableNavigator;
+            this.navigator.immediatelyResetRouteStack(this.navigator.getCurrentRoutes())
+            this.props.toggleTabBar(this.navigatorEnabled)
+        }
+    }
+
+    configureScene(route){
+        let transitionType=route.sceneConfig;
+        if(!this.navigatorEnabled){
+            if(transitionType=='right')transitionType='right-nodrag';
+        }
+
+        switch(transitionType){
+            case "bottom-nodrag":
+                return FloatFromBottomNoDrag
+                break;
+            case "bottom":
+                return FloatFromBottom
+                break;
+            case "right-nodrag":
+                return FloatFromRightNoDrag
+                break;
+            default:
+                return FloatFromRight
+        }
+    }
+
     render() {
         return (
                 <Navigator
@@ -310,22 +340,7 @@ class Feed extends Component {
                     renderScene={this.renderScene.bind(this)}
                     onDidFocus={this.sceneDidEnter.bind(this)}
                     onWillFocus={this.sceneChange.bind(this)}
-                    configureScene={(route) => {
-
-                            switch(route.sceneConfig){
-                                case "bottom-nodrag":
-                                    return FloatFromBottomNoDrag
-                                break;
-                                case "bottom":
-                                    return FloatFromBottom
-                                break;
-                                case "right-nodrag":
-                                    return FloatFromRightNoDrag
-                                break;
-                                default:
-                                    return FloatFromRight
-                            }
-                    }}
+                    configureScene={this.configureScene.bind(this)}
                     initialRoute={{
                       id:this.props.initial,
                       index:0

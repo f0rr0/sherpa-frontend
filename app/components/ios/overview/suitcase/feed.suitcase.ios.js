@@ -33,6 +33,7 @@ var styles = StyleSheet.create({
         flex:1,
         //backgroundColor:"black",
         justifyContent:"center",
+        overflow:'hidden',
         alignItems:'flex-start',
     },
     listView:{
@@ -190,17 +191,29 @@ class Suitecase extends React.Component {
         )
     }
 
-    _renderRow(tripData) {
+    _renderRow(tripData,sectionID,rowID) {
         var country = countries.filter(function(country) {
             return country["alpha-2"] === tripData.name;
         })[0];
+
+        const numRows=this.refs.listview._getRows().length-1;
+        let rowStyle;
+        let borderRadiusAmount=3;
+
+        if(rowID==numRows){
+            rowStyle={borderBottomLeftRadius:borderRadiusAmount,borderBottomRightRadius:borderRadiusAmount}
+        }else if(rowID==0){
+            rowStyle={borderTopRightRadius:borderRadiusAmount,borderTopLeftRadius:borderRadiusAmount}
+        }else{
+
+        }
 
         if(!country)country={name:tripData.name};
         var countryOrState=(tripData.name.toUpperCase()==="US")?tripData.state:country.name;
 
         return (
-            <TouchableOpacity activeOpacity={1} style={styles.listItemContainer}  onPress={() => this.showTripDetail(tripData)}>
-                <View style={styles.listItem}>
+            <TouchableOpacity activeOpacity={1} style={[styles.listItemContainer]}  onPress={() => this.showTripDetail(tripData)}>
+                <View style={[styles.listItem,rowStyle]}>
                     <Animated.Image
                         style={[styles.listItemImage,{opacity:this.state.smallImageOpacity}]}
                         resizeMode="cover"

@@ -34,10 +34,10 @@ const initialState={
     hometownImageLowRes:undefined,
     mostLikedImage:undefined,
     mostLikedImageLowRes:undefined,
+    notificationCount:0
 };
 
 export default function userReducer(state=initialState,action){
-    //console.log('!! update',action);
 
 
     switch(action.type){
@@ -53,6 +53,7 @@ export default function userReducer(state=initialState,action){
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
                 bio:                action.userData.bio || state.bio,
+                notificationCount:  !isNaN(action.userData.notificationCount) ?action.userData.notificationCount: state.notificationCount,
                 invite:             action.userData.invite == undefined? state.invite : action.userData.invite,
                 initialGeoCount:    !isNaN(action.userData.initialGeoCount)? action.userData.initialGeoCount : state.initialGeoCount,
                 website:            action.userData.website || state.website,

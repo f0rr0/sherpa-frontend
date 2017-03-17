@@ -66,7 +66,7 @@ var styles = StyleSheet.create({
         backgroundColor:'transparent',
         overflow:'hidden'
     },
-    listViewContainer:{flex:1,backgroundColor:'white',paddingBottom:60},
+    listViewContainer:{flex:1,backgroundColor:'white'},
     container: {
         flex: 1,
     },
@@ -81,7 +81,7 @@ var styles = StyleSheet.create({
     listView:{
         alignItems:'center',
         justifyContent:"center",
-        paddingBottom:0,
+        paddingBottom:60,
     },
     tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:-7,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:8},
 
@@ -125,40 +125,21 @@ class FeedTrip extends Component {
     constructor(props){
         super(props);
         this.ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-
-        let itemsPerRow=2;
-        let organizedMoments=[];
-        let data=props.trip.moments;
-        this.direction='down';
-        if(!props.trip.organizedMoments){
-            let globalIndex=0;
-
-            for(var i=0;i<props.trip.moments.length;i++){
-                let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
-                var currentMoment=data.slice(i, endIndex);
-                organizedMoments.push(currentMoment);
-                i = endIndex-1;
-                globalIndex++;
-            }
-            props.trip.organizedMoments=organizedMoments;
-        }else{
-            organizedMoments=props.trip.organizedMoments;
-        }
-
-
         this.scrollY=new Animated.Value(0);
 
         this.state= {
-            dataSource: this.ds.cloneWithRows(organizedMoments),
+            dataSource: this.ds.cloneWithRows([]),
             annotations:[],
             headerPreviewLoadedOpacity:new Animated.Value(0),
             headerLoadedOpacity:new Animated.Value(0),
-            moments:props.trip.moments,
+            moments:[],
             shouldUpdate:true,
-            isCurrentUsersTrip:props.trip.owner.id===props.user.profileID,
+            isCurrentUsersTrip:false,
             //routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
             routeName:"LOCATION",
-            itemsPerRow:itemsPerRow,
+            itemsPerRow:2,
+            trip:props.trip,
+            isReady:false,
             containerWidth:windowSize.width-30,
             region:null,
             momentDetailsOffsetY:new Animated.Value(windowSize.height),
@@ -194,9 +175,9 @@ class FeedTrip extends Component {
     _renderFooterView(){
         return;
         return <View style={{marginBottom:20}}>
-            {this.props.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
+            {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
             //console.log('type:',this.props.trip,'locus',this.props.trip.locus);
-            this.showTripLocation(this.props.trip.locus["region_gid"])}} text={"Explore "+this.props.trip.locus.region}></SimpleButton>:null}
+            this.showTripLocation(this.state.trip.locus["region_gid"])}} text={"Explore "+this.state.trip.locus.region}></SimpleButton>:null}
         </View>
     }
 
@@ -235,81 +216,50 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        //console.log('trip data',this.props.trip.moments)
         getFeed(this.props.trip.id,1,'trip').then((result)=>{
+
+
             let trip=result;
             let globalIndex=0;
             let itemsPerRow=2;
             let organizedMoments=[];
-            //console.log('trip endpoint',result);
-            let data=trip.data.moments;
+            let moments=trip.data.moments;
 
-            if(data.length!==this.props.trip.moments.length){
-                if(data.length==0){
-                    deleteTrip(this.props.trip.id).then(()=>{
-                        this.props.refreshCurrentScene();
-                        setTimeout(this.props.refreshCurrentScene,500)
-                    })
-                    this.props.navigator.pop();
-                }else{
-                    for(var i=0;i<data.length;i++){
-                        let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
-                        var currentMoment=data.slice(i, endIndex);
-                        organizedMoments.push(currentMoment);
-                        i = endIndex-1;
-                        globalIndex++;
-                    }
-                    this.props.trip.organizedMoments=organizedMoments;
-                    this.setState({dataSource: this.ds.cloneWithRows(organizedMoments)})
+            //console.log('moments',moments)
+            if(moments.length==0){
+                this.props.navigator.pop();
+            }else{
+                for(var i=0;i<moments.length;i++){
+                    let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
+                    var currentMoment=moments.slice(i, endIndex);
+                    organizedMoments.push(currentMoment);
+                    i = endIndex-1;
+                    globalIndex++;
                 }
+                this.organizedMoments=organizedMoments;
+                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
             }
         }).catch((error)=>{
+            //console.log('error',error)
             this.props.navigator.pop();
             //this.props.refreshCurrentScene();
             //setTimeout(this.props.refreshCurrentScene,500)
         })
     }
 
-    refreshCurrentScene(){
-        //setTimeout(()=>{
-        //
-        //getFeed(this.props.trip.id,1,'trip').then((result)=>{
-        //    let trip=result;
-        //    let globalIndex=0;
-        //    let itemsPerRow=2;
-        //    let organizedMoments=[];
-        //    //console.log('trip endpoint',result);
-        //    let data=trip.data.moments;
-        //
-        //    if(data.length!==this.props.trip.moments.length){
-        //        if(data.length==0){
-        //            deleteTrip(this.props.trip.id).then(()=>{
-        //                this.props.refreshCurrentScene();
-        //                setTimeout(this.props.refreshCurrentScene,500)
-        //            })
-        //            this.props.navigator.pop();
-        //        }else{
-        //            for(var i=0;i<data.length;i++){
-        //                let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
-        //                var currentMoment=data.slice(i, endIndex);
-        //                organizedMoments.push(currentMoment);
-        //                i = endIndex-1;
-        //                globalIndex++;
-        //            }
-        //            this.props.trip.organizedMoments=organizedMoments;
-        //            this.setState({dataSource: this.ds.cloneWithRows(organizedMoments)})
-        //        }
-        //    }
-        //}).catch((error)=>{
-        //    this.props.navigator.pop();
-        //    this.props.refreshCurrentScene();
-        //    setTimeout(this.props.refreshCurrentScene,500)
-        //})
-        //
-        //},500)
+
+
+    _renderEmpty(){
+        return (
+            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+                <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
+            </View>
+
+        )
     }
 
     render(){
+        if(!this.state.isReady)return this._renderEmpty();
         var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
 
         const completeHeader=
@@ -343,16 +293,16 @@ class FeedTrip extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-                <PopOver ref="popover" showEditTrip={true} onEditTrip={()=>{
+                <PopOver ref="popover" showEditTrip={true} enableNavigator={this.props.enableNavigator} onEditTrip={()=>{
                       this.props.navigator.push({
                             id: "editTripGrid",
                             hideNav:true,
-                            momentData:this.props.trip.moments,
-                            tripData:this.props.trip,
+                            momentData:this.state.trip.moments,
+                            tripData:this.state.trip,
                             name:"edit trip",
                             sceneConfig:"bottom-nodrag"
                       });
-                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.props.trip.id}></PopOver>
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.state.trip.id}></PopOver>
 
             </View>
         return completeHeader;
@@ -366,7 +316,7 @@ class FeedTrip extends Component {
                 [
                     {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                     {text: 'OK', onPress: () => {
-                        deleteTrip(this.props.trip.id).then(()=>{
+                        deleteTrip(this.state.trip.id).then(()=>{
                             this.props.refreshCurrentScene();
                             setTimeout(this.props.refreshCurrentScene,500)
                         })
@@ -393,15 +343,15 @@ class FeedTrip extends Component {
         };
 
 
-        this.props.trip.layer=locus[1];
-        this.props.trip.source=locus[0];
-        this.props.trip.sourceId=locus[2];
+        this.state.trip.layer=locus[1];
+        this.state.trip.source=locus[0];
+        this.state.trip.sourceId=locus[2];
 
 
 
         this.props.navigator.push({
             id: "location",
-            trip:{name:this.props.trip.name,...locationData},
+            trip:{name:this.state.trip.name,...locationData},
             version:"v2"
         });
     }
@@ -418,9 +368,9 @@ class FeedTrip extends Component {
 
 
     _renderHeader(){
-        var tripData=this.props.trip;
-        var type=this.props.trip.type=='global'?'state':this.props.trip.type;
-        var tripLocation=this.props.trip[type];
+        var tripData=this.state.trip;
+        var type=this.state.trip.type=='global'?'state':this.state.trip.type;
+        var tripLocation=this.state.trip[type];
 
         var country = countries.filter(function(country) {
             return country["alpha-2"].toLowerCase() === tripLocation.toLowerCase();
@@ -438,18 +388,19 @@ class FeedTrip extends Component {
 
         switch(tripData.contentType){
             case "trip":
-                bottomLeft=<UserImage style={{marginTop:-5}} radius={30} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.props.trip)}></UserImage>
+                bottomLeft=<UserImage style={{marginTop:-5}} radius={30} userID={this.state.trip.owner.id} imageURL={this.state.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.state.trip)}></UserImage>
 
                 let userName;
                 if(this.state.isCurrentUsersTrip){
-                    userName="YOU"
+                    userName="YOUR"
                 }else{
-                    userName=this.props.trip.owner.serviceUsername.toUpperCase()
+                    userName=this.state.trip.owner.serviceUsername.toUpperCase()
                 }
 
                 let didWhat
 
                 if(fullBleed&&this.state.isCurrentUsersTrip||this.state.isCurrentUsersTrip){
+                    didWhat="TRIP TO"
                 }else if(fullBleed){
                     didWhat="LIVES IN"
                     //didWhat=""
@@ -459,11 +410,11 @@ class FeedTrip extends Component {
                 }
 
                 tripTitle=userName+" "+didWhat;
-                momentCount=this.props.trip.momentCount||this.props.trip.moments.length
+                momentCount=this.state.trip.momentCount||this.state.trip.moments.length
             break;
             case "guide":
                 tripTitle=this.state.isCurrentUsersTrip?"":"EXPLORE"
-                momentCount=this.props.trip.venueCount;
+                momentCount=this.state.trip.venueCount;
             break;
         }
 
@@ -480,7 +431,7 @@ class FeedTrip extends Component {
                             onLoad={()=>{
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
-                            source={{uri:this.state.moments[0].serviceJson?this.state.moments[0].serviceJson.images.thumbnail.url:this.state.moments[0].mediaUrl}}
+                            source={{uri:this.state.trip.moments[0].serviceJson?this.state.trip.moments[0].serviceJson.images.thumbnail.url:this.state.trip.moments[0].mediaUrl}}
                         >
                             <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
                         </Animated.Image>
@@ -509,7 +460,7 @@ class FeedTrip extends Component {
                                 onLoad={()=>{
                                     Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
                                 }}
-                                source={{uri:this.state.moments[0].highresUrl||this.state.moments[0].mediaUrl}}
+                                source={{uri:this.state.trip.moments[0].highresUrl||this.state.trip.moments[0].mediaUrl}}
                             >
 
                             <View
@@ -525,7 +476,7 @@ class FeedTrip extends Component {
 
                             <Text style={styles.headerTripTo}>{tripTitle}</Text>
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.props.trip}></TripSubtitle>
+                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.state.trip}></TripSubtitle>
                             </View>
 
                         <View style={styles.subTitleContainer}>
@@ -547,8 +498,8 @@ class FeedTrip extends Component {
                 <View style={{height:260,width:windowSize.width-30,left:15,backgroundColor:'transparent',flex:1,position:'absolute',top:windowSize.height*.85}}>
                     <View style={[{backgroundColor:'white'},styles.map]}></View>
 
-                    <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap(this.props.trip)}}>
-                        <MarkerMap interactive={false} moments={this.props.trip.moments}></MarkerMap>
+                    <TouchableOpacity style={styles.map} onPress={()=>{this.showTripMap(this.state.trip)}}>
+                        <MarkerMap interactive={false} moments={this.state.trip.moments}></MarkerMap>
                     </TouchableOpacity>
                 </View>
 
@@ -573,7 +524,7 @@ class FeedTrip extends Component {
             }
 
             index++;
-            return  <MomentRow user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.state.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
 
         return (

@@ -143,7 +143,7 @@ class FeedLocation extends Component {
                            if((Math.random()>.5||globalIndex==0)){
                                endIndex=1+i
                            }else{
-                               if(data[i].contentType!=='guide'&&data[itemsPerRow+i-1].contentType!=='guide'){
+                               if(data[i]&&data[itemsPerRow+i-1]&&data[i].contentType!=='guide'&&data[itemsPerRow+i-1].contentType!=='guide'){
                                 endIndex=itemsPerRow+i;
 
                                }else{
@@ -163,7 +163,7 @@ class FeedLocation extends Component {
                 }:{};
 
                 if(page==1){
-                    console.log('get additional stuff',response);
+                    //console.log('get additional stuff',response);
                         this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
                     callback(organizedMoments,settings);
                     //getFeed(req,1,'search-places-v2').then((secondResponse)=>{
@@ -261,7 +261,7 @@ class FeedLocation extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
+                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
             </View>
         )
     }
@@ -401,7 +401,7 @@ class FeedLocation extends Component {
     _renderRow(rowData,sectionID,rowID){
         var index=0;
         var items = rowData.map((item) => {
-            //console.log(item.type);
+            console.log(item);
             if (item === null || (item.type!=='image'&&item.contentType!=='guide')) {
                 return null;
             }

@@ -143,7 +143,7 @@ class FeedDestination extends Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"suitcases/"+this.props.trip.id}></PopOver>
+                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"suitcases/"+this.props.trip.id}></PopOver>
 
             </View>
         )

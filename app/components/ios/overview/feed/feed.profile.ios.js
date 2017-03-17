@@ -63,15 +63,21 @@ var styles = StyleSheet.create({
 });
 
 class FeedProfile extends React.Component {
-    constructor(){
-        super();
+    constructor(props){
+        super(props);
         this.itemsLoadedCallback=null;
-
+        const isHeaderReady=false;
         this.state= {
             trips:[],
             headerTrips:[],
-            annotations:[]
+            annotations:[],
+            owner:isHeaderReady?props.trip.owner:null,
+            isHeaderReady
         };
+
+    }
+
+    componentDidMount(){
 
 
     }
@@ -89,26 +95,35 @@ class FeedProfile extends React.Component {
 
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
+        //console.log(this.props.trip.owner)
         getFeed(this.props.trip.owner.id,page,'profile').then((response)=>{
 
-            let hometownGuide=null;
+
             let trips=response.data;
-
-            for(var i=0;i<trips.length;i++){
-                let trip = trips[i];
-                if(trip.isHometown){
-                    hometownGuide=trips.splice(i,1)[0];
-                }
-            }
             this.isRescraping=false;
-            this.setState({hometownGuide,trips,feedReady:true})
+            this.setState({owner:response.profile,isHeaderReady:true,trips,feedReady:true})
 
-            if(page==1)this.setState({headerTrips:response.data})
-            callback(response.data);
+            if(page==1){
+                let hometownGuide=null;
+                for(var i=0;i<trips.length;i++){
+                    let trip = trips[i];
+                    if(trip.isHometown){
+                        hometownGuide=trips.splice(i,1)[0];
+                    }
+                }
+                this.setState({hometownGuide,headerTrips:response.data})
+            }
+
+            var settings=response.data.length==0?{
+                allLoaded: true
+            }:{};
+            callback(response.data,settings);
         });
     }
 
     render(){
+
+
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
 
@@ -144,7 +159,7 @@ class FeedProfile extends React.Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
-                <PopOver ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.trip.owner.id}></PopOver>
+                {this.state.owner?<PopOver enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.state.owner.id}></PopOver>:null}
 
             </View>
         )
@@ -164,7 +179,7 @@ class FeedProfile extends React.Component {
         this.props.navigator.push({
             id: "tripDetailMap",
             trip:{moments},
-            title:this.props.trip.owner.serviceUsername.toUpperCase()+"'S TRAVELS",
+            title:this.state.owner.serviceUsername.toUpperCase()+"'S TRAVELS",
             sceneConfig:"bottom",
             hideNav:true
         });
@@ -172,6 +187,8 @@ class FeedProfile extends React.Component {
 
 
     _renderHeader(){
+        if(!this.state.isHeaderReady)return;
+
         var trips=this.state.trips;
         var moments=[];
 
@@ -194,10 +211,10 @@ class FeedProfile extends React.Component {
 
 
 
-        const hometownGuide=this.state.hometownGuide?
+        const hometownGuide=this.state.hometownGuide&&this.state.owner.serviceUsername?
             <View>
                 <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.trip.owner.serviceUsername.toUpperCase()}'S TRAVELS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.state.owner.serviceUsername.toUpperCase()}'S TRAVELS</Text>
             </View>
             :null;
 
@@ -209,17 +226,17 @@ class FeedProfile extends React.Component {
             <View style={{marginBottom:15}}>
                 <View style={{backgroundColor:'#FFFFFF', height:600, width:windowSize.width,marginBottom:-290,marginTop:75}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
-                        <UserImage onPress={()=>{
-                            Linking.openURL("https://www.instagram.com/"+this.props.trip.owner.serviceUsername);
-                        }} radius={80} userID={this.props.trip.owner.id} imageURL={this.props.trip.owner.serviceProfilePicture}></UserImage>
+                        <UserImage border={false} onPress={()=>{
+                            Linking.openURL("https://www.instagram.com/"+this.state.owner.serviceUsername);
+                        }} radius={80} userID={this.state.owner.id} imageURL={this.state.owner.serviceProfilePicture}></UserImage>
 
-                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:25,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.trip.owner.serviceUsername.toUpperCase()}</Text>
+                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:25,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.owner.serviceUsername.toUpperCase()}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["bio"]}</Text>
+                            <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.state.owner.serviceObject["bio"]}</Text>
                         </Hyperlink>
-                        <Text style={{color:"#949494",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.props.trip.owner.hometown}</Text>
+                        <Text style={{color:"#949494",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.state.owner.hometown}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10,marginTop:5, fontFamily:"TSTAR", textAlign:'center', fontWeight:"600",backgroundColor:"transparent"}}>{this.props.trip.owner.serviceObject["website"].replace("http://","").replace("https://","")}</Text>
+                            <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10,marginTop:5, fontFamily:"TSTAR", textAlign:'center', fontWeight:"600",backgroundColor:"transparent"}}>{this.state.owner.serviceObject["website"].replace("http://","").replace("https://","")}</Text>
                         </Hyperlink>
                     </View>
                 </View>

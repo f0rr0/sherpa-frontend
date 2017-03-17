@@ -107,6 +107,7 @@ class OwnUserProfile extends React.Component {
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
+                //console.log(this.props.user.scrapeState)
                 if(parsedResponse.scrapeState!=='completed'){
                     this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
                     this.props.dispatch(updateUserData({scrapeState:'scraping'}));
@@ -125,7 +126,7 @@ class OwnUserProfile extends React.Component {
     }
 
     refreshCurrentScene(){
-        this.refresh();
+        //this.refresh();
     }
 
     refresh(){
@@ -150,15 +151,19 @@ class OwnUserProfile extends React.Component {
             //console.log(response)
             callback(response.data);
             let trips=response.data;
-            let hometownGuide=null;
-            for(var i=0;i<trips.length;i++){
-                let trip = trips[i];
-                if(trip.isHometown){
-                    hometownGuide=trips.splice(i,1)[0];
-                }
-            }
+
             this.isRescraping=false;
-            this.setState({hometownGuide,trips,feedReady:true})
+            if(page==1){
+                let hometownGuide=null;
+                for(var i=0;i<trips.length;i++){
+                    let trip = trips[i];
+                    if(trip.isHometown){
+                        hometownGuide=trips.splice(i,1)[0];
+                    }
+                }
+                this.setState({hometownGuide});
+            }
+            this.setState({trips,feedReady:true})
         });
     }
 
@@ -230,7 +235,7 @@ class OwnUserProfile extends React.Component {
                 }}
             />
             {tooltipTouchable}
-            <PopOver ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
+            <PopOver  enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
         </View>
@@ -271,7 +276,6 @@ class OwnUserProfile extends React.Component {
             sceneConfig:"bottom-nodrag",
             hideNav:true
         });
-        this.refs.popover._setAnimation("toggle");
     }
     navActionRight(){
         this.refs.popover._setAnimation("toggle");
@@ -308,8 +312,6 @@ class OwnUserProfile extends React.Component {
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
         }
-
-        //console.log('render empty == ',message);
 
         return (
             this.props.user.scrapeFromInstagram?status:null
@@ -349,8 +351,6 @@ class OwnUserProfile extends React.Component {
     _renderHeader(){
         var trips=this.state.trips;
         var moments=[];
-
-        //console.log(this.state.trips)
         if(trips){
             for(var i=0;i<trips.length;i++){
                 Array.prototype.push.apply(moments,trips[i].moments)
@@ -358,16 +358,11 @@ class OwnUserProfile extends React.Component {
         }
 
         if(this.state.hometownGuide)Array.prototype.push.apply(moments,this.state.hometownGuide.moments);
-
         var hasDescriptionCopy=true;
-
 
         const tooltip=!this.props.user.usedAddTrip?
                 <TouchableOpacity style={{position:'absolute',left:5,top:50}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image></TouchableOpacity>
             : null;
-
-
-
 
         const hometownGuide=this.state.hometownGuide?
             <View>

@@ -5,6 +5,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {getFeed} from '../../../../actions/feed.actions';
+import {updateUserData,storeUser} from '../../../../actions/user.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import NotificationRow from '../../components/notificationRow';
@@ -33,7 +34,8 @@ import React, { Component } from 'react';
 
 var styles = StyleSheet.create({
     listView:{
-        flex:1
+        flex:1,
+        paddingBottom:60,
     }
 });
 
@@ -46,26 +48,43 @@ class FeedNotifications extends React.Component {
         };
     }
 
+    componentDidMount(){
+        this.markAllAsViewed();
+    }
+
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
+        this.props.dispatch(updateUserData({notificationCount:0}))
+        this.props.dispatch(storeUser())
+
         getFeed(this.props.user.sherpaID,page,'notifications').then((response)=>{
             callback(response.data.notifications,{allLoaded:true});
-
+        }).catch((err)=>{
+            //console.log('err',err)
+            callback([],{allLoaded:true})
         });
+    }
+
+    markAllAsViewed(){
+        //console.log('mark as viewed');
+        getFeed(this.props.user.sherpaID,1,'reset-notifications').then((response)=>{
+            //console.log('notifications resetted',response);
+        }).catch((err)=>{
+            //console.log('notificaitons reset err',err);
+        })
     }
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height-100,width:windowSize.width,position:'absolute',top:0,left:0,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
-
         )
     }
 
     render(){
         return(
-            <View style={{flex:1,backgroundColor:'white'}}>
+            <View style={{flex:1,backgroundColor:'white',paddingBottom:65}}>
                 <SherpaGiftedListview
                     removeClippedSubviews={false}
                     renderHeaderOnInit={true}
@@ -93,11 +112,13 @@ class FeedNotifications extends React.Component {
 
     reset(){
         this._onFetch()
+        this.markAllAsViewed();
     }
 
     refreshCurrentScene(){
 
         this._onFetch()
+        this.markAllAsViewed();
     }
 
 
@@ -112,7 +133,7 @@ class FeedNotifications extends React.Component {
 
     _renderRow(notificationData) {
         return (
-            <NotificationRow data={notificationData}></NotificationRow>
+            <NotificationRow navigator={this.props.navigator} data={notificationData}></NotificationRow>
         );
     }
 }

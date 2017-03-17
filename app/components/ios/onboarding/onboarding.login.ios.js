@@ -376,7 +376,7 @@ class Login extends Component {
                         </View>
                         <View style={{flexDirection:"row"}}>
                             <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:1,borderColor:'rgba(255,255,255,.2)',width:windowSize.width,marginTop:15}} onPress={()=>{this.isRequest=false;this.alreadyInvited.bind(this)()}}>
-                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Already a member? Login now!".toUpperCase()}</Text>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Already invited? Login via Instagram.".toUpperCase()}</Text>
                             </TouchableOpacity>
                         </View>
                     </Animated.View>

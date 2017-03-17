@@ -207,7 +207,7 @@ class OnboardingSteps extends Component {
             <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false}  dot={<View style={styles.dot} />} showsButtons={false} loop={false} bounces={true} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
 
                 <OnboardingScreen
-                    darken={this.state.darken}
+                    darken={true}
                     backgroundImage={{uri:this.props.user.hometownImage}}
                         continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={

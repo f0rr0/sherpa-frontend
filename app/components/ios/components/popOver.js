@@ -44,7 +44,7 @@ var styles = StyleSheet.create({
         shadowRadius:4,
         shadowOpacity:.2,
         shadowOffset:{width:0,height:-5},
-        paddingBottom:100,
+        paddingBottom:40,
     }
 });
 
@@ -60,10 +60,13 @@ class PopOver extends Component {
     componentDidMount(){
     }
 
-    _setAnimation(enable) {
+    _setAnimation(enable,ignoreTabBar) {
         if(enable=="toggle")enable=!this.enabled;
         if(this.enabled!=enable){
             this.enabled=enable;
+            if(this.props.enableNavigator){
+                this.props.enableNavigator(!this.enabled,ignoreTabBar)
+            }
             this.setState({enabled:this.enabled})
             Animated.spring(this.state.bottomOffset, {
                 toValue: enable?-40:-400   // return to start
@@ -76,7 +79,6 @@ class PopOver extends Component {
     }
 
     openShare(){
-        //console.log(this.props.shareURL);
         ActivityView.show({
             url: this.props.shareURL
         });
@@ -114,16 +116,16 @@ class PopOver extends Component {
 
         var resetProfileButton=this.props.showReset?
           <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
-              this.props.resetProfileCallback();
               this._setAnimation(false)
+              this.props.resetProfileCallback();
           }}>
               <Text style={styles.buttonCopy}>RESET PROFILE</Text>
           </TouchableHighlight>:null;
 
         var profileSettingsButton = this.props.settings ?
           <TouchableHighlight underlayColor="#ececec" style={styles.button} dispatch={this.props.dispatch.bind(this)} onPress={() => {
-              this.props.showSettings();
               this._setAnimation(false);
+              this.props.showSettings();
           }}>
               <Text style={styles.buttonCopy}>PROFILE SETTINGS</Text>
           </TouchableHighlight> : null;
@@ -145,8 +147,8 @@ class PopOver extends Component {
 
         var settingsButton=this.props.showSettings?
             <TouchableHighlight underlayColor="#ececec" style={styles.button} onPress={() => {
+              this._setAnimation(false,true)
               this.props.openSettings();
-              this._setAnimation(false)
           }}>
                 <Text style={styles.buttonCopy}>SETTINGS</Text>
             </TouchableHighlight>:null;
