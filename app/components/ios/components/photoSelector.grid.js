@@ -19,7 +19,8 @@ class PhotoSelectorGrid extends React.Component {
         var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.state={
             dataSource: ds.cloneWithRows(this._genRows({})),
-            pressData:{}
+            pressData:{},
+            loadingMore: false,
         };
     }
 
@@ -41,6 +42,17 @@ class PhotoSelectorGrid extends React.Component {
         return {empty,checkArr};
     }
 
+    fetch() {
+        if (!this.state.loadingMore) {
+            this.setState({loadingMore: true}, () => { this._fetch(); });
+        }
+    }
+
+    _fetch() {
+        //getTripMoments(this.state.images.length?this.state.images[this.state.images.length-1].node.image.instagram_id:null)
+        //    .then((data) => this._appendImages(data), (e) => console.log(e));
+    }
+
     render(){
         return (
             // ListView wraps ScrollView and so takes on its properties.
@@ -51,6 +63,7 @@ class PhotoSelectorGrid extends React.Component {
                       renderFooter={this.props.footerView}
                       renderRow={this._renderRow.bind(this)}
                       removeClippedSubviews={false}
+                      onEndReached={this.props.onFetch}
             />
         );
     }
@@ -76,6 +89,12 @@ class PhotoSelectorGrid extends React.Component {
 
     _genRows(pressData){
         var dataBlob = [];
+        if(this.props.showMore){
+            dataBlob.push({
+                type:'add-more',
+                callback:this.props.moreCallback
+            });
+        }
         for (var ii = 0; ii < this.props.data.length; ii++) {
             dataBlob.push({
                 type:'moment',
@@ -85,17 +104,14 @@ class PhotoSelectorGrid extends React.Component {
 
             //this.props.data[ii].selected=!pressData[ii]
         }
-        if(this.props.showMore){
-            dataBlob.push({
-                type:'add-more',
-                callback:this.props.moreCallback
-            });
-        }
         return dataBlob;
     }
 
     _pressRow(rowID) {
-        this._pressData[rowID] = !this._pressData[rowID];
+        this._pressData[rowID-1] = !this._pressData[rowID-1];
+
+        this.props.pressedCallback(this._pressData)
+
         this.setState({
             dataSource: this.state.dataSource.cloneWithRows(
                 this._genRows(this._pressData)
@@ -135,5 +151,15 @@ const styles = StyleSheet.create({
         top:0
     }
 });
+
+PhotoSelectorGrid.defaultProps={
+    headerView:()=>{},
+    footerView:()=>{},
+    wrapper:()=>{},
+    moreCallback:()=>{},
+    onFetch:()=>{},
+    pressedCallback:()=>{},
+    tripID:null
+}
 
 export default PhotoSelectorGrid;

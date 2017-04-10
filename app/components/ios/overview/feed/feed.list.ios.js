@@ -1,6 +1,7 @@
 import { connect } from 'react-redux';
 import FeedTrip from './feed.trip.ios'
 import {loadFeed,getFeed} from '../../../../actions/feed.actions';
+import {updateUserData,storeUser} from '../../../../actions/user.actions';
 import TripRow from '../../components/tripRow'
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
@@ -128,9 +129,6 @@ class FeedList extends React.Component{
             }
         }
 
-        //if(prevState.mapLarge!==this.state.mapLarge){
-        //    this.updateMapSize.bind(this)();
-        //}
     }
 
     componentWillUnmount(){
@@ -180,7 +178,7 @@ class FeedList extends React.Component{
     }
 
     openMap(){
-        this.refs.listview.refs.listview.refs.mapToolTipp.hide();
+        if(this.refs.listview.refs.listview.refs.mapToolTipp)this.refs.listview.refs.listview.refs.mapToolTipp.hide();
         this.props.navigator.push({
             id: "tripDetailMap",
             sceneConfig:"bottom",
@@ -193,8 +191,12 @@ class FeedList extends React.Component{
 
     _renderHeader(){
         let windowHeight=windowSize.height;
+        let toolTip=this.props.user.usedMap?null:<ToolTipp ref="mapToolTipp" message="tap to explore" ref="mapToolTipp" onHide={()=>{
+                                                     this.props.dispatch(updateUserData({usedMap:true}))
+                                                     this.props.dispatch(storeUser())
+                                                }}></ToolTipp>
         return (
-            <View style={{overflow:'visible',justifyContent:'center',zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
+            <View style={{overflow:'visible',justifyContent:'center',marginBottom:0,zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
                 <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
                     <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
                        <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
@@ -202,7 +204,7 @@ class FeedList extends React.Component{
                                 transform: [,{
                         scale: this.state.scrollY.interpolate({
                             inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                            outputRange: [3, 1.3],
+                            outputRange: [3, 1.1],
                              extrapolate: 'clamp'
                         })
                     },{translateY:this.state.scrollY.interpolate({
@@ -213,15 +215,15 @@ class FeedList extends React.Component{
                                 }
                        ]}></Animated.Image>
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
-                            <ToolTipp ref="mapToolTipp" message="tap to open map" ref="mapToolTipp"></ToolTipp>
+                           {toolTip}
                        </View>
                     </Animated.View>
                 </TouchableOpacity>
                         {this._renderFixedSearchBar()}
-                <View style={{flex:1,paddingTop:30,backgroundColor:'white'}}>
+                <View style={{flex:1,marginTop:70,backgroundColor:'white'}}>
                     <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED TRAVELERS</Text>
                     {this._renderFeaturedProfiles.bind(this)()}
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST TRIPS</Text>
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST EXPERIENCES</Text>
                 </View>
             </View>
         )
@@ -229,13 +231,14 @@ class FeedList extends React.Component{
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:200,width:windowSize.width,alignItems:'center'}}>
+            <View style={{justifyContent:'center',backgroundColor:"white",height:200,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
         )
     }
 
     showUserProfile(user){
+        //console.log('user',user)
         this.props.navigator.push({
             id: "profile",
             trip:{owner:user}
@@ -243,6 +246,7 @@ class FeedList extends React.Component{
     }
 
     _renderFeaturedProfiles(){
+
         return(
             <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:30}}>
                 {this.state.featuredProfiles.map((profile,index)=> {
@@ -272,8 +276,8 @@ class FeedList extends React.Component{
                         shadowColor:'black',
                         shadowRadius:4,
                         shadowOpacity:.1,
-                        zIndex:1,
                         shadowOffset:{width:0,height:1},
+                        zIndex:1,
                         marginTop:this.state.inputFocusOffset,
                         top:topOffset,
                         width:windowSize.width*.85,
@@ -334,7 +338,7 @@ class FeedList extends React.Component{
         return(
             <View ref="searchContainer">
                 <SherpaPlacesAutocomplete
-                    placeholder="Where to?"
+                    placeholder={ref=='inputFixed'?"Discover the world":"Search places and people"}
                     ref={ref}
                     placeholderTextColor={'rgba(0,0,0,.5)'}
                     baseUrl={endpoint+version}
@@ -440,7 +444,7 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
-                    //scrollEventThrottle={100}
+                    scrollEventThrottle={100}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
                     onEndReached={()=>{
@@ -448,7 +452,7 @@ class FeedList extends React.Component{
                     }}
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
-                     //
+
                      // Animated.event(
                      //     [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
                      //   )(event);

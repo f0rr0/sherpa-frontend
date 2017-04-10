@@ -196,7 +196,7 @@ class FeedDestination extends Component {
                     <MarkerMap ref="markermap" moments={this.props.trip.moments} interactive={false}></MarkerMap>
                 </TouchableOpacity>
                 <View style={{width:windowSize.width,marginTop:15,marginBottom:12}}>
-                    <Text style={{marginLeft:14,fontWeight:"600",fontSize:10,fontFamily:"TSTAR"}}>{this.props.trip.moments.length} MOMENTS SAVED</Text>
+                    <Text style={{marginLeft:14,fontWeight:"600",fontSize:10,fontFamily:"TSTAR"}}>{this.props.trip.moments.length} PLACES SAVED</Text>
                 </View>
                 {this.props.navigation.default}
 

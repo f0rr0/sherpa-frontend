@@ -26,7 +26,7 @@ class ToolTipp extends React.Component {
 
     hide(){
         Animated.timing(this.state.opacity,{toValue:0}).start();
-        console.log('remove tooltipp')
+        this.props.onHide();
     }
 
     _renderTriangle(){
@@ -37,7 +37,7 @@ class ToolTipp extends React.Component {
                         style={{position:'absolute',top:-3,right:20}}
                         width={5}
                         height={3}
-                        color={'rgba(0,0,0,.6)'}
+                        color={'rgba(0,0,0,.85)'}
                         direction={'up'}
                     />)
                 break;
@@ -62,7 +62,10 @@ class ToolTipp extends React.Component {
 
         return (
             <Animated.View style={[toolTippStyle.basic,{width:toolTippWidth,opacity:this.state.opacity},this.props.style]}>
-                <Text style={[toolTippStyle.copy]}>{this.props.message.toUpperCase()}</Text>
+                <View style={{justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
+                    <Image style={{marginRight:10}} source={require("../../../Images/icons/close-tooltipp.png")}></Image>
+                    <Text style={[toolTippStyle.copy,this.props.textStyle]}>{this.props.message}</Text>
+                </View>
                 {this._renderTriangle()}
             </Animated.View>
         )

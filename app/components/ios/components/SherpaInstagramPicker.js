@@ -123,6 +123,7 @@ class SherpaInstagramPicker extends Component {
                                 "location": asset.location ? asset.location.name : null,
                                 "state": "",
                                 "instagram_id":asset.id,
+                                "id":"sherpa-internal-"+asset.id+"-"+(100*Math.random()),
                                 "country": "",
                                 "caption": asset.caption ? asset.caption.text : null,
                                 "serviceJson": _.pick(asset, [
@@ -137,6 +138,7 @@ class SherpaInstagramPicker extends Component {
                                     'id',
                                     'user'
                                 ]),
+                                "type":"image",
                                 "mediaUrl": this._getMediaUrl(asset),
                                 "highresUrl": this._getMediaUrl(asset).replace(/.640x640\//, '').replace(/.480x480\//, ''),
                                 "scrapeTime": new Date(),
@@ -195,6 +197,7 @@ class SherpaInstagramPicker extends Component {
             <View key={item.node.image.uri}>
                 <View style={{flex:1,position:'absolute',backgroundColor:'transparent',top:0,width:this._imageSize,height:this._imageSize}}></View>
                 <TouchableOpacity
+                    activeOpacity={1}
                     style={{marginBottom: imageMargin, marginRight: imageMargin,backgroundColor:'rgba(0,0,0,0)'}}
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image

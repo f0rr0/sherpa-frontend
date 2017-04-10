@@ -243,7 +243,7 @@ class Search extends React.Component {
                             source={require('./../../../../Images/icon-explore-dark.png')}
                         />
                         <GooglePlacesAutocomplete
-                            placeholder='Where to?'
+                            placeholder='Discover the world'
                             ref="googleSearch"
                             textInputProps={{
                                onChangeText:(searchQuery) => {

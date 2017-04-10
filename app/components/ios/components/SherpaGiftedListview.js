@@ -10,7 +10,7 @@ var {
     Text,
     RefreshControl,
     } = require('react-native');
-
+const SCREEN_WIDTH = require('Dimensions').get('window').width;
 
 // small helper function which merged two objects into one
 function MergeRecursive(obj1, obj2) {
@@ -286,10 +286,17 @@ var SherpaGiftedListview = React.createClass({
 
         //console.log(this.props.footerView());
 
+
         return(
-            <View style={{flex:1}}>
+            <View style={{ justifyContent: 'flex-start',
+        marginHorizontal: 7,
+        width: SCREEN_WIDTH-28,
+        alignItems: 'center'}}>
+
                 {this.props.footerView()}
-                {pagedFooterView}
+                    {pagedFooterView}
+
+
             </View>
         )
     },

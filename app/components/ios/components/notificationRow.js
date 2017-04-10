@@ -45,21 +45,18 @@ class NotificationRow extends Component {
             id: "trip",
             trip:{id:tripID}
         });
-
-
     }
 
     _renderNotification(){
         let notification;
         var timeAgo=this.props.data.createdAt?moment(new Date(this.props.data.createdAt)).fromNow():null;
         let timeAgoNode=timeAgo?<Text  style={{color:'white',fontSize:9,fontFamily:"Akkurat",opacity:.8,letterSpacing:1}}>{timeAgo.toUpperCase()}</Text>:null;
-
         switch(this.props.data.type){
             case "trip_featured":
             case "trip_created":
             case "profile_created":
                 notification=
-                    <TouchableOpacity onPress={()=>{this.showTrip(this.props.data.payload.v1.primaryView.trip)}} activeOpacity={1} style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center'}}>
+                    <TouchableOpacity onPress={()=>{this.props.data.type=='profile_created'?this.showUserProfile(this.props.data.payload.v1.primaryView.profile):this.showTrip(this.props.data.payload.v1.primaryView.trip)}} activeOpacity={1} style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center'}}>
                         <Image source={{uri:this.props.data.primaryImage}} style={{...StyleSheet.absoluteFillObject}}>
                         </Image>
                         <View style={{...StyleSheet.absoluteFillObject, backgroundColor:'rgba(0,0,0,.5)'}}></View>

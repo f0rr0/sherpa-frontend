@@ -59,7 +59,7 @@ class TripTitle extends Component {
 
         return (
             <View style={[this.state.containerStyle,this.props.style]}>
-                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?" LIVES IN":" WENT TO"}</Text>:null}
+                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?"":""}</Text>:null}
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
             </View>
         );

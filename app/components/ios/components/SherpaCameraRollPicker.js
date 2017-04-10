@@ -141,6 +141,7 @@ class SherpaCameraRollPicker extends Component {
             <View key={item.node.image.uri}>
                 <View style={{flex:1,position:'absolute',backgroundColor:'transparent',top:0,width:this._imageSize,height:this._imageSize}}></View>
                 <TouchableOpacity
+                    activeOpacity={1}
                     style={{marginBottom: imageMargin, marginRight: imageMargin}}
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image

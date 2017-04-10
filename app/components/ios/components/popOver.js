@@ -95,7 +95,7 @@ class PopOver extends Component {
 
         var editTripButton=this.props.showEditTrip?
             <TouchableHighlight onPress={this.props.onEditTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
-                <Text style={styles.buttonCopy}>EDIT TRIP</Text>
+                <Text style={styles.buttonCopy}>EDIT</Text>
             </TouchableHighlight>:null;
 
         var deleteTripButton=this.props.showDeleteTrip?

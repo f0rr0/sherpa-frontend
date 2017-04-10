@@ -175,6 +175,8 @@ class FoursquareInfoBox extends Component {
                             </View>
                         </View>
                     </TouchableHighlight>
+                    <View style={{marginHorizontal:0,marginTop:25,borderTopWidth:1,borderTopColor:"rgba(0,0,0,.1)"}}></View>
+
                 </View>
         )
     }

@@ -42,20 +42,22 @@ export function createMoment(moment){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/json");
 
-                var createOrUpdate=moment.id?moment.id+"/update":"create";
+                let momentExists=moment.id&&moment.id.toString().indexOf("internal")==-1;
+                //console.log('exists:',momentExists,"::",moment.id)
 
-
+                var createOrUpdate=momentExists?moment.id+"/update":"create";
                 fetch(endpoint + version + "/moment/"+createOrUpdate, {
-                    method: moment.id?'patch':'post',
+                    method: momentExists?'patch':'post',
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
-                    //Alert.alert('return date',JSON.parse(response).date.toString())
-
                     fulfill(JSON.parse(response))
-                }).catch(err=>reject(err));
+                }).catch((err)=>{
+                    //console.log('moment creation error',err)
+                    reject(err)
+                });
             }
         });
     })
@@ -77,10 +79,10 @@ export function uploadMoment(momentBlob,momentData){
                     { name : 'enctype', data : 'multipart/form-data'},
                     { name : 'image', filename : 'moment' + momentData.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
                 ]).then((resp) => {
-                    console.log('resp',resp);
+                    console.log('upload resp',resp);
                     fulfill(resp)
                 }).catch((err) => {
-                    console.log('error',err);
+                    //console.log('error',err);
                     reject(err);
                 })
             });
@@ -198,14 +200,16 @@ export function createTrip(tripBlob,tripLocation) {
                     headers: sherpaHeaders,
                     body: JSON.stringify(queryData)
                 }).then((rawServiceResponse)=> {
-                    switch (rawServiceResponse.status) {
-                        case 200:
+                    //console.log('raw create trip response',rawServiceResponse.text())
+                    //switch (rawServiceResponse.status) {
+                        //case 200:
                             return rawServiceResponse.text()
-                        break;
-                            reject({'response':rawServiceResponse})
-                        default:
-                    }
+                        //break;
+                        //    reject({'response':rawServiceResponse})
+                        //default:
+                    //}
                 }).then((response)=> {
+                    //console.log('response',response)
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }
@@ -229,14 +233,19 @@ export function getUserInstagramPhotos(maxID="1287786939763703288_184267603"){
     return new Promise((fulfill,reject)=> {
         const max=maxID?'max_id='+maxID+'&':'';
         store.get('user').then((user) => {
+             //console.log(user.serviceToken);
         //console.log('https://api.instagram.com/v1/users/self/media/recent/?'+max+'access_token='+user.serviceToken)
             fetch('https://api.instagram.com/v1/users/self/media/recent/?'+max+'access_token='+user.serviceToken, {
                 method: 'get'
             }).then((rawServiceResponse)=> {
                 return rawServiceResponse.text();
             }).then((response)=> {
+                //console.log(response)
                 fulfill(JSON.parse(response))
-            }).catch(err=>reject(err));
+            }).catch((err)=>{
+                //console.log(err);
+                reject(err)
+            });
         })
     });
 }

@@ -111,7 +111,7 @@ export function deleteMoment(momentID,instant){
 
 
                 let body={};
-                if(!instant)body.reason="image-not-found";
+                if(!instant)requestURI+="/?reason=image-not-found";
 
                 let reqBody = {
                     method: 'delete',
@@ -164,9 +164,6 @@ export function getFeed(query,page=1,type='') {
                         feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
                     break;
                     case "notifications":
-                        //http://api.trysherpa.com/api/v1/user/2278/notifications
-                        //query=2278;
-                        //console.log('get notifications',query)
                         feedRequestURI = endpoint + version + "/user/" + query +"/notifications?page=" + page;
                     break;
                     case 'reset-notifications':
@@ -178,7 +175,6 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "profile":
                         feedRequestURI = endpoint + "v2" + "/profile/" + query + "/trips?page=" + page;
-                        //console.log(feedRequestURI,'get profile')
                     break;
                     case "featured-profiles":
                         feedRequestURI = endpoint + version + "/profiles/featured";
@@ -198,7 +194,6 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "search-places-v2":
                         feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.sourceId+"&location&page="+page;
-                    //console.log('search places v2',feedRequestURI)
                     break;
                     case "search-places-guides":
                         feedRequestURI = endpoint + "v1" + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
@@ -208,18 +203,15 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "guide":
                         feedRequestURI = endpoint + version + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
-                        //console.log(feedRequestURI)
                     break;
                     case "user":
                         feedRequestURI = endpoint + version + user_uri + "/" + query;
-                        console.log('get user', feedRequestURI)
                     break;
                     case "moment":
                         feedRequestURI=endpoint+version+"/moment/"+query;
                     break;
                     case "trip":
-                        feedRequestURI=endpoint+version+"/trip/"+query;
-                        //console.log('tripfeed requ uro',feedRequestURI);
+                        feedRequestURI=endpoint+version+"/trip/"+query+"?momentPage="+page+"&momentLimit=24";
                     break;
                     case "feed-v2":
                         feedRequestURI = endpoint + "v2" + feed_uri + "?page=" + page;
@@ -238,6 +230,7 @@ export function getFeed(query,page=1,type='') {
 
 
                 sherpaHeaders.append("token", finalToken);
+
                 switch(type){
                     case 'map-search':
                     case 'map-search-classic':
@@ -272,10 +265,10 @@ export function getFeed(query,page=1,type='') {
                 }
 
 
-                //console.log('feed request uri',feedRequestURI)
+                console.log('feed request uri',feedRequestURI)
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
-                        //console.log('raw response',rawSherpaResponse)
+                        console.log('raw response',rawSherpaResponse)
                         switch (rawSherpaResponse.status) {
                             case 200:
                                 return rawSherpaResponse.text()
@@ -295,7 +288,7 @@ export function getFeed(query,page=1,type='') {
                     .then((rawSherpaResponseFinal)=> {
                         if (!rawSherpaResponseFinal)return;
                         let parsedResponse=JSON.parse(rawSherpaResponseFinal);
-                        //console.log(parsedResponse);
+                        console.log(parsedResponse);
                         let trips = parsedResponse.trips || parsedResponse;
                         let cleanTrips=[];
                         for(let index in trips){
@@ -338,7 +331,8 @@ export function getFeed(query,page=1,type='') {
                             break;
                             case "location":
                             case "profile":
-                                fulfill({data:cleanTrips,profile:parsedResponse.profile, page, type});
+                                //parsedResponse.profile.serviceToken
+                                fulfill({data:cleanTrips,profile:parsedResponse.profile, page, type,followers:parsedResponse.followers,following:parsedResponse.following});
                             break;
                             case "feed-v2":
                                 fulfill({trips:parsedResponse.content, page, type});
@@ -355,8 +349,6 @@ export function getFeed(query,page=1,type='') {
                             case "location-search":
                             case "map-search-v2":
                             case "guide":
-
-
                                 let cleanMoments=[];
                                 let moments;
                                 if(type=="search-places-v2"){

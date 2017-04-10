@@ -555,9 +555,9 @@ const SherpaPlacesAutocomplete = React.createClass({
                                     style={[ defaultStyles.description, this.props.styles.description]}
                                     numberOfLines={1}
                                 >
-                                    {rowData.payload.serviceFullName}
+                                    @{rowData.payload.serviceUsername}
                                 </Text>
-                                <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>@{rowData.payload.serviceUsername}</Text>
+                                <Text style={{fontSize:10,color:'rgba(0,0,0,.5)',letterSpacing:.25,marginTop:-2}}>{rowData.payload.serviceFullName}</Text>
                             </View>
                         </View>
                     </View>
@@ -643,6 +643,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                         placeholderTextColor={this.props.placeholderTextColor}
                         onFocus={onFocus ? () => {this._onFocus(); onFocus()} : this._onFocus}
                         clearButtonMode="always"
+                        returnKeyType='search'
                     />
                 </Animated.View>
                 {this._renderHelperRow()}

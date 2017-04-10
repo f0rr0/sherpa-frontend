@@ -25,18 +25,42 @@ import SimpleError from '../../components/simpleError';
 class EditTripName extends React.Component {
     constructor(props){
         super(props)
-        //console.log('props',props);
+
+        let displayData=[];
+
+        for(var i=0;i<props.momentData.length;i++){
+            let shouldAdd=true;
+            for(var j=0;j<props.deselectedMomentIDs.length;j++){
+
+                console.log(props.deselectedMomentIDs[j])
+                if(props.momentData[i].id==props.deselectedMomentIDs[j]){
+                    shouldAdd=false;
+                }
+            }
+
+            if(shouldAdd){
+                displayData.push(props.momentData[i]);
+            }
+        }
+
+
+
         this.state={
             remainingCharacters:30,
             text:props.tripData?props.tripData.name:"",
-            positionBottom:new Animated.Value(14)
+            positionBottom:new Animated.Value(14),
+            tripData:null,
+            tripName:props.tripName,
+            intent:props.intent,
+            momentData:props.momentData,
+            deselectedMomentIDs:props.deselectedMomentIDs,
+            displayData
         }
 
-        console.log(props.momentData)
     }
 
     componentDidMount(){
-        //console.log(this.props.momentData);
+        console.log(this.state.displayData);
     }
 
     navActionRight(){
@@ -51,9 +75,9 @@ class EditTripName extends React.Component {
             var momentIDs=[];
 
             //create moments or edit moments
-            for(var i=0;i<this.props.momentData.length;i++){
-                console.log('moment[i]',this.props.momentData[i]);
-                let momentPromise = createMoment(this.props.momentData[i]);
+            for(var i=0;i<this.state.displayData.length;i++){
+                //console.log('moment[i]',this.state.displayData[i]);
+                let momentPromise = createMoment(this.state.displayData[i]);
                 moments.push(momentPromise)
             }
 
@@ -61,36 +85,34 @@ class EditTripName extends React.Component {
             this.props.headerProgress.show();
             this.props.headerProgress.startToMiddle();
 
-            getTripLocation(this.props.momentData).then((tripLocation)=>{
-                Promise.all(moments).then((momentsRes)=>{
+            console.log('get trip location',this.state.displayData)
 
+            getTripLocation(this.state.displayData).then((tripLocation)=>{
+                console.log('received trip location',tripLocation);
+
+                Promise.all(moments).then((momentsRes)=>{
                     var momentUploads=[];
                     var dates=[];
                     var coverMomentID="";
-                    for(var i=0;i<  this.props.momentData.length;i++){
-                        if(this.props.selection[i].selected){
+                    for(var i=0;i<  this.state.displayData.length;i++){
                             momentIDs.push(momentsRes[i].id)
-                            if(this.props.selection[i].isCover){
+                            if(this.state.displayData[i].isCover){
                                 coverMomentID=momentsRes[i].id;
                             }
-                            this.props.selection[i].data=momentsRes[i];
-                            dates.push(this.props.momentData[i].date || new Date().getTime()/1000)
-                            if(!this.props.momentData[i].id&&this.props.momentData[i].service=='sherpa-ios')momentUploads.push(uploadMoment(this.props.momentData[i],momentsRes[i]));
-                        }
+                            dates.push(this.state.displayData[i].date || new Date().getTime()/1000)
+                            if(this.state.displayData[i].id.toString().indexOf("sherpa-internal")>-1&&this.state.displayData[i].service=='sherpa-ios'){
+                                momentUploads.push(uploadMoment(this.state.displayData[i],momentsRes[i]));
+                                console.log('add to moment uploads')
+                            }
                     }
 
                     dates.sort(function(a,b) {
                         return a - b
                     });
 
-                    //console.log(dates);
                     var startDate=dates[0];
                     var endDate=dates[dates.length-1];
-
-                    //console.log('start date',startDate);
-                    //console.log('end date',endDate);
-
-
+                    console.log('moments uploads',momentUploads)
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {
@@ -102,6 +124,7 @@ class EditTripName extends React.Component {
                         //    coverMomentID,
                         //    trip: this.props.tripData
                         //},'trip location::',tripLocation);
+                        console.log("uploads complete");
                         createTrip({
                             momentIDs,
                             name: this.state.text,
@@ -113,7 +136,6 @@ class EditTripName extends React.Component {
                             this.props.headerProgress.showSuccess();
                             setTimeout(this.props.refreshCurrentScene,500)
                         }).catch((err)=> {
-                            //console.log('create trip error',err);
                             this.props.headerProgress.showError();
                         })
                     }).catch((err)=>{console.log('err from upload')});
@@ -121,13 +143,6 @@ class EditTripName extends React.Component {
 
                 //console.log(this.props.navigator.getCurrentRoutes())
                 this.props.navigator.popToTop();
-                //this.props.navigator.push({
-                //    id: "own-profile",
-                //    hideNav:false,
-                //    momentData:this.props.momentData,
-                //    refresh:true,
-                //    sceneConfig:"bottom-nodrag"
-                //});
             });
         }
 
@@ -168,15 +183,15 @@ class EditTripName extends React.Component {
                            onBlur={this.onEnd.bind(this)}
                            onChangeText={(text) =>{this.setState({text:text.toUpperCase(),remainingCharacters:30-text.length})}}
                                       value={this.state.text}
-                                      placeholder={'NAME YOUR TRIP'}
+                                      placeholder={'YOUR ALBUM'}
                 >
                 </TextInput>
-                <Text style={{color:"#999999",fontFamily:Fonts.type.headline,fontSize:10,letterSpacing:.5}}>EDIT YOUR TRIP NAME HERE ({this.state.remainingCharacters})</Text>
+                <Text style={{color:"#999999",fontFamily:Fonts.type.headline,fontSize:10,letterSpacing:.5}}>EDIT NAME HERE ({this.state.remainingCharacters})</Text>
                 {this.props.navigation.default}
                 <Animated.View style={{position:'absolute',bottom:this.state.positionBottom,left:7,flex:1}}>
-                    <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7}} onPress={()=>{this.navActionRight()}} text="save and publish trip"></SimpleButton>
+                    <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7}} onPress={()=>{this.navActionRight()}} text="save and publish"></SimpleButton>
                 </Animated.View>
-                <SimpleError ref="tripnameError" errorMessage="Please add a trip name"></SimpleError>
+                <SimpleError ref="tripnameError" errorMessage="Please add an album name"></SimpleError>
 
             </View>
         )
@@ -188,6 +203,11 @@ var styles = StyleSheet.create({
 
 });
 
-
+EditTripName.defaultProps={
+    tripData:null,
+    intent:null,
+    momentData:[],
+    deselectedMomentIDs:[]
+}
 
 export default EditTripName;

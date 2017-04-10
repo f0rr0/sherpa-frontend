@@ -27,12 +27,23 @@ import {getUserInstagramPhotos} from '../../../../actions/trip.edit.actions'
 class AddTrip extends React.Component {
     constructor(props){
         super(props);
-        this.state={images:{cameraroll:props.images&&!props.momentData?props.images.cameraroll:[],instagram:props.images&&!props.momentData?props.images.instagram:[]},type:'instagram'}
+        this.state={
+            images:{
+                cameraroll:[],
+                instagram:[]
+            },
+            photoSource:'instagram',
+            intent:props.intent,
+            momentData:props.momentData,
+            deselectedMomentIDs:props.deselectedMomentIDs,
+            tripData:props.tripData
+        }
+
     }
 
     componentDidMount(){
         this.setType('instagram');
-    }
+    }f
 
     componentDidUpdate(){
         this.refs['tab-cameraroll'].setOpacityTo(this.refs['tab-cameraroll'].props.disabled?1:.2)
@@ -58,7 +69,7 @@ class AddTrip extends React.Component {
         }
 
         Promise.all(momentsExif).then((momentsExifData)=> {
-            var momentBlobs=this.props.momentData||[];
+            var momentBlobs=this.state.momentData||[];
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
 
@@ -74,7 +85,8 @@ class AddTrip extends React.Component {
                 }
 
 
-                momentBlobs.push({
+                //serialize into moments object
+                momentBlobs.unshift({
                     "lat":lat,
                     "lng":lng,
                     "date": new Date(dateTime[0]).getTime()/1000,
@@ -82,59 +94,62 @@ class AddTrip extends React.Component {
                     "location":"",
                     "state":"",
                     "country":"",
+                    "type":"image",
+                    "id":"sherpa-internal-"+ new Date(dateTime[0]).getTime() + 100*Math.random(),
                     "service":"sherpa-ios",
                     "mediaUrl":this.state.images.cameraroll[i].uri
                 })
             }
 
 
-            momentBlobs=momentBlobs.concat(this.state.images.instagram);
-            //console.log(this.state.images.instagram,'instagram');
+            //merge all moment blobs into one
+            momentBlobs=this.state.images.instagram.concat(momentBlobs)
 
             this.props.navigator.push({
                 id: "editTripGrid",
                 hideNav:true,
-                momentData:momentBlobs,
-                images:this.state.images,
                 sceneConfig:"bottom-nodrag",
-                tripData:this.props.tripData
+                tripData:this.state.tripData,
+                intent:this.state.intent,
+                momentData:momentBlobs,
+                deselectedMomentIDs:this.props.deselectedMomentIDs
             });
 
         });
     }
 
-    setType(newType){
-        this.setState({type:newType})
+    setType(photoSource){
+        //toggle type between instagram and cameraroll
+        this.setState({photoSource})
     }
 
     checkEmpty(){
+        //check empty
         return (this.state.images.cameraroll.length==0&&this.state.images.instagram.length==0);
     }
 
 
     render(){
-        var header=<Header ref="navFixed" rightDisabled={this.checkEmpty()} settings={{opaque:false,routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),navColor:'white'}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
-
-
+        var header=<Header ref="navFixed" rightDisabled={this.checkEmpty()} settings={{opaque:false,routeName:"Select album photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),navColor:'white'}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
         var currentImageSelection=null;
-        switch(this.state.type){
+        switch(this.state.photoSource){
             case "cameraroll":
-                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" selected={this.state.images.cameraroll} wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
+                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" selected={this.state.images.cameraroll} wrapper={{height:SCREEN_HEIGHT-121,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
             break;
             case "instagram":
-                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" selected={this.state.images.instagram} wrapper={{height:SCREEN_HEIGHT-120,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
+                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" selected={this.state.images.instagram} wrapper={{height:SCREEN_HEIGHT-121,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
             break;
         }
         return(
             <View style={{flex:1,backgroundColor:"#161616"}}>
                 {header}
 
-                <View style={{width:SCREEN_WIDTH,marginTop:70,flex:1,flexDirection:'row',borderTopColor:"#343434",borderTopWidth:1}}>
-                    <TouchableOpacity disabled={this.state.type==='cameraroll'} onPress={()=>this.setType('cameraroll')} ref="tab-cameraroll" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
+                <View style={{width:SCREEN_WIDTH,marginTop:70,flexDirection:'row',borderTopColor:"#343434",borderBottomColor:"#343434",borderTopWidth:1,borderBottomWidth:1,height:51}}>
+                    <TouchableOpacity disabled={this.state.photoSource==='cameraroll'} onPress={()=>this.setType('cameraroll')} ref="tab-cameraroll" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
                         <Text style={{color:'white',fontFamily:Fonts.type.headline,fontSize:11,letterSpacing:.5}}>CAMERA ROLL</Text>
                     </TouchableOpacity>
                     <View style={{height:50,width:1,backgroundColor:"#343434"}}></View>
-                    <TouchableOpacity disabled={this.state.type==='instagram'} onPress={()=>this.setType('instagram')} ref="tab-instagram" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
+                    <TouchableOpacity disabled={this.state.photoSource==='instagram'} onPress={()=>this.setType('instagram')} ref="tab-instagram" style={{width:SCREEN_WIDTH/2,flex:1,height:50,alignItems:"center",justifyContent:'center'}}>
                         <Text style={{color:'white',fontFamily:Fonts.type.headline,fontSize:11,letterSpacing:.5}}>INSTAGRAM</Text>
                     </TouchableOpacity>
                 </View>
@@ -142,6 +157,13 @@ class AddTrip extends React.Component {
             </View>
         )
     }
+}
+
+AddTrip.defaultProps={
+    tripData:null,
+    intent:null,
+    momentData:[],
+    deselectedMomentIDs:[]
 }
 
 

@@ -58,6 +58,16 @@ class LocationName extends Component{
     }
 
     render(){
+        let isCover=this.props.showCover? <TouchableOpacity onPress={this.setCoverPhoto.bind(this)} style={{position:'absolute',right:12,bottom:12}}>
+            <View style={{flexDirection:'row',flex:1,alignItems:'center',justifyContent:'center'}}>
+
+                <Text style={{color:'white',fontSize:10,fontFamily:Fonts.type.headline,letterSpacing:1}}>MAKE THIS THE COVER PHOTO</Text>
+                <View style={{marginBottom:3,marginLeft:10,width:21,height:21}}>
+                    <Image style={{position:'absolute',width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-empty-white-circle.png')}></Image>
+                    <Image style={{position:'absolute',opacity:this.state.isCover?1:0,width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-check-white-circle.png')}></Image>
+                </View>
+            </View>
+        </TouchableOpacity>:null;
         var moment = this.state.moment;
         //console.log(moment);
         return(
@@ -79,16 +89,7 @@ class LocationName extends Component{
                         onError={()=>{}}
                     />
                     <Image style={{width:this.props.cardWidth,position:'absolute',bottom:-60,left:0}} resizeMode="contain" source={require('../../../Images/shadow-bottom.png')}></Image>
-                    <TouchableOpacity onPress={this.setCoverPhoto.bind(this)} style={{position:'absolute',right:12,bottom:12}}>
-                        <View style={{flexDirection:'row',flex:1,alignItems:'center',justifyContent:'center'}}>
-
-                            <Text style={{color:'white',fontSize:10,fontFamily:Fonts.type.headline,letterSpacing:1}}>MAKE THIS THE COVER PHOTO</Text>
-                            <View style={{marginBottom:3,marginLeft:10,width:21,height:21}}>
-                                <Image style={{position:'absolute',width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-empty-white-circle.png')}></Image>
-                                <Image style={{position:'absolute',opacity:this.state.isCover?1:0,width:21,height:21}} resizeMode="contain" source={require('../../../Images/icon-check-white-circle.png')}></Image>
-                            </View>
-                        </View>
-                    </TouchableOpacity>
+                    {isCover}
                 </View>
                 <GooglePlacesAutocomplete
                     placeholder='Enter photo location'

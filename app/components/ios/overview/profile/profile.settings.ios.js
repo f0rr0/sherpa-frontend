@@ -254,7 +254,7 @@ class ProfileSettings extends React.Component {
                     </View>
                     <View style={[styles.button,{justifyContent:'center',marginBottom:20}]}>
                         <View style={[styles.toggleRow,{borderBottomWidth:0}]}>
-                            <Text style={styles.buttonCopy}>ADD NEW TRIPS FROM INSTAGRAM</Text>
+                            <Text style={styles.buttonCopy}>{"add geotagged photos from Instagram".toUpperCase()}</Text>
                             <Switch
                               value={this.state.allowScrape}
                               onValueChange={this.setAllowScrape.bind(this)}/>

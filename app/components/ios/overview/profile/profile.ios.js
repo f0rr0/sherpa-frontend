@@ -20,6 +20,9 @@ const {sherpa}=config.auth[config.environment];
 import TripRow from '../../components/tripRow'
 import SimpleButton from '../../components/simpleButton'
 import Hyperlink from 'react-native-hyperlink';
+import UserStat from '../../components/userStat'
+import { Fonts, Colors } from '../../../../Themes/'
+
 
 import {
     StyleSheet,
@@ -38,7 +41,6 @@ var styles = StyleSheet.create({
         flex: 1
     },
     listItem:{
-        flex:1,
         backgroundColor:"black",
         justifyContent:"center",
         alignItems:'center'
@@ -49,7 +51,6 @@ var styles = StyleSheet.create({
         paddingBottom:60
     },
     listItemContainer:{
-        flex:1,
         width:windowSize.width-30,
         height:windowSize.width-30,
         marginBottom:15
@@ -62,7 +63,6 @@ var styles = StyleSheet.create({
     },
     button:{
         width:windowSize.width-30,
-        flex:1,
         marginTop:0,
         marginBottom:20
     },
@@ -78,9 +78,11 @@ class OwnUserProfile extends React.Component {
         this.state= {
             annotations:[],
             trips:[],
+            profile:null,
             hometownGuide:null,
             tooltipOpacity:new Animated.Value(1),
-            isRescraping:false
+            isRescraping:false,
+            isFollowing:false
         };
         this.isScraping=false;
     }
@@ -88,7 +90,8 @@ class OwnUserProfile extends React.Component {
     componentDidMount(){
         checkOptedIn().then((res)=>{
             this.props.dispatch(updateUserData({scrapeFromInstagram:res.optedIn}));
-        })
+        });
+
         this.checkScrapeStatus();
     }
 
@@ -107,6 +110,7 @@ class OwnUserProfile extends React.Component {
                 return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 var parsedResponse=JSON.parse(rawSherpaResponse);
+
                 //console.log(this.props.user.scrapeState)
                 if(parsedResponse.scrapeState!=='completed'){
                     this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
@@ -126,7 +130,7 @@ class OwnUserProfile extends React.Component {
     }
 
     refreshCurrentScene(){
-        //this.refresh();
+        this.refresh();
     }
 
     refresh(){
@@ -148,9 +152,9 @@ class OwnUserProfile extends React.Component {
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
-            //console.log(response)
             callback(response.data);
             let trips=response.data;
+
 
             this.isRescraping=false;
             if(page==1){
@@ -158,10 +162,10 @@ class OwnUserProfile extends React.Component {
                 for(var i=0;i<trips.length;i++){
                     let trip = trips[i];
                     if(trip.isHometown){
-                        hometownGuide=trips.splice(i,1)[0];
+                        hometownGuide=trips[i]
                     }
                 }
-                this.setState({hometownGuide});
+                this.setState({hometownGuide,profile:response.profile,followers:response.followers,following:response.following});
             }
             this.setState({trips,feedReady:true})
         });
@@ -175,15 +179,72 @@ class OwnUserProfile extends React.Component {
         this.props.dispatch(storeUser())
     }
 
+    showFollowers(followerType){
+        this.props.navigator.push({
+            id: "follower-list",
+            followerType,
+            user:this.props.user,
+            profile:this.state.profile
+        });
+    }
+
+
+    renderUserStats(){
+        return null;
+
+        if(!this.state.profile)return;
+        const counts=this.state.profile.serviceObject.counts;
+
+
+        const userStats=[
+            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.followers+" followers",onPress:()=>{this.showFollowers('followers')}},
+            {icon:require('./../../../../Images/icons/flag-small.png'),description:counts.media+" moments"},
+            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.following+" following",onPress:()=>{this.showFollowers('following')}},
+        ]
+
+        const borderRight={
+            borderRightWidth:1,
+            borderRightColor:'#E5E5E5'
+        };
+
+        const borderLeft={
+            borderLeftWidth:1,
+            borderLeftColor:'#E5E5E5',
+        };
+
+
+        return(
+            <View style={{flexDirection:'row',justifyContent:'space-between',width:windowSize.width-30}}>
+                {userStats.map((item,index)=>{
+
+                    let border=null;
+                    if(index==0){
+                        border=borderRight;
+                    }else if(index==userStats.length-1){
+                        border=borderLeft;
+                    }
+
+                    return (
+                        <View key={"user-stat-"+index} style={[{justifyContent:"center",flexDirection:'row',flex:1,alignItems:'center'},border]}>
+                            <UserStat style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
+                        </View>
+                    )
+                })}
+            </View>
+        )
+    }
+
+
+
     render(){
         const tooltipTouchable=this.state.hideTooltip||this.props.user.usedAddTrip?null:
             <TouchableOpacity onPress={this.hideTooltip.bind(this)} style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></TouchableOpacity>
 
 
-        //console.log('scrape from isntagram',this.props.user.scrapeFromInstagram)
+
 
         return(
-        <View style={{flex:1,backgroundColor:'white'}}>
+        <View style={{backgroundColor:'white'}}>
 
             <SherpaGiftedListview
                 enableEmptySections={true}
@@ -213,7 +274,7 @@ class OwnUserProfile extends React.Component {
                         activeView=this._renderRescrapeMessage();
                     }
                     return(
-                        <View style={{flex:1,justifyContent:'flex-start',alignItems:'center'}}>
+                        <View style={{justifyContent:'flex-start',alignItems:'center'}}>
                             {activeView}
                         </View>
                     )
@@ -242,34 +303,6 @@ class OwnUserProfile extends React.Component {
         )
     }
 
-    resetProfile(){
-        const {endpoint,version} = sherpa;
-        let feedRequestURI;
-        feedRequestURI = endpoint + version + "/profile/" + this.props.user.serviceID + "/reset";
-        let sherpaHeaders = new Headers();
-        sherpaHeaders.append("token", this.props.user.sherpaToken);
-        var me = this;
-
-        fetch(feedRequestURI, {
-            method: 'post',
-            headers: sherpaHeaders,
-            mode: 'cors'
-        })
-            .then((rawSherpaResponse)=> {
-                switch (rawSherpaResponse.status) {
-                    case 200:
-                        return rawSherpaResponse.text()
-                        break;
-                    case 400:
-                        return '{}';
-                        break;
-                }
-            })
-            .then((rawSherpaResponseFinal)=> {
-                me.refs.listview._refresh();
-            });
-    }
-
     openSettings(){
         this.props.navigator.push({
             id: "profile-settings",
@@ -285,10 +318,10 @@ class OwnUserProfile extends React.Component {
         this.props.navigator.push({
             id: "addTrip",
             sceneConfig:"bottom-nodrag",
+            intent:"ADD_TRIP",
             hideNav:true
         });
     }
-
 
     _renderEmpty(){
 
@@ -308,7 +341,7 @@ class OwnUserProfile extends React.Component {
         }else if(this.state.trips.length>0){
             message='c';
             status=
-                <View style={{flex:1,justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
+                <View style={{justifyContent:'center',width:windowSize.width,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
         }
@@ -329,8 +362,8 @@ class OwnUserProfile extends React.Component {
 
     _renderRescrapeMessage(){
         return(
-            <View style={{flex:1,justifyContent: 'center',alignItems: 'center'}}>
-                <View style={{flex:1,justifyContent:'center',height:50,width:50,alignItems:'center'}}>
+            <View style={{justifyContent: 'center',alignItems: 'center'}}>
+                <View style={{justifyContent:'center',height:50,width:50,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
                 {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are scraping your profile. Please check back soon!</Text>:null}
@@ -377,14 +410,14 @@ class OwnUserProfile extends React.Component {
 
         return (
             <View>
-                <View style={{backgroundColor:'#FFFFFF', height:hasDescriptionCopy?300:250, width:windowSize.width,marginBottom:0,marginTop:100}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:20,height:200,width:windowSize.width,zIndex:1}}>
+                <View style={{backgroundColor:'#FFFFFF', height:windowSize.height*.4, width:windowSize.width,marginBottom:150,marginTop:0,justifyContent:'space-between',zIndex:1}} >
+                    <View style={{alignItems:'center',justifyContent:'flex-start',width:windowSize.width,zIndex:1,paddingTop:0}}>
                         <UserImage
-                          onPress={()=>{Linking.openURL("https://www.instagram.com/"+this.props.user.username);}}
                           radius={80}
+                          activeOpacity={1}
                           border={false}
                           userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
-                        <Text style={{color:"#282b33",fontSize:20, marginTop:25,marginBottom:20,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
+                        <Text style={{color:"#282b33",fontSize:20, marginTop:-65,marginBottom:20,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
 
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
                             <Text style={{color:"#000",width:300,fontSize:12,marginBottom:0, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.user.bio}</Text>
@@ -394,17 +427,22 @@ class OwnUserProfile extends React.Component {
                             <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.props.user.website.replace("http://","").replace("https://","")}</Text>
                         </Hyperlink>
                     </View>
+                    <View style={{width:windowSize.width,height:115,marginBottom:-30,alignItems:'center',justifyContent:'center'}}>
+                        {this.renderUserStats()}
+                    </View>
                 </View>
                 {tooltip}
                 {hometownGuide}
                 {map}
-                {this.props.navigation.default}
+                <View style={{position:'absolute',top:0,height:75,backgroundColor:"red",zIndex:1}}>
+                    {this.props.navigation.default}
+                </View>
             </View>
         )
     }
 
     _renderRow(tripData) {
-        if(!tripData)return null;
+        if(!tripData||tripData.isHometown)return null;
         return (
             <TripRow key={"row"+tripData.id} tripData={tripData} isProfile={true} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
         );

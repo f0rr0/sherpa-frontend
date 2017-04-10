@@ -18,6 +18,16 @@ import {getFeed} from './feed.actions'
  */
 
 
+function makeRequest(type='get',...args){
+    console.log('args',args);
+    console.log('type',type);
+    switch(type){
+        case 'get':
+        break;
+        case 'post':
+        break;
+    }
+}
 
 export function updateUserData(userData){
     //console.log('update user data',userData);
@@ -105,6 +115,121 @@ export function checkSuitcased(momentID){
                     }).then((response)=> {
                     fulfill(response);
                 }).catch(err=>reject(err));
+            }
+        });
+    })
+}
+
+export function checkFollowing(followID){
+    return new Promise((fulfill,reject)=> {
+        return store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + user.profileID + "/following/" + followID, {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(response=='true')
+                }).catch(err=>reject(err));
+            }
+        });
+    })
+}
+
+export function follow(followID){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            fetch(endpoint+version+"/profile/"+user.profileID+"/follow/"+followID, {
+                method: 'post',
+                headers: sherpaHeaders
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                //console.log('successfully followed',response);
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+export function unfollow(followID){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            fetch(endpoint+version+"/profile/"+user.profileID+"/unfollow/"+followID, {
+                method: 'post',
+                headers: sherpaHeaders
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                //console.log('successfully unfollowed',response);
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+export function getFollowers(profileID){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + profileID+"/followers", {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(JSON.parse(response));
+                }).catch(err=>reject(err));
+
+            }
+        });
+    })
+}
+
+export function getFollowing(profileID){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + profileID+"/following", {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(JSON.parse(response));
+                }).catch(err=>reject(err));
+
             }
         });
     })
@@ -201,6 +326,59 @@ export function addNotificationsDeviceToken(deviceToken,sherpaToken){
     }
 }
 
+export function rescrape(){
+    return function (dispatch, getState) {
+        store.get('user').then((user) => {
+            const {endpoint,version} = sherpa;
+            let feedRequestURI;
+            feedRequestURI = endpoint + version + "/profile/" + user.serviceID + "/scrape";
+            let sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+
+            return fetch(feedRequestURI, {
+                method: 'post',
+                headers: sherpaHeaders
+            }).then((rawSherpaResponse)=> {
+                switch (rawSherpaResponse.status) {
+                    case 200:
+                        return rawSherpaResponse.text();
+                        break;
+                    case 400:
+                        break;
+                }
+            });
+        })
+    }
+}
+
+
+
+export function checkToken(){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            const {endpoint,version} = sherpa;
+            let feedRequestURI;
+            feedRequestURI = endpoint + version + "/profile/" + user.serviceID + "/check-token";
+            let sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            fetch(feedRequestURI, {
+                method: 'get',
+                headers: sherpaHeaders
+            }).then((rawSherpaResponse)=> {
+                switch (rawSherpaResponse.status) {
+                    case 200:
+
+                        fulfill(rawSherpaResponse.text());
+                        break;
+                    case 400:
+                        reject(rawSherpaResponse.text())
+                        break;
+                }
+            });
+        })
+    })
+}
+
 export function resetProfile(){
     return function (dispatch, getState) {
         store.get('user').then((user) => {
@@ -219,7 +397,6 @@ export function resetProfile(){
                         return rawSherpaResponse.text();
                         break;
                     case 400:
-                        return '{}';
                         break;
                 }
             });
@@ -258,6 +435,8 @@ export function deleteUser(){
                     profileID:-1,
                     usedSuitcase:false,
                     usedAddTrip:false,
+                    usedMap:false,
+                    usedEditTrip:false,
                     initialGeoCount:-1,
                     scrapeFromInstagram:false,
                     hometownLatitude:undefined,
@@ -586,7 +765,7 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
-                //console.log('sherpa response',sherpaResponse)
+                console.log('sherpa response',sherpaResponse)
                 const {
                     email,
                     id,

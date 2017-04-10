@@ -220,7 +220,9 @@ class Login extends Component {
             notificationToken:"",
             profileID:-1,
             usedSuitcase:false,
-            usedAddTrip:false
+            usedAddTrip:false,
+            usedMap:false,
+            usedEditTrip:false
         }));
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(signupUser());

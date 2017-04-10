@@ -36,6 +36,9 @@ export default class SimpleButton extends React.Component {
                     image=require('./../../../Images/icon-suitcase-button.png');
                     customStyle.height=25;
                 break;
+                case "is-following-button":
+                    image=require('./../../../Images/icons/following-on-button.png');
+                break;
                 case "twitter":
                     image=require('./../../../Images/icon-twitter.png');
                     customStyle.height=12;

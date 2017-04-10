@@ -34,7 +34,7 @@ var styles=StyleSheet.create({
     imageRowContainer:{flex:1,width:windowSize.width-30,height:windowSize.width-30,justifyContent:"center"},
 
     tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
-    tripDataFootnoteContainer:{position:'absolute',bottom:12,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',right:10},
+    tripDataFootnoteContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',right:10},
     tripDataFootnoteIcon:{height:7,marginBottom:3,marginLeft:6},
 
     darkener:{flex:1, backgroundColor:"rgba(0,0,0,.2)"},
@@ -107,6 +107,7 @@ class TripRow extends Component {
                         locationLayer="";
                 }
 
+
                 let guideString=tripData.isHometown?"LOCAL":" GUIDE"
                 bottomLeftContent=
                     <View style={{flex:1,flexDirection:'row'}}>
@@ -116,7 +117,7 @@ class TripRow extends Component {
                 bottomRightContent= <
                     View style={styles.tripDataFootnoteContainer}>
                         <Image source={require('image!icon-images')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||tripData.momentcount||tripData.moments.length}</Text>
+                        <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||tripData.momentCount||tripData.moments.length}</Text>
                     </View>
                 tripTitle=  <View style={{alignItems:'center'}}>
                                 <Text style={styles.tripTitleLarge}>{tripData.isHometown?"":"EXPLORE"}</Text>
@@ -129,7 +130,8 @@ class TripRow extends Component {
                 largeImageURI=tripData.moments[0].mediaUrl;
                 thumbnailURL=tripData.moments[0].serviceJson?tripData.moments[0].serviceJson.images.thumbnail.url:tripData.moments[0].mediaUrl;
                 if(tripData.owner){
-                    bottomLeftContent=<UserImage radius={this.state.userImageRadius} userID={tripData.owner.id} imageURL={tripData.owner.serviceProfilePicture}></UserImage>
+                    bottomLeftContent=
+                            <UserImage radius={this.state.userImageRadius} userID={tripData.owner.id}  imageURL={tripData.owner.serviceProfilePicture}></UserImage>
                     tripTitle=<TripTitle isProfile={this.props.isProfile} tripData={tripData} tripOwner={tripData.owner.serviceUsername}></TripTitle>
                 }
 

@@ -7,6 +7,7 @@ import countries from "./../../../../data/countries";
 import moment from 'moment';
 import {deleteTrip} from '../../../../actions/trip.edit.actions';
 import {udpateFeedState} from '../../../../actions/feed.actions';
+import {updateUserData,storeUser} from '../../../../actions/user.actions';
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
 import config from '../../../../data/config';
 import store from 'react-native-simple-store';
@@ -17,6 +18,7 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 const {sherpa}=config.auth[config.environment];
 import UserImage from '../../components/userImage'
+import ToolTipp from '../../components/toolTipp'
 import MomentRow from '../../components/momentRow'
 import SimpleButton from '../../components/simpleButton'
 import Header from '../../components/header'
@@ -66,10 +68,6 @@ var styles = StyleSheet.create({
         backgroundColor:'transparent',
         overflow:'hidden'
     },
-    listViewContainer:{flex:1,backgroundColor:'white'},
-    container: {
-        flex: 1,
-    },
     tripDetailContainer:{
         //backgroundColor:'rgba(0,0,0,.5)',
         position:'absolute',
@@ -83,7 +81,7 @@ var styles = StyleSheet.create({
         justifyContent:"center",
         paddingBottom:60,
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:-7,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:8},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:8},
 
     button:{
         backgroundColor:'#001545',
@@ -109,6 +107,10 @@ var styles = StyleSheet.create({
     },
     subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
     row:{flexDirection: 'row'},
+    listViewContainer:{flex:1,backgroundColor:'white'},
+    container: {
+        flex: 1,
+    },
     headerContainer:{flex:1,height:windowSize.height+160},
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
@@ -136,7 +138,7 @@ class FeedTrip extends Component {
             shouldUpdate:true,
             isCurrentUsersTrip:false,
             //routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
-            routeName:"LOCATION",
+            routeName:"ALBUM",
             itemsPerRow:2,
             trip:props.trip,
             isReady:false,
@@ -151,26 +153,8 @@ class FeedTrip extends Component {
             scrollY:new Animated.Value(0)
         };
 
-        Magnetometer.setMagnetometerUpdateInterval(0.8); // in seconds
-
-        DeviceEventEmitter.addListener('MagnetometerData', function (data) {
-            /**
-             * data.rotationRate.x
-             * data.rotationRate.y
-             * data.rotationRate.z
-             **/
-        });
-
-
-        Magnetometer.startMagnetometerUpdates();
 
     }
-
-    componentWillUnmount(){
-        Magnetometer.stopMagnetometerUpdates();
-    }
-
-
 
     _renderFooterView(){
         return;
@@ -182,7 +166,8 @@ class FeedTrip extends Component {
     }
 
     navActionRight(){
-       this.refs.popover._setAnimation("toggle");
+        if(this.refs.listview.refs.editToolTip)this.refs.listview.refs.editToolTip.hide();
+        if(this.refs.popover)this.refs.popover._setAnimation("toggle");
     }
 
     navActionLeft(){
@@ -216,37 +201,40 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
+        console.log('did mount')
         getFeed(this.props.trip.id,1,'trip').then((result)=>{
-
-
             let trip=result;
-            let globalIndex=0;
-            let itemsPerRow=2;
-            let organizedMoments=[];
             let moments=trip.data.moments;
+            console.log(result)
 
-            //console.log('moments',moments)
             if(moments.length==0){
                 this.props.navigator.pop();
             }else{
-                for(var i=0;i<moments.length;i++){
-                    let endIndex=(Math.random()>.5)||globalIndex==0?1+i:itemsPerRow+i;
-                    var currentMoment=moments.slice(i, endIndex);
-                    organizedMoments.push(currentMoment);
-                    i = endIndex-1;
-                    globalIndex++;
-                }
+                const organizedMoments=this.organizeMomentRows(moments,2,true);
                 this.organizedMoments=organizedMoments;
-                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+                //this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+                this.setState({isCurrentUsersTrip:true,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
             }
         }).catch((error)=>{
-            //console.log('error',error)
+            //console.log('feed error',error)
             this.props.navigator.pop();
-            //this.props.refreshCurrentScene();
-            //setTimeout(this.props.refreshCurrentScene,500)
         })
     }
 
+
+    organizeMomentRows(moments,itemsPerRow,isRandom=true){
+        let globalIndex=0;
+        let organizedMoments=[];
+        for(var i=0;i<moments.length;i++){
+            let endIndex=(Math.random()>.5)||globalIndex==0||!isRandom?1+i:itemsPerRow+i;
+            var currentMoment=moments.slice(i, endIndex);
+            organizedMoments.push(currentMoment);
+            i = endIndex-1;
+            globalIndex++;
+        }
+
+        return organizedMoments;
+    }
 
 
     _renderEmpty(){
@@ -264,6 +252,7 @@ class FeedTrip extends Component {
 
         const completeHeader=
             <View style={styles.listViewContainer}>
+
                 <ListView
                     enableEmptySections={false}
                     dataSource={this.state.dataSource}
@@ -291,21 +280,26 @@ class FeedTrip extends Component {
                          }
                     }}
                 />
-
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
-                <PopOver ref="popover" showEditTrip={true} enableNavigator={this.props.enableNavigator} onEditTrip={()=>{
+                <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} enableNavigator={this.props.enableNavigator} onEditTrip={()=>{
+                      console.log(this.state.trip)
                       this.props.navigator.push({
+                            intent:"EDIT_TRIP",
                             id: "editTripGrid",
                             hideNav:true,
-                            momentData:this.state.trip.moments,
                             tripData:this.state.trip,
-                            name:"edit trip",
+                            momentData:[],
+                            name:"edit album",
                             sceneConfig:"bottom-nodrag"
                       });
                 }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.state.trip.id}></PopOver>
 
             </View>
         return completeHeader;
+    }
+
+    refreshCurrentScene(){
+
     }
 
     deleteTripAlert(){
@@ -386,9 +380,14 @@ class FeedTrip extends Component {
 
         let tripTitle;
 
+        let toolTip=this.props.user.usedEditTrip&&this.state.isCurrentUsersTrip?null:<ToolTipp hasTriangle="top" ref="editToolTip" message="Tap to edit and share" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:12}} onHide={()=>{
+                                                     this.props.dispatch(updateUserData({usedEditTrip:true}))
+                                                     this.props.dispatch(storeUser())
+                                                }}></ToolTipp>
+
         switch(tripData.contentType){
             case "trip":
-                bottomLeft=<UserImage style={{marginTop:-5}} radius={30} userID={this.state.trip.owner.id} imageURL={this.state.trip.owner.serviceProfilePicture} onPress={() => this.showUserProfile(this.state.trip)}></UserImage>
+                bottomLeft=<UserImage style={{marginTop:0}} underlined={true} radius={30} userID={this.state.trip.owner.id} imageURL={this.state.trip.owner.serviceProfilePicture} username={this.state.trip.owner.serviceUsername} onPress={() => this.showUserProfile(this.state.trip)}></UserImage>
 
                 let userName;
                 if(this.state.isCurrentUsersTrip){
@@ -422,6 +421,7 @@ class FeedTrip extends Component {
 
         return (
             <View style={styles.headerContainer}>
+
                 <View style={[styles.headerMaskedView,{height:windowSize.height}]} >
 
                     <View style={{position:'absolute',left:0,top:0}}>
@@ -472,9 +472,9 @@ class FeedTrip extends Component {
 
 
 
-                        <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
+                   <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                            <Text style={styles.headerTripTo}>{tripTitle}</Text>
+                       {/*<Text style={styles.headerTripTo}>{tripTitle}</Text>*/}
                                 <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                             <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.state.trip}></TripSubtitle>
                             </View>
@@ -482,16 +482,16 @@ class FeedTrip extends Component {
                         <View style={styles.subTitleContainer}>
                             <View style={{flexDirection:'row',alignItems:'center',justifyContent:'center'}} >
                                 {bottomLeft}
-                                <Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>
+                                {/*<Text style={styles.tripDataFootnoteCopy}>{tripData.owner.serviceUsername.toUpperCase()}</Text>*/}
 
                                 {/*<TouchableOpacity  onPress={() => this.showUserProfile(this.props.trip)}>
                                     <Text style={{color:'white',backgroundColor:'transparent',fontFamily:"TSTAR",fontSize:12,marginLeft:10,marginTop:-8,fontWeight:"800"}}>{this.props.trip.owner.serviceUsername}</Text>
                                 </TouchableOpacity>*/}
                             </View>
-                            {/*<Text style={styles.tripDataFootnoteCopy}>UPDATED {timeAgo.toUpperCase()}</Text>*/}
-                            <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1}}>
-                                <Image source={require('image!icon-images')} style={styles.iconImages} resizeMode="contain"></Image>
-                                <Text style={{color:"#FFFFFF",fontSize:10, marginTop:0,fontFamily:"TSTAR",backgroundColor:"transparent",fontWeight:"500"}}>{momentCount}</Text>
+                            <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1,marginTop:2}}>
+                                <Image style={{marginTop:-3}} source={require('../../../../Images/icons/clock.png')}></Image>
+                                <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
+                                {/*<Text style={styles.tripDataFootnoteCopy}>{tripData.owner.serviceUsername.toUpperCase()}</Text>*/}
                             </View>
                         </View>
                 </View>
@@ -512,6 +512,9 @@ class FeedTrip extends Component {
                 }}>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
                 </Animated.View>
+                <TouchableOpacity activeOpacity={1} onPress={()=>{this.refs.listview.refs.editToolTip.hide()}} style={{position:'absolute',right:10,top:50}}>
+                    {toolTip}
+                </TouchableOpacity>
             </View>
         )
     }
@@ -524,7 +527,7 @@ class FeedTrip extends Component {
             }
 
             index++;
-            return  <MomentRow user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.state.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow isNotCurrentUsersTrip={!this.state.isCurrentUsersTrip} user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.state.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
 
         return (

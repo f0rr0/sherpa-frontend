@@ -101,7 +101,7 @@ class MomentRow extends Component{
         var tripData = this.props.tripData;
         var imageMargin=10;
         var baseWidth=(this.props.containerWidth - (imageMargin*(this.props.itemsPerRow-1)) ) / this.props.itemsPerRow;
-        const tooltip=this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
+        const tooltip=this.props.isNotCurrentUsersTrip&&this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
 
         return(
             this.state.available?

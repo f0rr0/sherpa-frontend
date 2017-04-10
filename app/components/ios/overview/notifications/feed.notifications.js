@@ -11,6 +11,7 @@ import StickyHeader from '../../components/stickyHeader';
 import NotificationRow from '../../components/notificationRow';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
+import Header from '../../components/header';
 import UserImage from '../../components/userImage';
 import TripRow from '../../components/tripRow'
 import Hyperlink from 'react-native-hyperlink';
@@ -125,8 +126,8 @@ class FeedNotifications extends React.Component {
 
     _renderHeader(){
         return (
-            <View style={{height:70,alignItems:'center',justifyContent:'center'}}>
-                <Text style={{fontSize:13,fontFamily:"TSTAR",fontWeight:"600",letterSpacing:2}}>NOTIFICATIONS</Text>
+            <View style={{height:75}}>
+                <Header settings={{hideBack:true,routeName:"NOTIFICATIONS",topShadow:false,hideNav:true}} ref="navStatic"></Header>
             </View>
         )
     }

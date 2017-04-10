@@ -243,9 +243,9 @@ class NotWhitelisted extends Component {
                                     <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
 
 
-                                    <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-                                        <UserImage radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
-                                        <View style={{marginLeft:20,}}>
+                                    <View style={{height:50,alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
+                                        <UserImage style={{position:'absolute',top:0}} radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
+                                        <View style={{marginLeft:50,}}>
                                             <TouchableOpacity onPress={()=>{
                                                 Linking.openURL(trip.serviceJson.link)
                                             }}>

@@ -37,8 +37,8 @@ class TripDetailMap extends Component{
             {
                 latitude: parseFloat(props.moments[0].lat),
                 longitude: parseFloat(props.moments[0].lng),
-                latitudeDelta: 1.5,
-                longitudeDelta: 1.5
+                latitudeDelta: props.moments.length==1?.1:1.5,
+                longitudeDelta: props.moments.length==1?.1:1.5
             }
         }
 

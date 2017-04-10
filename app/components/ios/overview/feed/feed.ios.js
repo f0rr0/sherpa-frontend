@@ -16,6 +16,7 @@ import FeedNotifications from '../notifications/feed.notifications'
 import EditTripGrid from '../profile/profile.edit-trip-grid'
 import EditMomentNames from '../profile/profile.edit-moment-names'
 import EditTripName from '../profile/profile.edit-trip.name'
+import FollowerList from '../feed/feed.followers.ios'
 
 import TripDetailMap from '../feed/feed.trip.detail.map.ios'
 
@@ -119,18 +120,40 @@ class Feed extends Component {
     }
 
     setView(deepLinkObject){
-        switch(deepLinkObject.type){
-            case "TRIP":
-                this.getTrip(deepLinkObject.id)
+        let target=deepLinkObject.v1.primaryView;
+        switch(target.id){
+            case "profile":
+                this.showUserProfile(target.profile)
             break;
-            case "MOMENT":
-                this.navigator.push({
-                    id: "tripDetail",
-                    momentID:deepLinkObject.id,
-                    sceneConfig:"right-nodrag"
-                });
+            case "tripDetail":
+                this.showMoment(target.moment)
+            break;
+            case "momentDetail":
+                this.showTrip(target.trip)
             break;
         }
+    }
+
+    showUserProfile(user) {
+        this.navigator.push({
+            id: "profile",
+            trip: {owner: {id:user,user}}
+        });
+    }
+
+
+    showMoment(momentID) {
+        this.navigator.push({
+            id: "tripDetail",
+            momentID
+        });
+    }
+
+    showTrip(tripID){
+        this.navigator.push({
+            id: "trip",
+            trip:{id:tripID}
+        });
     }
 
     getTrip(id){
@@ -171,6 +194,8 @@ class Feed extends Component {
         var sceneContent;
         var showNav=false;
 
+        //console.log('render scene',route);
+
         GoogleAnalytics.trackScreenView(route.id);
 
 
@@ -178,6 +203,10 @@ class Feed extends Component {
             case 'feed':
                 showNav=false;
                 sceneContent = <FeedList enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar}  refreshCurrentScene={this.refreshCurrentScene.bind(this)}  ref={route.id} navigator={navigator} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} navigation={this._getNavigation({routeName:"LATEST TRIPS",hideBack:true,fixedHeader:true,hideNav:true})}/>;
+            break;
+            case "follower-list":
+                showNav=true;
+                sceneContent = <FollowerList user={this.props.user} profile={route.profile} followerType={route.followerType}  enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} dispatch={this.props.dispatch}/>;
             break;
             case "location":
                 showNav=true;
@@ -201,7 +230,7 @@ class Feed extends Component {
             break;
             case "notifications":
                 showNav=true;
-                sceneContent=<FeedNotifications navigator={navigator}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
+                sceneContent= <FeedNotifications navigator={navigator}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
             break;
             case "profile":
                 showNav=true;
@@ -219,20 +248,24 @@ class Feed extends Component {
             break;
             case "addTrip":
                 showNav=true;
-                sceneContent = <AddTrip enableNavigator={this.enableNavigator.bind(this)} images={route.images} tripData={route.tripData} momentData={route.momentData} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <AddTrip deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} enableNavigator={this.enableNavigator.bind(this)} images={route.images} tripData={route.tripData} momentData={route.momentData} deselectedMomentIDs={route.deselectedMomentIDs} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"Select trip photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid images={route.images} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"add new trip",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} ref={route.id} tripData={route.tripData} intent={route.intent} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"create album",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
-                sceneContent = <EditMomentNames selection={route.selection} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"add location names",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditMomentNames type={route.type} ref={route.id}  tripData={route.tripData} intent={route.intent} deselectedMomentIDs={route.deselectedMomentIDs} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit locations",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripName":
                 showNav=true;
-                sceneContent = <EditTripName selection={route.selection}  refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} tripData={route.tripData} momentData={route.momentData} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit trip name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripName type={route.type} momentData={route.momentData} tripData={route.tripData} intent={route.intent} refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit album name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
+            case "editMomentName":
+                showNav=true;
+                sceneContent = <EditMomentNames type={route.type} ref={route.id}  tripData={route.tripData} intent={route.intent} deselectedMomentIDs={route.deselectedMomentIDs} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit location name",topLeftImage:require('./../../../../Images/icon-close-black.png'),fixedHeader:true,topRightImageStyle:{width:7} ,hideNav:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+                break;
             case "profile-settings":
                 sceneContent = <ProfileSettings ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"settings",opaque:true,topLeftImage:require('./../../../../Images/icon-close-black.png'),fixedHeader:true,hideNav:true })} {...this.props}/>;
             break;
@@ -280,12 +313,14 @@ class Feed extends Component {
 
     sceneDidEnter(route){
         this.sceneChange(route);
+        //console.log('did enter')
         if(this.navigator&&this.navigator.refs[this.currentRenderScene]&&this.navigator.refs[this.currentRenderScene].onDidEnter){
             this.navigator.refs[this.currentRenderScene].onDidEnter();
         }
     }
 
     sceneChange(route){
+        //console.log('scen change')
         if(this.currentRenderScene!==route.id||route.toggleTabBar){
             this.currentRenderScene=route.id;
             this.props.toggleTabBar(!route.hideNav);
@@ -296,9 +331,7 @@ class Feed extends Component {
     }
 
      refreshCurrentScene(){
-         //console.log('try refresh current scene',this.navigator.refs[this.currentRenderScene]);
         if(this.navigator&&this.navigator.refs[this.currentRenderScene]&&this.navigator.refs[this.currentRenderScene].refreshCurrentScene){
-            //console.log('::refrsh current scene from feed')
             this.navigator.refs[this.currentRenderScene].refreshCurrentScene();
         }
     }

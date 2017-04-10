@@ -3,7 +3,7 @@ import { Fonts, Colors } from '../../../../Themes/'
 
 export default StyleSheet.create({
     basic:{
-        backgroundColor:'rgba(0,0,0,.6)',
+        backgroundColor:'rgba(0,0,0,.85)',
         alignItems:"center",
         justifyContent:"center",
         borderRadius:2,
@@ -16,7 +16,7 @@ export default StyleSheet.create({
         marginTop:3.5,
         margin:0,
         lineHeight:9,
-        fontFamily:Fonts.type.headline,
+        fontFamily:Fonts.type.bodyCopy,
         letterSpacing:1
     }
 })

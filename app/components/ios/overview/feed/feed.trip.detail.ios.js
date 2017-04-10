@@ -6,6 +6,7 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import PopOver from '../../components/popOver';
 import UserImage from '../../components/userImage';
+import TripSubtitle from '../../components/tripSubtitle';
 import MomentRow from '../../components/momentRow';
 import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
@@ -38,6 +39,9 @@ var styles = StyleSheet.create({
     container: {
         flex: 1
     },
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:5,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:4},
+    foursquareTitle:{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"},
+
     listItem:{
         flex:1,
         backgroundColor:"black",
@@ -90,7 +94,7 @@ class TripDetail extends React.Component{
             scrollY:new Animated.Value(0),
             headerLoadedOpacity:new Animated.Value(0),
             containerWidth:windowSize.width-30,
-        }
+        };
 
 
         //get moment data
@@ -106,11 +110,19 @@ class TripDetail extends React.Component{
                 globalIndex++;
             }
 
+            getFeed(moment.trip,1,'trip').then((result)=>{
+                this.setState({tripData:result})
+            }).catch((error)=>{
+            })
+
+
+
 
             this.setState({
                 organizedRelatedMoments,
                 momentData: moment.data,
-                routeName: moment.data.venue
+                routeName: moment.data.venue,
+                isCurrentUsersTrip:moment.data.profile.id===this.props.user.profileID
             })
         })
 
@@ -134,7 +146,7 @@ class TripDetail extends React.Component{
             title:momentData.venue,
             sceneConfig:"bottom-nodrag",
             hideNav:true,
-            disablePins:true
+            disablePins:true,
         });
     }
 
@@ -202,12 +214,45 @@ class TripDetail extends React.Component{
             [
                 {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                 {text: 'OK', onPress: () => {
-                    deleteMoment(this.state.momentData.id,true)
+                    deleteMoment(this.state.momentData.id,false)
                     this.props.navigator.pop()
                 }}
             ]
         )
 
+    }
+
+    onEditMoment(moment){
+        this.refs.popover._setAnimation("toggle")
+        this.props.navigator.push({
+            id: "editMomentName",
+            hideNav:true,
+            sceneConfig:"bottom-nodrag",
+            intent:"edit-moment",
+            momentData:[moment],
+            tripData:{id:moment.id,name:""},
+        });
+    }
+
+    refreshCurrentScene(){
+
+    }
+
+
+    showTripLocation(data){
+        let locus=data.split(":");
+        var locationData={
+            layer:locus[1],
+            source:locus[0],
+            sourceId:locus[2]
+        };
+
+
+        this.props.navigator.push({
+            id: "location",
+            trip:{name:"location",...locationData},
+            version:"v2"
+        });
     }
 
 
@@ -217,22 +262,19 @@ class TripDetail extends React.Component{
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
         let windowHeight=windowSize.height;
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
-        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={10}>{momentData.caption}</Text>:null;
+        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'black', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={10}>{momentData.caption}</Text>:null;
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                 <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
 
-                <View style={{alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-                    <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} userID={momentData.profile.id} imageURL={momentData.profile.serviceProfilePicture}></UserImage>
-                    <View style={{marginLeft:20,}}>
-                        <TouchableOpacity onPress={()=>{
-                            Linking.openURL(momentData.serviceJson.link)
-                        }}>
-                            {description}
-                        </TouchableOpacity>
-                        <View style={{flexDirection:'row',alignItems:'center'}}>
+                <View style={{alignItems:'flex-start',width:windowSize.width-35,justifyContent:"space-between",flexDirection:'row',marginBottom:20,marginLeft:20}}>
+                    <View style={{flexDirection:"row",alignItems:"center"}}>
+                        <UserImage onPress={()=>{this.showUserProfile({owner:momentData.profile})}} radius={30} username={momentData.profile.serviceUsername.toUpperCase()} userID={momentData.profile.id} imageURL={momentData.profile.serviceProfilePicture}></UserImage>
+                    </View>
+                    <View style={{marginRight:0,}}>
+                        <View style={{flexDirection:'row',alignItems:'center',marginTop:3}}>
                             <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                            <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
+                            <Text style={{backgroundColor:'transparent',color:'white', marginTop:7,fontFamily:'Akkurat',fontSize:10,opacity:1,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
                         </View>
                     </View>
                 </View>
@@ -260,14 +302,9 @@ class TripDetail extends React.Component{
 
         let relatedMomentContainer=this.state.momentData.related.length>0?
             <View style={{marginBottom:55}}>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginTop:30,marginBottom:12,fontWeight:"500"}}>OTHER PHOTOS FROM THIS LOCATION</Text>
+                <Text style={{marginLeft:25,fontSize:10,fontFamily:"TSTAR",color:"#9b9b9b",letterSpacing:.8,marginTop:30,marginBottom:12,fontWeight:"500"}}>MORE PHOTOS FROM THIS LOCATION</Text>
                 {relatedMoments}
-            </View>:null;
-
-
-
-
-
+            </View>:<View style={{height:80}}></View>;
         return (
             <View style={{flex:1}}>
                 <ScrollView  scrollEventThrottle={8} style={{flex:1,backgroundColor:'white'}} onScroll={(event)=>{
@@ -310,20 +347,32 @@ class TripDetail extends React.Component{
 
 
                     {profilePic}
+                    <View style={{backgroundColor:'white',padding:15}}>
+
                     {this._renderSuitcaseButton()}
+
+                        {momentData.caption&&momentData.caption.length>0?<View style={{marginTop:20,marginLeft:10}}>
+                            <Text style={styles.foursquareTitle}>{/*momentData.profile.serviceUsername.toUpperCase()*/}CAPTION</Text>
+                            {description}
+                        </View>:null}
+                    </View>
+                    <View style={{marginHorizontal:25,borderTopWidth:momentData.caption&&momentData.caption.length>0?1:0,borderTopColor:"rgba(0,0,0,.1)"}}></View>
                     <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
+
 
                     <TouchableOpacity style={{height:260,left:0,flex:1}}  onPress={()=>{this.showTripMap(momentData)}}>
                         <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
                     </TouchableOpacity>
-
+                    <View style={{marginHorizontal:25,borderBottomWidth:this.state.momentData.related.length>0?1:0,paddingBottom:25,borderBottomColor:"rgba(0,0,0,.1)",marginTop:25,alignItems:'center',justifyContent:"center"}}>
+                        <TripSubtitle textStyle={{borderBottomColor:'rgba(0,0,0,.2)'}} style={{fontSize:11,color:'#9B9B9B',fontWeight:"500"}} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:momentData.locus}}></TripSubtitle>
+                    </View>
 
                     {relatedMomentContainer}
 
                 </ScrollView>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
-                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={false} showDeleteMoment={true}></PopOver>
+                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{this.onEditMoment(momentData)}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={true} showDeleteMoment={this.state.isCurrentUsersTrip}></PopOver>
             </View>
 
         )

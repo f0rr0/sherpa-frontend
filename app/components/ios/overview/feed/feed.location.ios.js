@@ -20,6 +20,7 @@ var windowSize=Dimensions.get('window');
 import MomentRow from '../../components/momentRow'
 import TripRow from '../../components/tripRow'
 import MarkerMap from '../../components/MarkerMap'
+import TripSubtitle from '../../components/tripSubtitle'
 
 
 import {
@@ -112,6 +113,7 @@ class FeedLocation extends Component {
                 sourceId:data.sourceId||data.source_id
             }
             searchType=data.type&&data.type=='guide'?'guide':'guide';
+            this.setState({trip:{locus:req}})
             //console.log(searchType,'search type')
         }else{
             req={type:data.type,page}
@@ -121,6 +123,8 @@ class FeedLocation extends Component {
 
 
         getFeed(req,page,searchType).then((response)=>{
+            let locationName=response.rawData.location[response.rawData.location.layer];
+            if(locationName)this.setState({locationName:locationName.toUpperCase()})
 
             if(page==1&&response.moments.length==0){
                 Alert.alert(
@@ -276,6 +280,7 @@ class FeedLocation extends Component {
         //console.log(this.state)
         var tripData=this.props.trip;
         var moments=this.state.moments;
+        //console.log(tripData)
         //console.log(moments,'render header');
         if(moments.length==0)return null
         //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
@@ -289,12 +294,38 @@ class FeedLocation extends Component {
         //    break;
         //    case "trip":
         //    default:
-                bottomLeft=this.renderProfiles()
+                bottomLeft=null;//this.renderProfiles()
                 wikipediaInfo=this.state.rawData.location.wikipediaLocation?<WikipediaInfoBox style={{marginTop:-150,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>:null;
             //break;
         //}
 
-        //console.log('wiki info',wikipediaInfo);
+
+        let locationLayer;
+        switch(tripData.layer){
+            case "neighbourhood":
+                locationLayer="Neighborhood";
+                break;
+            case "locality":
+                locationLayer="City";
+                break;
+            case "borough":
+                locationLayer="Borough";
+                break;
+            case "region":
+                locationLayer="State / Province";
+                break;
+            case "macro-region":
+                locationLayer="Region";
+                break;
+            case "country":
+                locationLayer="Country";
+                break;
+            case "continent":
+                locationLayer="Continent";
+                break;
+            default:
+                locationLayer="";
+        }
 
         return (
             <View style={{flex:1}}>
@@ -353,8 +384,11 @@ class FeedLocation extends Component {
 
 
                     <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
-                        <View>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripData.name.toUpperCase()}</Text>
+                        <View style={{alignItems:'center'}}>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.locationName||tripData.name.toUpperCase()}</Text>
+                            {/*<TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.props.trip}}></TripSubtitle>*/}
+                            <Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>
+
                         </View>
                         <View style={{backgroundColor:'transparent',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
                         </View>
@@ -401,7 +435,7 @@ class FeedLocation extends Component {
     _renderRow(rowData,sectionID,rowID){
         var index=0;
         var items = rowData.map((item) => {
-            console.log(item);
+            //console.log(item);
             if (item === null || (item.type!=='image'&&item.contentType!=='guide')) {
                 return null;
             }
@@ -457,6 +491,8 @@ var styles = StyleSheet.create({
         fontFamily:"TSTAR-bold",
         fontSize:12
     },
+    subtitle:{color:"#FFFFFF",fontSize:12, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+
     headerImage:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width },
     headerDarkBG:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
 

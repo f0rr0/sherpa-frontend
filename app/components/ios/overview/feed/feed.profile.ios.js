@@ -8,6 +8,7 @@ import countries from './../../../../data/countries'
 import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {getFeed} from '../../../../actions/feed.actions';
+import {follow,unfollow,checkFollowing} from '../../../../actions/user.actions';
 import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
@@ -18,6 +19,9 @@ import Hyperlink from 'react-native-hyperlink';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import MarkerMap from '../../components/MarkerMap'
+import { Fonts, Colors } from '../../../../Themes/'
+import UserStat from '../../components/userStat'
+import SimpleButton from '../../components/simpleButton'
 
 
 import {
@@ -72,15 +76,17 @@ class FeedProfile extends React.Component {
             headerTrips:[],
             annotations:[],
             owner:isHeaderReady?props.trip.owner:null,
-            isHeaderReady
+            isHeaderReady,
+            isFollowing:false
         };
 
     }
 
     componentDidMount(){
-
-
+        //console.log('trip profile created');
+        //getFeed("profile-map")
     }
+
 
     showTripDetail(trip) {
         this.props.navigator.push({
@@ -95,13 +101,14 @@ class FeedProfile extends React.Component {
 
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
-        //console.log(this.props.trip.owner)
         getFeed(this.props.trip.owner.id,page,'profile').then((response)=>{
-
 
             let trips=response.data;
             this.isRescraping=false;
-            this.setState({owner:response.profile,isHeaderReady:true,trips,feedReady:true})
+            this.setState({owner:response.profile,trips,feedReady:true})
+            var settings=response.data.length==0?{
+                allLoaded: true
+            }:{};
 
             if(page==1){
                 let hometownGuide=null;
@@ -111,17 +118,97 @@ class FeedProfile extends React.Component {
                         hometownGuide=trips.splice(i,1)[0];
                     }
                 }
-                this.setState({hometownGuide,headerTrips:response.data})
+
+
+                checkFollowing(response.profile.id).then((res)=>{
+
+                    this.setState({isHeaderReady:true,isFollowing:res,hometownGuide,headerTrips:response.data,profile:response.profile,followers:response.followers,following:response.following})
+                    callback(response.data,settings);
+                })
+            }else{
+                callback(response.data,settings);
             }
 
-            var settings=response.data.length==0?{
-                allLoaded: true
-            }:{};
-            callback(response.data,settings);
+
         });
     }
 
+    showFollowers(followerType){
+        this.props.navigator.push({
+            id: "follower-list",
+            followerType,
+            user:this.props.user,
+            profile:this.state.profile
+        });
+    }
+
+
+
+    followUser(){
+        if(this.state.isFollowing){
+            unfollow(this.state.profile.id);
+            this.setState({isFollowing:false})
+        }else{
+            follow(this.state.profile.id);
+            this.setState({isFollowing:true})
+        }
+    }
+
+
+    renderUserStats(){
+
+        if(!this.state.profile)return;
+
+        const counts=this.state.profile.serviceObject.counts;
+
+        const userStats=[
+            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.followers+" followers",onPress:()=>{this.showFollowers('followers')}},
+            {icon:require('./../../../../Images/icons/user-small.png'),description:counts.media+" moments"},
+            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.following+" following",onPress:()=>{this.showFollowers('following')}},
+        ]
+
+        const borderRight={
+            borderRightWidth:1,
+            borderRightColor:'#E5E5E5'
+        };
+
+        const borderLeft={
+            borderLeftWidth:1,
+            borderLeftColor:'#E5E5E5',
+        };
+        return(
+            <View style={{flexDirection:'row',justifyContent:'space-between',width:windowSize.width-30}}>
+                {userStats.map((item,index)=>{
+
+                    let border=null;
+                    if(index==0){
+                        border=borderRight;
+                    }else if(index==userStats.length-1){
+                        border=borderLeft;
+                    }
+
+                    return (
+                        <View  key={"user-stat-"+index} style={[{justifyContent:"center",flexDirection:'row',flex:1,alignItems:'center'},border]}>
+                            <UserStat style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
+                        </View>
+                    )
+                })}
+            </View>
+        )
+    }
+
+    renderFollowButton(){
+        return null;
+        return(
+            <View style={{width:windowSize.width-30,marginTop:15}}>
+                <SimpleButton icon="is-following-button"  style={{marginTop:0, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} textStyle={{color:Colors.white}} onPress={()=>{this.unfollow()}} text="following"></SimpleButton>
+                <SimpleButton icon="follow-button" style={{marginTop:-55,opacity:this.state.isFollowing?0:1, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} onPress={()=>{this.followUser()}} text={"follow "+this.state.profile.serviceUsername}></SimpleButton>
+            </View>
+        )
+    }
+
     render(){
+
 
 
         return(
@@ -168,7 +255,7 @@ class FeedProfile extends React.Component {
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
 
@@ -186,18 +273,19 @@ class FeedProfile extends React.Component {
     }
 
 
+
     _renderHeader(){
         if(!this.state.isHeaderReady)return;
 
         var trips=this.state.trips;
         var moments=[];
 
-        //console.log(this.state.trips)
         if(trips){
-            for(var i=0;i<trips.length;i++){
-                Array.prototype.push.apply(moments,trips[i].moments)
+            for(var i=0;i<this.state.headerTrips.length;i++){
+                Array.prototype.push.apply(moments,this.state.headerTrips[i].moments)
             }
         }
+
 
         if(this.state.hometownGuide)Array.prototype.push.apply(moments,this.state.hometownGuide.moments);
 
@@ -218,19 +306,19 @@ class FeedProfile extends React.Component {
             </View>
             :null;
 
-        const map= this.state.feedReady&&this.state.trips.length>0?<TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}>
+        const map= this.state.feedReady&&this.state.headerTrips.length>0?<TouchableOpacity  onPress={()=>{this.showProfileMap(moments)}} style={{left:15,height:260,width:windowSize.width-30,marginBottom:14}}>
             <MarkerMap moments={moments} interactive={false}></MarkerMap>
         </TouchableOpacity>:null;
 
         return (
-            <View style={{marginBottom:15}}>
-                <View style={{backgroundColor:'#FFFFFF', height:600, width:windowSize.width,marginBottom:-290,marginTop:75}} >
-                    <View style={{flex:1,alignItems:'center',justifyContent:'center',position:'absolute',left:0,top:0,height:300,width:windowSize.width}}>
+            <View>
+                <View style={{height:windowSize.height*.4, width:windowSize.width,marginBottom:85,marginTop:0,justifyContent:'space-between',zIndex:1}} >
+                    <View style={{flex:1,alignItems:'center',justifyContent:'flex-start',paddingTop:0,width:windowSize.width,zIndex:1}}>
                         <UserImage border={false} onPress={()=>{
                             Linking.openURL("https://www.instagram.com/"+this.state.owner.serviceUsername);
                         }} radius={80} userID={this.state.owner.id} imageURL={this.state.owner.serviceProfilePicture}></UserImage>
 
-                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:25,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.owner.serviceUsername.toUpperCase()}</Text>
+                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:-65,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.owner.serviceUsername.toUpperCase()}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
                             <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.state.owner.serviceObject["bio"]}</Text>
                         </Hyperlink>
@@ -241,17 +329,11 @@ class FeedProfile extends React.Component {
                     </View>
                 </View>
 
-                {/*<View style={{bottom:0,backgroundColor:'white',flex:1,alignItems:'center',width:windowSize.width-30,justifyContent:'center',flexDirection:'row',position:'absolute',height:55,left:15,top:385,borderColor:"#cccccc",borderWidth:1,borderStyle:"solid"}}>
-                    <View style={{flexDirection:'column',alignItems:'center'}}>
-                        <Image source={require('image!icon-countries-negative')} style={{height:8,marginBottom:4}} resizeMode="contain"></Image>
-                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{tripDuration} {tripS}</Text>
-                    </View>
-                    <Image source={require('image!icon-divider')} style={{height:25,marginLeft:35,marginRight:25}} resizeMode="contain"></Image>
-                    <View style={{flexDirection:'column',alignItems:'center'}}>
-                        <Image source={require('image!icon-images-negative')} style={{height:7,marginBottom:5}} resizeMode="contain"></Image>
-                        <Text style={{color:"#282b33",fontSize:8, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"}}>{moments} {phopoporPhotos}</Text>
-                    </View>
-                </View>*/}
+                <View style={{width:windowSize.width,height:130,marginBottom:-65,alignItems:'center',justifyContent:'center',zIndex:1}}>
+                    {/*this.renderUserStats()*/}
+                    {this.renderFollowButton()}
+                </View>
+
                 {hometownGuide}
                 {map}
 
