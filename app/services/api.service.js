@@ -10,7 +10,7 @@ export function showTripLocation(trip){
 
     this.props.navigator.push({
         id: "location",
-        trip,
+        data:trip,
         location:tripLocation,
         isCountry:country?true:false
     });

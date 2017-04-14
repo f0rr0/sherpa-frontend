@@ -84,7 +84,7 @@ class MomentRow extends Component{
 
         this.props.navigator.push({
             id: "tripDetail",
-            momentID,
+            data:momentID,
             refreshCurrentScene:this.props.refreshCurrentScene,
             suiteCaseTrip:this.suiteCaseTrip.bind(this),
             unSuiteCaseTrip:this.unSuiteCaseTrip.bind(this),
@@ -103,6 +103,7 @@ class MomentRow extends Component{
         var baseWidth=(this.props.containerWidth - (imageMargin*(this.props.itemsPerRow-1)) ) / this.props.itemsPerRow;
         const tooltip=this.props.isNotCurrentUsersTrip&&this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
 
+        //console.log('show moment tooltip',this.props.isNotCurrentUsersTrip)
         return(
             this.state.available?
 

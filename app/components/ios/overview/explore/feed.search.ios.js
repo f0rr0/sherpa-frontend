@@ -119,7 +119,7 @@ class Search extends React.Component {
         var tripDetails={trip,owner};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails,
+            data:tripDetails,
             sceneConfig:"right-nodrag"
         });
     }

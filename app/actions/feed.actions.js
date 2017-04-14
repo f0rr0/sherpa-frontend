@@ -91,6 +91,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"location-search"}));
                     break;
                     case "suitcase-list":
+                        //console.log('suitcase response',sherpaResponse)
                         dispatch(udpateFeed({trips:sherpaResponse,page:page,type:"suitcase"}));
                     break;
                     default:
@@ -120,6 +121,7 @@ export function deleteMoment(momentID,instant){
                 };
 
 
+                console.log('request delete',reqBody)
                 fetch(requestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         switch (rawSherpaResponse.status) {
@@ -137,7 +139,7 @@ export function deleteMoment(momentID,instant){
                         }
                     })
                     .then((response)=> {
-                        //console.log('delete moment response',response)
+                        console.log('delete moment response',response)
                         fulfill();
                     }).catch((err)=>reject(err))
             })
@@ -162,6 +164,12 @@ export function getFeed(query,page=1,type='') {
                     break;
                     case "map-search-v2":
                         feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
+                    break;
+                    case "map-search-profile":
+                        feedRequestURI = endpoint + "v1" + "/profile/" + query.profileID + "/map";
+                    break;
+                    case "map-search-trip":
+                        feedRequestURI = endpoint + "v1" + "/trip/" + query.tripID + "/map";
                     break;
                     case "notifications":
                         feedRequestURI = endpoint + version + "/user/" + query +"/notifications?page=" + page;
@@ -241,6 +249,15 @@ export function getFeed(query,page=1,type='') {
                             body: JSON.stringify(searchBody)
                         }
                     break;
+                    case "map-search-profile":
+                    case "map-search-trip":
+                        sherpaHeaders.append("Content-Type", "application/json");
+                        reqBody={
+                            method: 'post',
+                            headers: sherpaHeaders,
+                            body: JSON.stringify(query.bbox)
+                        }
+                    break;
                     case 'location':
                     case 'search-places':
                         reqBody={
@@ -265,17 +282,16 @@ export function getFeed(query,page=1,type='') {
                 }
 
 
-                console.log('feed request uri',feedRequestURI)
+                //console.log('feed request uri',feedRequestURI)
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
-                        console.log('raw response',rawSherpaResponse)
                         switch (rawSherpaResponse.status) {
                             case 200:
+                            case 400:
                                 return rawSherpaResponse.text()
                             break;
                             case 500:
-                            case 400:
-                                //console.log('reject reject reject')
+                                //console.log('reject reject reject',rawSherpaResponse.text())
                                 reject({errorCode:rawSherpaResponse.status});
                             break;
                             case 401:
@@ -286,9 +302,9 @@ export function getFeed(query,page=1,type='') {
                         }
                     })
                     .then((rawSherpaResponseFinal)=> {
+                        //console.log('final response',rawSherpaResponseFinal)
                         if (!rawSherpaResponseFinal)return;
                         let parsedResponse=JSON.parse(rawSherpaResponseFinal);
-                        console.log(parsedResponse);
                         let trips = parsedResponse.trips || parsedResponse;
                         let cleanTrips=[];
                         for(let index in trips){
@@ -300,14 +316,14 @@ export function getFeed(query,page=1,type='') {
                                 if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
                                 if(moments.length>0){
                                     currentTrip.moments=[];
-                                    for(let i=0;i<moments.length;i++){
-                                        if(moments[i].type==='image'||moments[i].contentType=='guide')currentTrip.moments.push(moments[i]);
-                                        if(currentTrip.coverMoment&&moments[i].id==currentTrip.coverMoment.id){
-                                            coverIndex=i;
-                                        }
+                                    if(currentTrip.coverMoment){
+                                        console.log('cover moment',currentTrip.coverMoment)
+                                        moments.unshift(currentTrip.coverMoment)
+                                        console.log('moments',moments);
                                     }
 
-                                    moveArrayPos(currentTrip.moments,coverIndex,0);
+                                    currentTrip.moments=moments;
+
                                     cleanTrips.push(currentTrip);
                                 }
                             }else{
@@ -324,6 +340,7 @@ export function getFeed(query,page=1,type='') {
                             case "trip":
                             case "map-search":
                             case "map-search-classic":
+
                             case "notifications":
                             case "reset-notifications":
                             case "user":
@@ -348,10 +365,12 @@ export function getFeed(query,page=1,type='') {
                             case "search-people":
                             case "location-search":
                             case "map-search-v2":
+                            case "map-search-trip":
+                            case "map-search-profile":
                             case "guide":
                                 let cleanMoments=[];
                                 let moments;
-                                if(type=="search-places-v2"){
+                                if(type=="search-places-v2"||type=="map-search-trip"||type=="map-search-profile"){
                                     moments=parsedResponse.moments
                                 }else if(type=='guide'){
                                     moments=parsedResponse.content;
@@ -364,6 +383,7 @@ export function getFeed(query,page=1,type='') {
                                         if(moments[i].type==='image'||moments[i].contentType=='guide')cleanMoments.push(moments[i]);
                                     }
                                 }
+
 
                                 fulfill({rawData:parsedResponse,moments:cleanMoments, page, type});
                             break;

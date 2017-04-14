@@ -182,7 +182,7 @@ class OnboardingSteps extends Component {
 
     _enableScraping(enable){
         //console.log('enable scraping',enable)
-        //this.props.dispatch(enableScraping(enable));
+        this.props.dispatch(enableScraping(enable));
     }
 
     _renderScrapingPermission(){
@@ -204,10 +204,11 @@ class OnboardingSteps extends Component {
 
 
         return (
-            <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={false}  dot={<View style={styles.dot} />} showsButtons={false} loop={false} bounces={true} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
+            <Swiper ref="onboardingSlider" style={styles.wrapper} showsPagination={false} scrollEnabled={true}  dot={<View style={styles.dot} />} showsButtons={false} loop={false} bounces={true} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
 
                 <OnboardingScreen
                     darken={true}
+                    key="onboarding-start"
                     backgroundImage={{uri:this.props.user.hometownImage}}
                         continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
@@ -266,13 +267,22 @@ class OnboardingSteps extends Component {
                     <OnboardingScreen
                         darken={true}
                         topAreaStyle={{top:220}}
+                        key="onboarding-hometown"
                         headline={"Share where\nyou've been"}
                         description="create your profile via instagram?"
                         backgroundImage={{uri:this.props.user.mostLikedImage}}
                         continueButton={
                             <View>
-                                <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{console.log('on press'); this.refs.onboardingSlider.scrollBy(1);this._enableScraping(true)}} text="yep, let's do this"></SimpleButton>
-                                  <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{this._enableScraping.bind(this)(false)}}>
+                                <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
+                                        this.refs.onboardingSlider.scrollBy(1);
+                                        let me=this;
+                                        setTimeout(function(){me._enableScraping(true)},500);
+                                    }} text="yep, let's do this"></SimpleButton>
+                                  <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{
+                                        this.refs.onboardingSlider.scrollBy(1);
+                                        let me=this;
+                                        setTimeout(function(){me._enableScraping(false)},500);
+                                  }}>
                                     <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
                                 </TouchableOpacity>
                             </View>
@@ -283,6 +293,7 @@ class OnboardingSteps extends Component {
 
                     <OnboardingScreen
                         backgroundImage={require('./../../../Images/onboarding-notification_empty.png')}
+                        key="onboarding-permissions"
                         continueButton={
                             <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
                                 <View style={{left:0,right:0,top:-250,position:'absolute',alignItems:'center'}}>

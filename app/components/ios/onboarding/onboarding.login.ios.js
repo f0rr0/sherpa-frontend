@@ -178,15 +178,16 @@ class Login extends Component {
         }
 
 
+
         switch(this.props.user.invite){
             case "invalid":
-                this.setState({deniedMessage:"Not a valid invite code"})
+                this.setState({deniedMessage:"You invite code is invalid"})
             break;
             case "expired":
                 this.setState({deniedMessage:"That invite code has expired"})
             break;
             case "not-invited":
-                this.setState({deniedMessage:"Your are not invited yet,please request an invite code."})
+                this.setState({deniedMessage:"You haven't been invited yet"})
             break;
             default:
                 this.setState({deniedMessage:"A valid invite code is required"})
@@ -377,7 +378,7 @@ class Login extends Component {
                             <SimpleButton onPress={()=>{this.signupWithInvite()}} text="Sign up with Invite code"></SimpleButton>
                         </View>
                         <View style={{flexDirection:"row"}}>
-                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:1,borderColor:'rgba(255,255,255,.2)',width:windowSize.width,marginTop:15}} onPress={()=>{this.isRequest=false;this.alreadyInvited.bind(this)()}}>
+                            <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:0,borderColor:'rgba(255,255,255,.2)',width:windowSize.width,marginTop:15}} onPress={()=>{this.isRequest=false;this.alreadyInvited.bind(this)()}}>
                                 <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Already invited? Login via Instagram.".toUpperCase()}</Text>
                             </TouchableOpacity>
                         </View>

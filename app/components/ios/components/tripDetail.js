@@ -79,7 +79,7 @@ class TripDetail extends React.Component{
     showUserProfile(trip){
         this.props.navigator.push({
             id: "profile",
-            trip
+            data:trip
         });
     }
 

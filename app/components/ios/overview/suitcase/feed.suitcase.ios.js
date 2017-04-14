@@ -97,7 +97,7 @@ class Suitecase extends React.Component {
     showTripDetail(trip) {
         this.props.navigator.push({
             id: "destination",
-            trip,
+            data:trip,
         });
     }
 

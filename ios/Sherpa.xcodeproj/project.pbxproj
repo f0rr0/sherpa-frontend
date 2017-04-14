@@ -55,7 +55,6 @@
 		F3A612B11D897378002A3AF7 /* KDSocialShare.m in Sources */ = {isa = PBXBuildFile; fileRef = F3A612B01D897378002A3AF7 /* KDSocialShare.m */; };
 		F3A612B31D897378002A3AF7 /* Social.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A612B21D897378002A3AF7 /* Social.framework */; };
 		F3A941D91DDB2243007F9537 /* libRCTGoogleAnalyticsBridge.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A941D81DDB2237007F9537 /* libRCTGoogleAnalyticsBridge.a */; };
-		F3AE13B71DB5165500C22D62 /* libRCTCamera.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3AE139D1DB5164900C22D62 /* libRCTCamera.a */; };
 		F3AFD2461CC8BC5B00CDC733 /* AvenirNext-Light.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */; };
 		F3AFD2471CC8BC5B00CDC733 /* AvenirNext-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */; };
 		F3CDAB4F1D512D40007A54E3 /* libART.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F3A542111D512B6000CC10F2 /* libART.a */; };
@@ -339,13 +338,6 @@
 			remoteGlobalIDString = A79185C61C30694E001236A6;
 			remoteInfo = RCTGoogleAnalyticsBridge;
 		};
-		F3AE139C1DB5164900C22D62 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 4107012F1ACB723B00C6AA39;
-			remoteInfo = RCTCamera;
-		};
 		F3DC9E341DF5C48800EE6639 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */;
@@ -442,7 +434,6 @@
 		F3A612B01D897378002A3AF7 /* KDSocialShare.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = KDSocialShare.m; path = "../node_modules/react-native-social-share/iOS/KDSocialShare.m"; sourceTree = "<group>"; };
 		F3A612B21D897378002A3AF7 /* Social.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Social.framework; path = System/Library/Frameworks/Social.framework; sourceTree = SDKROOT; };
 		F3A941D31DDB2236007F9537 /* RCTGoogleAnalyticsBridge.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTGoogleAnalyticsBridge.xcodeproj; path = "../node_modules/react-native-google-analytics-bridge/ios/RCTGoogleAnalyticsBridge/RCTGoogleAnalyticsBridge.xcodeproj"; sourceTree = "<group>"; };
-		F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTCamera.xcodeproj; path = "../node_modules/react-native-camera/ios/RCTCamera.xcodeproj"; sourceTree = "<group>"; };
 		F3AE13B81DB5228D00C22D62 /* Sherpa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Sherpa.entitlements; path = Sherpa/Sherpa.entitlements; sourceTree = "<group>"; };
 		F3AFD2441CC8BC5B00CDC733 /* AvenirNext-Light.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Light.otf"; sourceTree = "<group>"; };
 		F3AFD2451CC8BC5B00CDC733 /* AvenirNext-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "AvenirNext-Regular.otf"; sourceTree = "<group>"; };
@@ -470,7 +461,6 @@
 				F3FB50811DDDBEB100643EA1 /* libRCTOrientation.a in Frameworks */,
 				F37606A61DDB2FF700070706 /* libAirMaps.a in Frameworks */,
 				F3A941D91DDB2243007F9537 /* libRCTGoogleAnalyticsBridge.a in Frameworks */,
-				F3AE13B71DB5165500C22D62 /* libRCTCamera.a in Frameworks */,
 				F34F8AC51DACEAF30089C7AC /* libReactNativeExif.a in Frameworks */,
 				F37910131DA7FF2B00FEF138 /* libRCTImageResizer.a in Frameworks */,
 				F379100C1DA69D9900FEF138 /* libRNUploader.a in Frameworks */,
@@ -651,7 +641,6 @@
 				F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */,
 				F3FB507B1DDDBE9400643EA1 /* RCTOrientation.xcodeproj */,
 				F376067B1DDB2FE900070706 /* AirMaps.xcodeproj */,
-				F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */,
 				F34F8ABF1DACEAE70089C7AC /* ReactNativeExif.xcodeproj */,
 				F3790FED1DA69D9100FEF138 /* RNUploader.xcodeproj */,
 				F3306DF71DA53C1900E687BC /* RNFetchBlob.xcodeproj */,
@@ -885,14 +874,6 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F3AE13961DB5164800C22D62 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				F3AE139D1DB5164900C22D62 /* libRCTCamera.a */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		F3DC9E2C1DF5C48800EE6639 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -989,10 +970,6 @@
 				{
 					ProductGroup = F3DC9E2C1DF5C48800EE6639 /* Products */;
 					ProjectRef = F3DC9E2B1DF5C48800EE6639 /* RCTAnimation.xcodeproj */;
-				},
-				{
-					ProductGroup = F3AE13961DB5164800C22D62 /* Products */;
-					ProjectRef = F3AE13951DB5164800C22D62 /* RCTCamera.xcodeproj */;
 				},
 				{
 					ProductGroup = F374824B1D9BD65500D953B1 /* Products */;
@@ -1363,13 +1340,6 @@
 			fileType = archive.ar;
 			path = libRCTGoogleAnalyticsBridge.a;
 			remoteRef = F3A941D71DDB2237007F9537 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		F3AE139D1DB5164900C22D62 /* libRCTCamera.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libRCTCamera.a;
-			remoteRef = F3AE139C1DB5164900C22D62 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		F3DC9E351DF5C48800EE6639 /* libRCTAnimation.a */ = {

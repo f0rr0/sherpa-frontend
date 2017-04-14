@@ -26,7 +26,9 @@ class TripDetailMap extends Component{
         "showReload":false,
         "renderMap":false,
         "isFullscreen":false,
-        "disablePins":false
+        "disablePins":false,
+        "tripID":-1,
+        "profileID":-1
     }
 
     constructor(props){
@@ -75,7 +77,6 @@ class TripDetailMap extends Component{
     onLoadFromRegion(region){
         switch(this.props.mapType){
             case "region":
-
                 var reqBody={
                     "source":this.props.regionData.source,
                     "sourceId":this.props.regionData.sourceId,
@@ -118,6 +119,57 @@ class TripDetailMap extends Component{
                         this.setState({mapMoments:response.data,reqID:Math.random()})
                         this.refs.feedlistmap.showMarkers().start();
                         if(response.data.length==0){
+                            this.refs.reloadRegionButton.nothing();
+                        }else{
+                            this.refs.reloadRegionButton.hide();
+                        }
+                    }
+                }).catch((err)=>{
+                    if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.nothing();
+                })
+            break;
+            case "profile":
+                var bbox={
+                    "bbox": {
+                        "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+                        "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+                    }
+                };
+
+                if(this.refs.feedlistmap)this.refs.feedlistmap.hideMarkers().start();
+                if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.load();
+
+
+                getFeed({bbox:bbox,profileID:this.props.profileID},-1,'map-search-profile').then((response)=>{
+                    if(!this.isLeaving){
+                        this.setState({mapMoments:response.moments,reqID:Math.random()})
+                        this.refs.feedlistmap.showMarkers().start();
+                        if(response.moments.length==0){
+                            this.refs.reloadRegionButton.nothing();
+                        }else{
+                            this.refs.reloadRegionButton.hide();
+                        }
+                    }
+                }).catch((err)=>{
+                    if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.nothing();
+                })
+            break;
+            case "trip":
+                var bbox={
+                    "bbox": {
+                        "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+                        "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+                    }
+                };
+
+                if(this.refs.feedlistmap)this.refs.feedlistmap.hideMarkers().start();
+                if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.load();
+
+                getFeed({bbox:bbox,tripID:this.props.tripID},-1,'map-search-trip').then((response)=>{
+                    if(!this.isLeaving){
+                        this.setState({mapMoments:response.moments,reqID:Math.random()})
+                        this.refs.feedlistmap.showMarkers().start();
+                        if(response.moments.length==0){
                             this.refs.reloadRegionButton.nothing();
                         }else{
                             this.refs.reloadRegionButton.hide();

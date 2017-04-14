@@ -157,11 +157,10 @@ class FeedTrip extends Component {
     }
 
     _renderFooterView(){
-        return;
+        //console.log(this.state.trip)
         return <View style={{marginBottom:20}}>
             {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
-            //console.log('type:',this.props.trip,'locus',this.props.trip.locus);
-            this.showTripLocation(this.state.trip.locus["region_gid"])}} text={"Explore "+this.state.trip.locus.region}></SimpleButton>:null}
+            this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+(this.state.trip.locus[this.state.trip.nameGid.split(":")[1]]||this.state.trip.location)}></SimpleButton>:null}
         </View>
     }
 
@@ -201,19 +200,23 @@ class FeedTrip extends Component {
     }
 
     componentDidMount(){
-        console.log('did mount')
+        //console.log('did mount')
+        this.onfetch();
+    }
+
+    onfetch(){
         getFeed(this.props.trip.id,1,'trip').then((result)=>{
             let trip=result;
             let moments=trip.data.moments;
-            console.log(result)
+            //console.log(result)
 
             if(moments.length==0){
                 this.props.navigator.pop();
             }else{
                 const organizedMoments=this.organizeMomentRows(moments,2,true);
                 this.organizedMoments=organizedMoments;
-                //this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
-                this.setState({isCurrentUsersTrip:true,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+                //this.setState({isCurrentUsersTrip:true,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
             }
         }).catch((error)=>{
             //console.log('feed error',error)
@@ -282,7 +285,7 @@ class FeedTrip extends Component {
                 />
                 <StickyHeader ref="stickyHeader" navigation={header}></StickyHeader>
                 <PopOver ref="popover" showEditTrip={this.state.isCurrentUsersTrip} enableNavigator={this.props.enableNavigator} onEditTrip={()=>{
-                      console.log(this.state.trip)
+                      //console.log(this.state.trip)
                       this.props.navigator.push({
                             intent:"EDIT_TRIP",
                             id: "editTripGrid",
@@ -299,14 +302,15 @@ class FeedTrip extends Component {
     }
 
     refreshCurrentScene(){
-
+        console.log('refresh');
+        //this.onfetch();
     }
 
     deleteTripAlert(){
         //console.log('delete trips',this.props.trip);
             Alert.alert(
-                'Delete Trip',
-                'Are you sure you want to delete this trip?',
+                'Delete Album',
+                'Are you sure you want to delete this album?',
                 [
                     {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                     {text: 'OK', onPress: () => {
@@ -324,7 +328,7 @@ class FeedTrip extends Component {
         this.props.dispatch(udpateFeedState("reset"));
         this.props.navigator.push({
             id: "profile",
-            trip
+            data:trip
         });
     }
 
@@ -345,16 +349,19 @@ class FeedTrip extends Component {
 
         this.props.navigator.push({
             id: "location",
-            trip:{name:this.state.trip.name,...locationData},
+            data:{name:this.state.trip.name,...locationData},
             version:"v2"
         });
     }
 
     showTripMap(trip){
+        //console.log('trip',trip)
         this.props.navigator.push({
             id: "tripDetailMap",
             trip,
             title:trip.name,
+            mapType:"trip",
+            tripID:trip.id,
             sceneConfig:"bottom",
             hideNav:true
         });
@@ -380,7 +387,7 @@ class FeedTrip extends Component {
 
         let tripTitle;
 
-        let toolTip=this.props.user.usedEditTrip&&this.state.isCurrentUsersTrip?null:<ToolTipp hasTriangle="top" ref="editToolTip" message="Tap to edit and share" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:12}} onHide={()=>{
+        let toolTip=this.props.user.usedEditTrip||!this.state.isCurrentUsersTrip?null:<ToolTipp hasTriangle="top" ref="editToolTip" message="Tap to edit and share" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:12}} onHide={()=>{
                                                      this.props.dispatch(updateUserData({usedEditTrip:true}))
                                                      this.props.dispatch(storeUser())
                                                 }}></ToolTipp>
@@ -475,7 +482,7 @@ class FeedTrip extends Component {
                    <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
                        {/*<Text style={styles.headerTripTo}>{tripTitle}</Text>*/}
-                                <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
+                            <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
                             <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.state.trip}></TripSubtitle>
                             </View>
 

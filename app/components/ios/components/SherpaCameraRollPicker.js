@@ -11,7 +11,6 @@ import {
     ListView,
     ActivityIndicator,
 } from 'react-native'
-import Camera from 'react-native-camera';
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 
@@ -77,6 +76,7 @@ class SherpaCameraRollPicker extends Component {
             fetchParams.after = this.state.lastCursor;
         }
 
+        //console.log('!!!!+++++!!!! cameraroll get photos')
         CameraRoll.getPhotos(fetchParams)
             .then((data) => this._appendImages(data), (e) => console.log(e));
     }
@@ -175,12 +175,6 @@ class SherpaCameraRollPicker extends Component {
         )
     }
 
-
-    takePicture() {
-        this.camera.capture()
-            .then((data) => console.log(data))
-            .catch(err => console.error(err));
-    }
 
     _renderRow(rowData) {
         var items = rowData.map((item) => {

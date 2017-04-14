@@ -117,9 +117,20 @@ class FeedDestination extends Component {
         //console.log('trip',trip);
         this.props.navigator.push({
             id: "location",
-            trip
+            data:trip
         });
     }
+
+
+    _renderFooterView(){
+        //console.log(this.props.trip);
+        return;
+        return <View style={{marginBottom:20}}>
+            {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
+            this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+this.state.trip.location}></SimpleButton>:null}
+        </View>
+    }
+
 
     render(){
         return(
@@ -129,6 +140,7 @@ class FeedDestination extends Component {
                    renderRow={this._renderRow.bind(this)}
                    contentContainerStyle={styles.listView}
                    renderHeader={this._renderHeader.bind(this)}
+                   renderFooter={this._renderFooterView.bind(this)}
                    enableEmptySections={true}
                    ref="listview"
                    onScroll={(event)=>{
@@ -159,7 +171,7 @@ class FeedDestination extends Component {
         }};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails,
+            data:tripDetails,
             sceneConfig:"right-nodrag"
         });
     }

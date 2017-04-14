@@ -31,7 +31,6 @@ var styles=StyleSheet.create({
         paddingLeft:7,
         paddingRight:7,
         paddingTop:65,
-        paddingBottom:10
     },
 
     row:{
@@ -64,7 +63,6 @@ class EditTripGrid extends React.Component {
         let displayData=props.momentData;
 
 
-        console.log('display data',displayData);
         this.state= {
             momentData: props.momentData,
             tripData: props.tripData,
@@ -88,7 +86,9 @@ class EditTripGrid extends React.Component {
         //return null;
         let disabled=false;
         return(
+            <View style={{}}>
                 <SimpleButton style={{width:SCREEN_WIDTH-28}} disabled={disabled} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+            </View>
         )
     }
 
@@ -222,7 +222,7 @@ class EditTripGrid extends React.Component {
 
         return(
             <View>
-
+                {this._renderHeader()}
             <SherpaGiftedListview
                     removeClippedSubviews={false}
                     renderHeaderOnInit={true}
@@ -233,7 +233,7 @@ class EditTripGrid extends React.Component {
                     pagination={true} // enable infinite scrolling using touch to load more
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
-                    headerView={this._renderHeader.bind(this)}
+                    headerView={()=>{}}
                     footerView={this._renderFooter.bind(this)}
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}

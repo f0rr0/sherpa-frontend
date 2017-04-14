@@ -63,7 +63,7 @@ class ToolTipp extends React.Component {
         return (
             <Animated.View style={[toolTippStyle.basic,{width:toolTippWidth,opacity:this.state.opacity},this.props.style]}>
                 <View style={{justifyContent:'center',alignItems:'center',flexDirection:'row'}}>
-                    <Image style={{marginRight:10}} source={require("../../../Images/icons/close-tooltipp.png")}></Image>
+                    {this.props.hideX?null:<Image style={{marginRight:10}} source={require("../../../Images/icons/close-tooltipp.png")}></Image>}
                     <Text style={[toolTippStyle.copy,this.props.textStyle]}>{this.props.message}</Text>
                 </View>
                 {this._renderTriangle()}

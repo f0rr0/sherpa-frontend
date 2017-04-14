@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {
-    CameraRoll,
     Image,
     Platform,
     StyleSheet,
@@ -11,7 +10,6 @@ import {
     ListView,
     ActivityIndicator,
 } from 'react-native'
-import Camera from 'react-native-camera';
 import {getUserInstagramPhotos} from '../../../actions/trip.edit.actions'
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 const SCREEN_WIDTH = require('Dimensions').get('window').width;

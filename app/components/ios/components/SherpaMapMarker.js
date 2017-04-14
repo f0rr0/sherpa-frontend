@@ -67,7 +67,7 @@ class SherpaMapMarker extends Component{
             clustercount=<View style={{position:'absolute',bottom:-3,right:-3,backgroundColor:'white',width:20,height:20,borderRadius:10,justifyContent:'center',alignItems:'center'}}><Text style={{color:'black',fontSize:10}}>{markerData.properties.point_count}</Text></View>
         }
         return(
-            <MapView.Marker ref="marker" onPress={this.props.onPress} coordinate={{latitude:parseFloat(markerData.geometry.coordinates[1]),longitude:parseFloat(markerData.geometry.coordinates[0])}}>
+            <MapView.Marker identifier={this.props.identifier} ref="marker" onPress={this.props.onPress} coordinate={{latitude:parseFloat(markerData.geometry.coordinates[1]),longitude:parseFloat(markerData.geometry.coordinates[0])}}>
                 <Animated.View style={{width:45,height:45,transform: [{scale: this.props.outsideScale}]}}>
                     <Animated.View style={{width:45,height:45,borderRadius:45,backgroundColor:'white',transform: [{scale: this.state.markerScale}]}}>
                         <Image

@@ -119,76 +119,48 @@ class Feed extends Component {
         })
     }
 
-    setView(deepLinkObject){
-        let target=deepLinkObject.v1.primaryView;
-        switch(target.id){
-            case "profile":
-                this.showUserProfile(target.profile)
-            break;
-            case "tripDetail":
-                this.showMoment(target.moment)
-            break;
-            case "momentDetail":
-                this.showTrip(target.trip)
-            break;
-        }
-    }
 
     showUserProfile(user) {
         this.navigator.push({
             id: "profile",
-            trip: {owner: {id:user,user}}
-        });
-    }
-
-
-    showMoment(momentID) {
-        this.navigator.push({
-            id: "tripDetail",
-            momentID
+            data: {owner: {id:user,user}}
         });
     }
 
     showTrip(tripID){
         this.navigator.push({
             id: "trip",
-            trip:{id:tripID}
+            data:{id:tripID}
         });
     }
 
-    getTrip(id){
-        const {endpoint,version,feed_uri,user_uri} = sherpa;
-        let feedRequestURI;
-        feedRequestURI=endpoint+version+"/trip/"+id;
+    setView(deepLinkObject){
+        let data = deepLinkObject.v1.linkView;
+        let id;
+        if(data.trip){
+            id="trip"
+        }else if(data.moment){
+            id="tripDetail";
+        }else{
+            id=data.id
+        }
 
-        let sherpaResponse;
-        let sherpaHeaders = new Headers();
-        sherpaHeaders.append("token", this.props.user.sherpaToken);
-        var me=this;
-
-        fetch(feedRequestURI,{
-            method:'get',
-            headers:sherpaHeaders,
-            mode: 'cors'
-        })
-            .then((rawSherpaResponse)=>{
-                switch(rawSherpaResponse.status){
-                    case 200:
-                        return rawSherpaResponse.text()
-                        break;
-                    case 400:
-                        return '{}';
-                        break;
-                }
-            })
-            .then((rawSherpaResponseFinal)=>{
-                sherpaResponse=JSON.parse(rawSherpaResponseFinal);
+        switch(id){
+            case "profile":
+                this.showUserProfile(data.target);
+                break;
+            case "trip":
+                this.showTrip(data.target);
+                break;
+            default:
                 this.navigator.push({
-                    id: "trip",
-                    trip:sherpaResponse
+                    id: data.id,
+                    data:data.target
                 });
-            });
+            break;
+        }
     }
+
 
     renderScene(route, navigator) {
         var sceneContent;
@@ -210,31 +182,32 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.location} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.data} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
-                sceneContent = <FeedTrip enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedTrip enableNavigator={this.enableNavigator.bind(this)} toggleTabBar={this.props.toggleTabBar} refreshCurrentScene={this.refreshCurrentScene.bind(this)}  navSettings={{navActionRight:this._navActionRight.bind(this)}} ref={route.id}  navigator={navigator} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.trip.name,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.data.name,fixedHeader:true})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "tripDetailMap":
                 showNav=true;
-                sceneContent = <TripDetailMap enableNavigator={this.enableNavigator.bind(this)} isFullscreen={route.isFullscreen} disablePins={route.disablePins} initialRegion={route.initialRegion} regionData={route.regionData} mapType={route.mapType} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetailMap enableNavigator={this.enableNavigator.bind(this)} tripID={route.tripID} profileID={route.profileID} isFullscreen={route.isFullscreen} disablePins={route.disablePins} initialRegion={route.initialRegion} regionData={route.regionData} mapType={route.mapType} ref={route.id} navigator={navigator}   navigation={this._getNavigation({routeName:route.title,fixedHeader:true,hideNav:true})} user={this.props.user} momentID={route.momentID} trip={route.trip}  dispatch={this.props.dispatch} />;
             break;
             case "tripDetail":
+            case "momentDetail":
                 showNav=true;
-                sceneContent = <TripDetail enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} user={this.props.user} momentID={route.momentID} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} user={this.props.user} momentID={route.data} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
             break;
             case "notifications":
                 showNav=true;
-                sceneContent= <FeedNotifications navigator={navigator}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
+                sceneContent= <FeedNotifications  updateTabTo={this.props.updateTabTo} navigator={navigator}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id}  feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}></FeedNotifications>
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;

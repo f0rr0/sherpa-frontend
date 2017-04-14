@@ -145,7 +145,7 @@ class OwnUserProfile extends React.Component {
     showTripDetail(trip) {
         this.props.navigator.push({
             id: "trip",
-            trip
+            data:trip
         });
     }
 
@@ -154,6 +154,7 @@ class OwnUserProfile extends React.Component {
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
             callback(response.data);
             let trips=response.data;
+            //console.log(response.data);
 
 
             this.isRescraping=false;
@@ -237,6 +238,8 @@ class OwnUserProfile extends React.Component {
 
 
     render(){
+        //console.log('render user profile');
+        //console.log(this.props.user.usedAddTrip,'used add trip')
         const tooltipTouchable=this.state.hideTooltip||this.props.user.usedAddTrip?null:
             <TouchableOpacity onPress={this.hideTooltip.bind(this)} style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></TouchableOpacity>
 
@@ -329,11 +332,8 @@ class OwnUserProfile extends React.Component {
         let message='0';
 
         if(this.isRescraping){
-
             status=this._renderStillScraping();
-            message='a';
         }else if(this.state.trips.length==0){
-            message='b';
             status=
                 <View style={{justifyContent: 'center', width:windowSize.width,alignItems: 'center'}}>
                     <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
@@ -366,7 +366,7 @@ class OwnUserProfile extends React.Component {
                 <View style={{justifyContent:'center',height:50,width:50,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
-                {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We are scraping your profile. Please check back soon!</Text>:null}
+                {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We're creating your profile. Check back soon.</Text>:null}
             </View>
         )
     }
@@ -377,6 +377,8 @@ class OwnUserProfile extends React.Component {
              trip:{moments},
              title:this.props.user.username.toUpperCase()+"'S TRAVELS",
              sceneConfig:"bottom",
+             mapType:"profile",
+             profileID:this.props.user.serviceID,
              hideNav:true
         });
     }
@@ -394,7 +396,9 @@ class OwnUserProfile extends React.Component {
         var hasDescriptionCopy=true;
 
         const tooltip=!this.props.user.usedAddTrip?
-                <TouchableOpacity style={{position:'absolute',left:5,top:50}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image></TouchableOpacity>
+                <TouchableOpacity style={{position:'absolute',zIndex:1,left:5,top:50}} onPress={()=>{this.hideTooltip()}}>
+                    <Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image>
+                </TouchableOpacity>
             : null;
 
         const hometownGuide=this.state.hometownGuide?

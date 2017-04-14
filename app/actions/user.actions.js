@@ -265,7 +265,6 @@ export function updateNotificationCount(){
         return store.get('user').then((user) => {
             if (user) {
                 getFeed(user.sherpaID,1,'notifications').then((response)=>{
-                    //dispatch(updateUserData({notificationCount:30}))
                     dispatch(updateUserData({notificationCount:response.data.counts.unviewedCount}))
                     dispatch(storeUser())
                 }).catch((err)=>{
@@ -539,16 +538,30 @@ export function setUserHometown(hometown){
     }
 }
 
+export function checkUser(){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+            //console.log('got user')
+            fulfill(user)
+        }).catch((err)=>{
+            reject(err)
+        })
+    })
+}
 
 export function loadUser() {
     return function (dispatch, getState) {
         //dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-            //console.log(user.userDBState,'initial user db state');
+            //console.log(user,'initial user db state');
             if(user&&!config.resetUser) {
                 //setTimeout(()=>{
+                if(user.invited){
                     dispatch(updateUserDBState("available-existing"));
                     dispatch(updateUserData(user));
+                }else{
+                    dispatch(updateUserDBState("empty"));
+                }
                 //console.log('user',user);
                 //},800)
             }else{
@@ -765,7 +778,6 @@ export function signupUser(){
                     return rawServiceResponse.text();
             }).then((rawSherpaResponse)=>{
                 let sherpaResponse=JSON.parse(rawSherpaResponse);
-                console.log('sherpa response',sherpaResponse)
                 const {
                     email,
                     id,
@@ -781,10 +793,10 @@ export function signupUser(){
                     hometownImage,
                     hometownImageLowRes,
                     mostLikedImage,
-                    mostLikedImageLowRes
+                    mostLikedImageLowRes,
+                    invited
                 } = sherpaResponse.user;
 
-                //console.log('user resposne',sherpaResponse.user)
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -798,6 +810,7 @@ export function signupUser(){
                     bio:userData.bio,
                     website:userData.website,
                     invite:sherpaResponse.invitation,
+                    invited,
                     profilePicture:userData.profile_picture,
                     username,
                     hometown,
@@ -817,7 +830,6 @@ export function signupUser(){
 
 
                 dispatch(storeUser());
-                //console.log(sherpaResponse," invite resposne")
                 if(
                     //!sherpaResponse.whitelisted&&
                     sherpaResponse.invitation=="expired"|| sherpaResponse.invitation=="invalid" || sherpaResponse.invitation=="not-invited"

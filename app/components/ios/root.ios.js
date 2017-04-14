@@ -1,6 +1,6 @@
 'use strict';
 
-import {loadUser,updateUserData,storeUser,rescrape,checkToken,logoutUser} from '../../actions/user.actions';
+import {loadUser,updateUserData,storeUser,rescrape,checkToken,logoutUser,checkUser,updateNotificationCount} from '../../actions/user.actions';
 import {getFeed} from '../../actions/feed.actions';
 import Loading from './onboarding/onboarding.loading.ios';
 import Login from './onboarding/onboarding.login.ios';
@@ -29,12 +29,12 @@ var styles = StyleSheet.create({
 });
 
 
+const tracker=GoogleAnalytics.setTrackerId('UA-75939846-3')
 
 class Root extends Component {
     constructor(props){
         super(props);
         this.props.dispatch(loadUser());
-        GoogleAnalytics.setTrackerId('UA-75939846-3')
         this.state={
             currentView:"loading",
             currentAppState:'undefined'
@@ -43,9 +43,9 @@ class Root extends Component {
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-        NotificationsIOS.addEventListener('notificationOpened', this._onNotificationOpened.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        this.feedStuff()
     }
 
     componentWillUnmount(){
@@ -60,6 +60,7 @@ class Root extends Component {
         switch(nextProps.user.userDBState){
             case "available-existing":
             case "notifications-registered":
+
                 this.setState({currentView:"overview"});
             break;
             case "available-new":
@@ -83,26 +84,25 @@ class Root extends Component {
     }
 
 
-    _onNotificationOpened(notification) {
-        PushNotificationIOS.setApplicationIconBadgeNumber(0);
-        var deepLinkObject=notification.getData();
-        tracker.trackEvent('notification-opened', deepLinkObject.v1.type);
-
-        if(deepLinkObject.type=='WHITELISTED'){
-            this.navigator.replace({id:"onboarding-steps"});
-        }
-    }
-
     feedStuff(){
-        //getFeed(this.props.user.sherpaID,1,'user',this.props.user.sherpaToken).then((result)=>{
-            //if(result.data.whitelisted){
-            //    this.navigator.replace({id:"onboarding-steps"});
-            //}
-            //this.props.dispatch(updateUserData({
-            //    whiteListed:result.data.whitelisted
-            //}));
-            //this.props.dispatch(storeUser());
-        //})
+        //console.log('feed stuff')
+        checkUser((user)=>{
+            //console.log('stored user',user);
+            getFeed(user.sherpaID,1,'user',user.sherpaToken).then((result)=>{
+                //if(result.data.invited){
+                //this.navigator.replace({id:"onboarding-steps"});
+                //}else{
+                //this.navigator.replace({id:"login"});
+                //}
+                this.props.dispatch(updateUserData({
+                    whiteListed:result.data.whitelisted
+                }));
+                this.props.dispatch(storeUser());
+            })
+        }).catch((err)=>{
+            console.log('no user')
+        })
+
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -111,13 +111,15 @@ class Root extends Component {
             this.feedStuff();
             checkToken().then((res)=>{
                 if(!!res){
-                    console.log('token valid');
+                    //console.log('token valid');
                 }else{
                     logoutUser();
                 }
             }).catch((err)=>{console.log('err',err)})
 
             rescrape();
+            this.props.dispatch(updateNotificationCount());
+
 
         }else if((prevState.currentView!=this.state.currentView)){
             this.navigator.replace({id:this.state.currentView});
@@ -138,7 +140,7 @@ class Root extends Component {
                 return <NotWhitelisted navigator={navigator} {...this.props} />;
             break;
             case "overview":
-                return <Overview navigator={navigator} {...this.props}/>;
+                return <Overview tracker={tracker} navigator={navigator} {...this.props}/>;
             break;
             case "onboarding-steps":
                 return <OnboardingSteps navigator={navigator} {...this.props}/>;

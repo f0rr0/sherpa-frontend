@@ -146,7 +146,7 @@ class FeedList extends React.Component{
     showTripLocationOrGuide(data){
         this.props.navigator.push({
             id: "location",
-            trip:data.properties,
+            data:data.properties,
             version:"v2"
         });
     }
@@ -154,7 +154,7 @@ class FeedList extends React.Component{
     showTripDetail(trip) {
         this.props.navigator.push({
             id: "trip",
-            trip
+            data:trip
         });
     }
 
@@ -191,10 +191,11 @@ class FeedList extends React.Component{
 
     _renderHeader(){
         let windowHeight=windowSize.height;
-        let toolTip=this.props.user.usedMap?null:<ToolTipp ref="mapToolTipp" message="tap to explore" ref="mapToolTipp" onHide={()=>{
+        let toolTip=this.props.user.usedMap?null:<ToolTipp hideX={true} ref="mapToolTipp" message={"tap to explore".toUpperCase()} ref="mapToolTipp" onHide={()=>{
                                                      this.props.dispatch(updateUserData({usedMap:true}))
                                                      this.props.dispatch(storeUser())
                                                 }}></ToolTipp>
+        toolTip=null;
         return (
             <View style={{overflow:'visible',justifyContent:'center',marginBottom:0,zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
                 <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
@@ -221,9 +222,9 @@ class FeedList extends React.Component{
                 </TouchableOpacity>
                         {this._renderFixedSearchBar()}
                 <View style={{flex:1,marginTop:70,backgroundColor:'white'}}>
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED TRAVELERS</Text>
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED GUIDES</Text>
                     {this._renderFeaturedProfiles.bind(this)()}
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST EXPERIENCES</Text>
+                    {/*<Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST EXPERIENCES</Text>*/}
                 </View>
             </View>
         )
@@ -241,7 +242,7 @@ class FeedList extends React.Component{
         //console.log('user',user)
         this.props.navigator.push({
             id: "profile",
-            trip:{owner:user}
+            data:{owner:user}
         });
     }
 

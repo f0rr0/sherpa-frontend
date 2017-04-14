@@ -110,7 +110,8 @@ class TripDetail extends React.Component{
                 globalIndex++;
             }
 
-            getFeed(moment.trip,1,'trip').then((result)=>{
+            console.log('moment',moment)
+            getFeed(moment.trip||moment.data.trip,1,'trip').then((result)=>{
                 this.setState({tripData:result})
             }).catch((error)=>{
             })
@@ -161,7 +162,7 @@ class TripDetail extends React.Component{
     showUserProfile(trip){
         this.props.navigator.push({
             id: "profile",
-            trip
+            data:trip
         });
     }
 
@@ -214,8 +215,8 @@ class TripDetail extends React.Component{
             [
                 {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                 {text: 'OK', onPress: () => {
-                    deleteMoment(this.state.momentData.id,false)
-                    this.props.navigator.pop()
+                    deleteMoment(this.state.momentData.id,true)
+                    this.props.navigator.popToTop()
                 }}
             ]
         )
@@ -250,7 +251,7 @@ class TripDetail extends React.Component{
 
         this.props.navigator.push({
             id: "location",
-            trip:{name:"location",...locationData},
+            data:{name:"location",...locationData},
             version:"v2"
         });
     }
@@ -372,7 +373,7 @@ class TripDetail extends React.Component{
 
                 </ScrollView>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
-                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{this.onEditMoment(momentData)}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={true} showDeleteMoment={this.state.isCurrentUsersTrip}></PopOver>
+                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{this.onEditMoment(momentData)}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={this.state.isCurrentUsersTrip} showDeleteMoment={this.state.isCurrentUsersTrip}></PopOver>
             </View>
 
         )

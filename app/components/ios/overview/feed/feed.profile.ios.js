@@ -31,7 +31,8 @@ import {
     Image,
     TouchableHighlight,
     TouchableOpacity,
-    Linking
+    Linking,
+    Animated
 } from 'react-native';
 import React, { Component } from 'react';
 
@@ -91,7 +92,7 @@ class FeedProfile extends React.Component {
     showTripDetail(trip) {
         this.props.navigator.push({
             id: "trip",
-            trip
+            data:trip
         });
     }
 
@@ -263,10 +264,13 @@ class FeedProfile extends React.Component {
     }
 
     showProfileMap(moments){
+        console.log(this.state.owner)
         this.props.navigator.push({
             id: "tripDetailMap",
             trip:{moments},
             title:this.state.owner.serviceUsername.toUpperCase()+"'S TRAVELS",
+            mapType:"profile",
+            profileID:this.state.owner.id,
             sceneConfig:"bottom",
             hideNav:true
         });
@@ -336,8 +340,9 @@ class FeedProfile extends React.Component {
 
                 {hometownGuide}
                 {map}
-
-                {this.props.navigation.default}
+                <View style={{position:'absolute',top:0,height:75,backgroundColor:"red",zIndex:1}}>
+                    {this.props.navigation.default}
+                </View>
             </View>
         )
     }

@@ -180,7 +180,7 @@ class TripDetailMap extends Component{
         if(!this.props.navigator||this.props.disablePins)return;
         this.props.navigator.push({
             id: "tripDetail",
-            momentID,
+            data:momentID
         });
 
         this.props.onLeave();
@@ -202,8 +202,24 @@ class TripDetailMap extends Component{
 
     renderMarker(markerData,i){
 
+        //console.log(markerData);
         return(
-            <SherpaMapMarker outsideScale={this.state.markerScale}  markerData={markerData} onPress={()=>{this.goToTripDetail(markerData.data.id)}} key={i}></SherpaMapMarker>
+            <SherpaMapMarker outsideScale={this.state.markerScale} identifier={"marker"+markerData.data.id}  markerData={markerData} onPress={()=>{
+                //let isCluster=markerData.properties&&markerData.properties.cluster;
+                //if(isCluster){
+                //console.log(markerData.properties);
+                //let padding=.2*markerData.properties.point_count;
+                //    this.map.fitToCoordinates([
+                //        {"longitude":markerData.geometsory.coordinates[0],"latitude":markerData.geometry.coordinates[1]},
+                //        {"longitude":markerData.geometry.coordinates[0]+padding,"latitude":markerData.geometry.coordinates[1]+padding},
+                //        {"longitude":markerData.geometry.coordinates[0]-padding,"latitude":markerData.geometry.coordinates[1]-padding},
+                //    ], {
+                //        edgePadding: { top: 100, right: 100, bottom: 100, left: 100 }
+                //    });
+                //}else{
+                    this.goToTripDetail(markerData.data.id)
+                //}
+            }} key={i}></SherpaMapMarker>
         )
     }
 

@@ -52,7 +52,7 @@ export default class SimpleButton extends React.Component {
 
     render () {
         return (
-                <TouchableWithoutFeedback disabled={this.props.disabled} style={[this.props.stateStyle]} onPress={this.props.onPress}>
+                <TouchableWithoutFeedback disabled={this.props.disabled} style={[this.props.stateStyle]} onPressIn={this.props.onPress}>
                     <Animated.View style={[styles.button, this.props.style,{}]} >
                         {this._renderIcon()}
                         <Text style={[styles.buttonText,this.props.textStyle,{opacity:this.props.disabled?.6:1}]}>{this.props.text && this.props.text.toUpperCase()}</Text>

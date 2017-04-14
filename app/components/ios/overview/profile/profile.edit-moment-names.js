@@ -38,7 +38,7 @@ class EditMomentNames extends React.Component {
     constructor(props){
         super(props)
 
-        let displayData=props.deselectedMomentIDs.length>0?this.filterMomentsByDeselected(props.momentData,props.deselectedMomentIDs):props.momentData;
+        let displayData=this.filterMomentsByDeselected(props.momentData,props.deselectedMomentIDs)
 
         this.state= {
             navOpacity:new Animated.Value(1),
@@ -54,7 +54,9 @@ class EditMomentNames extends React.Component {
     }
 
     filterMomentsByDeselected(momentData,deselected){
+        console.log('filter');
         let displayData=[];
+        let emptyData=[];
         for(var i=0;i<momentData.length;i++){
             let shouldAdd=true;
 
@@ -65,9 +67,14 @@ class EditMomentNames extends React.Component {
             }
 
             if(shouldAdd){
-                displayData.push(momentData[i]);
+                if(!momentData[i].location||momentData[i].location.length==""){
+                    emptyData.push(momentData[i]);
+                }else{
+                    displayData.push(momentData[i]);
+                }
             }
         }
+        displayData=emptyData.concat(displayData)
         return displayData;
     }
 
@@ -142,6 +149,7 @@ class EditMomentNames extends React.Component {
             newDisplayData.push(this.state.displayData[index])
             newDisplayData[index].isCover=isCover;
             this.refs["location-"+index].isCover(isCover);
+            console.log('make cover photo',"location-"+targetIndex,':: index-',index);
         })
 
         this.setState({displayData:newDisplayData})
@@ -211,7 +219,7 @@ class EditMomentNames extends React.Component {
                     return <LocationName showCover={this.state.intent!=='edit-moment'} updateInfo={this.updateInfo.bind(this)} makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>;
                 })}
             </PagedScrollView>
-            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} text={this.state.intent!=='edit-moment'?"next step (edit tripname)":"save location name"}></SimpleButton>
+            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} text={this.state.intent!=='edit-moment'?"next step (edit album name)":"save location name"}></SimpleButton>
             </View>
     )
     }

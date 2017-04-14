@@ -54,6 +54,7 @@ class EditTripName extends React.Component {
             intent:props.intent,
             momentData:props.momentData,
             deselectedMomentIDs:props.deselectedMomentIDs,
+            canSubmit:true,
             displayData
         }
 
@@ -68,9 +69,11 @@ class EditTripName extends React.Component {
 
         if(this.state.text==""){
             this.refs.tripnameError.show();
-        }else{
+        }else if(this.state.canSubmit){
             this.refs.tripnameError.hide();
+            console.log('submit submit')
 
+            this.setState({canSubmit:false})
             var moments=[];
             var momentIDs=[];
 
@@ -85,10 +88,8 @@ class EditTripName extends React.Component {
             this.props.headerProgress.show();
             this.props.headerProgress.startToMiddle();
 
-            console.log('get trip location',this.state.displayData)
 
             getTripLocation(this.state.displayData).then((tripLocation)=>{
-                console.log('received trip location',tripLocation);
 
                 Promise.all(moments).then((momentsRes)=>{
                     var momentUploads=[];
@@ -97,6 +98,7 @@ class EditTripName extends React.Component {
                     for(var i=0;i<  this.state.displayData.length;i++){
                             momentIDs.push(momentsRes[i].id)
                             if(this.state.displayData[i].isCover){
+                                console.log('cover is ',momentsRes[i])
                                 coverMomentID=momentsRes[i].id;
                             }
                             dates.push(this.state.displayData[i].date || new Date().getTime()/1000)
@@ -124,7 +126,8 @@ class EditTripName extends React.Component {
                         //    coverMomentID,
                         //    trip: this.props.tripData
                         //},'trip location::',tripLocation);
-                        console.log("uploads complete");
+                        console.log("cover moment id",coverMomentID);
+                        console.log("create trip!!!!!")
                         createTrip({
                             momentIDs,
                             name: this.state.text,
@@ -135,7 +138,9 @@ class EditTripName extends React.Component {
                         }, tripLocation).then(()=> {
                             this.props.headerProgress.showSuccess();
                             setTimeout(this.props.refreshCurrentScene,500)
+                            this.setState({canSubmit:true})
                         }).catch((err)=> {
+                            this.setState({canSubmit:true})
                             this.props.headerProgress.showError();
                         })
                     }).catch((err)=>{console.log('err from upload')});

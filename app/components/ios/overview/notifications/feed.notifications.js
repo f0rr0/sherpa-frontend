@@ -37,7 +37,10 @@ var styles = StyleSheet.create({
     listView:{
         flex:1,
         paddingBottom:60,
-    }
+    },
+    emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
+    loaderContainer:{justifyContent:'center',height:windowSize.height-200,width:windowSize.width,alignItems:'center'},
+
 });
 
 class FeedNotifications extends React.Component {
@@ -59,10 +62,12 @@ class FeedNotifications extends React.Component {
         this.props.dispatch(storeUser())
 
         getFeed(this.props.user.sherpaID,page,'notifications').then((response)=>{
-            callback(response.data.notifications,{allLoaded:true});
+            //console.log(response.data.notifications)
+            callback(response.data.notifications,{allLoaded:response.data.notifications.length==0});
+            //callback([]);
         }).catch((err)=>{
             //console.log('err',err)
-            callback([],{allLoaded:true})
+            //callback([],{allLoaded:true})
         });
     }
 
@@ -83,6 +88,13 @@ class FeedNotifications extends React.Component {
         )
     }
 
+    _renderEmptyWaiting(){
+       return(
+           <View style={styles.loaderContainer}>
+               <Text style={styles.emptyCopy}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
+           </View>
+       )
+    }
     render(){
         return(
             <View style={{flex:1,backgroundColor:'white',paddingBottom:65}}>
@@ -97,6 +109,7 @@ class FeedNotifications extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     headerView={this._renderHeader.bind(this)}x
+                    emptyView={this._renderEmptyWaiting.bind(this)}
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
                     ref="listview"
@@ -112,13 +125,13 @@ class FeedNotifications extends React.Component {
     }
 
     reset(){
-        this._onFetch()
+        this.refs.listview._refresh();
         this.markAllAsViewed();
     }
 
     refreshCurrentScene(){
 
-        this._onFetch()
+        this.refs.listview._refresh();
         this.markAllAsViewed();
     }
 
@@ -134,7 +147,7 @@ class FeedNotifications extends React.Component {
 
     _renderRow(notificationData) {
         return (
-            <NotificationRow navigator={this.props.navigator} data={notificationData}></NotificationRow>
+            <NotificationRow user={this.props.user}  updateTabTo={this.props.updateTabTo} navigator={this.props.navigator} data={notificationData}></NotificationRow>
         );
     }
 }

@@ -35,24 +35,28 @@ class TripSubtitle extends Component {
                 ){
                     subTitle.push({name:locuses[type],locus:locuses[key],type})
                 }
-                //subTitle.push({name:locuses[type],locus:locuses[key]})
             }
         }
 
-        let sorting=['neighbourhood','locality','region','country','continent'];
+        //console.log('subtitle',subTitle);
+        let sorting=['neighbourhood','borough','locality','region','country'];
         let finalSubtitles=[];
+        var charcount=0;
         for(var i=0;i<sorting.length;i++){
             for(var j=0;j<subTitle.length;j++){
-                if(subTitle[j].type==sorting[i].type){
-                    finalSubtitles.push(subTitle[j])
+                if(subTitle[j].type==sorting[i]){
+                    if(charcount<40)finalSubtitles.push(subTitle[j])
+                    charcount+=subTitle[j].name.length;
                 }
             }
         }
 
+        //console.log('final subtitles',finalSubtitles)
+
         return(
             <View style={{flexDirection:'row'}}>
-                {subTitle.map((el,index)=>{
-                    const divider=index<subTitle.length-1?<Text style={[styles.subtitle,this.props.style,{marginHorizontal:2}]}>/</Text>:null;
+                {finalSubtitles.map((el,index)=>{
+                    const divider=index<finalSubtitles.length-1?<Text style={[styles.subtitle,this.props.style,{marginHorizontal:2}]}>/</Text>:null;
                     return(
                         <View key={"subtitle-"+index} style={{flexDirection:'row'}}>
                             <TouchableOpacity onPress={()=>{this.props.goLocation(el)}} style={[{borderBottomWidth:.5,height:16,borderBottomColor:'rgba(255,255,255,.4)'},this.props.textStyle]}>

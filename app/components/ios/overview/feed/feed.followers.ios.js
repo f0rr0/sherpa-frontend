@@ -50,7 +50,7 @@ class FollowerList extends React.Component{
     showUserProfile(user){
         this.props.navigator.push({
             id: "profile",
-            trip:{owner:user}
+            data:{owner:user}
         });
     }
 

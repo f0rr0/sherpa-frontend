@@ -83,7 +83,7 @@ class FeedLocation extends Component {
         var tripDetails={trip,owner};
         this.props.navigator.push({
             id: "tripDetail",
-            tripDetails,
+            data:tripDetails,
             sceneConfig:"right-nodrag"
         });
     }
@@ -426,7 +426,7 @@ class FeedLocation extends Component {
         //console.log('data properties',data.properties)
         this.props.navigator.push({
             id: "location",
-            trip:data.properties,
+            data:data.properties,
             version:"v2"
         });
     }

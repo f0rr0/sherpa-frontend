@@ -185,6 +185,8 @@ export function createTrip(tripBlob,tripLocation) {
                     "moments":tripBlob.momentIDs
                 };
 
+                console.log('create/update trip data',queryData)
+
 
 
                 var sherpaHeaders = new Headers();

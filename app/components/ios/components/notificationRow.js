@@ -26,68 +26,84 @@ class NotificationRow extends Component {
 
 
     showUserProfile(user) {
-        this.props.navigator.push({
-            id: "profile",
-            trip: {owner: {id:user,user}}
-        });
-    }
-
-
-    showMoment(momentID) {
-        this.props.navigator.push({
-            id: "tripDetail",
-            momentID
-        });
+        if(user==this.props.user.serviceID){
+           this.props.updateTabTo("own-profile")
+        }else{
+            this.props.navigator.push({
+                id: "profile",
+                data: {owner: {id:user,user}}
+            });
+        }
     }
 
     showTrip(tripID){
         this.props.navigator.push({
             id: "trip",
-            trip:{id:tripID}
+            data:{id:tripID}
         });
+    }
+
+    setView(data){
+        let id;
+        if(data.trip){
+            id="trip"
+        }else if(data.moment){
+            id="tripDetail";
+        }else{
+            id=data.id
+        }
+        switch(id){
+            case "profile":
+                this.showUserProfile(data.target);
+            break;
+            case "trip":
+                this.showTrip(data.target);
+            break;
+            default:
+                this.props.navigator.push({
+                    id: data.id,
+                    data:data.target
+                });
+            break;
+        }
     }
 
     _renderNotification(){
         let notification;
-        var timeAgo=this.props.data.createdAt?moment(new Date(this.props.data.createdAt)).fromNow():null;
-        let timeAgoNode=timeAgo?<Text  style={{color:'white',fontSize:9,fontFamily:"Akkurat",opacity:.8,letterSpacing:1}}>{timeAgo.toUpperCase()}</Text>:null;
-        switch(this.props.data.type){
-            case "trip_featured":
-            case "trip_created":
-            case "profile_created":
-                notification=
-                    <TouchableOpacity onPress={()=>{this.props.data.type=='profile_created'?this.showUserProfile(this.props.data.payload.v1.primaryView.profile):this.showTrip(this.props.data.payload.v1.primaryView.trip)}} activeOpacity={1} style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center'}}>
-                        <Image source={{uri:this.props.data.primaryImage}} style={{...StyleSheet.absoluteFillObject}}>
-                        </Image>
-                        <View style={{...StyleSheet.absoluteFillObject, backgroundColor:'rgba(0,0,0,.5)'}}></View>
-                        <View style={{justifyContent:'center',alignItems:'center'}}>
-                            <Text style={{color:'white',fontSize:12,fontFamily:"Akkurat"}}>{this.props.data.primaryHeadline} {this.props.data.secondaryHeadline}</Text>
-                            {timeAgoNode}
-                        </View>
-                    </TouchableOpacity>
-            break;
-            case "followed":
-            case "suitcased":
-            default:
+        var timeAgo=this.props.data.createdAt?moment(new Date(this.props.data.createdAt)).fromNow().toUpperCase():null;
+        let timeAgoNode=timeAgo?<Text  style={{color:'white',fontSize:9,fontFamily:"Akkurat",opacity:.8,letterSpacing:1}}>{timeAgo}</Text>:null;
+        if(this.props.data.payload.v1.layout=='image') {
+            notification =
+                <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}} activeOpacity={1}
+                                  style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center'}}>
+                    <Image source={{uri:this.props.data.primaryImage}} style={{...StyleSheet.absoluteFillObject}}>
+                    </Image>
+                    <View style={{...StyleSheet.absoluteFillObject, backgroundColor:'rgba(0,0,0,.5)'}}></View>
+                    <View style={{justifyContent:'center',alignItems:'center'}}>
+                        <Text
+                            style={{color:'white',fontSize:12,fontFamily:"Akkurat"}}>{this.props.data.primaryHeadline || ""} {this.props.data.secondaryHeadline || ""}</Text>
+                        {timeAgoNode}
+                    </View>
+                </TouchableOpacity>
+        }else{
                 let description=this.props.data.description?this.props.data.description.toUpperCase():null;
                 notification=
                     <View style={{paddingHorizontal:20,flex:1,justifyContent:'space-between',alignItems:'center',flexDirection:'row'}}>
                         <UserImage
-                            onPress={()=>{this.showUserProfile(this.props.data.payload.v1.primaryView.profile)}}
+                            onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}}
                             radius={25}
                             border={false}
                             userID={this.props.data.payload.profile} imageURL={this.props.data.primaryImage}/>
-                        <View style={{width:200}}>
+                        <View style={{width:220}}>
                             <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity onPress={()=>{this.showUserProfile(this.props.data.payload.v1.primaryView.profile)}}><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.primaryHeadline}</Text></TouchableOpacity><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}> {this.props.data.secondaryHeadline}</Text>
+                                <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}}><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.primaryHeadline||""}</Text></TouchableOpacity><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}> {this.props.data.secondaryHeadline||""}</Text>
                             </View>
                             <Text style={{fontFamily:"Akkurat",color:'black',fontSize:9,opacity:.7}}>{description||timeAgo||""}</Text>
                         </View>
-                        <TouchableOpacity onPress={()=>{this.showMoment(this.props.data.payload.v1.secondaryView.moment)}}>
+                        <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.secondaryView)}}>
                             <Image source={{uri:this.props.data.secondaryImage||null}}  style={{width:30,height:30}}></Image>
                         </TouchableOpacity>
                     </View>
-            break;
         }
 
         return notification
