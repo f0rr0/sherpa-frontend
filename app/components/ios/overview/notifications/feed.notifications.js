@@ -63,7 +63,7 @@ class FeedNotifications extends React.Component {
 
         getFeed(this.props.user.sherpaID,page,'notifications').then((response)=>{
             //console.log(response.data.notifications)
-            callback(response.data.notifications,{allLoaded:response.data.notifications.length==0});
+            callback(response.data.notifications);
             //callback([]);
         }).catch((err)=>{
             //console.log('err',err)
@@ -81,6 +81,7 @@ class FeedNotifications extends React.Component {
     }
 
     _renderEmpty(){
+//console.log('render loading')
         return (
             <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height-100,width:windowSize.width,position:'absolute',top:0,left:0,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
@@ -89,9 +90,10 @@ class FeedNotifications extends React.Component {
     }
 
     _renderEmptyWaiting(){
+        //console.log('render empty waiting')
        return(
            <View style={styles.loaderContainer}>
-               <Text style={styles.emptyCopy}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
+               <Text style={styles.emptyCopy}>Your travel-related notifications will display here.</Text>
            </View>
        )
     }

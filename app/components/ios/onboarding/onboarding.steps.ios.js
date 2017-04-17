@@ -209,7 +209,7 @@ class OnboardingSteps extends Component {
                 <OnboardingScreen
                     darken={true}
                     key="onboarding-start"
-                    backgroundImage={{uri:this.props.user.hometownImage}}
+                    backgroundImage={this.props.user.hometownImage=='use-fallback'?require('../../../Images/hometown-fallback.png'):{uri:this.props.user.hometownImage}}
                         continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
                         <View>
@@ -256,7 +256,7 @@ class OnboardingSteps extends Component {
                                  }}/>
                              </View>
                              <View style={{position:"absolute",top:130,flex:1,width:windowSize.width-30,left:15}}>
-                                <Text style={styles.textStyleNormal}>{"Is this your\nhome base?".toUpperCase()}</Text>
+                                <Text style={styles.textStyleNormal}>{this.props.user.hometownImage=="use-fallback"?"Where's your homebase?".toUpperCase():"Is this your\nhome base?".toUpperCase()}</Text>
                                 <Text style={[styles.textStyleNormal,{fontWeight:"900",fontSize:10,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
                              </View>
                          </View>
@@ -270,7 +270,7 @@ class OnboardingSteps extends Component {
                         key="onboarding-hometown"
                         headline={"Share where\nyou've been"}
                         description="create your profile via instagram?"
-                        backgroundImage={{uri:this.props.user.mostLikedImage}}
+                        backgroundImage={this.props.user.mostLikedImage=='use-fallback'?require('../../../Images/mostliked-fallback.png'):{uri:this.props.user.mostLikedImage}}
                         continueButton={
                             <View>
                                 <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{

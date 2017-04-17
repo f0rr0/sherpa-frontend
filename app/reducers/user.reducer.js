@@ -57,7 +57,7 @@ export default function userReducer(state=initialState,action){
                 fullName:           action.userData.fullName || state.fullName,
                 profilePicture:     action.userData.profilePicture || state.profilePicture,
                 email:              action.userData.email || state.email,
-                bio:                action.userData.bio || state.bio,
+                bio:                (typeof action.userData.bio === 'string') ? action.userData.bio : state.bio,
                 notificationCount:  !isNaN(action.userData.notificationCount) ?action.userData.notificationCount: state.notificationCount,
                 invite:             action.userData.invite == undefined? state.invite : action.userData.invite,
                 invited:             action.userData.invited == undefined? state.invited : action.userData.invited,

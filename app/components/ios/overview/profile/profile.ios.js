@@ -38,7 +38,7 @@ import React, { Component } from 'react';
 
 var styles = StyleSheet.create({
     container: {
-        flex: 1
+        //flex: 1
     },
     listItem:{
         backgroundColor:"black",
@@ -47,8 +47,10 @@ var styles = StyleSheet.create({
     },
     listView:{
         alignItems:'center',
-        justifyContent:"center",
-        paddingBottom:60
+        //justifyContent:"center",
+        paddingBottom:60,
+        //top:0,
+        minHeight:windowSize.height,
     },
     listItemContainer:{
         width:windowSize.width-30,
@@ -81,7 +83,7 @@ class OwnUserProfile extends React.Component {
             profile:null,
             hometownGuide:null,
             tooltipOpacity:new Animated.Value(1),
-            isRescraping:false,
+            isRescraping:props.user.scrapeFromInstagram,
             isFollowing:false
         };
         this.isScraping=false;
@@ -112,11 +114,7 @@ class OwnUserProfile extends React.Component {
                 var parsedResponse=JSON.parse(rawSherpaResponse);
 
                 //console.log(this.props.user.scrapeState)
-                if(parsedResponse.scrapeState!=='completed'){
-                    this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
-                    this.props.dispatch(updateUserData({scrapeState:'scraping'}));
-                    this.props.dispatch(storeUser());
-                }else if(parsedResponse.scrapeState=='completed'){
+                 if(parsedResponse.scrapeState=='completed'){
                     this.props.dispatch(updateUserData({scrapeState:'completed'}));
                     this.props.dispatch(storeUser());
                     clearTimeout(this.checkScrapeTimeout);
@@ -124,6 +122,19 @@ class OwnUserProfile extends React.Component {
                         this.ready=false;
                         this._onFetch();
                     },3000)
+                }else if(parsedResponse.scrapeState.indexOf('error')>-1){
+                    this.props.dispatch(updateUserData({scrapeState:'error'}));
+                    this.props.dispatch(storeUser());
+                    this.ready=false;
+                     clearTimeout(this.checkScrapeTimeout);
+                     setTimeout(()=> {
+                         this.ready=false;
+                         this._onFetch();
+                     },500)
+                }else if(parsedResponse.scrapeState!=='completed'){
+                    this.checkScrapeTimeout=setTimeout(()=>{this.checkScrapeStatus()},1000);
+                    this.props.dispatch(updateUserData({scrapeState:'scraping'}));
+                    this.props.dispatch(storeUser());
                 }
             });
         })
@@ -150,13 +161,13 @@ class OwnUserProfile extends React.Component {
     }
 
     _onFetch(page=1,callback=this.itemsLoadedCallback){
+        //console.log('on fetch')
         this.itemsLoadedCallback=callback;
         getFeed(this.props.user.serviceID,page,'profile').then((response)=>{
             callback(response.data);
             let trips=response.data;
-            //console.log(response.data);
 
-
+            //console.log('after fetch',trips,'callback',callback)
             this.isRescraping=false;
             if(page==1){
                 let hometownGuide=null;
@@ -168,6 +179,7 @@ class OwnUserProfile extends React.Component {
                 }
                 this.setState({hometownGuide,profile:response.profile,followers:response.followers,following:response.following});
             }
+            //console.log('after fetch set state',this.isRescraping,'page',page);
             this.setState({trips,feedReady:true})
         });
     }
@@ -260,6 +272,7 @@ class OwnUserProfile extends React.Component {
                 withSections={false}// enable sections
                 ref="listview"
                 paginationFetchingView={this._renderEmpty.bind(this)}
+                emptyView={this._renderEmpty.bind(this)}
                 footerView={()=>{
                     let activeView=null
 
@@ -273,8 +286,8 @@ class OwnUserProfile extends React.Component {
                             this.props.dispatch(storeUser());
                             this.checkScrapeStatus();
                         }} style={[styles.button]}text="create your travel profile via instagram"></SimpleButton>
-                    }else if(this.props.user.scrapeFromInstagram&&this.isRescraping&&this.props.user.scrapeState!=='completed'){
-                        activeView=this._renderRescrapeMessage();
+                    }else if(this.props.user.scrapeFromInstagram&&this.isRescraping&&this.props.user.scrapeState=='scraping'){
+                        //activeView=this._renderRescrapeMessage();
                     }
                     return(
                         <View style={{justifyContent:'flex-start',alignItems:'center'}}>
@@ -299,9 +312,9 @@ class OwnUserProfile extends React.Component {
                 }}
             />
             {tooltipTouchable}
-            <PopOver  enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
 
             <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
+            <PopOver  enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
         </View>
         )
     }
@@ -328,12 +341,16 @@ class OwnUserProfile extends React.Component {
 
     _renderEmpty(){
 
+        //console.log('render empty')
         let status;
         let message='0';
+        //console.log(this.isRescraping,'render empty',this.state.trips)
 
         if(this.isRescraping){
+            message='a';
             status=this._renderStillScraping();
-        }else if(this.state.trips.length==0){
+        }else if(this.state.trips.length==0&&this.props.user.scrapeFromInstagram){
+            message='b';
             status=
                 <View style={{justifyContent: 'center', width:windowSize.width,alignItems: 'center'}}>
                     <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
@@ -346,9 +363,10 @@ class OwnUserProfile extends React.Component {
                 </View>
         }
 
-        return (
-            this.props.user.scrapeFromInstagram?status:null
-        )
+
+        //console.log('render',message);
+        //console.log('is scraping',this.props.user)
+        return  this.props.user.scrapeFromInstagram?status:null;
     }
 
     _renderStillScraping(){
@@ -361,12 +379,13 @@ class OwnUserProfile extends React.Component {
     }
 
     _renderRescrapeMessage(){
+        //console.log(this.props.user.scrapeState)
         return(
             <View style={{justifyContent: 'center',alignItems: 'center'}}>
                 <View style={{justifyContent:'center',height:50,width:50,alignItems:'center'}}>
                     <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
                 </View>
-                {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:20,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>We're creating your profile. Check back soon.</Text>:null}
+                {this.props.user.scrapeState!=='completed'?<Text style={{color:"#bcbec4",width:250,marginTop:0,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>{"We're creating your profile.\n Check back soon."}</Text>:null}
             </View>
         )
     }

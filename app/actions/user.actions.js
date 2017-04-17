@@ -19,8 +19,8 @@ import {getFeed} from './feed.actions'
 
 
 function makeRequest(type='get',...args){
-    console.log('args',args);
-    console.log('type',type);
+    //console.log('args',args);
+    //console.log('type',type);
     switch(type){
         case 'get':
         break;
@@ -403,55 +403,55 @@ export function resetProfile(){
     }
 }
 
+export function resetUser(dispatch){
+    dispatch(updateUserData({
+        serviceID:-1,
+        sherpaID:-1,
+        fullName:"",
+        profilePicture:"",
+        email:"noreply@trysherpa.com",
+        bio:"",
+        website:"",
+        serviceToken:"",
+        sherpaToken:"",
+        inviteCode:"",
+        invite:"",
+        username:"",
+        jobID:"",
+        hometown:"",
+        serviceObject:"",
+        service:"instagram",
+        signupState:"",
+        userDBState:"none", //none, empty, available,
+        whiteListed:false,
+        notificationToken:"",
+        isExistingLogin:false,
+        profileID:-1,
+        usedSuitcase:false,
+        usedAddTrip:false,
+        usedMap:false,
+        usedEditTrip:false,
+        initialGeoCount:-1,
+        scrapeFromInstagram:false,
+        hometownLatitude:undefined,
+        hometownLongitude:undefined,
+        hometownImage:undefined,
+        hometownImageLowRes:undefined,
+        mostLikedImage:undefined,
+        mostLikedImageLowRes:undefined,
+    }));
+
+    dispatch(storeUser())
+}
+
 export function deleteUser(){
     return function (dispatch, getState) {
         store.get('user').then((user) => {
 
             if (user) {
 
-                dispatch(updateUserData({
-                    serviceID:-1,
-                    sherpaID:-1,
-                    fullName:"",
-                    profilePicture:"",
-                    email:"noreply@trysherpa.com",
-                    bio:"",
-                    website:"",
-                    serviceToken:"",
-                    sherpaToken:"",
-                    inviteCode:"",
-                    invite:"",
-                    username:"",
-                    jobID:"",
-                    hometown:"",
-                    serviceObject:"",
-                    service:"instagram",
-                    signupState:"",
-                    userDBState:"none", //none, empty, available,
-                    whiteListed:false,
-                    notificationToken:"",
-                    isExistingLogin:false,
-                    profileID:-1,
-                    usedSuitcase:false,
-                    usedAddTrip:false,
-                    usedMap:false,
-                    usedEditTrip:false,
-                    initialGeoCount:-1,
-                    scrapeFromInstagram:false,
-                    hometownLatitude:undefined,
-                    hometownLongitude:undefined,
-                    hometownImage:undefined,
-                    hometownImageLowRes:undefined,
-                    mostLikedImage:undefined,
-                    mostLikedImageLowRes:undefined,
-                }));
-
-                dispatch(storeUser())
-
+                resetUser(dispatch);
                 const {endpoint,version,user_uri} = sherpa;
-
-
-
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
@@ -463,6 +463,7 @@ export function deleteUser(){
                 .then((rawServiceResponse)=> {
                     return rawServiceResponse.text();
                 }).then((response)=> {
+                    //console.log('delete user resposne',response)
                     store.delete('user').then(()=> {
                         dispatch(updateUserDBState("empty"));
                     })
@@ -475,6 +476,7 @@ export function deleteUser(){
 
 export function logoutUser(){
     return function (dispatch, getState) {
+        resetUser(dispatch);
         store.delete('user').then(()=> {
             dispatch(updateUserData({
                 whiteListed:false
@@ -689,6 +691,7 @@ export function signupUser(){
             //console.log({client_id, client_secret, grant_type, redirect_uri, code})
             dispatch(updateUserSignupState("service_token_request"));
 
+            //console.log('hit instagram',endpoint)
             fetch(endpoint+token_uri, {
                 method: 'post',
                 headers: {
@@ -700,6 +703,7 @@ export function signupUser(){
             }).then((rawSherpaResponse)=>{
                 //console.log('raw sherpa response',rawSherpaResponse)
                 var info=JSON.parse(rawSherpaResponse);
+                //console.log('response',info)
                 signupWithSherpa(info.access_token,info.user);
             }).catch(error => {
                 dispatch(updateUserDBState("empty"));
@@ -737,10 +741,11 @@ export function signupUser(){
                 appVersionReadable: DeviceInfo.getReadableVersion()
             };
 
+            //console.log(userReducer);
 
 
             let queryObject={
-                email:userReducer.email,
+                email:userData.email,
                 intent:userReducer.intent,
                 service:userReducer.service,
                 token:instagramToken,
@@ -751,6 +756,7 @@ export function signupUser(){
             if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
             const queryData = encodeQueryData(queryObject);
 
+            //console.log('signup query object',queryObject);
             //console.log({
             //    email:userReducer.email,
             //    inviteCode:userReducer.inviteCode,
@@ -797,6 +803,7 @@ export function signupUser(){
                     invited
                 } = sherpaResponse.user;
 
+                //console.log('sherpa response',sherpaResponse)
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -807,19 +814,19 @@ export function signupUser(){
                     email,
                     fullName,
                     initialGeoCount:0,
-                    bio:userData.bio,
-                    website:userData.website,
+                    bio:userData.bio || "",
+                    website:userData.website || "",
                     invite:sherpaResponse.invitation,
                     invited,
                     profilePicture:userData.profile_picture,
                     username,
-                    hometown,
-                    hometownLatitude,
-                    hometownLongitude,
-                    hometownImage,
-                    hometownImageLowRes,
-                    mostLikedImage,
-                    mostLikedImageLowRes,
+                    hometown:hometown||"",
+                    hometownLatitude:hometownLatitude||0,
+                    hometownLongitude:hometownLongitude || 0,
+                    hometownImage:hometownImage || "use-fallback",
+                    hometownImageLowRes:hometownImageLowRes ||  "use-fallback",
+                    mostLikedImage: mostLikedImage ||  "use-fallback",
+                    mostLikedImageLowRes:mostLikedImageLowRes || "use-fallback",
                     serviceObject:userData,
                     whiteListed:sherpaResponse.whitelisted,
                     allowScrape: sherpaResponse.allowScrape,
