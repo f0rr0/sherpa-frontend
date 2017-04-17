@@ -124,7 +124,6 @@ class Overview extends React.Component {
         }
 
         if(this.state.selectedView!==prevState.selectedView){
-            console.log('selected view',this.state.selectedView)
             this.refs[this.state.selectedTab].setView(this.state.selectedView)
         }
 
@@ -140,7 +139,7 @@ class Overview extends React.Component {
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
-        if(this.props.tracker)this.props.tracker.trackEvent('notification-opened', deepLinkObject.payload.v1.type);
+        if(this.props.tracker)this.props.tracker.trackEvent('notification-opened', deepLinkObject.v1.linkView.id);
     }
 
     onNotificationReceivedBackground(){
