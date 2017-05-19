@@ -15,13 +15,13 @@ export const reduxStore = configureStore();
 
 class Sherpa extends Component {
 
-    render() {
-        return (
-            <Provider store={reduxStore}>
-                <Root />
-            </Provider>
-        );
-    }
+  render() {
+    return (
+        <Provider store={reduxStore}>
+          <Root />
+        </Provider>
+    );
+  }
 
 
 }

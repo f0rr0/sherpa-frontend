@@ -18,7 +18,8 @@ var styles = StyleSheet.create({
         borderColor:"#e6e6e6",
         height:50,
         flex:1,
-        justifyContent:"center"
+        justifyContent:"center",
+        backgroundColor:"white"
     },
     buttonRed:{
         backgroundColor:'white'
@@ -37,6 +38,7 @@ var styles = StyleSheet.create({
         left:5,
         flex:1,
         right:5,
+        bottom:0,
         borderRadius:4,
         overflow:'hidden',
         position:'absolute',
@@ -53,7 +55,8 @@ class PopOver extends Component {
         super(props);
         this.state={
             enabled:false,
-            bottomOffset:new Animated.Value(-400)
+            bottomOffset:new Animated.Value(400),
+            overlayOpacity:new Animated.Value(0)
         }
     }
 
@@ -69,7 +72,13 @@ class PopOver extends Component {
             }
             this.setState({enabled:this.enabled})
             Animated.spring(this.state.bottomOffset, {
-                toValue: enable?-40:-400   // return to start
+                useNativeDriver: true, // <-- Add this
+                toValue: enable?40:400   // return to start
+            }).start()
+
+            Animated.spring(this.state.overlayOpacity, {
+                useNativeDriver: true, // <-- Add this
+                toValue: enable?1:0   // return to start
             }).start()
         }
     }
@@ -155,10 +164,10 @@ class PopOver extends Component {
 
 
         return (
-            <Animated.View style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:this.state.bottomOffset.interpolate({inputRange:[-400,-40],outputRange:['rgba(0,0,0,0)','rgba(0,0,0,.3)'],extrapolate:'clamp'})}} pointerEvents={this.state.enabled?"auto":"none"} >
+            <Animated.View style={{position:'absolute',top:0,left:0,bottom:0,right:0}} pointerEvents={this.state.enabled?"auto":"none"} >
             <TouchableOpacity onPress={()=>{this._setAnimation(false)}} activeOpacity={1} style={{position:'absolute',top:0,left:0,bottom:0,right:0}}>
-
-                <Animated.View style={[styles.container,{bottom: this.state.bottomOffset}]}>
+                <Animated.View style={[{position:'absolute',bottom:0,left:0,top:0,right:0,backgroundColor:"rgba(0,0,0,.5)",opacity:this.state.overlayOpacity}]}></Animated.View>
+                <Animated.View style={[styles.container,{transform:[{ translateY:this.state.bottomOffset}]}]}>
                     {editTripButton}
                     {shareButton}
                     {reportPhotoButton}

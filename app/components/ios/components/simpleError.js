@@ -37,7 +37,7 @@ export default class SimpleError extends React.Component {
 
                 <Animated.View style={[errorStyles.errorContainer,{top:this.state.offsetTop}]}>
                         <Text style={errorStyles.errorMessage}>{this.props.errorMessage.toUpperCase()}</Text>
-                        <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icon-close.png')}></Image>
+                        <Image resizeMode="contain" style={errorStyles.errorX} source={require('./../../../Images/icons/close-tooltipp.png')}></Image>
                 </Animated.View>
             </TouchableWithoutFeedback>
         )

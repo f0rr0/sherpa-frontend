@@ -38,6 +38,7 @@ class SherpaInstagramPicker extends Component {
         if(typeof containerWidth != "undefined") {
             width = containerWidth;
         }
+        width=width-5;
         this._imageSize = (width - (imagesPerRow) ) / imagesPerRow;
 
         this.fetch();
@@ -186,7 +187,7 @@ class SherpaInstagramPicker extends Component {
 
         var marker = selectedMarker ? selectedMarker :
             <Image
-                style={[styles.marker, {width: 25, height: 25, right: imageMargin + 5,bottom:imageMargin+5}]}
+                style={[styles.marker, {width: 30, height: 30, right: imageMargin -3,bottom:imageMargin-3}]}
                 source={require('../../../Images/icon-check-green.png')}
             />;
 
@@ -200,9 +201,10 @@ class SherpaInstagramPicker extends Component {
                     onPress={event => this._selectImage(item.node.image)}>
                     <Image
                         source={{uri: item.node.image.uri}}
-                        style={{height: this._imageSize, width: this._imageSize,opacity:isSelected?.7:1}} >
-                        { isSelected ? marker : null }
+                        style={{height: this._imageSize, width: this._imageSize}} >
                     </Image>
+                    <View style={{position:'absolute',height: this._imageSize, width: this._imageSize,opacity:isSelected?1:0,backgroundColor:'rgba(255,255,255,.4)'}}></View>
+                        { isSelected ? marker : null }
                 </TouchableOpacity>
             </View>
         );

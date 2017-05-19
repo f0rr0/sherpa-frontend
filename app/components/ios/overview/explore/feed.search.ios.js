@@ -150,7 +150,6 @@ class Search extends React.Component {
         return(
             <View style={{flex:1}}>
                 <SherpaGiftedListview
-                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     emptyView={this._emptyView.bind(this)}
@@ -354,7 +353,7 @@ class Search extends React.Component {
     _renderRow(tripData) {
         return (
             <View style={[styles.row,{width:this.state.containerWidth}]}>
-                <MomentRow itemsPerRow={1} tripData={tripData} containerWidth={this.state.containerWidth}  trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                <MomentRow user={this.props.user} itemsPerRow={1} tripData={tripData} containerWidth={this.state.containerWidth}  trip={{owner:tripData.profile}} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
             </View>
         );
     }

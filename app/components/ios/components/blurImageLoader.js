@@ -23,15 +23,17 @@ class BlurImageLoader extends Component{
     }
 
     render(){
+        //console.log(this.props.thumbUrl,"thumb url")
+        //console.log(this.props.largeUrl,"large url")
         return(
-            <View style={[this.props.style]}>
+            <View style={[this.props.style,{backgroundColor:"transparent"}]}>
                 <Animated.View style={[styles.animatedContainer,{opacity:this.state.previewImageOpacity,...StyleSheet.absoluteFillObject}]}>
-                    <Image source={{uri:this.props.thumbUrl}} onLoad={()=>{Animated.timing(this.state.previewImageOpacity,{toValue:1,duration:200}).start()}} style={[{...StyleSheet.absoluteFillObject},this.props.imageStyle]}></Image>
+                    <Image source={{uri:this.props.thumbUrl}} onLoad={()=>{Animated.timing(this.state.previewImageOpacity,{toValue:1,duration:200}).start()}} style={[{...StyleSheet.absoluteFillObject,backgroundColor:'transparent'},this.props.imageStyle]}></Image>
                     <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
                 </Animated.View>
 
                 <Animated.View style={[styles.animatedContainer,{opacity:this.state.largeImageOpacity,...StyleSheet.absoluteFillObject}]}>
-                    <Image source={{uri:this.props.largeUrl}} onLoad={()=>{Animated.timing(this.state.largeImageOpacity,{toValue:1,duration:200}).start()}} style={[{...StyleSheet.absoluteFillObject},this.props.imageStyle]}></Image>
+                    <Image source={{uri:this.props.largeUrl}} onLoad={()=>{Animated.timing(this.state.largeImageOpacity,{toValue:1,duration:200}).start()}} style={[{...StyleSheet.absoluteFillObject,backgroundColor:'transparent'},this.props.imageStyle]}></Image>
                 </Animated.View>
             </View>
         )

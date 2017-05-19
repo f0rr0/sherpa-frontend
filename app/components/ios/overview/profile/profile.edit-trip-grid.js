@@ -85,9 +85,14 @@ class EditTripGrid extends React.Component {
     _renderFooter(){
         //return null;
         let disabled=false;
+        if(this.refs.listview&&this.refs.listview._getRows()){
+            disabled=this.state.deselectedMomentIDs.length==this.refs.listview._getRows().length-1;
+        }else{
+            return null;
+        }
         return(
             <View style={{}}>
-                <SimpleButton style={{width:SCREEN_WIDTH-28}} disabled={disabled} onPress={()=>{this.navActionRight()}} text="next step (edit locations)"></SimpleButton>
+                <SimpleButton style={{width:SCREEN_WIDTH-28,marginBottom:15}} disabled={disabled} secondaryTextStyle={{color:"#caebcb"}} onPress={()=>{this.navActionRight()}} text="next step" secondaryText="edit locations"></SimpleButton>
             </View>
         )
     }
@@ -97,7 +102,9 @@ class EditTripGrid extends React.Component {
     }
 
     navActionRight(){
-            this.props.navigator.push({
+        let disabled=this.state.deselectedMomentIDs.length==this.refs.listview._getRows().length-1;
+        if(disabled)return;
+        this.props.navigator.push({
                 id: "editTripNames",
                 hideNav:true,
                 sceneConfig:"right-nodrag",
@@ -133,6 +140,8 @@ class EditTripGrid extends React.Component {
             if(newRowData[i].disabled)deselectedMomentIDs.push(newRowData[i].id)
         }
         this.setState({deselectedMomentIDs})
+
+        console.log('deselected',deselectedMomentIDs)
 
         this.refs.listview._updateRows(newRowData);
     }
@@ -210,7 +219,6 @@ class EditTripGrid extends React.Component {
                         shouldDisable=true;
                     }
                 }
-                //console.log('should disable',shouldDisable)
                 moments[i].disabled=shouldDisable;
             }
             callback(moments)
@@ -226,7 +234,6 @@ class EditTripGrid extends React.Component {
             <SherpaGiftedListview
                     removeClippedSubviews={false}
                     renderHeaderOnInit={true}
-                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching

@@ -28,6 +28,8 @@ function MergeRecursive(obj1, obj2) {
     return obj1;
 }
 
+import SGListView from 'react-native-sglistview'
+
 var GiftedSpinner = require('react-native-gifted-spinner');
 
 var SherpaGiftedListview = React.createClass({
@@ -293,8 +295,8 @@ var SherpaGiftedListview = React.createClass({
         width: SCREEN_WIDTH-28,
         alignItems: 'center'}}>
 
-                {this.props.footerView()}
                     {pagedFooterView}
+                {this.props.footerView()}
 
 
             </View>
@@ -322,15 +324,15 @@ var SherpaGiftedListview = React.createClass({
         return (
             <ListView
                 ref="listview"
+                enableEmptySections={true}
                 keyboardDismissMode="on-drag"
-                keyboardShouldPersistTaps={false}
+                keyboardShouldPersistTaps='never'
                 dataSource={this.state.dataSource}
                 renderRow={this.props.rowView}
                 renderSectionHeader={this.props.sectionHeaderView}
                 renderHeader={this.headerView}
                 renderFooter={this._renderPaginationView}
                 renderSeparator={this.renderSeparator}
-
                 automaticallyAdjustContentInsets={false}
                 scrollEnabled={this.props.scrollEnabled}
                 canCancelContentTouches={true}

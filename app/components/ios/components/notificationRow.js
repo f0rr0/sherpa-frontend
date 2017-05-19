@@ -34,6 +34,7 @@ class NotificationRow extends Component {
                 data: {owner: {id:user,user}}
             });
         }
+
     }
 
     showTrip(tripID){
@@ -69,9 +70,14 @@ class NotificationRow extends Component {
     }
 
     _renderNotification(){
+        //console.log(this.props.data.primaryImage);
+
+        if(!this.props.data.payload)return null;
         let notification;
+
         var timeAgo=this.props.data.createdAt?moment(new Date(this.props.data.createdAt)).fromNow().toUpperCase():null;
-        let timeAgoNode=timeAgo?<Text  style={{color:'white',fontSize:9,fontFamily:"Akkurat",opacity:.8,letterSpacing:1}}>{timeAgo}</Text>:null;
+        let timeAgoNode=timeAgo?<Text  style={{color:'white',fontSize:9,fontFamily:"Akkurat",opacity:.8,letterSpacing:1}}>{timeAgo || ""}</Text>:null;
+
         if(this.props.data.payload.v1.layout=='image') {
             notification =
                 <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}} activeOpacity={1}
@@ -86,9 +92,10 @@ class NotificationRow extends Component {
                     </View>
                 </TouchableOpacity>
         }else{
+            //console.log(this.props.data.primaryHeadline,"::",this.props.data.primaryImage)
                 let description=this.props.data.description?this.props.data.description.toUpperCase():null;
                 notification=
-                    <View style={{paddingHorizontal:20,flex:1,justifyContent:'space-between',alignItems:'center',flexDirection:'row'}}>
+                    <View style={{paddingHorizontal:20,flex:1,justifyContent:'flex-start',alignItems:'center',flexDirection:'row'}}>
                         <UserImage
                             onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}}
                             radius={25}
@@ -96,13 +103,14 @@ class NotificationRow extends Component {
                             userID={this.props.data.payload.profile} imageURL={this.props.data.primaryImage}/>
                         <View style={{width:220}}>
                             <View style={{flexDirection:'row'}}>
-                                <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}}><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.primaryHeadline||""}</Text></TouchableOpacity><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}> {this.props.data.secondaryHeadline||""}</Text>
+                                <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}}><Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.primaryHeadline||""}</Text></TouchableOpacity><Text style={{fontFamily:"Akkurat-Light",fontWeight:"200",color:'black',fontSize:12}}> {this.props.data.secondaryHeadline||""}</Text>
                             </View>
                             <Text style={{fontFamily:"Akkurat",color:'black',fontSize:9,opacity:.7}}>{description||timeAgo||""}</Text>
                         </View>
-                        <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.secondaryView)}}>
+
+                        {this.props.data.payload.v1.secondaryView?<TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.secondaryView)}}>
                             <Image source={{uri:this.props.data.secondaryImage||null}}  style={{width:30,height:30}}></Image>
-                        </TouchableOpacity>
+                        </TouchableOpacity>:null}
                     </View>
         }
 

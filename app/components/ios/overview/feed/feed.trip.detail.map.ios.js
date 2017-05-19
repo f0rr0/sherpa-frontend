@@ -102,7 +102,8 @@ class TripDetailMap extends Component{
                             this.refs.reloadRegionButton.hide();
                         }
                     }
-                })
+                });
+
             break;
             case "global":
                 var reqBody={

@@ -6,7 +6,6 @@ const DEFAULT_PADDING = { top: 6, right: 60, bottom: 80, left: 60 };
 import StickyHeader from './stickyHeader';
 import Header from './header'
 import SherpaMapMarker from './SherpaMapMarker';
-import ReactTransitionGroup  from 'react-addons-transition-group';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
@@ -53,6 +52,7 @@ class TripDetailMap extends Component{
             locator:false
         };
         this.isLeaving=false;
+        //console.log('marker map');
     }
 
     componentDidMount(){
@@ -154,6 +154,7 @@ class TripDetailMap extends Component{
             region.latitude + (region.latitudeDelta * (0.5 + padding)),
         ], this.getZoomLevel(region));
 
+        //console.log('markers',markers);
         this.setState({markers:markers});
     }
 

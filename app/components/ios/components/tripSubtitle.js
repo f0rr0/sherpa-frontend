@@ -18,6 +18,7 @@ class TripSubtitle extends Component {
 
     render() {
         var locuses=this.props.tripData.locus;
+        //console.log('locuses',locuses)
         let subTitle=[];
         //console.log('locus',this.props.tripData.locus)
 
@@ -38,20 +39,41 @@ class TripSubtitle extends Component {
             }
         }
 
+        //console.log(subTitle)
+
         //console.log('subtitle',subTitle);
         let sorting=['neighbourhood','borough','locality','region','country'];
+        if(this.props.maxLength)sorting.push('continent');
         let finalSubtitles=[];
-        var charcount=0;
-        for(var i=0;i<sorting.length;i++){
-            for(var j=0;j<subTitle.length;j++){
-                if(subTitle[j].type==sorting[i]){
-                    if(charcount<40)finalSubtitles.push(subTitle[j])
-                    charcount+=subTitle[j].name.length;
+        let counter=0;
+        //console.log('yoyo',this.props)
+        //if(this.props.limitLength){
+            var charcount=0;
+            for(var i=0;i<sorting.length;i++){
+                for(var j=0;j<subTitle.length;j++){
+                        //console.log(subTitle[j].type,'i',i,':',)
+                    if(subTitle[j].type==sorting[i]){
+                        if(!this.props.maxLength&&charcount<this.props.maxCharCount){
+                            //console.log('pop');
+                            finalSubtitles.push(subTitle[j]);
+                            charcount+=subTitle[j].name.length;
+                        }else{
+                            if(subTitle[j].type!==this.props.tripData.type)finalSubtitles.push(subTitle[j]);
+                        }
+                    }
                 }
             }
+        //}
+
+        if(this.props.maxLength)finalSubtitles=finalSubtitles.slice(finalSubtitles.length-this.props.maxLength,finalSubtitles.length)
+
+        if(finalSubtitles==[]){
+            finalSubtitles=subTitle;
         }
 
+
         //console.log('final subtitles',finalSubtitles)
+        //console.log('my type',this.props.tripData.type)
 
         return(
             <View style={{flexDirection:'row'}}>
@@ -73,6 +95,7 @@ class TripSubtitle extends Component {
 
 TripSubtitle.defaultProps = {
     tripData:{},
+    limitLength:true,
     goLocation:function(el){}
 };
 

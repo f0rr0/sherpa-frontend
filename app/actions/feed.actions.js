@@ -121,7 +121,7 @@ export function deleteMoment(momentID,instant){
                 };
 
 
-                console.log('request delete',reqBody)
+                //console.log('request delete',reqBody)
                 fetch(requestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         switch (rawSherpaResponse.status) {
@@ -139,7 +139,7 @@ export function deleteMoment(momentID,instant){
                         }
                     })
                     .then((response)=> {
-                        console.log('delete moment response',response)
+                        //console.log('delete moment response',response)
                         fulfill();
                     }).catch((err)=>reject(err))
             })
@@ -230,6 +230,7 @@ export function getFeed(query,page=1,type='') {
                     break;
                 }
 
+                //console.log(feedRequestURI,'feed requ uri')
 
 
                 let sherpaHeaders = new Headers();
@@ -306,20 +307,22 @@ export function getFeed(query,page=1,type='') {
                         if (!rawSherpaResponseFinal)return;
                         let parsedResponse=JSON.parse(rawSherpaResponseFinal);
                         let trips = parsedResponse.trips || parsedResponse;
+                        //console.log(parsedResponse,'prased response')
                         let cleanTrips=[];
                         for(let index in trips){
                             let currentTrip=trips[index];
                             if(currentTrip&&currentTrip.moments){
                                 let moments=currentTrip.moments;
-                                let name=currentTrip.name;
+                                let name=currentTrip.name || "";
                                 let coverIndex=0;
+                                //console.log(currentTrip)
                                 if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
                                 if(moments.length>0){
                                     currentTrip.moments=[];
                                     if(currentTrip.coverMoment){
-                                        console.log('cover moment',currentTrip.coverMoment)
+                                        //console.log('cover moment',currentTrip.coverMoment)
                                         moments.unshift(currentTrip.coverMoment)
-                                        console.log('moments',moments);
+                                        //console.log('moments',moments);
                                     }
 
                                     currentTrip.moments=moments;
@@ -335,12 +338,15 @@ export function getFeed(query,page=1,type='') {
 
                        //console.log('feed',type,'::',parsedResponse)
                         switch(type){
+                            case "trip":
+                                //console.log(parsedResponse);
+                                fulfill({data:parsedResponse, page, type});
+                            break;
                             case "featured-profiles":
                             case "moment":
-                            case "trip":
                             case "map-search":
                             case "map-search-classic":
-
+                                //console.log('search resp',parsedResponse)
                             case "notifications":
                             case "reset-notifications":
                             case "user":

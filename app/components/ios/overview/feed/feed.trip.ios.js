@@ -30,6 +30,7 @@ import { Fonts, Colors } from '../../../../Themes/'
 import MarkerMap from '../../components/MarkerMap'
 import {BlurView} from 'react-native-blur';
 import {getFeed} from '../../../../actions/feed.actions';
+import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 
 import {
     StyleSheet,
@@ -116,7 +117,8 @@ var styles = StyleSheet.create({
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
     headerTripTo:{color:"#FFFFFF",fontSize:14,marginBottom:-8,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width*.99,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    //headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width-30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
+    headerTripName:{color:"#FFFFFF",fontSize:33, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center",width:windowSize.width-30},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
@@ -157,7 +159,7 @@ class FeedTrip extends Component {
     }
 
     _renderFooterView(){
-        //console.log(this.state.trip)
+        if(!this.state.trip.nameGid)return null;
         return <View style={{marginBottom:20}}>
             {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
             this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+(this.state.trip.locus[this.state.trip.nameGid.split(":")[1]]||this.state.trip.location)}></SimpleButton>:null}
@@ -201,23 +203,53 @@ class FeedTrip extends Component {
 
     componentDidMount(){
         //console.log('did mount')
-        this.onfetch();
+        //this.onfetch();
     }
 
-    onfetch(){
-        getFeed(this.props.trip.id,1,'trip').then((result)=>{
+    onfetch(page=1,callback){
+        //console.log('fetch')
+        getFeed(this.props.trip.id,page,'trip').then((result)=>{
             let trip=result;
             let moments=trip.data.moments;
-            //console.log(result)
+            //console.log(trip.data.moments)
+            //console.log(moments)
 
-            if(moments.length==0){
-                this.props.navigator.pop();
-            }else{
+            //if(moments.length==0){
+            //    this.props.navigator.pop();
+            //}else{
+
+
+            //if(page==1){
+            //    //console.log('get additional stuff',response);
+            //    let locationGID=response.rawData.location[response.rawData.location.layer+"_gid"];
+            //    this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+            //
+            //    checkFollowingLocation(locationGID).then((res)=>{
+            //        this.setState({isFollowing:res});
+            //    });
+            //
+            //    callback(organizedMoments,settings);
+            //}else{
+            //    callback(organizedMoments,settings);
+            //}
+
                 const organizedMoments=this.organizeMomentRows(moments,2,true);
-                this.organizedMoments=organizedMoments;
-                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
-                //this.setState({isCurrentUsersTrip:true,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+                //this.organizedMoments=organizedMoments;
+                //this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+
+            if(page==1){
+                //console.log(result.data,'is ready')
+                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data}
+                    //,dataSource: this.ds.cloneWithRows(organizedMoments)}
+                )
+                callback(organizedMoments,{allLoaded:moments.length==0});
+
+            }else{
+                callback(organizedMoments,{allLoaded:moments.length==0});
             }
+
+
+            //}
         }).catch((error)=>{
             //console.log('feed error',error)
             this.props.navigator.pop();
@@ -242,27 +274,34 @@ class FeedTrip extends Component {
 
     _renderEmpty(){
         return (
-            <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
+            <View style={{justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
             </View>
-
         )
     }
 
     render(){
-        if(!this.state.isReady)return this._renderEmpty();
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
-
+        //if(!this.state.isReady)return this._renderEmpty();
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.trip.name?this.state.trip.name.toUpperCase():"",opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
         const completeHeader=
             <View style={styles.listViewContainer}>
 
-                <ListView
-                    enableEmptySections={false}
-                    dataSource={this.state.dataSource}
+                <SherpaGiftedListview
+                    //dataSource={this.state.dataSource}
                     renderRow={this._renderRow.bind(this)}
                     contentContainerStyle={styles.listView}
                     renderHeader={this._renderHeader.bind(this)}
                     ref="listview"
+                    rowView={this._renderRow.bind(this)}
+                    onFetch={this.onfetch.bind(this)}
+                    onEndReached={()=>{
+                         this.refs.listview._onPaginate();
+                    }}
+                    paginationFetchingView={this._renderEmpty.bind(this)}
+                    firstLoader={true} // display a loader for the first fetching
+                    pagination={true} // enable infinite scrolling using touch to load more
+                    refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
+                    withSections={false} // enable sections
                     renderFooter={this._renderFooterView.bind(this)}
                     scrollEventThrottle={8}
                     onScroll={(event)=>{
@@ -302,7 +341,7 @@ class FeedTrip extends Component {
     }
 
     refreshCurrentScene(){
-        console.log('refresh');
+        //console.log('refresh');
         //this.onfetch();
     }
 
@@ -369,6 +408,8 @@ class FeedTrip extends Component {
 
 
     _renderHeader(){
+        if(!this.state.isReady)return this._renderEmpty()
+
         var tripData=this.state.trip;
         var type=this.state.trip.type=='global'?'state':this.state.trip.type;
         var tripLocation=this.state.trip[type];
@@ -426,6 +467,9 @@ class FeedTrip extends Component {
 
 
 
+        let firstMoment=this.state.trip.coverMoment?this.state.trip.coverMoment:this.state.trip.moments[0];
+        let highresUrl=firstMoment.highresUrl||firstMoment.mediaUrl;
+        if(highresUrl.indexOf("https")==-1)highresUrl=highresUrl.replace("http","https");
         return (
             <View style={styles.headerContainer}>
 
@@ -438,7 +482,7 @@ class FeedTrip extends Component {
                             onLoad={()=>{
                                     Animated.timing(this.state.headerPreviewLoadedOpacity,{toValue:1,duration:100}).start()
                                 }}
-                            source={{uri:this.state.trip.moments[0].serviceJson?this.state.trip.moments[0].serviceJson.images.thumbnail.url:this.state.trip.moments[0].mediaUrl}}
+                            source={{uri:firstMoment.serviceJson?firstMoment.serviceJson.images.thumbnail.url:firstMoment.mediaUrl}}
                         >
                             <BlurView blurType="light" blurAmount={100} style={{...StyleSheet.absoluteFillObject}}></BlurView>
                         </Animated.Image>
@@ -451,23 +495,20 @@ class FeedTrip extends Component {
 
                             <Animated.Image
                                 style={[styles.headerImage,{
-                                transform: [,{
+                                transform: [{
                         scale: this.state.scrollY.interpolate({
                             inputRange: [ -windowHeight, 0],
                             outputRange: [3, 1.1],
                              extrapolate: 'clamp'
                         })
-                    },{translateY:this.state.scrollY.interpolate({
-                                                    inputRange: [ -windowHeight,0],
-                                                    outputRange: [-40, 0],
-                                                    extrapolate: 'clamp',
-                                                })}]
+                    }
+                                                ]
                                 }]}
                                 resizeMode="cover"
                                 onLoad={()=>{
                                     Animated.timing(this.state.headerLoadedOpacity,{toValue:1,duration:200}).start()
                                 }}
-                                source={{uri:this.state.trip.moments[0].highresUrl||this.state.trip.moments[0].mediaUrl}}
+                                source={{uri:highresUrl}}
                             >
 
                             <View
@@ -482,8 +523,9 @@ class FeedTrip extends Component {
                    <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
                        {/*<Text style={styles.headerTripTo}>{tripTitle}</Text>*/}
-                            <Text style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
-                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={this.state.trip}></TripSubtitle>
+                            <Text multiline={true} style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
+
+                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} limitLength={false} maxLength={2} tripData={this.state.trip}></TripSubtitle>
                             </View>
 
                         <View style={styles.subTitleContainer}>
@@ -519,9 +561,12 @@ class FeedTrip extends Component {
                 }}>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true}} ref="navStatic" goBack={this.navActionLeft.bind(this)}  navActionRight={this.navActionRight.bind(this)}></Header>
                 </Animated.View>
-                <TouchableOpacity activeOpacity={1} onPress={()=>{this.refs.listview.refs.editToolTip.hide()}} style={{position:'absolute',right:10,top:50}}>
+
+                <TouchableOpacity activeOpacity={1} onPress={()=>{
+                        this.refs.listview.refs.listview.refs.editToolTip.hide()}} style={{position:'absolute',right:10,top:50}}>
                     {toolTip}
                 </TouchableOpacity>
+
             </View>
         )
     }

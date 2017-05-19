@@ -110,7 +110,7 @@ class TripDetail extends React.Component{
                 globalIndex++;
             }
 
-            console.log('moment',moment)
+            //console.log('moment',moment)
             getFeed(moment.trip||moment.data.trip,1,'trip').then((result)=>{
                 this.setState({tripData:result})
             }).catch((error)=>{
@@ -240,7 +240,7 @@ class TripDetail extends React.Component{
     }
 
 
-    showTripLocation(data){
+    showTripLocation(data,rawData){
         let locus=data.split(":");
         var locationData={
             layer:locus[1],
@@ -251,13 +251,14 @@ class TripDetail extends React.Component{
 
         this.props.navigator.push({
             id: "location",
-            data:{name:"location",...locationData},
+            data:{name:rawData.name||"location",...locationData},
             version:"v2"
         });
     }
 
 
     render(){
+
         var momentData=this.state.momentData;
         //console.log(momentData)
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
@@ -274,7 +275,7 @@ class TripDetail extends React.Component{
                     </View>
                     <View style={{marginRight:0,}}>
                         <View style={{flexDirection:'row',alignItems:'center',marginTop:3}}>
-                            <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                            <Image source={require('./../../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                             <Text style={{backgroundColor:'transparent',color:'white', marginTop:7,fontFamily:'Akkurat',fontSize:10,opacity:1,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
                         </View>
                     </View>
@@ -291,7 +292,7 @@ class TripDetail extends React.Component{
                 }
 
                 index++;
-                return  <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                return  <MomentRow user={this.props.user} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
             });
 
             return (
@@ -327,17 +328,13 @@ class TripDetail extends React.Component{
                     <Animated.Image
                         style={[{height:windowSize.width,width:windowSize.width,opacity:this.state.headerLoadedOpacity },
                         {
-                                transform: [,{
+                                transform: [{
                         scale: this.state.scrollY.interpolate({
                             inputRange: [ -windowSize.width, 0],
                             outputRange: [3, 1.1],
                              extrapolate: 'clamp'
                         })
-                    },{translateY:this.state.scrollY.interpolate({
-                                                    inputRange: [ -windowSize.width,0],
-                                                    outputRange: [-40, 0],
-                                                    extrapolate: 'clamp',
-                                                })}]
+                    }]
                                 }]}
                         resizeMode="cover"
                         onLoad={()=>{
@@ -366,7 +363,7 @@ class TripDetail extends React.Component{
                         <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
                     </TouchableOpacity>
                     <View style={{marginHorizontal:25,borderBottomWidth:this.state.momentData.related.length>0?1:0,paddingBottom:25,borderBottomColor:"rgba(0,0,0,.1)",marginTop:25,alignItems:'center',justifyContent:"center"}}>
-                        <TripSubtitle textStyle={{borderBottomColor:'rgba(0,0,0,.2)'}} style={{fontSize:11,color:'#9B9B9B',fontWeight:"500"}} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:momentData.locus}}></TripSubtitle>
+                        <TripSubtitle limitLength={true} textStyle={{borderBottomColor:'rgba(0,0,0,.2)'}} style={{fontSize:11,color:'#9B9B9B',fontWeight:"500"}} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus,data)}} tripData={{locus:momentData.locus}}></TripSubtitle>
                     </View>
 
                     {relatedMomentContainer}

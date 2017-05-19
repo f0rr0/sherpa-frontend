@@ -32,9 +32,9 @@ class UserStat extends Component {
     render() {
         return(
             <TouchableOpacity activeOpacity={1} onPress={()=>{this.props.onPress()}} style={this.props.style}>
-                <View style={{alignItems:'center',justifyContent:'center'}}>
-                    <Image  backgroundSize="contain" source={this.props.icon} />
-                    <Text style={{fontSize:8,fontFamily:"TSTAR",fontWeight:"600",letterSpacing:.5,marginTop:5}}>{this.props.description.toUpperCase()}</Text>
+                <View style={[{alignItems:'center',justifyContent:'center'},this.props.containerStyle]}>
+                    <Image style={this.props.imageStyle} backgroundSize="contain" source={this.props.icon} />
+                    <Text style={[{fontSize:8,fontFamily:"TSTAR",fontWeight:"600",letterSpacing:.5,marginTop:5},this.props.textStyle]}>{this.props.description.toUpperCase()}</Text>
                 </View>
             </TouchableOpacity>
         )

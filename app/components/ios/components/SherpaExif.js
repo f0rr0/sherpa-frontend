@@ -15,13 +15,15 @@ function unifyAndroid(exif) {
 }
 
 function unifyIOS(rawExif) {
-    var exif=JSON.parse(rawExif);
+    //console.log(rawExif)
+    var exif=rawExif;//JSON.parse(rawExif);
     var output = {}
     //output.ImageWidth = exif.PixelWidth
     //output.ImageHeight = exif.PixelHeight
     //output.Orientation = exif.Orientation
     //output.originalUri = exif.originalUri
     //return output
+    //console.log('exif',exif)
     return exif;
 }
 

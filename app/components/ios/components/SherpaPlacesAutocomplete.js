@@ -364,6 +364,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                 return;
             }
             if (request.status === 200) {
+                //console.log(request,'search response');
                 const responseJSON = JSON.parse(request.responseText);
                 //console.log('people response',responseJSON);
                 // console.log(responseJSON.features[0].properties);
@@ -425,7 +426,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                                 results:this._results,
                                 dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(this._results)),
                             });
-                            //console.log(responseJSON.features.length)
+                            console.log(responseJSON)
                             if(this._results.length==0){
                                 this.setState({uiState:'noresults'});
                             }else{
@@ -442,7 +443,8 @@ const SherpaPlacesAutocomplete = React.createClass({
                 }
             };
 
-            var mapzenSearch = this.props.baseUrl+'/geosearch/autocomplete?layers=borough,locality,county,macrocounty,region,macroregion,country&text=' +encodeURIComponent(text);
+            var mapzenSearch = this.props.baseUrl+'/geosearch/autocomplete?layers=borough,locality,county,macrocounty,neighbourhood,region,macroregion,country&text=' +encodeURIComponent(text);
+            //console.log('search',mapzenSearch)
             request.open('GET', mapzenSearch);
             request.send();
     },
@@ -497,6 +499,9 @@ const SherpaPlacesAutocomplete = React.createClass({
             case "macro-region":
                 locationLayer="Region";
             break;
+            case "county":
+                locationLayer="Region";
+                break;
             case "country":
                 locationLayer="Country";
             break;
@@ -597,7 +602,7 @@ const SherpaPlacesAutocomplete = React.createClass({
             // console.log(this.state.dataSource);
             return (
                 <ListView
-                    keyboardShouldPersistTaps={true}
+                    keyboardShouldPersistTaps="always"
                     keyboardDismissMode="on-drag"
                     style={[defaultStyles.listView, this.props.styles.listView]}
                     dataSource={this.state.dataSource}

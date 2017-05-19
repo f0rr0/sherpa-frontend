@@ -45,6 +45,16 @@ class UserImage extends Component {
         }
     }
 
+    isURL(str) {
+        var pattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.?)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))'+ // OR ip (v4) address
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+        return pattern.test(str);
+    }
+
     rescrapeImage(){
         store.get('user').then((user) => {
             if (user) {
@@ -62,6 +72,7 @@ class UserImage extends Component {
                     }).then((response)=> {
 
                     if(this.mounted&&response.length>2){
+                        //console.log('rescraped image',response)
                         this.setState({imageURL:response});
                     }
                 }).catch(err=>console.log('device token err',err));
@@ -70,12 +81,14 @@ class UserImage extends Component {
     }
 
     render() {
-        var imageURL=this.state.imageURL?this.state.imageURL:this.props.imageURL;
+        var imageURL=this.state.imageURL&&this.isURL(this.state.imageURL)?this.state.imageURL:this.props.imageURL;
+        //imageURL=this.isURL(imageURL)?imageURL:"";
+
         return(
-        <TouchableOpacity onPress={()=>{this.props.onPress()}} style={this.props.style}>
+        <TouchableOpacity onPress={()=>{this.props.onPress()}} style={[this.props.style]}>
             <View style={{flex:1,flexDirection:'row',alignItems:'center'}}>
 
-                <View style={{height:this.props.radius,width:this.props.radius,}}>
+                <View style={{height:this.props.radius,width:this.props.radius,backgroundColor:'grey',borderRadius:this.props.radius/2}}>
                     <BlurImageLoader imageStyle={{height:this.props.radius,width:this.props.radius,borderWidth:this.props.border?1.5:0,borderColor:this.props.border?"#FFFFFF":'transparent',borderRadius:this.props.radius/2}} thumbUrl={imageURL.replace("s150x150","s50x50")} largeUrl={imageURL} style={this.props.style}  />
                 </View>
                 <View style={{marginLeft:12,opacity:1,marginBottom:-2}}>

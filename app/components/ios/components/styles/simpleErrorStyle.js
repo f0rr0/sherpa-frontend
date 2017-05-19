@@ -22,14 +22,16 @@ export default StyleSheet.create({
         fontSize:Fonts.size.tiny,
         marginLeft:12,
         textAlign:'center',
+        marginTop:3,
         width:windowSize.width-35,
         //backgroundColor:'blue',
         letterSpacing:Fonts.letterSpacing.small
     },
     errorX:{
         position:'absolute',
-        left:15,
-        width:8,
-        top:18,
+        left:20,
+        //width:8,
+        top:20,
+        zIndex:1
     }
 })

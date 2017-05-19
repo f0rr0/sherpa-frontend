@@ -16,7 +16,6 @@ import { Fonts, Colors } from '../../../Themes/'
 import {loadFeed,getFeed} from '../../../actions/feed.actions';
 import Header from './header'
 import MapView from 'react-native-maps'
-import {PanController} from 'react-native-pan-controller'
 import ImageProgress from 'react-native-image-progress';
 import * as Progress from 'react-native-progress';
 
@@ -132,7 +131,7 @@ class TripDetail extends React.Component{
                             {description}
                         </TouchableOpacity>
                         <View style={{flexDirection:'row',alignItems:'center'}}>
-                            <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                            <Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                             <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
                         </View>
                     </View>

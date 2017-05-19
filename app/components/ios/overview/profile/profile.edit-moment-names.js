@@ -2,23 +2,13 @@
 import {
     StyleSheet,
     View,
-    Text,
     Image,
-    TouchableOpacity,
     Animated,
 } from 'react-native';
-import React, { Component } from 'react';
-import StickyHeader from '../../components/stickyHeader';
-import Header from '../../components/stickyHeader';
+import React from 'react';
 import SimpleButton from '../../components/simpleButton';
 import LocationName from '../../components/locationName';
-import RNFetchBlob from 'react-native-fetch-blob';
-import PhotoSelectorGrid from '../../components/photoSelector.grid';
-import ImageProgress from 'react-native-image-progress';
-import * as Progress from 'react-native-progress';
 import Dimensions from 'Dimensions';
-import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
-import { Fonts, Colors } from '../../../../Themes/'
 import SimpleError from '../../components/simpleError';
 import { ScrollView } from 'react-native'
 import AddPaging from 'react-native-paged-scroll-view/index'
@@ -29,7 +19,6 @@ const CARD_PREVIEW_WIDTH = 10
 const CARD_MARGIN = 3;
 const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;
 import {getFeed} from '../../../../actions/feed.actions';
-
 import {createMoment} from "../../../../actions/trip.edit.actions"
 
 
@@ -54,7 +43,6 @@ class EditMomentNames extends React.Component {
     }
 
     filterMomentsByDeselected(momentData,deselected){
-        console.log('filter');
         let displayData=[];
         let emptyData=[];
         for(var i=0;i<momentData.length;i++){
@@ -74,7 +62,7 @@ class EditMomentNames extends React.Component {
                 }
             }
         }
-        displayData=emptyData.concat(displayData)
+        displayData=emptyData.length>0?emptyData.concat(displayData):displayData;
         return displayData;
     }
 
@@ -83,7 +71,7 @@ class EditMomentNames extends React.Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if(!prevState.isReady&&this.state.isReady){
+        if(!prevState.isReady&&this.state.isReady&&!(this.state.tripData&&this.state.tripData.coverMoment)){
             this.makeCoverPhoto(0)
         }
     }
@@ -115,7 +103,8 @@ class EditMomentNames extends React.Component {
                     tripData:this.props.tripData,
                     momentData:this.state.displayData,
                     sceneConfig:"right-nodrag",
-                    selection:this.props.selection
+                    selection:this.props.selection,
+                    deselectedMomentIDs:this.props.deselectedMomentIDs
                 });
             }
         }
@@ -149,7 +138,7 @@ class EditMomentNames extends React.Component {
             newDisplayData.push(this.state.displayData[index])
             newDisplayData[index].isCover=isCover;
             this.refs["location-"+index].isCover(isCover);
-            console.log('make cover photo',"location-"+targetIndex,':: index-',index);
+            //console.log('make cover photo',"location-"+targetIndex,':: index-',index);
         })
 
         this.setState({displayData:newDisplayData})
@@ -173,8 +162,14 @@ class EditMomentNames extends React.Component {
                 let displayData=this.filterMomentsByDeselected(result.data.moments,this.state.deselectedMomentIDs);
                 moments=moments.concat(displayData);
                 this.setState({isReady:true,displayData:moments,page:this.state.page+1,loadMore:result.data.moments.length>0})
+
+                for(var i=0;i<moments.length;i++){
+                    if(this.state.tripData&&this.state.tripData.coverMoment.id==moments[i].id){
+                        this.makeCoverPhoto(i)
+                    }
+                }
             }).catch((error)=>{
-                console.log('error',error);
+                //console.log('error',error);
             })
         }else{
             this.setState({isReady:true})
@@ -211,7 +206,7 @@ class EditMomentNames extends React.Component {
                 snapToInterval={CARD_WIDTH + CARD_MARGIN*2}
                 snapToAlignment="start"
                 contentContainerStyle={styles.content}
-                keyboardShouldPersistTaps={true}
+                keyboardShouldPersistTaps="always"
                 showsHorizontalScrollIndicator={false}
                 onPageChange={this.handlePageChange.bind(this)}
             >
@@ -219,7 +214,7 @@ class EditMomentNames extends React.Component {
                     return <LocationName showCover={this.state.intent!=='edit-moment'} updateInfo={this.updateInfo.bind(this)} makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>;
                 })}
             </PagedScrollView>
-            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} text={this.state.intent!=='edit-moment'?"next step (edit album name)":"save location name"}></SimpleButton>
+            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} secondaryTextStyle={{color:"#caebcb"}} secondaryText={this.state.intent!=='edit-moment'?"edit album name":""} text={this.state.intent!=='edit-moment'?"next step":"save location name"}></SimpleButton>
             </View>
     )
     }

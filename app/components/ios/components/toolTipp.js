@@ -34,11 +34,29 @@ class ToolTipp extends React.Component {
             switch(this.props.hasTriangle){
                 case "top":
                     triangle= (<Triangle
-                        style={{position:'absolute',top:-3,right:20}}
-                        width={5}
-                        height={3}
+                        style={{position:'absolute',top:-6,right:20}}
+                        width={10}
+                        height={6}
                         color={'rgba(0,0,0,.85)'}
                         direction={'up'}
+                    />)
+                break;
+                case "topleft":
+                    triangle= (<Triangle
+                        style={{position:'absolute',top:-6,left:20}}
+                        width={10}
+                        height={6}
+                        color={'rgba(0,0,0,.85)'}
+                        direction={'up'}
+                    />)
+                    break;
+                case "bottom":
+                    triangle= (<Triangle
+                        style={{position:'absolute',bottom:-6,left:20}}
+                        width={10}
+                        height={6}
+                        color={'rgba(0,0,0,.85)'}
+                        direction={'down'}
                     />)
                 break;
                 default:

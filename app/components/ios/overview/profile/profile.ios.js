@@ -11,6 +11,7 @@ import StickyHeader from '../../components/stickyHeader';
 import TripTitle from "../../components/tripTitle"
 import PopOver from '../../components/popOver';
 import Dimensions from 'Dimensions';
+import ToolTipp from '../../components/toolTipp'
 import UserImage from '../../components/userImage'
 import MarkerMap from '../../components/MarkerMap'
 var windowSize=Dimensions.get('window');
@@ -22,6 +23,7 @@ import SimpleButton from '../../components/simpleButton'
 import Hyperlink from 'react-native-hyperlink';
 import UserStat from '../../components/userStat'
 import { Fonts, Colors } from '../../../../Themes/'
+import Header from '../../components/header'
 
 
 import {
@@ -177,6 +179,7 @@ class OwnUserProfile extends React.Component {
                         hometownGuide=trips[i]
                     }
                 }
+                //console.log(response)
                 this.setState({hometownGuide,profile:response.profile,followers:response.followers,following:response.following});
             }
             //console.log('after fetch set state',this.isRescraping,'page',page);
@@ -185,9 +188,7 @@ class OwnUserProfile extends React.Component {
     }
 
     hideTooltip(){
-        Animated.timing(this.state.tooltipOpacity,{duration:100,toValue:0}).start(()=>{
-            this.setState({hideTooltip:true})
-        });
+        if(this.refs.listview.refs.listview.refs.geoToolTipp)this.refs.listview.refs.listview.refs.geoToolTipp.hide();
         this.props.dispatch(updateUserData({usedAddTrip:true}))
         this.props.dispatch(storeUser())
     }
@@ -203,31 +204,34 @@ class OwnUserProfile extends React.Component {
 
 
     renderUserStats(){
-        return null;
+        //return null;
 
         if(!this.state.profile)return;
         const counts=this.state.profile.serviceObject.counts;
 
+        //console.log(this.state.profile)
 
         const userStats=[
             {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.followers+" followers",onPress:()=>{this.showFollowers('followers')}},
-            {icon:require('./../../../../Images/icons/flag-small.png'),description:counts.media+" moments"},
+            {icon:require('./../../../../Images/icons/flag-small.png'),description:(counts?counts.media:0)+" places"},
             {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.following+" following",onPress:()=>{this.showFollowers('following')}},
         ]
 
         const borderRight={
             borderRightWidth:1,
-            borderRightColor:'#E5E5E5'
+            borderRightColor:'#E5E5E5',
+            height:15
         };
 
         const borderLeft={
             borderLeftWidth:1,
             borderLeftColor:'#E5E5E5',
+            height:15
         };
 
 
         return(
-            <View style={{flexDirection:'row',justifyContent:'space-between',width:windowSize.width-30}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',alignItems:"center",width:windowSize.width-30,height:50}}>
                 {userStats.map((item,index)=>{
 
                     let border=null;
@@ -239,7 +243,7 @@ class OwnUserProfile extends React.Component {
 
                     return (
                         <View key={"user-stat-"+index} style={[{justifyContent:"center",flexDirection:'row',flex:1,alignItems:'center'},border]}>
-                            <UserStat style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
+                            <UserStat textStyle={{marginLeft:6,fontSize:9}} style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
                         </View>
                     )
                 })}
@@ -250,11 +254,8 @@ class OwnUserProfile extends React.Component {
 
 
     render(){
-        //console.log('render user profile');
-        //console.log(this.props.user.usedAddTrip,'used add trip')
-        const tooltipTouchable=this.state.hideTooltip||this.props.user.usedAddTrip?null:
+        const tooltipTouchable=this.props.user.usedAddTrip?null:
             <TouchableOpacity onPress={this.hideTooltip.bind(this)} style={{position:'absolute',top:0,left:0,bottom:0,right:0,backgroundColor:'transparent'}}></TouchableOpacity>
-
 
 
 
@@ -262,7 +263,6 @@ class OwnUserProfile extends React.Component {
         <View style={{backgroundColor:'white'}}>
 
             <SherpaGiftedListview
-                enableEmptySections={true}
                 rowView={this._renderRow.bind(this)}
                 onFetch={this._onFetch.bind(this)}
                 renderHeaderOnInit={true}
@@ -313,7 +313,7 @@ class OwnUserProfile extends React.Component {
             />
             {tooltipTouchable}
 
-            <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={this.props.navigation.fixed}></StickyHeader>
+            <StickyHeader ref="stickyHeader" reset={()=>this.reset()} navigation={<Header type="fixed" ref="navFixed" routeName={this.props.user.username.toUpperCase()} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
             <PopOver  enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} showSettings={true} openSettings={this.openSettings.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.props.user.serviceID}></PopOver>
         </View>
         )
@@ -353,7 +353,7 @@ class OwnUserProfile extends React.Component {
             message='b';
             status=
                 <View style={{justifyContent: 'center', width:windowSize.width,alignItems: 'center'}}>
-                    <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>You don't have any trips yet.</Text>
+                    <Text style={{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14}}>Geotag places on Instagram or tap the plus button above to create your travel profile.</Text>
                 </View>
         }else if(this.state.trips.length>0){
             message='c';
@@ -364,8 +364,6 @@ class OwnUserProfile extends React.Component {
         }
 
 
-        //console.log('render',message);
-        //console.log('is scraping',this.props.user)
         return  this.props.user.scrapeFromInstagram?status:null;
     }
 
@@ -394,7 +392,7 @@ class OwnUserProfile extends React.Component {
         this.props.navigator.push({
              id: "tripDetailMap",
              trip:{moments},
-             title:this.props.user.username.toUpperCase()+"'S TRAVELS",
+             title:this.props.user.username.toUpperCase()+"'S TRIPS",
              sceneConfig:"bottom",
              mapType:"profile",
              profileID:this.props.user.serviceID,
@@ -414,16 +412,20 @@ class OwnUserProfile extends React.Component {
         if(this.state.hometownGuide)Array.prototype.push.apply(moments,this.state.hometownGuide.moments);
         var hasDescriptionCopy=true;
 
-        const tooltip=!this.props.user.usedAddTrip?
-                <TouchableOpacity style={{position:'absolute',zIndex:1,left:5,top:50}} onPress={()=>{this.hideTooltip()}}>
-                    <Animated.Image ref="tooltip" source={require('./../../../../Images/tooltip-addtrip.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:90}}></Animated.Image>
-                </TouchableOpacity>
-            : null;
+        let tooltip=
+            this.props.user.usedAddTrip?null:<View style={{position:'absolute',zIndex:2,left:5,top:60}} >
+
+                <ToolTipp hideX={false} hasTriangle="topleft" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:15}} message={"Tap here to create a new travel album."} ref="geoToolTippprops.user" onHide={()=>{
+                                                     this.props.dispatch(updateUserData({usedMap:true}))
+                                                     this.props.dispatch(storeUser())
+                                                }}></ToolTipp>
+
+            </View>
 
         const hometownGuide=this.state.hometownGuide?
             <View>
                 <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRAVELS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRIPS</Text>
             </View>
             :null;
 
@@ -433,15 +435,18 @@ class OwnUserProfile extends React.Component {
 
         return (
             <View>
-                <View style={{backgroundColor:'#FFFFFF', height:windowSize.height*.4, width:windowSize.width,marginBottom:150,marginTop:0,justifyContent:'space-between',zIndex:1}} >
-                    <View style={{alignItems:'center',justifyContent:'flex-start',width:windowSize.width,zIndex:1,paddingTop:0}}>
-                        <UserImage
-                          radius={80}
-                          activeOpacity={1}
-                          border={false}
-                          userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
-                        <Text style={{color:"#282b33",fontSize:20, marginTop:-65,marginBottom:20,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
+                <View style={{backgroundColor:'transparent',alignItems:'center',justifyContent:"flex-start", height:windowSize.height*.6, width:windowSize.width,marginTop:0,zIndex:1}} >
 
+                    <View style={{width:80,height:80,marginTop:135,marginBottom:-40,backgroundColor:'transparent'}}>
+                        <UserImage
+                            radius={80}
+                            activeOpacity={1}
+                            border={false}
+                            userID={this.props.user.id} imageURL={this.props.user.profilePicture}/>
+                    </View>
+
+                    <View style={{backgroundColor:'transparent'}}>
+                        <Text style={{color:"#282b33",fontSize:20,marginVertical:20,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.props.user.username.toUpperCase()}</Text>
                         <Hyperlink onPress={(url) => Linking.openURL(url)}>
                             <Text style={{color:"#000",width:300,fontSize:12,marginBottom:0, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.props.user.bio}</Text>
                         </Hyperlink>
@@ -450,15 +455,17 @@ class OwnUserProfile extends React.Component {
                             <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.props.user.website.replace("http://","").replace("https://","")}</Text>
                         </Hyperlink>
                     </View>
-                    <View style={{width:windowSize.width,height:115,marginBottom:-30,alignItems:'center',justifyContent:'center'}}>
-                        {this.renderUserStats()}
-                    </View>
                 </View>
+
+                <View style={{marginBottom:20,backgroundColor:"transparent",alignItems:'center'}}>
+                    {this.renderUserStats()}
+                </View>
+
                 {tooltip}
                 {hometownGuide}
                 {map}
-                <View style={{position:'absolute',top:0,height:75,backgroundColor:"red",zIndex:1}}>
-                    {this.props.navigation.default}
+                <View style={{position:'absolute',top:0,height:75,backgroundColor:"transparent",zIndex:1}}>
+                    <Header type="fixed" ref="navFixed" goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>
                 </View>
             </View>
         )
@@ -467,7 +474,7 @@ class OwnUserProfile extends React.Component {
     _renderRow(tripData) {
         if(!tripData||tripData.isHometown)return null;
         return (
-            <TripRow key={"row"+tripData.id} tripData={tripData} isProfile={true} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
+            <TripRow neverFeature={true} key={"row"+tripData.id} tripData={tripData} isProfile={true} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
         );
     }
 }

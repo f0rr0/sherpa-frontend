@@ -120,7 +120,7 @@ export function checkSuitcased(momentID){
     })
 }
 
-export function checkFollowing(followID){
+export function checkFollowing(followID,type="profile"){
     return new Promise((fulfill,reject)=> {
         return store.get('user').then((user) => {
             if (user) {
@@ -129,7 +129,7 @@ export function checkFollowing(followID){
                 sherpaHeaders.append("token", user.sherpaToken);
                 sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-                fetch(endpoint + version + "/profile/" + user.profileID + "/following/" + followID, {
+                fetch(endpoint + version + "/profile/" + user.profileID + "/subscribed/"+type+"/" + followID, {
                     method: 'get',
                     headers: sherpaHeaders
                 })
@@ -143,6 +143,98 @@ export function checkFollowing(followID){
     })
 }
 
+
+export function checkFollowingLocation(followID){
+    return new Promise((fulfill,reject)=> {
+        return store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + user.profileID + "/subscribed/location/" + followID, {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(response=='true')
+                }).catch(err=>reject(err));
+            }
+        });
+    })
+}
+
+
+
+export function checkSubscribing(id,type="location"){
+    return new Promise((fulfill,reject)=> {
+        return store.get('user').then((user) => {
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + user.profileID + "/subscribed/"+type+"/" + id, {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(response=='true')
+                }).catch(err=>reject(err));
+            }
+        });
+    })
+}
+
+export function subscribe(id,type="location"){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            fetch(endpoint+version+"/profile/"+user.profileID+"/subscribe/"+type+"/"+id, {
+                method: 'post',
+                headers: sherpaHeaders
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                //console.log('successfully subscribed',response);
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+export function unsubscribe(id,type="location"){
+    return store.get('user').then((user) => {
+        if(user){
+            const {endpoint,version,user_uri} = sherpa;
+            var sherpaHeaders = new Headers();
+            sherpaHeaders.append("token", user.sherpaToken);
+            sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+            fetch(endpoint+version+"/profile/"+user.profileID+"/unsubscribe/"+type+"/"+id, {
+                method: 'post',
+                headers: sherpaHeaders
+            })
+                .then((rawServiceResponse)=>{
+                    return rawServiceResponse.text();
+                }).then((response)=>{
+                //console.log('successfully unsubscribed',response);
+            }).catch(err=>console.log(err));
+        }
+    });
+}
+
+
 export function follow(followID){
     return store.get('user').then((user) => {
         if(user){
@@ -151,7 +243,7 @@ export function follow(followID){
             sherpaHeaders.append("token", user.sherpaToken);
             sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-            fetch(endpoint+version+"/profile/"+user.profileID+"/follow/"+followID, {
+            fetch(endpoint+version+"/profile/"+user.profileID+"/subscribe/profile/"+followID, {
                 method: 'post',
                 headers: sherpaHeaders
             })
@@ -172,7 +264,7 @@ export function unfollow(followID){
             sherpaHeaders.append("token", user.sherpaToken);
             sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
 
-            fetch(endpoint+version+"/profile/"+user.profileID+"/unfollow/"+followID, {
+            fetch(endpoint+version+"/profile/"+user.profileID+"/unsubscribe/profile/"+followID, {
                 method: 'post',
                 headers: sherpaHeaders
             })
@@ -183,6 +275,32 @@ export function unfollow(followID){
             }).catch(err=>console.log(err));
         }
     });
+}
+
+
+export function getSubscriptions(profileID){
+    return new Promise((fulfill,reject)=> {
+        store.get('user').then((user) => {
+
+            if (user) {
+                const {endpoint,version,user_uri} = sherpa;
+                var sherpaHeaders = new Headers();
+                sherpaHeaders.append("token", user.sherpaToken);
+                sherpaHeaders.append("Content-Type", "application/x-www-form-urlencoded");
+
+                fetch(endpoint + version + "/profile/" + profileID+"/subscriptions", {
+                    method: 'get',
+                    headers: sherpaHeaders
+                })
+                    .then((rawServiceResponse)=> {
+                        return rawServiceResponse.text();
+                    }).then((response)=> {
+                    fulfill(JSON.parse(response));
+                }).catch(err=>reject(err));
+
+            }
+        });
+    })
 }
 
 export function getFollowers(profileID){
@@ -209,6 +327,7 @@ export function getFollowers(profileID){
         });
     })
 }
+
 
 export function getFollowing(profileID){
     return new Promise((fulfill,reject)=> {
@@ -252,7 +371,7 @@ export function checkOptedIn(){
                     .then((rawServiceResponse)=> {
                         return rawServiceResponse.text();
                     }).then((response)=> {
-                    fulfill(JSON.parse(response));
+                    fulfill(response);
                 }).catch(err=>reject(err));
             }
         });
@@ -553,80 +672,20 @@ export function checkUser(){
 
 export function loadUser() {
     return function (dispatch, getState) {
-        //dispatch(updateUserDBState("process"));
         return store.get('user').then((user) => {
-            //console.log(user,'initial user db state');
             if(user&&!config.resetUser) {
-                //setTimeout(()=>{
                 if(user.invited){
                     dispatch(updateUserDBState("available-existing"));
                     dispatch(updateUserData(user));
                 }else{
                     dispatch(updateUserDBState("empty"));
                 }
-                //console.log('user',user);
-                //},800)
             }else{
                 store.delete('user').then(()=>{
                     dispatch(updateUserDBState("empty"));
                 })
             }
-        //        var responseStatus=400;
-        //        const {endpoint,version,user_uri} = sherpa;
-        //        var sherpaHeaders = new Headers();
-        //        sherpaHeaders.append("token", user.sherpaToken);
-        //
-        //        fetch(endpoint+version+user_uri+"/"+user.sherpaID,{
-        //            method:'get',
-        //            headers:sherpaHeaders
-        //        }).
-        //        then((rawServiceResponse)=>{
-        //            responseStatus=rawServiceResponse.status;
-        //            return rawServiceResponse.text();
-        //        }).then((rawSherpaResponse)=>{
-        //            switch(responseStatus){
-        //
-        //                case 200:
-        //                    var responseJSON = JSON.parse(rawSherpaResponse);
-        //                    dispatch(updateUserData({
-        //                        serviceObject:responseJSON,
-        //                        profileID:responseJSON.profile.id,
-        //                        profilePicture:responseJSON.profile.serviceProfilePicture,
-        //                        bio:responseJSON.profile.serviceBio,
-        //                        allowScrape: responseJSON.allowScrape,
-        //                        userContactSettings: responseJSON.contactSettings,
-        //                        allContactSettings: responseJSON.allContactSettings,
-        //                    }));
-        //
-        //                    if(!user.whiteListed){
-        //                        dispatch(updateUserDBState("empty"));
-        //                    }else if(user.username===responseJSON.username) {
-        //                        dispatch(updateUserDBState("available-existing"));
-        //                    }else{
-        //                        dispatch(updateUserDBState("empty"));
-        //                    }
-        //
-        //                    dispatch(storeUser());
-        //                break;
-        //                case 400:
-        //                case 401:
-        //                case 500:
-        //                case 506:
-        //                    store.delete('user').then(()=>{
-        //                        dispatch(updateUserDBState("empty"));
-        //                    })
-        //                break;
-        //            }
-        //        }).catch((err)=>{
-        //            store.delete('user').then(()=>{
-        //                dispatch(updateUserDBState("empty"));
-        //            })
-        //        });
-        //    }else{
-        //        store.delete('user').then(()=>{
-        //            dispatch(updateUserDBState("empty"));
-        //        })
-        //    }
+
         });
     }
 }
@@ -645,8 +704,6 @@ export function signupUser(){
 
         instagramAuthRequest();
         dispatch(updateUserSignupState("start"));
-        //signupWithSherpa("184267603.610a4a6.9c1223178abf473b9ea5e2f444452c82",JSON.parse('{"bio": "tech director & co-founder at WILD living in vienna / austria","full_name": "Thomas Ragger","username": "ragmaen","counts": {"media": 159,"follows": 299,"followed_by": 311},"profile_picture": "https://scontent.cdninstagram.com/t51.2885-19/s150x150/14276504_1820927734817780_537359030_a.jpg","id":"184267603","website": "http://www.wild.as"}'));
-
 
         function instagramAuthRequest(){
             const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
@@ -745,7 +802,7 @@ export function signupUser(){
 
 
             let queryObject={
-                email:userData.email,
+                email:userReducer.email,
                 intent:userReducer.intent,
                 service:userReducer.service,
                 token:instagramToken,
@@ -755,17 +812,6 @@ export function signupUser(){
 
             if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
             const queryData = encodeQueryData(queryObject);
-
-            //console.log('signup query object',queryObject);
-            //console.log({
-            //    email:userReducer.email,
-            //    inviteCode:userReducer.inviteCode,
-            //    intent:userReducer.intent,
-            //    service:userReducer.service,
-            //    token:instagramToken,
-            //    serviceData:JSON.stringify(userData),
-            //    deviceData:JSON.stringify(deviceData)
-            //})
 
             dispatch(updateUserData({
                 serviceToken:instagramToken
@@ -803,7 +849,7 @@ export function signupUser(){
                     invited
                 } = sherpaResponse.user;
 
-                //console.log('sherpa response',sherpaResponse)
+                console.log('sherpa response',sherpaResponse)
 
                 dispatch(updateUserData({
                     sherpaID:id,
@@ -842,13 +888,9 @@ export function signupUser(){
                     sherpaResponse.invitation=="expired"|| sherpaResponse.invitation=="invalid" || sherpaResponse.invitation=="not-invited"
                 ) {
                     store.get('user').then((user) => {
-                        //if(user.isExistingLogin){
                             dispatch(updateUserDBState("login-denied"));
                             dispatch(updateUserData({isExistingLogin:false}))
                             dispatch(storeUser());
-                        //}else{
-                        //    dispatch(updateUserDBState("not-whitelisted"));
-                        //}
                     })
                 }else if(sherpaResponse.invitation=="requested"){
                     dispatch(updateUserDBState("not-whitelisted"));

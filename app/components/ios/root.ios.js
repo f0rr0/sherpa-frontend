@@ -11,16 +11,19 @@ import { connect } from 'react-redux';
 import GoogleAnalytics from 'react-native-google-analytics-bridge';
 import React, { Component } from 'react';
 import NotificationsIOS from 'react-native-notifications';
+import crashlytics from 'react-native-fabric-crashlytics';
+var Fabric = require('react-native-fabric');
+var { Crashlytics } = Fabric;
 
 
 import {
     StyleSheet,
-    Navigator,
     View,
     AppState,
     PushNotificationIOS
     } from 'react-native';
 
+import {Navigator} from 'react-native-deprecated-custom-components'
 
 var styles = StyleSheet.create({
     container: {
@@ -45,6 +48,7 @@ class Root extends Component {
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        crashlytics.init();
         this.feedStuff()
     }
 

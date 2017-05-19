@@ -184,7 +184,7 @@ class WikpediaInfoBox extends Component {
                 <View style={styles.infoBoxContainer}>
                     <Text style={styles.infoBoxTitle}>WIKIPEDIA</Text>
                     {/*<TouchableHighlight underlayColor="#dfdfdf" onPress={()=>{this.openWikipedia()}}>*/}
-                        <Text style={styles.infoBoxCopy}>{this.state.wikipediaDescription}</Text>
+                        <Text style={styles.infoBoxCopy}>{this.state.wikipediaDescription.split("\n")[0]}</Text>
                     {/*</TouchableHighlight>*/}
                     <View style={{marginHorizontal:0,marginTop:25,borderTopWidth:1,borderTopColor:"rgba(0,0,0,.1)"}}></View>
 

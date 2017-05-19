@@ -88,18 +88,12 @@ class Overview extends React.Component {
             'change',
             this.handleFirstConnectivityChange
         );
-        //this.refs[this.state.selectedTab].setView({type:'TRIP',id:1231})
-        //this.refs[this.state.selectedTab].setView({type:'MOMENT',id:133276})
         this.props.dispatch(updateNotificationCount());
 
-        //console.log(this.props.user)
         if(this.props.user.sherpaID==-1){
-            //this.props.navigator.replace({id:"login"});
         }else{
             this.setState({ready:true})
         }
-
-        //this._onNotificationOpened({})
     }
 
     handleFirstConnectivityChange(reach) {
@@ -134,7 +128,6 @@ class Overview extends React.Component {
         this.setState({ selectedTab: target });
     }
 
-
     _onNotificationOpened(notification) {
         PushNotificationIOS.setApplicationIconBadgeNumber(0);
         var deepLinkObject=notification.getData();
@@ -155,42 +148,43 @@ class Overview extends React.Component {
     toggleTabBar(enable){
         Animated.timing(this.state.bottomOffset, {
             duration: 200,
-            toValue: enable? 0 : -100
+            toValue: enable? 0 : 100,
+            useNativeDriver: true, // <-- Add this
         }).start()
     }
 
     render() {
-        //if(!this.state.ready){
-        //    return null
-        //}
-        //console.log('render overview',this.props.user.notificationCount)
-        let notificationBadge=this.props.user.notificationCount==0?null:<View style={{width:80}}><View style={{position:'absolute',flexDirection:'row',left:13,top:-5,backgroundColor:'red',alignItems:'center',justifyContent:'center',height:13,borderRadius:13,minWidth:13}}><Text style={{color:'white',paddingLeft:5,paddingRight:5,position:'relative',fontWeight:"600",backgroundColor:'transparent',fontSize:8}}>{this.props.user.notificationCount}</Text></View></View>
-        var tabBar =    <TabNavigator titleStyle={{backgroundColor:'red'}} tabBarStyle={[styles.tabBarHeight,{bottom:this.state.bottomOffset,backgroundColor:'white',borderTopWidth:1,borderTopColor:'#EFF1F2'}]}  sceneStyle={{paddingBottom:0}}>
+        let notificationBadge=this.props.user.notificationCount==0?null:<View style={{width:80}}><View style={{position:'absolute',flexDirection:'row',left:13,top:-5,backgroundColor:'transparent',alignItems:'center',justifyContent:'center',height:13,borderRadius:13,minWidth:13}}><Text style={{color:'white',paddingLeft:5,paddingRight:5,position:'relative',fontWeight:"600",backgroundColor:'transparent',fontSize:8}}>{this.props.user.notificationCount}</Text></View></View>
+        var tabBar =    <TabNavigator titleStyle={{backgroundColor:'white'}} tabBarStyle={[styles.tabBarHeight,{transform:[{translateY:this.state.bottomOffset}],backgroundColor:'white',borderTopWidth:1,borderTopColor:'#EFF1F2'}]}  sceneStyle={{paddingBottom:0}}>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === FEED}
-                                renderIcon={() => <Image style={{width:19,height:22,marginBottom:-.5}} source={require('./../../../Images/icons/explore.png')} />}
+                                renderIcon={() => <Image style={{marginBottom:5}} source={require('./../../../Images/icons/explore.png')} />}
+                                renderSelectedIcon={() => <Image style={{marginBottom:5,tintColor: '#001645'}} source={require('./../../../Images/icons/explore.png')} />}
                                 onPress={()=>this.updateTabTo(FEED)}>
                                 <Feed updateTabTo={this.updateTabTo.bind(this)} toggleTabBar={this.toggleTabBar.bind(this)} initial={FEED} headerProgress={this.refs.headerProgress} ref={FEED} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === SUITCASE}
-                                renderIcon={() => <Image source={require('./../../../Images/icons/suitcase-tabbar.png')} />}
+                                renderIcon={() => <Image style={{marginBottom:7}} source={require('./../../../Images/icons/suitcase-tabbar.png')} />}
+                                renderSelectedIcon={() => <Image style={{marginBottom:7,tintColor: '#001645'}} source={require('./../../../Images/icons/suitcase-tabbar.png')} />}
                                 onPress={()=>this.updateTabTo(SUITCASE)}>
                                 <Feed updateTabTo={this.updateTabTo.bind(this)} toggleTabBar={this.toggleTabBar.bind(this)} initial={SUITCASE} headerProgress={this.refs.headerProgress} ref={SUITCASE} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}
                                 selected={this.state.selectedTab === NOTIFICATIONS}
-                                renderIcon={() => <Image  style={{overflow:'visible'}} source={require('./../../../Images/icons/activity.png')}>{notificationBadge}</Image>}
+                                renderIcon={() => <Image  style={{overflow:'visible',marginBottom:5}} source={require('./../../../Images/icons/activity.png')}>{notificationBadge}</Image>}
+                                renderSelectedIcon={() => <Image style={{marginBottom:5,tintColor: '#001645'}} source={require('./../../../Images/icons/activity.png')} />}
                                 onPress={()=>this.updateTabTo(NOTIFICATIONS)}>
                                 <Feed updateTabTo={this.updateTabTo.bind(this)} toggleTabBar={this.toggleTabBar.bind(this)} initial={NOTIFICATIONS} headerProgress={this.refs.headerProgress} ref={NOTIFICATIONS} {...this.props}/>
                             </TabNavigator.Item>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}c
                                 selected={this.state.selectedTab === PROFILE}
-                                renderIcon={() => <Image source={require('./../../../Images/icons/user.png')} />}
+                                renderIcon={() => <Image style={{marginBottom:5}} source={require('./../../../Images/icons/user.png')} />}
+                                renderSelectedIcon={() => <Image style={{marginBottom:5,tintColor: '#001645'}} source={require('./../../../Images/icons/user.png')} />}
                                 onPress={()=>this.updateTabTo(PROFILE)}>
                                 <Feed updateTabTo={this.updateTabTo.bind(this)} toggleTabBar={this.toggleTabBar.bind(this)} initial={PROFILE} headerProgress={this.refs.headerProgress} ref={PROFILE} {...this.props}/>
                             </TabNavigator.Item>
@@ -199,7 +193,7 @@ class Overview extends React.Component {
         return (
 
             <View style={{flex:1}}>
-                <Animated.View style={{position:'absolute',bottom:this.state.bottomOffset}}>
+                <Animated.View style={{position:'absolute',transform:[{translateY:this.state.bottomOffset}]}}>
                     <Image source={require('./../../../Images/navbar_dropshadow.png')} resizeMode="contain" style={styles.tabBarShadow}></Image>
                 </Animated.View>
                 {tabBar}

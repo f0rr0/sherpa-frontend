@@ -5,7 +5,7 @@ import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import config from '../../../../data/config';
 import React, { Component } from 'react';
 import FollowingRow from '../../components/followingRow'
-import {getFollowers,getFollowing,follow,unfollow} from '../../../../actions/user.actions'
+import {getFollowers,getFollowing,follow,unfollow,getSubscriptions} from '../../../../actions/user.actions'
 import Header from '../../components/header'
 
 
@@ -25,8 +25,9 @@ import {
 } from 'react-native';
 
 
-var styles=StyleSheet.create({
-});
+let styles = StyleSheet.create({
+    emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
+})
 
 class FollowerList extends React.Component{
 
@@ -54,6 +55,23 @@ class FollowerList extends React.Component{
         });
     }
 
+    showTripLocation(data){
+        //console.log(data);
+        //let locus=data.split(":");
+        //var locationData={
+        //    layer:locus[1],
+        //    source:locus[0],
+        //    sourceId:locus[2]
+        //};
+        //
+        //
+        //this.props.navigator.push({
+        //    id: "location",
+        //    data:{name:this.state.trip.name,...locationData},
+        //    version:"v2"
+        //});
+    }
+
     _onFetch(page=1,callback){
         switch(this.props.followerType){
             case 'followers':
@@ -62,9 +80,13 @@ class FollowerList extends React.Component{
                 })
             break;
             case 'following':
-                getFollowing(this.props.profile.id).then((response)=>{
-                    callback(response.following);
-                })
+                //getFollowing(this.props.profile.id).then((response)=>{
+                    getSubscriptions(this.props.profile.id).then((response)=>{
+                       //console.log('subscriptions',response)
+                        callback(response.sources);
+                    });
+                    //console.log(response.following);
+                //})
             break;
         }
 
@@ -88,19 +110,26 @@ class FollowerList extends React.Component{
 
     _renderEmpty(){
         let preposition;
+        let followCopy;
             switch(this.props.followerType){
                 case 'followers':
-                    preposition= this.state.ownProfile?"You have":this.props.profile.serviceUsername+" has";
+                    //console.log('followers')
+                    followCopy="You don’t have any followers yet. But that’s ok, we still think you're great.";
+                    //preposition= this.state.ownProfile?"You have":this.props.profile.serviceUsername+" has";
                 break;
                 case 'following':
-                    preposition= this.state.ownProfile?"You are":this.props.profile.serviceUsername+" is";
+                    default:
+                    followCopy="Visit the explore tab to find people and places to follow.";
+                    //preposition= this.state.ownProfile?"You are":this.props.profile.serviceUsername+" is";
                 break;
             }
 
+        //console.log('follow copy',followCopy,'::',this.props.followerType)
         return(
-            <View style={{justifyContent:'center',alignItems:'center',width:windowSize.width,height:windowSize.height-120}}>
-                <Text style={{color:"#a6a7a8",fontSize:12,marginBottom:0, marginTop:5,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>
-                    {this.props.followerType=='followers'?preposition+' no followers yet':preposition+' not following anyone yet'}
+            <View style={{justifyContent:'center',alignItems:'center',width:windowSize.width,height:windowSize.height-240}}>
+                <Text style={styles.emptyCopy}>
+                    {followCopy}
+                    {/*this.props.followerType=='followers'?preposition+' no followers yet':preposition+' not following anyone yet'*/}
                 </Text>
             </View>
         )
@@ -116,7 +145,6 @@ class FollowerList extends React.Component{
                 <SherpaGiftedListview
                     removeClippedSubviews={false}
                     renderHeaderOnInit={true}
-                    enableEmptySections={true}
                     emptyView={this._renderEmpty.bind(this)}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
@@ -144,7 +172,15 @@ class FollowerList extends React.Component{
 
 
     _renderRow(rowData){
-        return <FollowingRow onPress={this.showUserProfile.bind(this)} data={rowData}></FollowingRow>
+        if(!rowData.type)rowData.type="profile";
+        switch(rowData.type){
+            case "profile":
+                return <FollowingRow isMe={this.props.user.serviceID==rowData.id} onPress={this.showUserProfile.bind(this)} data={rowData}></FollowingRow>
+            break;
+            case "location":
+                return <FollowingRow onPress={this.showTripLocation.bind(this)} data={rowData}></FollowingRow>
+            break;
+        }
     }
 }
 

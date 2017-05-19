@@ -141,7 +141,6 @@ class FeedDestination extends Component {
                    contentContainerStyle={styles.listView}
                    renderHeader={this._renderHeader.bind(this)}
                    renderFooter={this._renderFooterView.bind(this)}
-                   enableEmptySections={true}
                    ref="listview"
                    onScroll={(event)=>{
                          var currentOffset = event.nativeEvent.contentOffset.y;
@@ -224,7 +223,7 @@ class FeedDestination extends Component {
             }
 
             index++;
-            return  <MomentRow isSuitcased={true} key={"momentRow"+rowID+"_"+index} itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow user={this.props.user} isSuitcased={true} key={"momentRow"+rowID+"_"+index} itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
         });
         return (
             <View style={[styles.row,{width:this.state.containerWidth}]}>

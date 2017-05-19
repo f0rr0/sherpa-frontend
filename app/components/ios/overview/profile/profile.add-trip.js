@@ -73,18 +73,32 @@ class AddTrip extends React.Component {
             for (let i = 0; i < momentsExifData.length; i++) {
                 let exifData = momentsExifData[i];
 
-                let gps=exifData['gps'];
+                let gps=exifData['{GPS}'];
                 let lat=gps?gps['Latitude']:0;
                 let lng=gps?gps['Longitude']:0;
                 let dateTime=new Date();
 
-                if(exifData.exif.DateTimeOriginal){
-                    dateTime=exifData.exif.DateTimeOriginal.split(' ');
+                if(exifData["{Exif}"].DateTimeOriginal){
+                    dateTime=exifData["{Exif}"].DateTimeOriginal.split(' ');
                     const regex = new RegExp(':', 'g');
                     dateTime[0] = dateTime[0].replace(regex, '-');
                 }
 
 
+                console.log('dingens',
+                    {
+                        "lat":lat,
+                        "lng":lng,
+                        "date": new Date(dateTime[0]).getTime()/1000,
+                        "venue":"",
+                        "location":"",
+                        "state":"",
+                        "country":"",
+                        "type":"image",
+                        "id":"sherpa-internal-"+ new Date(dateTime[0]).getTime() + 100*Math.random(),
+                        "service":"sherpa-ios",
+                        "mediaUrl":this.state.images.cameraroll[i].uri
+                    })
                 //serialize into moments object
                 momentBlobs.unshift({
                     "lat":lat,
@@ -134,10 +148,10 @@ class AddTrip extends React.Component {
         var currentImageSelection=null;
         switch(this.state.photoSource){
             case "cameraroll":
-                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" selected={this.state.images.cameraroll} wrapper={{height:SCREEN_HEIGHT-121,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
+                currentImageSelection=<SherpaCameraRollPicker ref="sherpaCameraRoll" selected={this.state.images.cameraroll} wrapper={{height:SCREEN_HEIGHT-121,width:SCREEN_WIDTH,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesCameraRoll.bind(this)} />
             break;
             case "instagram":
-                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" selected={this.state.images.instagram} wrapper={{height:SCREEN_HEIGHT-121,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
+                currentImageSelection=<SherpaInstagramPicker ref="sherpaInstagram" selected={this.state.images.instagram} wrapper={{height:SCREEN_HEIGHT-121,width:SCREEN_WIDTH,position:'absolute',bottom:0}} backgroundColor={"#161616"} callback={this.getSelectedImagesInstagram.bind(this)} />
             break;
         }
         return(

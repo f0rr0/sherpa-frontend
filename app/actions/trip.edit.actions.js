@@ -79,7 +79,7 @@ export function uploadMoment(momentBlob,momentData){
                     { name : 'enctype', data : 'multipart/form-data'},
                     { name : 'image', filename : 'moment' + momentData.id + '.jpg', type:'image/jpeg', data: RNFetchBlob.wrap(resizedImageUri)}
                 ]).then((resp) => {
-                    console.log('upload resp',resp);
+                    //console.log('upload resp',resp);
                     fulfill(resp)
                 }).catch((err) => {
                     //console.log('error',err);
@@ -182,7 +182,9 @@ export function createTrip(tripBlob,tripLocation) {
                         "location":tripLocation.location,
                         "coverMoment":tripBlob.coverMomentID
                     },
-                    "moments":tripBlob.momentIDs
+                    // "moments":tripBlob.momentIDs,
+                    "addMoments":tripBlob.addMomentIDs,
+                    "removeMoments":tripBlob.removeMomentIDs
                 };
 
                 console.log('create/update trip data',queryData)
@@ -195,7 +197,8 @@ export function createTrip(tripBlob,tripLocation) {
 
                 var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create";
 
-                //console.log('trip query data',queryData)
+                console.log('create or update trip',createOrUpdate);
+                console.log('trip query data',queryData);
 
                 fetch(endpoint + version + "/trip/"+createOrUpdate, {
                     method: tripBlob.trip?'put':'post',
@@ -211,7 +214,7 @@ export function createTrip(tripBlob,tripLocation) {
                         //default:
                     //}
                 }).then((response)=> {
-                    //console.log('response',response)
+                    console.log('response',JSON.parse(response))
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

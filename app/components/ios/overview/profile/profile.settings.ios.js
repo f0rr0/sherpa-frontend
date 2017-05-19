@@ -200,6 +200,7 @@ class ProfileSettings extends React.Component {
     }
 
     render(){
+        //console.log(this.props.user)
         return (
             <View style={{flex:1}}>
                 <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}/>

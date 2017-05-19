@@ -39,7 +39,7 @@ var styles = StyleSheet.create({
         paddingBottom:60,
     },
     emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
-    loaderContainer:{justifyContent:'center',height:windowSize.height-200,width:windowSize.width,alignItems:'center'},
+    loaderContainer:{zIndex:1,justifyContent:'center',height:windowSize.height-260,width:windowSize.width,alignItems:'center'},
 
 });
 
@@ -49,6 +49,7 @@ class FeedNotifications extends React.Component {
         this.itemsLoadedCallback=null;
 
         this.state= {
+            empty:false
         };
     }
 
@@ -62,8 +63,14 @@ class FeedNotifications extends React.Component {
         this.props.dispatch(storeUser())
 
         getFeed(this.props.user.sherpaID,page,'notifications').then((response)=>{
-            //console.log(response.data.notifications)
-            callback(response.data.notifications);
+            //console.log(response.data.notifications.length,'::',page)
+            //console.log(response.data.notifications.length==0,'::',page==1)
+            if(response.data.notifications.length==0&&page==1){
+                this.setState({empty:true})
+                callback([],{allLoaded:true});
+            }else{
+                callback(response.data.notifications);
+            }
             //callback([]);
         }).catch((err)=>{
             //console.log('err',err)
@@ -81,7 +88,12 @@ class FeedNotifications extends React.Component {
     }
 
     _renderEmpty(){
-//console.log('render loading')
+        if(this.state.empty){
+            //console.log('render empty waiting');
+            return this._renderEmptyWaiting()
+        }
+
+        //console.log('render empty')
         return (
             <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height-100,width:windowSize.width,position:'absolute',top:0,left:0,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
@@ -90,10 +102,9 @@ class FeedNotifications extends React.Component {
     }
 
     _renderEmptyWaiting(){
-        //console.log('render empty waiting')
        return(
            <View style={styles.loaderContainer}>
-               <Text style={styles.emptyCopy}>Your travel-related notifications will display here.</Text>
+               <Text style={styles.emptyCopy}>Subscribe to people and places for personalized travel content.</Text>
            </View>
        )
     }
@@ -103,7 +114,6 @@ class FeedNotifications extends React.Component {
                 <SherpaGiftedListview
                     removeClippedSubviews={false}
                     renderHeaderOnInit={true}
-                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
@@ -111,7 +121,8 @@ class FeedNotifications extends React.Component {
                     refreshable={false} // enable pull-to-refresh for iOS and touch-to-refresh for Android
                     withSections={false} // enable sections
                     headerView={this._renderHeader.bind(this)}x
-                    emptyView={this._renderEmptyWaiting.bind(this)}
+                    emptyView={this._renderEmpty.bind(this)}
+                    paginationAllLoadedView={this._renderEmpty.bind(this)}
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
                     ref="listview"

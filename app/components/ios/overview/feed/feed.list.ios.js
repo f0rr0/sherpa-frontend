@@ -7,8 +7,6 @@ import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 import StickyHeader from '../../components/stickyHeader';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import Orientation from 'react-native-orientation';
-import MarkerMap from '../../components/MarkerMap'
 import FeaturedProfile from '../../components/featuredProfile'
 import {SherpaPlacesAutocomplete} from '../../components/SherpaPlacesAutocomplete'
 import config from '../../../../data/config';
@@ -30,6 +28,7 @@ import {
     PixelRatio,
     ScrollView
 } from 'react-native';
+
 import React, { Component } from 'react';
 
 var styles=StyleSheet.create({
@@ -92,7 +91,6 @@ class FeedList extends React.Component{
 
     componentDidMount(){
         AppState.addEventListener('change', this._handleAppStateChange.bind(this));
-        Orientation.lockToPortrait();
 
         //this.state.scrollY.addListener((value) => this.handleScroll(value));
         //console.log('add scrolly listener')
@@ -171,9 +169,11 @@ class FeedList extends React.Component{
             //}
             //
             //console.log('moments',moments)
+            //console.log('load page',page)
             //this.setState({moments})
             //console.log('feed response',response)
-            callback(response.trips);
+            callback(response.trips,{allLoaded:response.trips.length==0});
+            //callback(response.trips);
         })
     }
 
@@ -198,33 +198,37 @@ class FeedList extends React.Component{
         toolTip=null;
         return (
             <View style={{overflow:'visible',justifyContent:'center',marginBottom:0,zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
-                <TouchableOpacity style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
+                <TouchableOpacity activeOpacity={1} style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
                     <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
-                       <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={[{height:mapBaseHeight,width:windowSize.width}
+                       <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={
+                       [
+                       {height:mapBaseHeight,width:windowSize.width}
                         ,{
-                                transform: [,{
-                        scale: this.state.scrollY.interpolate({
-                            inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                            outputRange: [3, 1.1],
-                             extrapolate: 'clamp'
-                        })
-                    },{translateY:this.state.scrollY.interpolate({
-                                                    inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                                                    outputRange: [-50, 0],
-                                                    extrapolate: 'clamp',
-                                                })}]
-                                }
+                         transform: [{
+                                scale: this.state.scrollY.interpolate({
+                                        inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
+                                        outputRange: [3, 1.3],
+                                        extrapolate: 'clamp'
+                                })
+                        },{
+                                translateY:this.state.scrollY.interpolate({
+                                    inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
+                                    outputRange: [-50, 0],
+                                    extrapolate: 'clamp'
+                        })}]
+                        }
                        ]}></Animated.Image>
                        <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
                            {toolTip}
                        </View>
                     </Animated.View>
                 </TouchableOpacity>
+                        <View style={{position:'absolute',width:windowSize.width,top:mapBaseHeight+50,height:50,backgroundColor:"white"}}></View>
                         {this._renderFixedSearchBar()}
                 <View style={{flex:1,marginTop:70,backgroundColor:'white'}}>
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED GUIDES</Text>
+                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED EXPLORERS</Text>
                     {this._renderFeaturedProfiles.bind(this)()}
-                    {/*<Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>LATEST EXPERIENCES</Text>*/}
+                    {<Text style={{marginLeft:15,marginTop:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>TRENDING LOCATIONS</Text>}
                 </View>
             </View>
         )
@@ -249,7 +253,7 @@ class FeedList extends React.Component{
     _renderFeaturedProfiles(){
 
         return(
-            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:30}}>
+            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:20}}>
                 {this.state.featuredProfiles.map((profile,index)=> {
                     return (
                         <FeaturedProfile
@@ -339,7 +343,7 @@ class FeedList extends React.Component{
         return(
             <View ref="searchContainer">
                 <SherpaPlacesAutocomplete
-                    placeholder={ref=='inputFixed'?"Discover the world":"Search places and people"}
+                    placeholder={ref=='inputFixed'?"Discover the world":"Discover the world"}
                     ref={ref}
                     placeholderTextColor={'rgba(0,0,0,.5)'}
                     baseUrl={endpoint+version}
@@ -454,9 +458,9 @@ class FeedList extends React.Component{
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
 
-                     // Animated.event(
-                     //     [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
-                     //   )(event);
+                      //Animated.event(
+                      //    [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
+                      //  )(event);
 
                      this.offset = currentOffset;
                             //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
@@ -482,6 +486,7 @@ class FeedList extends React.Component{
 
     _renderRow(tripData) {
         let rowElement=null;
+        //console.log(tripData)
         switch(tripData.contentType){
             case "trip":
                 rowElement=<TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></TripRow>

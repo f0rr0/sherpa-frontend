@@ -142,7 +142,6 @@ class NotWhitelisted extends Component {
         }).catch((err)=>{
             //error logging
         });
-
     }
 
     cycleAnimation() {
@@ -186,6 +185,47 @@ class NotWhitelisted extends Component {
     }
 
 
+    getSlider(trip){
+            var timeAgo=moment(new Date(trip.dateEnd*1000)).fromNow();
+            let location=trip.country=="US"?trip.state:trip.name;
+            var description=<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:10,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>WENT TO {location.toUpperCase()}</Text>;
+            return(
+                <View style={styles.container} key={trip.id}>
+                    <ImageProgress
+                        resizeMode="cover"
+                        indicator={Progress.Circle}w
+                        indicatorProps={{
+                                            color: 'rgba(150, 150, 150, 1)',
+                                            unfilledColor: 'rgba(200, 200, 200, 0.2)'
+                                        }}
+                        style={styles.bg}
+                        source={{uri:trip.moments[trip.moments.length-1].mediaUrl}}
+                        onLoad={() => {}}
+                        onError={()=>{}}
+                    />
+                    <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
+
+
+                    <View style={{height:50,alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
+                        <UserImage style={{position:'absolute',top:0}} radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
+                        <View style={{marginLeft:50,}}>
+                            <TouchableOpacity onPress={()=>{
+                                                Linking.openURL(trip.serviceJson.link)
+                                            }}>
+
+                                <Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.owner.serviceUsername}</Text>
+                                {description}
+                            </TouchableOpacity>
+                            <View style={{flexDirection:'row',alignItems:'center'}}>
+                                <Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                                <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
+                            </View>
+                        </View>
+                    </View>
+                </View>
+            )
+    }
+
     render() {
         return (
             <Swiper ref="onboardingSlider" showsPagination={false} scrollEnabled={false} showsButtons={false} loop={false} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
@@ -222,45 +262,7 @@ class NotWhitelisted extends Component {
 
                     <Swiper ref="featuredMomentsGallery" automaticallyAdjustContentInsets={true} style={styles.wrapper} showsPagination={false} scrollEnabled={false} showsButtons={false} loop={true} bounces={true} dot={<View style={styles.dot} />} activeDot={<View style={[styles.dot,styles.dotHover]} />}>
 
-                        {this.state.featuredMoments.map(function(trip){
-                            var timeAgo=moment(new Date(trip.dateEnd*1000)).fromNow();
-                            var description=<Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:10,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>TOOK A TRIP {trip.location.toUpperCase()+", "+trip.continent.toUpperCase()}</Text>;
-
-                            return(
-                                <View style={styles.container} key={trip.id}>
-                                    <ImageProgress
-                                        resizeMode="cover"
-                                        indicator={Progress.Circle}
-                                        indicatorProps={{
-                                            color: 'rgba(150, 150, 150, 1)',
-                                            unfilledColor: 'rgba(200, 200, 200, 0.2)'
-                                        }}
-                                        style={styles.bg}
-                                        source={{uri:trip.moments[0].mediaUrl}}
-                                        onLoad={() => {}}
-                                        onError={()=>{}}
-                                    />
-                                    <View style={[styles.container,{backgroundColor:"rgba(0,0,0,.45)"}]}></View>
-
-
-                                    <View style={{height:50,alignItems:'flex-start',flexDirection:'row',marginBottom:20,marginLeft:20}}>
-                                        <UserImage style={{position:'absolute',top:0}} radius={30} userID={trip.owner.id} imageURL={trip.owner.serviceProfilePicture}></UserImage>
-                                        <View style={{marginLeft:50,}}>
-                                            <TouchableOpacity onPress={()=>{
-                                                Linking.openURL(trip.serviceJson.link)
-                                            }}>
-
-                                                <Text style={{backgroundColor:'transparent',color:'white', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={2}>{trip.owner.serviceUsername}</Text>
-                                                {description}
-                                            </TouchableOpacity>
-                                            <View style={{flexDirection:'row',alignItems:'center'}}>
-                                                <Image source={require('image!icon-watch')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                                                <Text style={{backgroundColor:'transparent',color:'white', marginTop:6,fontFamily:'Akkurat',fontSize:10,opacity:.8,marginLeft:3}}>{timeAgo.toUpperCase()}</Text>
-                                            </View>
-                                        </View>
-                                    </View>
-                                </View>)
-                        })}
+                        {this.state.featuredMoments.map(this.getSlider)}
                     </Swiper>
 
                     <Animated.View style={[styles.container,{alignItems:"center",justifyContent:"center",opacity:this.state.slideshowTitleOpacity}]}>

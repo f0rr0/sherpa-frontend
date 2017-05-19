@@ -100,9 +100,11 @@ class MomentRow extends Component{
     render(){
         var tripData = this.props.tripData;
         var imageMargin=10;
+        //console.log(this.props,'inside moment')
         var baseWidth=(this.props.containerWidth - (imageMargin*(this.props.itemsPerRow-1)) ) / this.props.itemsPerRow;
-        const tooltip=this.props.isNotCurrentUsersTrip&&this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
+        const tooltip=(this.props.user.profileID!==this.props.tripData.profile)&&this.props.rowIndex==0&&this.props.itemRowIndex==1&&!this.props.user.usedSuitcase? <TouchableOpacity style={{position:'absolute',right:-10,bottom:29}} onPress={()=>{this.hideTooltip()}}><Animated.Image ref="tooltip" source={require('./../../../Images/tooltip-suitcase.png')} resizeMode="contain" style={{opacity:this.state.tooltipOpacity,width:365,height:53}}></Animated.Image></TouchableOpacity>: null;
 
+        //console.log('highres url in moment',tripData.highresUrl,"::",tripData.mediaUrl)
         //console.log('show moment tooltip',this.props.isNotCurrentUsersTrip)
         return(
             this.state.available?
@@ -128,7 +130,7 @@ class MomentRow extends Component{
                             source={{uri:tripData.serviceJson?tripData.serviceJson.images.thumbnail.url:tripData.mediaUrl}}
                             onLoad={() => {
                             }}
-                            onError={()=>{
+                            onError={(err)=>{
                                 this.setState({available:false})
                                 deleteMoment(tripData.id);
                             }}
@@ -143,9 +145,11 @@ class MomentRow extends Component{
                         resizeMode="cover"
                         source={{uri:tripData.highresUrl||tripData.mediaUrl}}
                         onLoad={() => {
+                                //console.log('=> moment loaded')
                                 Animated.timing(this.state.loadedImageOpacity,{toValue:1,duration:200}).start()
                             }}
-                        onError={()=>{
+                        onError={(e)=>{
+                                //console.log('=> image loading error',e.nativeEvent.error);
                                 this.setState({available:false})
                                 deleteMoment(tripData.id);
                             }}

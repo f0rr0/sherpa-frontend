@@ -11,13 +11,15 @@ export default class SimpleButton extends React.Component {
 
     static propTypes = {
         text: React.PropTypes.string,
+        secondaryText: React.PropTypes.string,
         onPress: React.PropTypes.func,
         icon: React.PropTypes.string,
     }
 
     static defaultProps={
         onPress:function(){},
-        text:"please add button copy"
+        text:"please add button copy",
+        secondaryText:""
     }
 
     _renderIcon(){
@@ -55,7 +57,10 @@ export default class SimpleButton extends React.Component {
                 <TouchableWithoutFeedback disabled={this.props.disabled} style={[this.props.stateStyle]} onPressIn={this.props.onPress}>
                     <Animated.View style={[styles.button, this.props.style,{}]} >
                         {this._renderIcon()}
-                        <Text style={[styles.buttonText,this.props.textStyle,{opacity:this.props.disabled?.6:1}]}>{this.props.text && this.props.text.toUpperCase()}</Text>
+                        <View style={{flexDirection:"row"}}>
+                            <Text style={[styles.buttonText,this.props.textStyle,{opacity:this.props.disabled?.6:1,marginRight:this.props.secondaryText.length>0?0:20}]}>{this.props.text && this.props.text.toUpperCase()}</Text>
+                            {this.props.secondaryText.length>0?<Text style={[styles.buttonText,this.props.secondaryTextStyle,{opacity:this.props.disabled?.6:1,marginLeft:0}]}> ({this.props.secondaryText && this.props.secondaryText.toUpperCase()})</Text>:null}
+                        </View>
                     </Animated.View>
                 </TouchableWithoutFeedback>
         )

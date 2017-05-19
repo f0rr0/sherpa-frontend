@@ -159,6 +159,9 @@ class OnboardingSteps extends Component {
                 //console.log(parsedResponse);
                 //this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
             });
+
+            this.props.dispatch(enableScraping(true));
+
     }
 
     allowNotifications() {
@@ -264,7 +267,7 @@ class OnboardingSteps extends Component {
 
                     />
 
-                    <OnboardingScreen
+                <OnboardingScreen
                         darken={true}
                         topAreaStyle={{top:220}}
                         key="onboarding-hometown"
@@ -272,19 +275,23 @@ class OnboardingSteps extends Component {
                         description="create your profile via instagram?"
                         backgroundImage={this.props.user.mostLikedImage=='use-fallback'?require('../../../Images/mostliked-fallback.png'):{uri:this.props.user.mostLikedImage}}
                         continueButton={
-                            <View>
-                                <SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
-                                        this.refs.onboardingSlider.scrollBy(1);
-                                        let me=this;
-                                        setTimeout(function(){me._enableScraping(true)},500);
-                                    }} text="yep, let's do this"></SimpleButton>
-                                  <TouchableOpacity activeOpacity={1} style={{backgroundColor:'transparent'}} onPress={()=>{
+                            <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
+
+
+                            <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#2E2F31'}]} onPress={()=>{
                                         this.refs.onboardingSlider.scrollBy(1);
                                         let me=this;
                                         setTimeout(function(){me._enableScraping(false)},500);
-                                  }}>
-                                    <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:18,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Maybe later".toUpperCase()}</Text>
-                                </TouchableOpacity>
+                            }} text="maybe later"></SimpleButton>
+
+
+                            <SimpleButton style={[styles.buttonHalf]} onPress={()=>{
+                                         this.refs.onboardingSlider.scrollBy(1);
+                                        let me=this;
+                                        setTimeout(function(){me._enableScraping(true)},500);
+                            }} text="let's do it"></SimpleButton>
+
+
                             </View>
                         }>
 

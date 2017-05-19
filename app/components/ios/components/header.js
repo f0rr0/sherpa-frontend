@@ -16,7 +16,7 @@ class Header extends Component {
         super(props);
         var navSettings={
             color:this.props.type=='fixed'?'black':(this.props.settings.navColor||'black'),
-            routeName:this.props.settings.routeName || '',
+            routeName:this.props.routeName || this.props.settings.routeName || '',
             hideBack:this.props.settings.hideBack,
             opaque:this.props.type=='fixed'?true:this.props.settings.opaque,
             fixedHeader:this.props.settings.fixedHeader,
@@ -28,9 +28,11 @@ class Header extends Component {
             topRightImageStyle:this.props.settings.topRightImageStyle
         };
 
+        this.routeName="BLABLABLA";
 
-        let topLeftImage=navSettings.color==="black"?require("image!nav-arrow-black"):require("image!nav-arrow-white");
-        let topRightImage=navSettings.color==="black"?require('image!nav-dots-black'):require('image!nav-dots-white');
+
+        let topLeftImage=require("./../../../Images/icons/icon-back.png");
+        let topRightImage=require('./../../../Images/icons/options.png');
 
         if(navSettings.topLeftImage)topLeftImage=navSettings.topLeftImage;
         if(navSettings.topRightImage)topRightImage=navSettings.topRightImage;
@@ -63,12 +65,12 @@ class Header extends Component {
 
         var backButton=this.state.settings.hideBack?null:
             <TouchableOpacity style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>
-                <Image style={[styles.navigationBackImage,this.state.settings.topLeftImageStyle]} source={this.state.topLeftImage} resizeMode="contain" />
+                <Image style={[styles.navigationBackImage,this.state.settings.topLeftImageStyle,{tintColor:this.state.settings.color}]} source={this.state.topLeftImage} resizeMode="contain" />
             </TouchableOpacity>;
 
         var navButton=this.state.settings.hideNav?null:
             <TouchableOpacity  underlayColor="#ececec" disabled={this.props.rightDisabled}  onPress={()=>{this.props.navActionRight()}} style={[styles.dotsMoreContainer]}>
-                <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle,{opacity:this.props.rightDisabled?.2:1}]} source={this.state.topRightImage} resizeMode="contain" />
+                <Image style={[styles.dotsMoreImage,this.state.settings.topRightImageStyle,{opacity:this.props.rightDisabled?.2:1, tintColor:this.state.settings.color}]} source={this.state.topRightImage} resizeMode="contain" />
             </TouchableOpacity>;
 
         var topShadow=this.state.settings.topShadow?<Image style={{position:'absolute',top:0,left:0,width:windowSize.width,height:140}} resizeMode="cover" source={require('../../../Images/shadow-top.png')}></Image>:null;

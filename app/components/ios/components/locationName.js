@@ -58,7 +58,7 @@ class LocationName extends Component{
     }
 
     render(){
-        let isCover=this.props.showCover? <TouchableOpacity onPress={this.setCoverPhoto.bind(this)} style={{position:'absolute',right:12,bottom:12}}>
+        let isCover=this.props.showCover? <TouchableOpacity  activeOpacity={1} onPress={this.setCoverPhoto.bind(this)} style={{position:'absolute',right:12,bottom:12}}>
             <View style={{flexDirection:'row',flex:1,alignItems:'center',justifyContent:'center'}}>
 
                 <Text style={{color:'white',fontSize:10,fontFamily:Fonts.type.headline,letterSpacing:1}}>MAKE THIS THE COVER PHOTO</Text>
@@ -174,11 +174,12 @@ class LocationName extends Component{
                                                  fontFamily: Fonts.type.bodyCopy,
                                                  fontSize: Fonts.size.input,
                                                  letterSpacing:Fonts.letterSpacing.small,
-                                                 width:this.props.cardWidth-10
+                                                 width:this.props.cardWidth-30
                                              },
                                              textInputContainer: {
                                                  backgroundColor: '#FFFFFF',
                                                  height:55,
+                                                 width:this.props.cardWidth-10,
                                                  borderRadius:2,
                                                  borderTopWidth: 1,
                                                  borderLeftWidth:1,

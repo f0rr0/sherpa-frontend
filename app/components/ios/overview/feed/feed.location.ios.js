@@ -8,7 +8,7 @@ import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed,getFeed,deleteMoment} from '../../../../actions/feed.actions';
 import FeedTrip from './feed.trip.ios'
 import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
-import {addMomentToSuitcase,removeMomentFromSuitcase} from '../../../../actions/user.actions';
+import {addMomentToSuitcase,removeMomentFromSuitcase,subscribe,unsubscribe,checkFollowingLocation} from '../../../../actions/user.actions';
 import config from '../../../../data/config';
 const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
@@ -21,6 +21,10 @@ import MomentRow from '../../components/momentRow'
 import TripRow from '../../components/tripRow'
 import MarkerMap from '../../components/MarkerMap'
 import TripSubtitle from '../../components/tripSubtitle'
+import FollowButton from '../../components/followButton'
+import { Fonts, Colors } from '../../../../Themes/'
+import UserStat from '../../components/userStat'
+import Header from '../../components/header'
 
 
 import {
@@ -59,7 +63,7 @@ class FeedLocation extends Component {
     }
 
     componentDidMount(){
-        //console.log('trip location');
+        //console.log('trip location nav');
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -114,15 +118,18 @@ class FeedLocation extends Component {
             }
             searchType=data.type&&data.type=='guide'?'guide':'guide';
             this.setState({trip:{locus:req}})
-            //console.log(searchType,'search type')
+            //console.log(req,'search type')
         }else{
+            //console.log('search places v1')
             req={type:data.type,page}
             req[data.type]=this.props.trip[data.type];
             searchType='search-places';
         }
 
 
+
         getFeed(req,page,searchType).then((response)=>{
+            //console.log('feed response',response)
             let locationName=response.rawData.location[response.rawData.location.layer];
             if(locationName)this.setState({locationName:locationName.toUpperCase()})
 
@@ -168,18 +175,18 @@ class FeedLocation extends Component {
 
                 if(page==1){
                     //console.log('get additional stuff',response);
-                        this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+                    let locationGID=response.rawData.location[response.rawData.location.layer+"_gid"];
+                    this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
+
+                    checkFollowingLocation(locationGID).then((res)=>{
+                        this.setState({isFollowing:res});
+                    });
+
                     callback(organizedMoments,settings);
-                    //getFeed(req,1,'search-places-v2').then((secondResponse)=>{
-                    //    callback(organizedMoments,settings);
-                    //});
                 }else{
                     callback(organizedMoments,settings);
-                    //console.log('regular resposne')
                 }
 
-
-                //console.log('organized moments::',organizedMoments)
 
             }
         })
@@ -225,10 +232,10 @@ class FeedLocation extends Component {
     }
 
     render(){
+        var tripData=this.props.trip;
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
                 <SherpaGiftedListview
-                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
@@ -264,7 +271,7 @@ class FeedLocation extends Component {
                     }}
                 />
 
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase()} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
                 <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
             </View>
         )
@@ -276,29 +283,43 @@ class FeedLocation extends Component {
     }
 
 
+    renderFollowButton(){
+        return null;
+        return(
+            <View style={{marginTop:15,maxWidth:103}}>
+                <FollowButton   style={{marginTop:0,opacity:this.state.isFollowing?1:0, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} textStyle={{marginLeft:15,color:'rgba(255,255,255,.7)'}} onPress={()=>{this.followLocation()}} text="following"></FollowButton>
+                <FollowButton icon="follow-button" style={{marginTop:-40,opacity:this.state.isFollowing?0:1, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} onPress={()=>{this.followLocation()}} text={"follow"}></FollowButton>
+            </View>
+        )
+    }
+
+
+    followLocation(){
+        if(this.state.isFollowing){
+            unsubscribe(this.state.rawData.location[this.state.rawData.location.layer+"_gid"]);
+            this.setState({isFollowing:false})
+        }else{
+            subscribe(this.state.rawData.location[this.state.rawData.location.layer+"_gid"]);
+            this.setState({isFollowing:true})
+        }
+    }
+
+
     _renderHeader(){
+        if(!this.state.isReady)return (
+            <View style={{flex:1}}>
+                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:15,alignItems:'center',justifyContent:"flex-end",backgroundColor:'white'}} >
+                </View>
+            </View>
+        );
         //console.log(this.state)
         var tripData=this.props.trip;
         var moments=this.state.moments;
-        //console.log(tripData)
-        //console.log(moments,'render header');
         if(moments.length==0)return null
-        //var mapURI="https://api.mapbox.com/v4/mapbox.emerald/"+moments[0][0].lng+","+moments[0][0].lat+",8/760x1204.png?access_token=pk.eyJ1IjoidHJhdmVseXNoZXJwYSIsImEiOiJjaXRrNnk5OHgwYW92Mm9ta2J2dWw1MTRiIn0.QZvGaQUAnLMvoarRo9JmOg";
         var country=this.getTripLocation(tripData);
         let windowHeight=windowSize.height;
-        let wikipediaInfo=null;
-        let bottomLeft=null
-
-        //switch(tripData.contentType){
-        //    case "guide":
-        //    break;
-        //    case "trip":
-        //    default:
-                bottomLeft=null;//this.renderProfiles()
-                wikipediaInfo=this.state.rawData.location.wikipediaLocation?<WikipediaInfoBox style={{marginTop:-150,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>:null;
-            //break;
-        //}
-
+        let bottomLeft=null;
+        let wikipediaInfo=this.state.rawData.location.wikipediaLocation?<WikipediaInfoBox style={{marginTop:-150,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>:null;
 
         let locationLayer;
         switch(tripData.layer){
@@ -326,10 +347,11 @@ class FeedLocation extends Component {
             default:
                 locationLayer="";
         }
+        //console.log('trip data',this.state.rawData);
 
         return (
             <View style={{flex:1}}>
-                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:15,alignItems:'center'}} >
+                <View style={{height:windowSize.height, width:windowSize.width, marginBottom:15,alignItems:'center',justifyContent:"flex-end"}} >
 
 
                     <View style={{position:'absolute',left:0,top:0}}>
@@ -355,17 +377,13 @@ class FeedLocation extends Component {
 
                         <Animated.Image
                             style={[styles.headerImage,{
-                                transform: [,{
+                                transform: [{
                         scale: this.state.scrollY.interpolate({
                             inputRange: [ -windowHeight, 0],
                             outputRange: [3, 1.1],
                              extrapolate: 'clamp'
                         })
-                    },{translateY:this.state.scrollY.interpolate({
-                                                    inputRange: [ -windowHeight,0],
-                                                    outputRange: [-40, 0],
-                                                    extrapolate: 'clamp',
-                                                })}]
+                    }]
                                 }]}
                             resizeMode="cover"
                             onLoad={()=>{
@@ -386,8 +404,8 @@ class FeedLocation extends Component {
                     <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View style={{alignItems:'center'}}>
                             <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.locationName||tripData.name.toUpperCase()}</Text>
-                            {/*<TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.props.trip}}></TripSubtitle>*/}
-                            <Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>
+                            <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.state.rawData.location}}></TripSubtitle>
+                            {/*<Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>*/}
 
                         </View>
                         <View style={{backgroundColor:'transparent',alignItems:'center',justifyContent:'center',flexDirection:'row'}}>
@@ -396,6 +414,23 @@ class FeedLocation extends Component {
 
                     <View style={{position:'absolute',bottom:170,left:0,justifyContent:'center',alignItems:'center',width:windowSize.width,height:20}}>
                         {bottomLeft}
+                    </View>
+                    <View style={{position:'absolute',left:15, bottom:150}}>
+
+                    <View style={{justifyContent:'center',alignItems:"center",flexDirection:"row",width:windowSize.width-30}}>
+                        {this.renderFollowButton()}
+                        <View>
+                            <View style={styles.tripDataFootnoteRightContainer}>
+                                <Image source={require('./../../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                                <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount}</Text>
+                            </View>
+                            <View style={styles.tripDataFootnoteLeftContainer}>
+                                <Image source={require('./../../../../Images/icons/guide-icon.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
+                                <Text style={styles.tripDataFootnoteCopy}>{locationLayer.toUpperCase()}</Text>
+                                {/* <UserStat description={this.state.rawData.location.relatedData.visitorCount+" Explorers"} textStyle={{marginLeft:6,fontSize:9,backgroundColor:"transparent",color:"white"}} containerStyle={{flexDirection:'row'}} imageStyle={{tintColor:"white",marginTop:2}} style={[{paddingHorizontal:5,marginRight:5}]} icon={require('./../../../../Images/icons/user-small.png')}></UserStat>*/}
+                            </View>
+                        </View>
+                    </View>
                     </View>
                 </View>
                 {wikipediaInfo}
@@ -414,8 +449,8 @@ class FeedLocation extends Component {
                                                     extrapolate: 'clamp',
                                                 })}]
                 }}>
-                {this.props.navigation.default}
-                    </Animated.View>
+                    <Header ref="navStatic" navActionRight={this.navActionRight.bind(this)} goBack={this.props.navigator.pop} settings={this.props.navigation}></Header>
+                </Animated.View>
 
             </View>
         )
@@ -449,10 +484,10 @@ class FeedLocation extends Component {
             switch(item.contentType){
                 case "moment":
                     rowElement=
-                            <MomentRow key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                            <MomentRow key={"momentRow"+rowID+"_"+index} rowIndex={rowID}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} user={this.props.user} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
                     break;
                 case "guide":
-                    rowElement=<TripRow key={"tripRow"+rowID+"_"+index} tripData={item} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...item, type:item.contentType,layer:item.layer,source:item.source,sourceId:item.sourceId||item.sourceId}})}}></TripRow>
+                    rowElement=<TripRow fullBleed={true} key={"tripRow"+rowID+"_"+index} tripData={item} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...item, type:item.contentType,layer:item.layer,source:item.source,sourceId:item.sourceId||item.sourceId}})}}></TripRow>
                     break;
 
             }
@@ -495,7 +530,10 @@ var styles = StyleSheet.create({
 
     headerImage:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width },
     headerDarkBG:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
-
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
+    tripDataFootnoteRightContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',right:10},
+    tripDataFootnoteLeftContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:10},
+    tripDataFootnoteIcon:{marginBottom:3,marginLeft:8,marginRight:4},
     map: {
         ...StyleSheet.absoluteFillObject
     },

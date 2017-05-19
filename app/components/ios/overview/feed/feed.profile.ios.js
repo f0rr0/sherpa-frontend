@@ -21,7 +21,9 @@ var windowSize=Dimensions.get('window');
 import MarkerMap from '../../components/MarkerMap'
 import { Fonts, Colors } from '../../../../Themes/'
 import UserStat from '../../components/userStat'
+import FollowButton from '../../components/followButton'
 import SimpleButton from '../../components/simpleButton'
+import Header from '../../components/header'
 
 
 import {
@@ -122,7 +124,6 @@ class FeedProfile extends React.Component {
 
 
                 checkFollowing(response.profile.id).then((res)=>{
-
                     this.setState({isHeaderReady:true,isFollowing:res,hometownGuide,headerTrips:response.data,profile:response.profile,followers:response.followers,following:response.following})
                     callback(response.data,settings);
                 })
@@ -143,8 +144,6 @@ class FeedProfile extends React.Component {
         });
     }
 
-
-
     followUser(){
         if(this.state.isFollowing){
             unfollow(this.state.profile.id);
@@ -162,10 +161,11 @@ class FeedProfile extends React.Component {
 
         const counts=this.state.profile.serviceObject.counts;
 
+        //console.log('counts',counts)
         const userStats=[
-            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.followers+" followers",onPress:()=>{this.showFollowers('followers')}},
-            {icon:require('./../../../../Images/icons/user-small.png'),description:counts.media+" moments"},
-            {icon:require('./../../../../Images/icons/user-small.png'),description:this.state.following+" following",onPress:()=>{this.showFollowers('following')}},
+            //{icon:require('./../../../../Images/icons/user-small.png'),description:this.state.followers+(this.state.followers<=1?" follower":" followers"),onPress:()=>{this.showFollowers('followers')}},
+            {icon:require('./../../../../Images/icons/images-black.png'),description:counts.media+" places"},
+            //{icon:require('./../../../../Images/icons/user-small.png'),description:this.state.following+" following",onPress:()=>{this.showFollowers('following')}},
         ]
 
         const borderRight={
@@ -178,7 +178,9 @@ class FeedProfile extends React.Component {
             borderLeftColor:'#E5E5E5',
         };
         return(
-            <View style={{flexDirection:'row',justifyContent:'space-between',width:windowSize.width-30}}>
+            <View style={{flexDirection:'row',justifyContent:'space-between',width:windowSize.width-60,height:50}}>
+                {this.renderFollowButton()}
+
                 {userStats.map((item,index)=>{
 
                     let border=null;
@@ -189,8 +191,8 @@ class FeedProfile extends React.Component {
                     }
 
                     return (
-                        <View  key={"user-stat-"+index} style={[{justifyContent:"center",flexDirection:'row',flex:1,alignItems:'center'},border]}>
-                            <UserStat style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
+                        <View  key={"user-stat-"+index}  style={[{justifyContent:"center",flexDirection:'row',flex:1,alignItems:'center'}]}>
+                            <UserStat textStyle={{marginLeft:6,fontSize:9}} containerStyle={{flexDirection:'row'}} style={[{paddingHorizontal:5}]} icon={item.icon} description={item.description} onPress={item.onPress}></UserStat>
                         </View>
                     )
                 })}
@@ -199,11 +201,11 @@ class FeedProfile extends React.Component {
     }
 
     renderFollowButton(){
-        return null;
+        //return null;
         return(
-            <View style={{width:windowSize.width-30,marginTop:15}}>
-                <SimpleButton icon="is-following-button"  style={{marginTop:0, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} textStyle={{color:Colors.white}} onPress={()=>{this.unfollow()}} text="following"></SimpleButton>
-                <SimpleButton icon="follow-button" style={{marginTop:-55,opacity:this.state.isFollowing?0:1, shadowRadius:2,shadowOpacity:.1,shadowOffset:{width:0,height:.5}}} onPress={()=>{this.followUser()}} text={"follow "+this.state.profile.serviceUsername}></SimpleButton>
+            <View style={{marginTop:10,marginRight:10}}>
+                <FollowButton icon="subscribe" negative={true} textStyle={{color:'black'}} style={{position:'absolute',left:0,top:0,opacity:this.state.isFollowing?0:1,borderColor:'rgba(0,0,0,.15)'}} onPress={()=>{this.followUser()}} text="follow"></FollowButton>
+                <FollowButton textStyle={{marginLeft:15,color:'rgba(0,0,0,.4)'}} style={{borderColor:'rgba(0,0,0,.15)',opacity:this.state.isFollowing?1:0}} onPress={()=>{this.followUser()}} text="following"></FollowButton>
             </View>
         )
     }
@@ -216,7 +218,6 @@ class FeedProfile extends React.Component {
             <View style={{flex:1,backgroundColor:'white'}}>
 
                 <SherpaGiftedListview
-                    enableEmptySections={true}
                     rowView={this._renderRow.bind(this)}
                     onFetch={this._onFetch.bind(this)}
                     firstLoader={true} // display a loader for the first fetching
@@ -246,7 +247,7 @@ class FeedProfile extends React.Component {
                         actionsLabel:{fontSize:12}
                     }}
                 />
-                <StickyHeader ref="stickyHeader" navigation={this.props.navigation.fixed}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" routeName={this.props.trip.owner?this.props.trip.owner.serviceUsername:this.state.trip.owner.serviceUsername} ref="navFixed" goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
                 {this.state.owner?<PopOver enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.state.owner.id}></PopOver>:null}
 
             </View>
@@ -264,11 +265,11 @@ class FeedProfile extends React.Component {
     }
 
     showProfileMap(moments){
-        console.log(this.state.owner)
+        //console.log(this.state.owner)
         this.props.navigator.push({
             id: "tripDetailMap",
             trip:{moments},
-            title:this.state.owner.serviceUsername.toUpperCase()+"'S TRAVELS",
+            title:this.state.owner.serviceUsername.toUpperCase()+"'S TRIPS",
             mapType:"profile",
             profileID:this.state.owner.id,
             sceneConfig:"bottom",
@@ -306,7 +307,7 @@ class FeedProfile extends React.Component {
         const hometownGuide=this.state.hometownGuide&&this.state.owner.serviceUsername?
             <View>
                 <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.state.owner.serviceUsername.toUpperCase()}'S TRAVELS</Text>
+                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.state.owner.serviceUsername.toUpperCase()}'S TRIPS</Text>
             </View>
             :null;
 
@@ -315,33 +316,36 @@ class FeedProfile extends React.Component {
         </TouchableOpacity>:null;
 
         return (
-            <View>
-                <View style={{height:windowSize.height*.4, width:windowSize.width,marginBottom:85,marginTop:0,justifyContent:'space-between',zIndex:1}} >
+            <View style={{backgroundColor:"transparent"}}>
+                <View style={{height:windowSize.height*.6, width:windowSize.width,marginTop:0,justifyContent:'flex-start',zIndex:1}} >
                     <View style={{flex:1,alignItems:'center',justifyContent:'flex-start',paddingTop:0,width:windowSize.width,zIndex:1}}>
-                        <UserImage border={false} onPress={()=>{
-                            Linking.openURL("https://www.instagram.com/"+this.state.owner.serviceUsername);
-                        }} radius={80} userID={this.state.owner.id} imageURL={this.state.owner.serviceProfilePicture}></UserImage>
+                        <View style={{width:80,height:80,marginTop:135,marginBottom:-40}}>
+                            <UserImage border={false} onPress={()=>{
+                                Linking.openURL("https://www.instagram.com/"+this.state.owner.serviceUsername);
+                            }} radius={80} userID={this.state.owner.id} imageURL={this.state.owner.serviceProfilePicture}></UserImage>
+                        </View>
 
-                        <Text style={{color:"#000000",fontSize:20,marginBottom:20, marginTop:-65,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.owner.serviceUsername.toUpperCase()}</Text>
-                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.state.owner.serviceObject["bio"]}</Text>
-                        </Hyperlink>
-                        <Text style={{color:"#949494",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.state.owner.hometown}</Text>
-                        <Hyperlink onPress={(url) => Linking.openURL(url)}>
-                            <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10,marginTop:5, fontFamily:"TSTAR", textAlign:'center', fontWeight:"600",backgroundColor:"transparent"}}>{this.state.owner.serviceObject["website"].replace("http://","").replace("https://","")}</Text>
-                        </Hyperlink>
+                        <View>
+                            <Text style={{color:"#000000",fontSize:20,marginVertical:20, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.owner.serviceUsername.toUpperCase()}</Text>
+                            <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                                <Text style={{color:"#000000",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", backgroundColor:"transparent"}}>{this.state.owner.serviceObject["bio"]}</Text>
+                            </Hyperlink>
+                            <Text style={{color:"#949494",width:300,fontSize:12,marginBottom:0, marginTop:3,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500",backgroundColor:"transparent"}}>{this.state.owner.hometown}</Text>
+                            <Hyperlink onPress={(url) => Linking.openURL(url)}>
+                                <Text style={{textDecorationLine:'underline',color:"#8AD78D",width:300,fontSize:12,marginBottom:10,marginTop:5, fontFamily:"TSTAR", textAlign:'center', fontWeight:"600",backgroundColor:"transparent"}}>{this.state.owner.serviceObject["website"].replace("http://","").replace("https://","")}</Text>
+                            </Hyperlink>
+                        </View>
                     </View>
                 </View>
 
-                <View style={{width:windowSize.width,height:130,marginBottom:-65,alignItems:'center',justifyContent:'center',zIndex:1}}>
-                    {/*this.renderUserStats()*/}
-                    {this.renderFollowButton()}
+                <View style={{marginBottom:20,alignItems:'center',justifyContent:'center',zIndex:1}}>
+                    {this.renderUserStats()}
                 </View>
 
                 {hometownGuide}
                 {map}
-                <View style={{position:'absolute',top:0,height:75,backgroundColor:"red",zIndex:1}}>
-                    {this.props.navigation.default}
+                <View style={{position:'absolute',top:0,height:75,backgroundColor:"transparent",zIndex:1}}>
+                    <Header type="fixed" ref="navFixed" goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>
                 </View>
             </View>
         )
@@ -349,7 +353,7 @@ class FeedProfile extends React.Component {
 
     _renderRow(tripData) {
         return (
-            <TripRow isProfile={true} tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
+            <TripRow neverFeature={true} isProfile={true} tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}></TripRow>
         );
     }
 }

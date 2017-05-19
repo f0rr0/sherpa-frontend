@@ -33,9 +33,9 @@ const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 
 import {
     StyleSheet,
-    Navigator,
     View
 } from 'react-native';
+import {Navigator} from 'react-native-deprecated-custom-components';
 import React, { Component } from 'react';
 
 
@@ -182,7 +182,7 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.data} isCountry={route.isCountry} navigation={this._getNavigation({navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation user={this.props.user} enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.data} isCountry={route.isCountry} navigation={{navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false}} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;
@@ -199,7 +199,7 @@ class Feed extends Component {
             case "tripDetail":
             case "momentDetail":
                 showNav=true;
-                sceneContent = <TripDetail enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} user={this.props.user} momentID={route.data} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
+                sceneContent = <TripDetail user={this.props.user} enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} user={this.props.user} momentID={route.data} isSuitcased={route.isSuitcased} trip={route.trip} suitcase={route.suiteCaseTrip} unsuitcase={route.unSuiteCaseTrip} dispatch={this.props.dispatch} />;
             break;
             case "notifications":
                 showNav=true;
@@ -207,7 +207,7 @@ class Feed extends Component {
             break;
             case "profile":
                 showNav=true;
-                sceneContent = <FeedProfile enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:'Profile',fixedHeader:true,hideNav:false})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedProfile enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={{routeName:'Profile',fixedHeader:true,hideNav:false}} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "suitcase":
                 showNav=true;
@@ -217,7 +217,7 @@ class Feed extends Component {
                 showNav=true;
             case "own-profile":
                 showNav=true;
-                sceneContent = <OwnUserProfile enableNavigator={this.enableNavigator.bind(this)} refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={this._getNavigation({routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}})} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <OwnUserProfile enableNavigator={this.enableNavigator.bind(this)} refresh={route.refresh} ref={route.id} navigator={navigator}  navigation={{routeName:"Profile",fixedHeader:true,topLeftImage:require('./../../../../Images/icon-add.png'),topLeftImageStyle:{width:9}}} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "addTrip":
                 showNav=true;
@@ -225,15 +225,15 @@ class Feed extends Component {
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} ref={route.id} tripData={route.tripData} intent={route.intent} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"create album",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} ref={route.id} tripData={route.tripData} intent={route.intent} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"create album",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
-                sceneContent = <EditMomentNames type={route.type} ref={route.id}  tripData={route.tripData} intent={route.intent} deselectedMomentIDs={route.deselectedMomentIDs} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit locations",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-arrow-next.png'),fixedHeader:true,topRightImageStyle:{width:7} })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditMomentNames type={route.type} ref={route.id}  tripData={route.tripData} intent={route.intent} deselectedMomentIDs={route.deselectedMomentIDs} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:"edit locations",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripName":
                 showNav=true;
-                sceneContent = <EditTripName type={route.type} momentData={route.momentData} tripData={route.tripData} intent={route.intent} refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit album name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),fixedHeader:true,hideNav:true })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripName type={route.type} momentData={route.momentData} tripData={route.tripData} deselectedMomentIDs={route.deselectedMomentIDs} intent={route.intent} refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit album name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,hideNav:false })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editMomentName":
                 showNav=true;
@@ -341,7 +341,7 @@ class Feed extends Component {
     render() {
         return (
                 <Navigator
-                    sceneStyle={styles.container}
+                    sceneStyle= {{flex: 1,backgroundColor:'white'}}
                     ref={(navigator) => { this.navigator = navigator; }}
                     renderScene={this.renderScene.bind(this)}
                     onDidFocus={this.sceneDidEnter.bind(this)}

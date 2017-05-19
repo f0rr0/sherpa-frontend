@@ -23,7 +23,8 @@ class TripTitle extends Component {
         let tripTitle="";
         switch(props.type){
             case 'trip':
-                tripTitle=props.tripData.isHometown?"S":" WENT TO";
+                //tripTitle=props.tripData.isHometown?"S":" WENT TO";
+                tripTitle=props.tripData.isHometown?"S":"";
             break;
         }
 
@@ -59,8 +60,8 @@ class TripTitle extends Component {
 
         return (
             <View style={[this.state.containerStyle,this.props.style]}>
-                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?"":""}</Text>:null}
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
+                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?"":this.state.tripTitle}</Text>:null}
             </View>
         );
     }
