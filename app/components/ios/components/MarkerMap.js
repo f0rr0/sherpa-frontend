@@ -141,10 +141,9 @@ class TripDetailMap extends Component{
         this.map.animateToRegion(region);
     }
 
-    updatePins(region=this.region){
+    updatePins(region=this.region) {
         const padding = .2;
         this.recluster();
-
 
         //get clusters for area
         let markers=this.clusters.getClusters([
@@ -155,7 +154,7 @@ class TripDetailMap extends Component{
         ], this.getZoomLevel(region));
 
         //console.log('markers',markers);
-        this.setState({markers:markers});
+        this.setState({markers});
     }
 
     activateLocator(){

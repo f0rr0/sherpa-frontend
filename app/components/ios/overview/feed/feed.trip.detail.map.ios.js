@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import MarkerMap from '../../components/MarkerMap'
 import MapButton from '../../components/mapButton'
+import {cleanBoundingBoxArray, cleanBoundingBoxCorners} from '../../utils/mathUtils'
 import {getFeed} from '../../../../actions/feed.actions';
 import {BlurView} from 'react-native-blur';
 
@@ -12,13 +13,13 @@ import {
     View,
 } from 'react-native';
 import Dimensions from 'Dimensions';
-var windowSize=Dimensions.get('window');
 
+const windowSize = Dimensions.get('window');
 
 
 class TripDetailMap extends Component{
 
-    static defaultProps={
+    static defaultProps = {
         "mapType":"default",
         "hasTriangle":false,
         "regionData":{},
@@ -29,7 +30,7 @@ class TripDetailMap extends Component{
         "disablePins":false,
         "tripID":-1,
         "profileID":-1
-    }
+    };
 
     constructor(props){
         super(props);
@@ -75,115 +76,126 @@ class TripDetailMap extends Component{
     }
 
     onLoadFromRegion(region){
-        switch(this.props.mapType){
-            case "region":
-                var reqBody={
-                    "source":this.props.regionData.source,
-                    "sourceId":this.props.regionData.sourceId,
-                    "layer":this.props.regionData.layer,
-                    "page":1,
-                    "bbox": {
-                        "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
-                        "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
-                    }
-                };
+        const feedMap = {
+            region: this._loadRegionMap.bind(this),
+            global: this._loadGlobalMap.bind(this),
+            profile: this._loadProfileMap.bind(this),
+            trip: this._loadTripMap.bind(this),
+        };
+
+        feedMap[this.props.mapType](region);
+    }
+
+    _loadRegionMap(region) {
+        const bbox = {
+          topLeft: [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+          bottomRight: [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+        };
+
+        const reqBody = {
+            source: this.props.regionData.source,
+            sourceId: this.props.regionData.sourceId,
+            layer: this.props.regionData.layer,
+            page: 1,
+            bbox: cleanBoundingBoxCorners(bbox),
+        };
+
+        this.refs.feedlistmap.hideMarkers().start();
+        this.refs.reloadRegionButton.load();
+
+        getFeed(reqBody,-1,'map-search-v2').then(response => {
+            if (this.isLeaving) return;
+
+            this.setState({mapMoments: response.rawData, reqID: Math.random()});
+            this.refs.feedlistmap.showMarkers().start();
+
+            response.rawData.length === 0
+                ? this.refs.reloadRegionButton.nothing()
+                : this.refs.reloadRegionButton.hide();
+        });
+
+    }
+
+    _loadGlobalMap(region) {
+        const bbox = [
+            region.longitude - region.longitudeDelta/2,
+            region.latitude - region.latitudeDelta/2,
+            region.longitude + region.longitudeDelta/2,
+            region.latitude + region.latitudeDelta/2
+        ];
+
+        const reqBody = {
+            limit: 50,
+            bbox: cleanBoundingBoxArray(bbox)
+        };
+
+        if (this.refs.feedlistmap) this.refs.feedlistmap.hideMarkers().start();
+        if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.load();
+
+        getFeed(reqBody,-1,'map-search-classic').then(response => {
+            if(this.isLeaving) return;
+
+            this.setState({mapMoments:response.data,reqID:Math.random()});
+            this.refs.feedlistmap.showMarkers().start();
+
+            response.data.length === 0
+                ? this.refs.reloadRegionButton.nothing()
+                : this.refs.reloadRegionButton.hide();
+        }).catch(err => {
+            if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.nothing();
+        });
+
+    }
+
+    _loadProfileMap(region) {
+        const bbox = {
+            bbox: cleanBoundingBoxCorners({
+                topLeft: [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+                bottomRight: [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+            })
+        };
+
+        if (this.refs.feedlistmap) this.refs.feedlistmap.hideMarkers().start();
+        if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.load();
 
 
-                this.refs.feedlistmap.hideMarkers().start();
-                this.refs.reloadRegionButton.load();
+        getFeed({bbox:bbox, profileID: this.props.profileID}, -1, 'map-search-profile').then((response)=>{
+            if (this.isLeaving) return;
 
-                getFeed(reqBody,-1,'map-search-v2').then((response)=>{
-                    if(!this.isLeaving){
-                        this.setState({mapMoments:response.rawData,reqID:Math.random()})
-                        this.refs.feedlistmap.showMarkers().start();
-                        if(response.rawData.length==0){
-                            this.refs.reloadRegionButton.nothing();
-                        }else{
-                            this.refs.reloadRegionButton.hide();
-                        }
-                    }
-                });
+            this.setState({mapMoments: response.moments, reqID: Math.random()});
+            this.refs.feedlistmap.showMarkers().start();
 
-            break;
-            case "global":
-                var reqBody={
-                    "limit": 50,
-                    "bbox": [region.longitude-region.longitudeDelta/2,region.latitude-region.latitudeDelta/2,region.longitude+region.longitudeDelta/2,region.latitude+region.latitudeDelta/2]
-                };
+            response.moments.length === 0
+                ? this.refs.reloadRegionButton.nothing()
+                : this.refs.reloadRegionButton.hide();
+        }).catch(err => {
+            if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.nothing();
+        });
+    }
 
-                if(this.refs.feedlistmap)this.refs.feedlistmap.hideMarkers().start();
-                if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.load();
+    _loadTripMap(region) {
+        const bbox = {
+            bbox: cleanBoundingBoxCorners({
+                topLeft: [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
+                bottomRight: [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
+            })
+        };
 
+        if (this.refs.feedlistmap) this.refs.feedlistmap.hideMarkers().start();
+        if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.load();
 
-                getFeed(reqBody,-1,'map-search-classic').then((response)=>{
-                    if(!this.isLeaving){
-                        this.setState({mapMoments:response.data,reqID:Math.random()})
-                        this.refs.feedlistmap.showMarkers().start();
-                        if(response.data.length==0){
-                            this.refs.reloadRegionButton.nothing();
-                        }else{
-                            this.refs.reloadRegionButton.hide();
-                        }
-                    }
-                }).catch((err)=>{
-                    if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.nothing();
-                })
-            break;
-            case "profile":
-                var bbox={
-                    "bbox": {
-                        "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
-                        "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
-                    }
-                };
+        getFeed({bbox: bbox, tripID: this.props.tripID}, -1, 'map-search-trip').then(response => {
+            if (this.isLeaving) return;
 
-                if(this.refs.feedlistmap)this.refs.feedlistmap.hideMarkers().start();
-                if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.load();
+            this.setState({mapMoments: response.moments, reqID: Math.random()});
+            this.refs.feedlistmap.showMarkers().start();
 
-
-                getFeed({bbox:bbox,profileID:this.props.profileID},-1,'map-search-profile').then((response)=>{
-                    if(!this.isLeaving){
-                        this.setState({mapMoments:response.moments,reqID:Math.random()})
-                        this.refs.feedlistmap.showMarkers().start();
-                        if(response.moments.length==0){
-                            this.refs.reloadRegionButton.nothing();
-                        }else{
-                            this.refs.reloadRegionButton.hide();
-                        }
-                    }
-                }).catch((err)=>{
-                    if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.nothing();
-                })
-            break;
-            case "trip":
-                var bbox={
-                    "bbox": {
-                        "topLeft": [region.longitude-region.longitudeDelta/2, region.latitude+region.latitudeDelta/2], // [lng, lat], geojson format
-                        "bottomRight": [region.longitude+region.longitudeDelta/2, region.latitude-region.latitudeDelta/2] // [lng, lat], geojson format
-                    }
-                };
-
-                if(this.refs.feedlistmap)this.refs.feedlistmap.hideMarkers().start();
-                if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.load();
-
-                getFeed({bbox:bbox,tripID:this.props.tripID},-1,'map-search-trip').then((response)=>{
-                    if(!this.isLeaving){
-                        this.setState({mapMoments:response.moments,reqID:Math.random()})
-                        this.refs.feedlistmap.showMarkers().start();
-                        if(response.moments.length==0){
-                            this.refs.reloadRegionButton.nothing();
-                        }else{
-                            this.refs.reloadRegionButton.hide();
-                        }
-                    }
-                }).catch((err)=>{
-                    if(this.refs.reloadRegionButton)this.refs.reloadRegionButton.nothing();
-                })
-            break;
-            case "default":
-            default:
-            break;
-        }
+            response.moments.length === 0
+                ? this.refs.reloadRegionButton.nothing()
+                : this.refs.reloadRegionButton.hide();
+        }).catch(err => {
+            if (this.refs.reloadRegionButton) this.refs.reloadRegionButton.nothing();
+        });
     }
 
     componentWillUnmount(){
@@ -207,10 +219,10 @@ class TripDetailMap extends Component{
     }
 
     _renderLocateMe(){
-        if(!this.props.mapType||this.props.mapType=='default')return null;
+        if(!this.props.mapType||this.props.mapType === 'default')return null;
         return(
         <TouchableOpacity activeOpacity={1} style={{position:'absolute',right:30,bottom:30}} onPress={this.locateMe.bind(this)}>
-            <MapButton icon={require("../../../../Images/map-locate-me.png")} ></MapButton>
+            <MapButton icon={require("../../../../Images/map-locate-me.png")} />
         </TouchableOpacity>
         )
     }
@@ -230,9 +242,9 @@ class TripDetailMap extends Component{
                     containerStyle={styles.listViewContainer}
                     moments={this.state.mapMoments}>
                 </MarkerMap>
-                <Image pointerEvents="none" style={{position:'absolute',width:windowSize.width,height:150,top:0,left:0}} source={require('./../../../../Images/map-top-gradient.png')}></Image>
+                <Image pointerEvents="none" style={{position:'absolute',width:windowSize.width,height:150,top:0,left:0}} source={require('./../../../../Images/map-top-gradient.png')} />
                 <TouchableWithoutFeedback onPress={()=>{this.props.navigator.pop()}}>
-                    <Image style={{position:'absolute',width:50,height:50,padding:30,top:12,left:12}} source={require('./../../../../Images/map-icon-close.png')}></Image>
+                    <Image style={{position:'absolute',width:50,height:50,padding:30,top:12,left:12}} source={require('./../../../../Images/map-icon-close.png')} />
                 </TouchableWithoutFeedback>
                 {this._renderSearchableMapUI()}
                 {this._renderLocateMe()}
@@ -249,7 +261,7 @@ class TripDetailMap extends Component{
     }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
     map: {
         ...StyleSheet.absoluteFillObject
     },
@@ -261,8 +273,6 @@ var styles = StyleSheet.create({
         height:windowSize.height
     },
     listViewContainer: {flex: 1, backgroundColor: 'black', paddingBottom: 60},
-})
-
-
+});
 
 export default TripDetailMap;
