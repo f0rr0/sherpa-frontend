@@ -179,17 +179,18 @@ export function createTrip(tripBlob,tripLocation) {
                         "dateStart": tripBlob.startDate,
                         "dateEnd": tripBlob.endDate,
                         "type": tripLocation.type,
-                        "location":tripLocation.location,
-                        "coverMoment":tripBlob.coverMomentID
+                        "location":tripLocation.location
                     },
                     // "moments":tripBlob.momentIDs,
                     "addMoments":tripBlob.addMomentIDs,
                     "removeMoments":tripBlob.removeMomentIDs
                 };
 
-                console.log('create/update trip data',queryData)
+                // console.log(tripBlob,tripBlob.coverMomentID)
+                if(tripBlob.coverMomentID)queryData.trip["coverMoment"]=tripBlob.coverMomentID;
 
 
+                // console.log(queryData);
 
                 var sherpaHeaders = new Headers();
                 sherpaHeaders.append("token", user.sherpaToken);
@@ -197,8 +198,8 @@ export function createTrip(tripBlob,tripLocation) {
 
                 var createOrUpdate=tripBlob.trip?tripBlob.trip.id+"/update":"create";
 
-                console.log('create or update trip',createOrUpdate);
-                console.log('trip query data',queryData);
+                // console.log('create or update trip',createOrUpdate);
+                // console.log('trip query data',queryData);
 
                 fetch(endpoint + version + "/trip/"+createOrUpdate, {
                     method: tripBlob.trip?'put':'post',
@@ -214,7 +215,7 @@ export function createTrip(tripBlob,tripLocation) {
                         //default:
                     //}
                 }).then((response)=> {
-                    console.log('response',JSON.parse(response))
+                    // console.log('response',JSON.parse(response))
                     fulfill(JSON.parse(response))
                 }).catch(err=>reject(err));
             }

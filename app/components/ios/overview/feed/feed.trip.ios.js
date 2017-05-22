@@ -160,6 +160,7 @@ class FeedTrip extends Component {
 
     _renderFooterView(){
         if(!this.state.trip.nameGid)return null;
+        return null;
         return <View style={{marginBottom:20}}>
             {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
             this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+(this.state.trip.locus[this.state.trip.nameGid.split(":")[1]]||this.state.trip.location)}></SimpleButton>:null}
@@ -281,8 +282,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        //if(!this.state.isReady)return this._renderEmpty();
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:this.state.trip.name?this.state.trip.name.toUpperCase():"",opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:(this.state.trip.name?this.state.trip.name.toUpperCase():"")+" "+this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
         const completeHeader=
             <View style={styles.listViewContainer}>
 
@@ -309,7 +309,6 @@ class FeedTrip extends Component {
                           [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
                         )(event);
                          var currentOffset = event.nativeEvent.contentOffset.y;
-                         //Animated.timing(this.state.scrollY,{duration:0,toValue:currentOffset}).start()
                          var direction=currentOffset-this.offset>0?'down':'up';
                          var isDown=((direction=='down'&&this.direction=='down')  || (direction=='up' && this.direction=='down'));
                          this.offset = currentOffset;
@@ -332,7 +331,8 @@ class FeedTrip extends Component {
                             tripData:this.state.trip,
                             momentData:[],
                             name:"edit album",
-                            sceneConfig:"bottom-nodrag"
+                            sceneConfig:"bottom-nodrag",
+                            title:"Add Album Photos"
                       });
                 }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.state.trip.id}></PopOver>
 
@@ -365,10 +365,20 @@ class FeedTrip extends Component {
 
     showUserProfile(trip){
         this.props.dispatch(udpateFeedState("reset"));
-        this.props.navigator.push({
-            id: "profile",
-            data:trip
-        });
+
+        if(trip.owner.id==this.props.user.serviceID){
+            // this.props.updateTabTo("own-profile")
+        }else{
+            this.props.navigator.push({
+                id: "profile",
+                data:trip
+            });
+        }
+
+        // this.props.navigator.push({
+        //     id: "profile",
+        //     data:trip
+        // });
     }
 
     showTripLocation(data){
@@ -579,7 +589,7 @@ class FeedTrip extends Component {
             }
 
             index++;
-            return  <MomentRow isNotCurrentUsersTrip={!this.state.isCurrentUsersTrip} user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.state.trip} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+            return  <MomentRow isNotCurrentUsersTrip={!this.state.isCurrentUsersTrip} user={this.props.user} dispatch={this.props.dispatch} rowIndex={rowID} key={"momentRow"+rowID+"_"+index}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.state.trip} navigator={this.props.navigator}></MomentRow>
         });
 
         return (

@@ -148,17 +148,17 @@ class OnboardingSteps extends Component {
             sherpaHeaders.append("token", this.props.user.sherpaToken);
             const {endpoint,version,user_uri} = sherpa;
 
-            fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/most-liked/",{
-                method:'get',
-                headers:sherpaHeaders
-            }).then((rawServiceResponse)=>{
-                //console.log('raw sercvice response',rawServiceResponse)
-                return rawServiceResponse.text();
-            }).then((rawSherpaResponse)=>{
-                var parsedResponse=JSON.parse(rawSherpaResponse);
+            // fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/most-liked/",{
+            //     method:'get',
+            //     headers:sherpaHeaders
+            // }).then((rawServiceResponse)=>{
+            //     console.log('raw sercvice response',rawServiceResponse)
+                // return rawServiceResponse.text();
+            // }).then((rawSherpaResponse)=>{
+            //     var parsedResponse=JSON.parse(rawSherpaResponse);
                 //console.log(parsedResponse);
                 //this.setState({hometownBG:{uri:parsedResponse.highresUrl||parsedResponse.mediaUrl},darken:true})
-            });
+            // });
 
             this.props.dispatch(enableScraping(true));
 

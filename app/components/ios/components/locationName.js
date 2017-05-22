@@ -107,7 +107,6 @@ class LocationName extends Component{
                                                 //this.moveDown();
                                             },
                                             onChangeText:(text)=>{
-                                            console.log('text',text)
                                                 if(text.length==0){
                                                        this.props.updateInfo({
                                                             venue:"",

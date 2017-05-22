@@ -28,7 +28,7 @@ class Header extends Component {
             topRightImageStyle:this.props.settings.topRightImageStyle
         };
 
-        this.routeName="BLABLABLA";
+        this.routeName="";
 
 
         let topLeftImage=require("./../../../Images/icons/icon-back.png");

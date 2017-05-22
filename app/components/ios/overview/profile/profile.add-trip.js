@@ -144,7 +144,7 @@ class AddTrip extends React.Component {
 
 
     render(){
-        var header=<Header ref="navFixed" rightDisabled={this.checkEmpty()} settings={{opaque:false,routeName:"Select album photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),navColor:'white'}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
+        var header=<Header ref="navFixed" rightDisabled={this.checkEmpty()} settings={{opaque:false,routeName:this.props.navigation.routeName,topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),navColor:'white'}} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)}></Header>;
         var currentImageSelection=null;
         switch(this.state.photoSource){
             case "cameraroll":

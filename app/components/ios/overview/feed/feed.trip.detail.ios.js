@@ -8,15 +8,15 @@ import PopOver from '../../components/popOver';
 import UserImage from '../../components/userImage';
 import TripSubtitle from '../../components/tripSubtitle';
 import MomentRow from '../../components/momentRow';
-import StickyHeader from '../../components/stickyHeader';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
 import FoursquareInfoBox from '../../components/foursquareInfoBox';
 import SimpleButton from '../../components/simpleButton';
 import config from '../../../../data/config';
 import { Fonts, Colors } from '../../../../Themes/'
-import {loadFeed,getFeed,deleteMoment} from '../../../../actions/feed.actions';
+import infoboxStyles from '../../components/styles/infoBoxStyle';
+
+import {getFeed,deleteMoment} from '../../../../actions/feed.actions';
 import Header from '../../components/header'
-import MapView from 'react-native-maps'
 import MarkerMap from '../../components/MarkerMap'
 import {BlurView} from 'react-native-blur';
 import {removeMomentFromSuitcase,addMomentToSuitcase,checkSuitcased} from '../../../../actions/user.actions';
@@ -160,10 +160,19 @@ class TripDetail extends React.Component{
     }
 
     showUserProfile(trip){
-        this.props.navigator.push({
-            id: "profile",
-            data:trip
-        });
+        if(trip.owner.id==this.props.user.serviceID){
+            // this.props.updateTabTo("own-profile")
+        }else{
+            this.props.navigator.push({
+                id: "profile",
+                data:trip
+            });
+        }
+
+        // this.props.navigator.push({
+        //     id: "profile",
+        //     data:trip
+        // });
     }
 
     navActionRight(){
@@ -264,7 +273,7 @@ class TripDetail extends React.Component{
         if(!momentData)return <View style={{flex:1,backgroundColor:'white', justifyContent:'center',alignItems:'center'}}><Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} /></View>
         let windowHeight=windowSize.height;
         var timeAgo=moment(new Date(momentData.date*1000)).fromNow();
-        var description=momentData.caption&&momentData.caption.length>0?<Text style={{backgroundColor:'transparent',color:'black', fontFamily:'Akkurat',fontSize:12,width:windowSize.width-100}} ellipsizeMode="tail" numberOfLines={10}>{momentData.caption}</Text>:null;
+        var description=momentData.caption&&momentData.caption.length>0?<Text style={infoboxStyles.infoBoxCopy} ellipsizeMode="tail" numberOfLines={10}>{momentData.caption}</Text>:null;
         var profilePic= momentData.profile.serviceProfilePicture?
             <View style={{height:windowSize.width,width:windowSize.width,position:'absolute',top:0,flex:1,justifyContent:'flex-end',alignItems:'flex-start'}}>
                 <Image style={{position:'absolute',bottom:0,left:0,width:windowSize.width,height:200}} resizeMode="cover" source={require('../../../../Images/shadow-bottom.png')}></Image>
@@ -350,11 +359,12 @@ class TripDetail extends React.Component{
                     {this._renderSuitcaseButton()}
 
                         {momentData.caption&&momentData.caption.length>0?<View style={{marginTop:20,marginLeft:10}}>
-                            <Text style={styles.foursquareTitle}>{/*momentData.profile.serviceUsername.toUpperCase()*/}CAPTION</Text>
+                            <Text style={infoboxStyles.infoBoxTitle}>{/*momentData.profile.serviceUsername.toUpperCase()*/}CAPTION</Text>
                             {description}
                         </View>:null}
                     </View>
                     <View style={{marginHorizontal:25,borderTopWidth:momentData.caption&&momentData.caption.length>0?1:0,borderTopColor:"rgba(0,0,0,.1)"}}></View>
+
                     <WikipediaInfoBox data={momentData.wikipediaVenue} countryCode={momentData.country} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></WikipediaInfoBox>
                     <FoursquareInfoBox data={momentData.foursquareVenue} location={momentData.venue} coordinates={{lat:momentData.lat,lng:momentData.lng}}></FoursquareInfoBox>
 
@@ -363,7 +373,7 @@ class TripDetail extends React.Component{
                         <MarkerMap interactive={false} moments={[momentData]}> </MarkerMap>
                     </TouchableOpacity>
                     <View style={{marginHorizontal:25,borderBottomWidth:this.state.momentData.related.length>0?1:0,paddingBottom:25,borderBottomColor:"rgba(0,0,0,.1)",marginTop:25,alignItems:'center',justifyContent:"center"}}>
-                        <TripSubtitle limitLength={true} textStyle={{borderBottomColor:'rgba(0,0,0,.2)'}} style={{fontSize:11,color:'#9B9B9B',fontWeight:"500"}} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus,data)}} tripData={{locus:momentData.locus}}></TripSubtitle>
+                        <TripSubtitle limitLength={true} maxCharCount={20} textStyle={{borderBottomColor:'rgba(0,0,0,.2)'}} style={{fontSize:11,color:'#9B9B9B',fontWeight:"500"}} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus,data)}} tripData={{locus:momentData.locus}}></TripSubtitle>
                     </View>
 
                     {relatedMomentContainer}

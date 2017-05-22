@@ -96,6 +96,7 @@ class TripSubtitle extends Component {
 TripSubtitle.defaultProps = {
     tripData:{},
     limitLength:true,
+    maxLength:3,
     goLocation:function(el){}
 };
 

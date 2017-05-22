@@ -810,6 +810,8 @@ export function signupUser(){
                 deviceData:JSON.stringify(deviceData)
             }
 
+            // console.log(queryObject)
+
             if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
             const queryData = encodeQueryData(queryObject);
 
@@ -819,7 +821,7 @@ export function signupUser(){
 
             dispatch(updateUserSignupState("sherpa_token_request"));
             const {endpoint,version,login_uri} = sherpa;
-            //console.log(endpoint+version+login_uri,'login uri')
+            // console.log(endpoint+version+login_uri,'login uri')
             fetch(endpoint+version+login_uri,{
                 method:'post',
                 headers: {
@@ -849,7 +851,7 @@ export function signupUser(){
                     invited
                 } = sherpaResponse.user;
 
-                console.log('sherpa response',sherpaResponse)
+                // console.log('sherpa response',sherpaResponse)
 
                 dispatch(updateUserData({
                     sherpaID:id,

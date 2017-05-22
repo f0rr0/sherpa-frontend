@@ -335,7 +335,8 @@ class OwnUserProfile extends React.Component {
             id: "addTrip",
             sceneConfig:"bottom-nodrag",
             intent:"ADD_TRIP",
-            hideNav:true
+            hideNav:true,
+            title:"Create a new Album"
         });
     }
 

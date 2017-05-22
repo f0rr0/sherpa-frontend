@@ -114,12 +114,12 @@ class FollowerList extends React.Component{
             switch(this.props.followerType){
                 case 'followers':
                     //console.log('followers')
-                    followCopy="You don’t have any followers yet. But that’s ok, we still think you're great.";
+                    followCopy="You don't have any followers yet.";
                     //preposition= this.state.ownProfile?"You have":this.props.profile.serviceUsername+" has";
                 break;
                 case 'following':
                     default:
-                    followCopy="Visit the explore tab to find people and places to follow.";
+                    followCopy="Visit the explore tab to find people to follow.";
                     //preposition= this.state.ownProfile?"You are":this.props.profile.serviceUsername+" is";
                 break;
             }

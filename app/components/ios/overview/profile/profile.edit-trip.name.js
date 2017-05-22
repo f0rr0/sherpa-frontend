@@ -64,8 +64,8 @@ class EditTripName extends React.Component {
 
     componentDidMount(){
         //console.log(this.state.displayData);
-        console.log(this.state.deselectedMomentIDs)
-        console.log(this.state.displayData)
+        // console.log(this.state.deselectedMomentIDs)
+        // console.log(this.state.displayData)
     }
 
     navActionRight(){
@@ -82,12 +82,15 @@ class EditTripName extends React.Component {
             var momentIDs=[];
             let addMomentsRaw=[];
             let addMomentsFinal=[];
+            let coverMomentID;
 
             //create moments or edit moments
             for(var i=0;i<this.state.displayData.length;i++){
                 if(this.state.displayData[i].id.toString().indexOf("sherpa-internal")>-1){
                     addMomentsRaw.push(this.state.displayData[i]);
                     moments.push(createMoment(this.state.displayData[i]))
+                }else if(this.state.displayData[i].isCover){
+                    coverMomentID=this.state.displayData[i].id;
                 }
             }
 
@@ -96,52 +99,34 @@ class EditTripName extends React.Component {
             this.props.headerProgress.startToMiddle();
 
 
-
-
             getTripLocation(this.state.displayData).then((tripLocation)=>{
 
                 Promise.all(moments).then((momentsRes)=>{
                     var momentUploads=[];
                     var dates=[];
 
-                    var coverMomentID="";
-                    console.log(addMomentsRaw)
+
                     for(var i=0;i<  addMomentsRaw.length;i++){
                             momentIDs.push(momentsRes[i].id)
-                            if(this.state.displayData[i].isCover){
-                                //console.log('cover is ',momentsRes[i])
+                            if(addMomentsRaw[i].isCover){
                                 coverMomentID=momentsRes[i].id;
                             }
-                            dates.push(this.state.displayData[i].date || new Date().getTime()/1000)
+                            dates.push(addMomentsRaw[i].date || new Date().getTime()/1000)
                             if(addMomentsRaw[i].id.toString().indexOf("sherpa-internal")>-1&&addMomentsRaw[i].service=='sherpa-ios'){
-                                momentUploads.push(uploadMoment(this.state.displayData[i],momentsRes[i]));
+                                momentUploads.push(uploadMoment(addMomentsRaw[i],momentsRes[i]));
                             }
                     }
 
-                    console.log('final new moment ids',momentIDs);
                     dates.sort(function(a,b) {
                         return a - b
                     });
 
                     var startDate=dates[0];
                     var endDate=dates[dates.length-1];
-                    console.log('moments uploads',momentUploads)
+                    // console.log('moments uploads',momentUploads)
                     var uploadResolver=momentUploads.length>0?momentUploads:[true];
 
                     Promise.all(uploadResolver).then((res)=> {
-                        //console.log('uploaded moments',{
-                        //    momentIDs,
-                        //    name: this.state.text,
-                        //    startDate,
-                        //    endDate,
-                        //    coverMomentID,
-                        //    trip: this.props.tripData
-                        //},'trip location::',tripLocation);
-
-                        console.log('uploaded moments',res)
-
-                        //console.log("cover moment id",coverMomentID);
-                        //console.log("create trip!!!!!")
 
                         createTrip({
                             momentIDs,
@@ -163,7 +148,6 @@ class EditTripName extends React.Component {
                     }).catch((err)=>{console.log('err from upload',err)});
                 });
 
-                //console.log(this.props.navigator.getCurrentRoutes())
                 this.props.navigator.popToTop();
             });
         }

@@ -48,7 +48,7 @@ var styles=StyleSheet.create({
 const snapOffset=90;
 const topOffset=90;
 const mediumOffset=100;
-const mapBaseHeight=228;
+const mapBaseHeight=190;
 
 class FeedList extends React.Component{
 
@@ -59,7 +59,7 @@ class FeedList extends React.Component{
             currentAppState:'undefined',
             mapLarge:false,
             mapHeight:new Animated.Value(mapBaseHeight),
-            searchbarTopOffset:new Animated.Value(90),
+            searchbarTopOffset:new Animated.Value(-70),
             inputFocusOffset:new Animated.Value(0),
             featuredProfiles:[],
             isFixed:true,
@@ -118,12 +118,14 @@ class FeedList extends React.Component{
         }
 
         if(prevState.isFixed!==this.state.isFixed){
+                this.setState({hideFixed:false})
             if(this.state.isFixed){
-                //console.log('spring up')
-                Animated.spring(this.state.searchbarTopOffset,{toValue:0,tension:150,friction:12}).start()
+                Animated.timing(this.state.searchbarTopOffset,{useNativeDriver:true,toValue:0,duration:200}).start(()=>{
+                })
             }else{
-                //console.log('spring down')
-                Animated.spring(this.state.searchbarTopOffset,{toValue:snapOffset,tension:150,friction:12}).start()
+                Animated.timing(this.state.searchbarTopOffset,{useNativeDriver:true,toValue:-90,duration:200}).start(()=>{
+                    this.setState({hideFixed:true})
+                })
             }
         }
 
@@ -178,6 +180,8 @@ class FeedList extends React.Component{
     }
 
     openMap(){
+        this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
+
         if(this.refs.listview.refs.listview.refs.mapToolTipp)this.refs.listview.refs.listview.refs.mapToolTipp.hide();
         this.props.navigator.push({
             id: "tripDetailMap",
@@ -191,45 +195,49 @@ class FeedList extends React.Component{
 
     _renderHeader(){
         let windowHeight=windowSize.height;
-        let toolTip=this.props.user.usedMap?null:<ToolTipp hideX={true} ref="mapToolTipp" message={"tap to explore".toUpperCase()} ref="mapToolTipp" onHide={()=>{
+        let toolTip=this.props.user.usedMap?<ToolTipp hideX={true} message={"tap to explore".toUpperCase()} ref="mapToolTipp" onHide={()=>{
                                                      this.props.dispatch(updateUserData({usedMap:true}))
                                                      this.props.dispatch(storeUser())
-                                                }}></ToolTipp>
-        toolTip=null;
+                                                }}></ToolTipp>:null
+        // toolTip=null;
         return (
             <View style={{overflow:'visible',justifyContent:'center',marginBottom:0,zIndex:1,width:windowSize.width,alignItems:'flex-start'}}>
-                <TouchableOpacity activeOpacity={1} style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
-                    <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
-                       <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={
-                       [
-                       {height:mapBaseHeight,width:windowSize.width}
-                        ,{
-                         transform: [{
-                                scale: this.state.scrollY.interpolate({
+                <TouchableOpacity style={{flex:1}} activeOpacity={1} onPress={()=>{
+                    this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
+                }}>
+                    <TouchableOpacity activeOpacity={1} style={{backgroundColor:'white'}} onPress={this.openMap.bind(this)}>
+                        <Animated.View style={{overflow:'visible',alignItems:'center',position:'relative',height:mapBaseHeight,width:windowSize.width}}>
+                           <Animated.Image source={require('./../../../../Images/header-img.png')} resizeMode="cover" style={
+                           [
+                           {height:mapBaseHeight,width:windowSize.width}
+                            ,{
+                             transform: [{
+                                    scale: this.state.scrollY.interpolate({
+                                            inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
+                                            outputRange: [3, 1.3],
+                                            extrapolate: 'clamp'
+                                    })
+                            },{
+                                    translateY:this.state.scrollY.interpolate({
                                         inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                                        outputRange: [3, 1.3],
+                                        outputRange: [-50, 0],
                                         extrapolate: 'clamp'
-                                })
-                        },{
-                                translateY:this.state.scrollY.interpolate({
-                                    inputRange: [ -mapBaseHeight, mapBaseHeight*.2],
-                                    outputRange: [-50, 0],
-                                    extrapolate: 'clamp'
-                        })}]
-                        }
-                       ]}></Animated.Image>
-                       <View style={{position:'absolute',bottom:48, left:0, right:0,alignItems:"center"}} >
-                           {toolTip}
-                       </View>
-                    </Animated.View>
+                            })}]
+                            }
+                           ]}></Animated.Image>
+                           <View style={{position:'absolute',bottom:-5, left:0, right:0,alignItems:"center"}} >
+                               {toolTip}
+                           </View>
+                        </Animated.View>
+                    </TouchableOpacity>
+                            <View style={{position:'absolute',width:windowSize.width,top:mapBaseHeight+50,height:50,backgroundColor:"white"}}></View>
+                            {this._renderFixedSearchBar()}
+                    <View style={{flex:1,marginTop:70,backgroundColor:'white'}}>
+                        <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED EXPLORERS</Text>
+                        {this._renderFeaturedProfiles.bind(this)()}
+                        {<Text style={{marginLeft:15,marginTop:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>TRENDING LOCATIONS</Text>}
+                    </View>
                 </TouchableOpacity>
-                        <View style={{position:'absolute',width:windowSize.width,top:mapBaseHeight+50,height:50,backgroundColor:"white"}}></View>
-                        {this._renderFixedSearchBar()}
-                <View style={{flex:1,marginTop:70,backgroundColor:'white'}}>
-                    <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,marginBottom:12,fontWeight:"500"}}>FEATURED EXPLORERS</Text>
-                    {this._renderFeaturedProfiles.bind(this)()}
-                    {<Text style={{marginLeft:15,marginTop:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,top:-12,fontWeight:"500"}}>TRENDING LOCATIONS</Text>}
-                </View>
             </View>
         )
     }
@@ -244,16 +252,22 @@ class FeedList extends React.Component{
 
     showUserProfile(user){
         //console.log('user',user)
-        this.props.navigator.push({
-            id: "profile",
-            data:{owner:user}
-        });
+        this.refs.listview.refs.listview.refs.inputFixed.triggerBlur();
+
+        if(user.id==this.props.user.serviceID){
+            this.props.updateTabTo("own-profile")
+        }else{
+            this.props.navigator.push({
+                id: "profile",
+                data:{owner:user}
+            });
+        }
     }
 
     _renderFeaturedProfiles(){
 
         return(
-            <ScrollView containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:20}}>
+            <ScrollView keyboardShouldPersistTaps={'always'} containerWidth={windowSize.width} horizontal={true} showsHorizontalScrollIndicator={false} style={{flex:1,width:windowSize.width,height:75,flexDirection:'row',marginBottom:20}}>
                 {this.state.featuredProfiles.map((profile,index)=> {
                     return (
                         <FeaturedProfile
@@ -299,8 +313,8 @@ class FeedList extends React.Component{
             <Animated.View  pointerEvents={this.state.isFixed?'auto':'none'}  style={{
                      position:'absolute',
                      top:0,
-                     opacity:this.state.isFixed?1:0,
-                     zIndex:99
+                     zIndex:99,
+                     opacity:this.state.hideFixed?0:1
 
                 }}>
 
@@ -312,9 +326,10 @@ class FeedList extends React.Component{
                     shadowRadius:4,
                     shadowOpacity:.1,
                     shadowOffset:{width:0,height:1},
-                     top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,-65],extrapolate:'clamp'}),
-                        width:windowSize.width,
-                        left:0
+                    transform:[{ translateY:this.state.searchbarTopOffset}],
+                    // top:this.state.searchbarTopOffset.interpolate({inputRange:[0,snapOffset],outputRange:[0,-65],extrapolate:'clamp'}),
+                    width:windowSize.width,
+                    left:0
                 }}>
                     {this._renderSearchInput('inputAnimated')}
                 </Animated.View>
@@ -449,6 +464,7 @@ class FeedList extends React.Component{
                     headerView={this._renderHeader.bind(this)}x
                     refreshableTintColor={"#85d68a"}
                     onEndReachedThreshold={1200}
+                    keyboardShouldPersistTaps="always"
                     scrollEventThrottle={100}
                     scrollEnabled={!this.state.mapLarge}
                     paginationFetchingView={this._renderEmpty.bind(this)}
@@ -457,16 +473,14 @@ class FeedList extends React.Component{
                     }}
                     onScroll={(event)=>{
                      var currentOffset = event.nativeEvent.contentOffset.y;
-
-                      //Animated.event(
-                      //    [{ nativeEvent: { contentOffset: { y: this.state.scrollY }}}]
-                      //  )(event);
-
+                     var direction=currentOffset-this.offset>0?'down':'up';
+                     var isDown=((direction=='down'&&this.direction=='down')  || (direction=='up' && this.direction=='down'));
                      this.offset = currentOffset;
-                            //this.refs.listview.refs.listview.refs.inputFixed._onBlur();
-                            //this.refs.inputAnimated._onBlur();
+                     this.direction=direction;
 
-                     if(currentOffset>70){
+                     // console.log(isDown);
+
+                     if(isDown&&currentOffset>70){
                           this.setState({isFixed:true})
                      }else{
                           this.setState({isFixed:false})

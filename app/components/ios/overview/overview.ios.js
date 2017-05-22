@@ -124,7 +124,11 @@ class Overview extends React.Component {
     }
 
     updateTabTo(target){
-        if(this.state.selectedTab===target)this.refs[target].reset();
+        if(this.state.selectedTab===target){
+            // console.log('reset', this.refs[target],'::',target)
+
+            this.refs[target].reset();
+        }
         this.setState({ selectedTab: target });
     }
 

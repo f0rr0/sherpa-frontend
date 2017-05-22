@@ -197,34 +197,34 @@ class Login extends Component {
     alreadyInvited(){
         this.isRequest=false;
 
-        this.props.dispatch(updateUserData({
-            isExistingLogin:true,
-            intent:"login",
-            serviceID:-1,
-            sherpaID:-1,
-            fullName:"",
-            profilePicture:"",
-            email:"rag@wild.as",
-            bio:"",
-            website:"",
-            serviceToken:"",
-            inviteCode:"",
-            invite:"",
-            username:"",
-            jobID:"",
-            hometown:"",
-            serviceObject:"",
-            service:"instagram",
-            signupState:"",
-            userDBState:"none", //none, empty, available,
-            whiteListed:false,
-            notificationToken:"",
-            profileID:-1,
-            usedSuitcase:false,
-            usedAddTrip:false,
-            usedMap:false,
-            usedEditTrip:false
-        }));
+        // this.props.dispatch(updateUserData({
+        //     isExistingLogin:true,
+        //     intent:"login",
+        //     serviceID:-1,
+        //     sherpaID:-1,
+        //     fullName:"",
+        //     profilePicture:"",
+        //     email:"",
+        //     bio:"",
+        //     website:"",
+        //     serviceToken:"",
+        //     inviteCode:"",
+        //     invite:"",
+        //     username:"",
+        //     jobID:"",
+        //     hometown:"",
+        //     serviceObject:"",
+        //     service:"instagram",
+        //     signupState:"",
+        //     userDBState:"none", //none, empty, available,
+        //     whiteListed:false,
+        //     notificationToken:"",
+        //     profileID:-1,
+        //     usedSuitcase:false,
+        //     usedAddTrip:false,
+        //     usedMap:false,
+        //     usedEditTrip:false
+        // }));
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(signupUser());
     }

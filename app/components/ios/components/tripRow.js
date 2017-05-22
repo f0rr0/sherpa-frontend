@@ -126,17 +126,17 @@ class TripRow extends Component {
                     </View>
 
                 bottomLeftContent=
-                    <View style={{flex:1,flexDirection:'row'}}>
+                    <View style={{flex:1,flexDirection:'row',left:-6}}>
                         <Image source={require('./../../../Images/icons/guide-icon.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{locationLayer.toUpperCase()}</Text>
+                        <Text style={styles.tripDataFootnoteCopy}>TRENDING {locationLayer.toUpperCase()}</Text>
                     </View>
 
                 bottomRightContent= <
-                    View style={styles.tripDataFootnoteContainer}>
+                    View style={[styles.tripDataFootnoteContainer,{right:16}]}>
                     <Image source={require('./../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                     <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount}</Text>
-                        <Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
+                    {/*<Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
+                        <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>*/}
                     </View>
 
                 tripTitle=  <View style={{alignItems:'center'}}>
@@ -164,7 +164,7 @@ class TripRow extends Component {
                 }
 
                 bottomRightContent=(
-                    <View style={styles.tripDataFootnoteContainer}>
+                    <View style={[styles.tripDataFootnoteContainer,{right:0}]}>
                         <Image source={require('./../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                         <Text style={styles.tripDataFootnoteCopy}>{tripData.momentCount||tripData.moments.length}</Text>
                         <Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>

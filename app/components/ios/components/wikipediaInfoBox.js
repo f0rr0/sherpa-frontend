@@ -1,14 +1,9 @@
 'use strict';
-import store from 'react-native-simple-store';
-import config from '../../../data/config';
 import styles from './styles/infoBoxStyle';
 
 import {
     View,
     Text,
-    Linking,
-    TouchableHighlight,
-    StyleSheet
 } from 'react-native';
 import React, {
     Component} from 'react';

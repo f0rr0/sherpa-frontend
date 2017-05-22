@@ -1,16 +1,11 @@
 'use strict';
 
-//import Mapbox from "react-native-mapbox-gl";
 import countries from "./../../../../data/countries";
 import moment from 'moment';
-import { connect } from 'react-redux';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import {loadFeed,getFeed,deleteMoment} from '../../../../actions/feed.actions';
-import FeedTrip from './feed.trip.ios'
-import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
-import {addMomentToSuitcase,removeMomentFromSuitcase,subscribe,unsubscribe,checkFollowingLocation} from '../../../../actions/user.actions';
+import {getFeed,deleteMoment} from '../../../../actions/feed.actions';
+import {subscribe,unsubscribe,checkFollowingLocation} from '../../../../actions/user.actions';
 import config from '../../../../data/config';
-const {sherpa}=config.auth[config.environment];
 import StickyHeader from '../../components/stickyHeader';
 import PopOver from '../../components/popOver';
 import WikipediaInfoBox from '../../components/wikipediaInfoBox';
@@ -22,8 +17,6 @@ import TripRow from '../../components/tripRow'
 import MarkerMap from '../../components/MarkerMap'
 import TripSubtitle from '../../components/tripSubtitle'
 import FollowButton from '../../components/followButton'
-import { Fonts, Colors } from '../../../../Themes/'
-import UserStat from '../../components/userStat'
 import Header from '../../components/header'
 
 
@@ -32,8 +25,8 @@ import {
     View,
     Text,
     Image,
-    TouchableHighlight,
     TouchableOpacity,
+    InteractionManager,
     Alert,
     Animated
 } from 'react-native';
@@ -49,6 +42,7 @@ class FeedLocation extends Component {
         this.state={
             moments:[],
             isReady:false,
+            inTransition:true,
             containerWidth:windowSize.width-30,
             originalMoments:[],
             headerPreviewLoadedOpacity:new Animated.Value(0),
@@ -64,6 +58,10 @@ class FeedLocation extends Component {
 
     componentDidMount(){
         //console.log('trip location nav');
+        InteractionManager.runAfterInteractions(() => {
+            // ...long-running synchronous task...
+            this.setState({inTransition:false})
+        });
     }
 
     componentDidUpdate(prevProps,prevState){
@@ -232,6 +230,7 @@ class FeedLocation extends Component {
     }
 
     render(){
+        if(this.state.inTransition)return null
         var tripData=this.props.trip;
         return(
             <View style={{flex:1,backgroundColor:'white'}}>
@@ -271,7 +270,7 @@ class FeedLocation extends Component {
                     }}
                 />
 
-                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase()} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase() +" "+this.props.navigation.routeName} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
                 <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
             </View>
         )
@@ -325,29 +324,30 @@ class FeedLocation extends Component {
         switch(tripData.layer){
             case "neighbourhood":
                 locationLayer="Neighborhood";
-                break;
+            break;
             case "locality":
                 locationLayer="City";
-                break;
+            break;
             case "borough":
                 locationLayer="Borough";
-                break;
+            break;
             case "region":
                 locationLayer="State / Province";
-                break;
+            break;
             case "macro-region":
                 locationLayer="Region";
-                break;
+            break;
             case "country":
                 locationLayer="Country";
-                break;
+            break;
             case "continent":
                 locationLayer="Continent";
-                break;
+            break;
             default:
                 locationLayer="";
         }
-        //console.log('trip data',this.state.rawData);
+
+
 
         return (
             <View style={{flex:1}}>
@@ -404,7 +404,7 @@ class FeedLocation extends Component {
                     <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View style={{alignItems:'center'}}>
                             <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.locationName||tripData.name.toUpperCase()}</Text>
-                            <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.state.rawData.location}}></TripSubtitle>
+                            <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.props.trip.locus||this.state.rawData.location}}></TripSubtitle>
                             {/*<Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>*/}
 
                         </View>
@@ -415,7 +415,7 @@ class FeedLocation extends Component {
                     <View style={{position:'absolute',bottom:170,left:0,justifyContent:'center',alignItems:'center',width:windowSize.width,height:20}}>
                         {bottomLeft}
                     </View>
-                    <View style={{position:'absolute',left:15, bottom:150}}>
+                    <View style={{position:'absolute',left:15, bottom:130,backgroundColor:'red'}}>
 
                     <View style={{justifyContent:'center',alignItems:"center",flexDirection:"row",width:windowSize.width-30}}>
                         {this.renderFollowButton()}
@@ -532,7 +532,7 @@ var styles = StyleSheet.create({
     headerDarkBG:{position:"absolute",top:0,left:0,height:windowSize.height*.95,width:windowSize.width,opacity:.6,backgroundColor:'black' },
     tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
     tripDataFootnoteRightContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',right:10},
-    tripDataFootnoteLeftContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:10},
+    tripDataFootnoteLeftContainer:{position:'absolute',bottom:19,backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',left:2},
     tripDataFootnoteIcon:{marginBottom:3,marginLeft:8,marginRight:4},
     map: {
         ...StyleSheet.absoluteFillObject

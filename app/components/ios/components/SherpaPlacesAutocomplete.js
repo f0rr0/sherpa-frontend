@@ -426,7 +426,7 @@ const SherpaPlacesAutocomplete = React.createClass({
                                 results:this._results,
                                 dataSource: this.state.dataSource.cloneWithRows(this.buildRowsFromResults(this._results)),
                             });
-                            console.log(responseJSON)
+                            // console.log(responseJSON)
                             if(this._results.length==0){
                                 this.setState({uiState:'noresults'});
                             }else{

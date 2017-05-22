@@ -22,15 +22,15 @@ class ChooseHometown extends Component {
     sherpaHeaders.append("token", this.props.user.sherpaToken);
     const {endpoint,version,user_uri} = sherpa;
 
-    fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/lasthometownmoment/",{
-      method:'get',
-      headers:sherpaHeaders
-    }).then((rawServiceResponse)=>{
-      return rawServiceResponse.text();
-    }).then((rawSherpaResponse)=>{
-      var parsedResponse=JSON.parse(rawSherpaResponse);
-      this.setState({hometownBG:{uri:parsedResponse.mediaUrl},darken:true})
-    });
+    // fetch(endpoint+"v1/profile/"+this.props.user.serviceID+"/moments/lasthometownmoment/",{
+    //   method:'get',
+    //   headers:sherpaHeaders
+    // }).then((rawServiceResponse)=>{
+    //   return rawServiceResponse.text();
+    // }).then((rawSherpaResponse)=>{
+    //   var parsedResponse=JSON.parse(rawSherpaResponse);
+    //   this.setState({hometownBG:{uri:parsedResponse.mediaUrl},darken:true})
+    // });
   }
 
   render() {
