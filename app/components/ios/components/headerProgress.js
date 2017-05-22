@@ -1,6 +1,6 @@
 import React from 'react'
 import { TouchableOpacity, Text, View, Animated, Image } from 'react-native'
-import InteractiveNotification from '../components/interactiveNotification';
+import InteractiveNotification from '../components/InteractiveNotification';
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 const SCREEN_HEIGHT = require('Dimensions').get('window').height;
 
