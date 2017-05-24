@@ -282,8 +282,11 @@ export function getFeed(query,page=1,type='') {
 
                 }
 
+                // console.log(feedRequestURI)
+                // console.log(reqBody)
 
-                //console.log('feed request uri',feedRequestURI)
+
+                // console.log('feed request uri',feedRequestURI)
                 fetch(feedRequestURI, reqBody)
                     .then((rawSherpaResponse)=> {
                         switch (rawSherpaResponse.status) {

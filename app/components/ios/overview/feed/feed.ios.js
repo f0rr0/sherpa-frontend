@@ -178,7 +178,7 @@ class Feed extends Component {
             break;
             case "destination":
                 showNav=true;
-                sceneContent = <FeedDestination enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.data.name+" SUITCASE",fixedHeader:true})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedDestination enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:route.data.name, routeDescription:" SUITCASE",fixedHeader:true})} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "tripDetailMap":
                 showNav=true;
@@ -199,7 +199,7 @@ class Feed extends Component {
             break;
             case "suitcase":
                 showNav=true;
-                sceneContent = <Suitcase enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <Suitcase updateTabTo={this.props.updateTabTo}  enableNavigator={this.enableNavigator.bind(this)} ref={route.id} navigator={navigator} navigation={this._getNavigation({routeName:"suitcase",hideNav:true,hideBack:true,fixedHeader:true})} trip={route.trip} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "explore":
                 showNav=true;
@@ -209,11 +209,11 @@ class Feed extends Component {
             break;
             case "addTrip":
                 showNav=true;
-                sceneContent = <AddTrip type={route.type} enableNavigator={this.enableNavigator.bind(this)} images={route.images} tripData={route.tripData} momentData={route.momentData} deselectedMomentIDs={route.deselectedMomentIDs} ref={route.id} navigator={navigator} navigation={{routeName:route.title||"add album photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'}} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <AddTrip type={route.type} enableNavigator={this.enableNavigator.bind(this)} images={route.images} tripData={route.tripData} momentData={route.momentData} deselectedMomentIDs={route.deselectedMomentIDs} ref={route.id} navigator={navigator} navigation={{routeName:route.title||"add guide photos",topLeftImage:require('./../../../../Images/icon-close-white.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,navColor:'white'}} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripGrid":
                 showNav=true;
-                sceneContent = <EditTripGrid deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} ref={route.id} tripData={route.tripData} intent={route.intent} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"create album",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripGrid deselectedMomentIDs={route.deselectedMomentIDs} type={route.type} ref={route.id} tripData={route.tripData} intent={route.intent} momentData={route.momentData} navigator={navigator} navigation={this._getNavigation({routeName:route.name||"select guide photos",topLeftImage:require('./../../../../Images/icon-close-black.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true})} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editTripNames":
                 showNav=true;
@@ -221,7 +221,7 @@ class Feed extends Component {
             break;
             case "editTripName":
                 showNav=true;
-                sceneContent = <EditTripName type={route.type} momentData={route.momentData} tripData={route.tripData} deselectedMomentIDs={route.deselectedMomentIDs} intent={route.intent} refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit album name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,hideNav:false })} user={this.props.user} dispatch={this.props.dispatch} />;
+                sceneContent = <EditTripName type={route.type} momentData={route.momentData} tripData={route.tripData} deselectedMomentIDs={route.deselectedMomentIDs} intent={route.intent} refreshCurrentScene={this.refreshCurrentScene.bind(this)} ref={route.id} navigator={navigator} headerProgress={this.props.headerProgress} navigation={this._getNavigation({routeName:"edit guide name",topLeftImage:require('./../../../../Images/icon-arrow-back.png'),topRightImage:require('./../../../../Images/icon-check-white.png'),fixedHeader:true,hideNav:false })} user={this.props.user} dispatch={this.props.dispatch} />;
             break;
             case "editMomentName":
                 showNav=true;

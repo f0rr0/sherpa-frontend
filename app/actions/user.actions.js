@@ -11,7 +11,7 @@ import DeviceInfo from 'react-native-device-info/deviceinfo';
 let simpleAuthClient = require('react-native-simple-auth');
 import SafariView from "react-native-safari-view";
 import {getFeed} from './feed.actions'
-
+import NotificationsIOS from 'react-native-notifications';
 
 /**
  * Update User Data
@@ -384,6 +384,7 @@ export function updateNotificationCount(){
         return store.get('user').then((user) => {
             if (user) {
                 getFeed(user.sherpaID,1,'notifications').then((response)=>{
+                    NotificationsIOS.setBadgesCount(response.data.counts.unviewedCount);
                     dispatch(updateUserData({notificationCount:response.data.counts.unviewedCount}))
                     dispatch(storeUser())
                 }).catch((err)=>{

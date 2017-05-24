@@ -102,12 +102,12 @@ class FollowingRow extends Component {
                                     userID={this.props.data.id}
                                     imageURL={this.props.data.serviceProfilePicture}
                                 ></UserImage>
-                                <View style={{width:220}}>
+                                <TouchableOpacity onPress={()=>{this.props.onPress(this.props.data)}} style={{width:220}}>
                                     <View style={{flexDirection:'row'}}>
                                         <Text style={{fontFamily:"Akkurat",color:'black',fontSize:12}}>{this.props.data.serviceUsername}</Text>
                                     </View>
                                     <Text style={{fontFamily:"Akkurat",color:'black',fontSize:9,opacity:.7}}>{this.props.data.serviceFullName}</Text>
-                                </View>
+                                </TouchableOpacity>
                                 {!this.props.isMe?<TouchableOpacity activeOpacity={1} onPress={()=>{this.toggleSubscribe()}}>
                                     <View style={{width:20,height:20,borderRadius:20,borderColor:'rgba(0,0,0,.3)',borderWidth:1}}>
                                     </View>

@@ -121,13 +121,13 @@ class TripRow extends Component {
                 let guideString=tripData.isHometown?"LOCAL":" GUIDE"
                 bottomLeftContent=
                     <View style={{flex:1,flexDirection:'row'}}>
-                        <Image  source={require('./../../../Images/icons/guide-icon.png')}></Image>
+                        <Image  source={require('./../../../Images/trending.png')}></Image>
                         <Text  style={[styles.tripDataFootnoteCopy,{marginLeft:5}]}>{locationLayer.toUpperCase() +""+guideString} </Text>
                     </View>
 
                 bottomLeftContent=
-                    <View style={{flex:1,flexDirection:'row',left:-6}}>
-                        <Image source={require('./../../../Images/icons/guide-icon.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
+                    <View style={{flex:1,flexDirection:'row',left:-6,alignItems:'center'}}>
+                        <Image source={require('./../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:5}]} ></Image>
                         <Text style={styles.tripDataFootnoteCopy}>TRENDING {locationLayer.toUpperCase()}</Text>
                     </View>
 
@@ -164,7 +164,7 @@ class TripRow extends Component {
                 }
 
                 bottomRightContent=(
-                    <View style={[styles.tripDataFootnoteContainer,{right:0}]}>
+                    <View style={[styles.tripDataFootnoteContainer,{right:2}]}>
                         <Image source={require('./../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                         <Text style={styles.tripDataFootnoteCopy}>{tripData.momentCount||tripData.moments.length}</Text>
                         <Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
@@ -175,7 +175,7 @@ class TripRow extends Component {
                  bottomLeftContent=
                      <View style={{flex:1,flexDirection:'row'}}>
                          <Image  source={require('./../../../Images/icons/star.png')}></Image>
-                         <Text  style={[styles.tripDataFootnoteCopy,{marginLeft:5}]}>FEATURED TRIP</Text>
+                         <Text  style={[styles.tripDataFootnoteCopy,{marginLeft:5}]}>FEATURED GUIDE</Text>
                      </View>
              break;
              case "trip":
@@ -188,7 +188,7 @@ class TripRow extends Component {
                         bottomLeftContent=
                             tripData.isHometown?<View style={{flexDirection:'row',bottom:3,left:0}}>
                                 <Image source={require('./../../../Images/icons/flag-small.png')} style={[styles.tripDataFootnoteIcon,{tintColor:"white"}]} ></Image>
-                                <Text style={styles.tripDataFootnoteCopy}>LOCAL PLACES</Text>
+                                <Text style={styles.tripDataFootnoteCopy}>LOCAL GUIDE</Text>
                             </View>:<UserImage radius={this.state.userImageRadius} userID={tripData.owner.id}  imageURL={tripData.owner.serviceProfilePicture}></UserImage>
                         tripTitle=<TripTitle isProfile={this.props.isProfile} tripData={tripData} tripOwner={tripData.owner.serviceUsername}></TripTitle>
                     }

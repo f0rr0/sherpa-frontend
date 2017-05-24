@@ -336,7 +336,7 @@ class OwnUserProfile extends React.Component {
             sceneConfig:"bottom-nodrag",
             intent:"ADD_TRIP",
             hideNav:true,
-            title:"Create a new Album"
+            title:"Create a new Guide"
         });
     }
 
@@ -416,7 +416,7 @@ class OwnUserProfile extends React.Component {
         let tooltip=
             this.props.user.usedAddTrip?null:<View style={{position:'absolute',zIndex:2,left:5,top:60}} >
 
-                <ToolTipp hideX={false} hasTriangle="topleft" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:15}} message={"Tap here to create a new travel album."} ref="geoToolTippprops.user" onHide={()=>{
+                <ToolTipp hideX={false} hasTriangle="topleft" style={{backgroundColor:'rgba(0,0,0,.85)',paddingVertical:15,paddingHorizontal:15}} textStyle={{fontSize:12,letterSpacing:.3,lineHeight:15}} message={"Tap here to create a new travel guide."} ref="geoToolTippprops.user" onHide={()=>{
                                                      this.props.dispatch(updateUserData({usedMap:true}))
                                                      this.props.dispatch(storeUser())
                                                 }}></ToolTipp>
@@ -426,7 +426,7 @@ class OwnUserProfile extends React.Component {
         const hometownGuide=this.state.hometownGuide?
             <View>
                 <TripRow isProfile={true} tripData={this.state.hometownGuide} showTripDetail={this.showTripDetail.bind(this)} hideProfileImage={true}/>
-                <Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRIPS</Text>
+                {/*<Text style={{marginLeft:15,fontSize:10,fontFamily:"TSTAR",letterSpacing:.8,fontWeight:"500",marginVertical:10}}>{this.props.user.username.toUpperCase()}'S TRIPS</Text>*/}
             </View>
             :null;
 

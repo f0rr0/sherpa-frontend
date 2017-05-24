@@ -214,7 +214,7 @@ class EditMomentNames extends React.Component {
                     return <LocationName showCover={this.state.intent!=='edit-moment'} updateInfo={this.updateInfo.bind(this)} makeCoverPhoto={this.makeCoverPhoto.bind(this)} ref={"location-"+index} locationIndex={index} key={index} cardWidth={CARD_WIDTH} hideNav={this.hideNav.bind(this)} showNav={this.showNav.bind(this)} style={styles.card} moment={moment}></LocationName>;
                 })}
             </PagedScrollView>
-            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} secondaryTextStyle={{color:"#caebcb"}} secondaryText={this.state.intent!=='edit-moment'?"edit album name":""} text={this.state.intent!=='edit-moment'?"next step":"save location name"}></SimpleButton>
+            <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7,position:'absolute',bottom:14,left:7}} onPress={()=>{this.navActionRight()}} secondaryTextStyle={{color:"#caebcb"}} secondaryText={this.state.intent!=='edit-moment'?"edit guide name":""} text={this.state.intent!=='edit-moment'?"next step":"save location name"}></SimpleButton>
             </View>
     )
     }

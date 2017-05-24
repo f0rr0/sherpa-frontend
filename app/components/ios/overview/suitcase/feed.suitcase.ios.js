@@ -4,14 +4,11 @@
 import FeedTrip from './../feed/feed.trip.ios'
 
 import countries from './../../../../data/countries'
-import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {loadFeed} from '../../../../actions/feed.actions';
-import { connect } from 'react-redux';
 import StickyHeader from '../../components/stickyHeader';
-import { BlurView, VibrancyView } from 'react-native-blur';
-
-
+import FollowButton from '../../components/followButton';
+import { BlurView } from 'react-native-blur';
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
 
@@ -23,7 +20,7 @@ import {
     Animated,
     TouchableOpacity
 } from 'react-native';
-import React, { Component } from 'react';
+import React from 'react';
 
 var styles = StyleSheet.create({
     container: {
@@ -57,8 +54,8 @@ var styles = StyleSheet.create({
     loaderContainer:{flex:1,justifyContent:'center',height:windowSize.height,width:windowSize.width,alignItems:'center'},
     loaderImage:{width: 250, height: 250},
 
-    emptyContainer:{flex:1,justifyContent: 'center', height:400,alignItems: 'center'},
-    emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
+    emptyContainer:{flex:1,justifyContent: 'center', height:windowSize.height-145,alignItems: 'center'},
+    emptyCopy:{color:"#282B33",width:300,textAlign:"center", fontWeight:"800", fontFamily:"Akkurat",lineHeight:16,letterSpacing:0.2,fontSize:12},
 
     suitcaseCopySmall:{marginLeft:30,color:"#FFFFFF",fontSize:10, fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent", marginTop:5},
     suitcaseCopyLarge:{marginLeft:30,color:"#FFFFFF",fontSize:25, marginTop:-1,fontFamily:"TSTAR", fontWeight:"500",textAlign:'left', letterSpacing:1,backgroundColor:"transparent"},
@@ -95,6 +92,7 @@ class Suitecase extends React.Component {
     }
 
     showTripDetail(trip) {
+        console.log('show detail',trip)
         this.props.navigator.push({
             id: "destination",
             data:trip,
@@ -116,6 +114,7 @@ class Suitecase extends React.Component {
     componentDidUpdate(){
         if(this.props.feed.feedState==='ready'&&this.props.feed.suitcaseDestinations[this.props.feed.feedPage]){
             this.itemsLoadedCallback(this.props.feed.suitcaseDestinations[this.props.feed.feedPage])
+            // this.itemsLoadedCallback([])
         }else if(this.props.feed.feedState==='reset'){
             this.refs.listview._refresh()
         }
@@ -165,7 +164,10 @@ class Suitecase extends React.Component {
     _emptyView(){
         return(
             <View style={styles.emptyContainer}>
-                <Text style={styles.emptyCopy}>Add the destinations you want to remember by tapping the small suitcase button underneath each photo.</Text>
+                <Image style={{marginBottom:23}} source={require('./../../../../Images/suitcase-big.png')} />
+                <Text style={{fontFamily:"TSTAR-bold",letterSpacing:1.6, fontSize:24,fontWeight:"700",marginBottom:5}}>SAVE INSPIRATION</Text>
+                <Text style={styles.emptyCopy}>Tap the suitcase button to save the places you'd like to remember.</Text>
+                <FollowButton negative={true} textStyle={{color:'black',marginLeft:0,marginRight:0,letterSpacing:1.11}} style={{marginLeft:0,marginRight:0,marginTop:25,borderColor:'rgba(0,0,0,.15)'}} onPress={()=>{this.props.updateTabTo("feed")}} text="Start Exploring"></FollowButton>
             </View>
         )
     }

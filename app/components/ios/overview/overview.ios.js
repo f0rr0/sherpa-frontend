@@ -10,10 +10,9 @@ import {udpateFeedState,getFeed} from '../../../actions/feed.actions';
 import {updateNotificationCount,storeUser} from '../../../actions/user.actions';
 import {updateTab} from '../../../actions/app.actions';
 
-import { connect } from 'react-redux';
 import TabNavigator from 'react-native-tab-navigator';
 import NotificationsIOS from 'react-native-notifications';
-import React, { Component } from 'react';
+import React from 'react';
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
 import HeaderProgress from '../components/headerProgress'
 import {
@@ -82,7 +81,8 @@ class Overview extends React.Component {
         NotificationsIOS.addEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground.bind(this));
         NotificationsIOS.addEventListener('notificationReceivedBackground', this.onNotificationReceivedBackground.bind(this));
         NotificationsIOS.consumeBackgroundQueue();
-        PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        // PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        NotificationsIOS.setBadgesCount(0);
         NetInfo.fetch().done(this.handleFirstConnectivityChange);
         NetInfo.addEventListener(
             'change',
@@ -133,14 +133,14 @@ class Overview extends React.Component {
     }
 
     _onNotificationOpened(notification) {
-        PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        // PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        NotificationsIOS.setBadgesCount(0);
         var deepLinkObject=notification.getData();
         this.setState({selectedTab:FEED,selectedView:deepLinkObject});
         if(this.props.tracker)this.props.tracker.trackEvent('notification-opened', deepLinkObject.v1.linkView.id);
     }
 
     onNotificationReceivedBackground(){
-
         this.props.dispatch(updateNotificationCount());
     }
 

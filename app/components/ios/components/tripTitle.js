@@ -9,7 +9,7 @@ import {
 
 var styles=StyleSheet.create({
     tripTitleContainer:{flex:1,justifyContent:'center',alignItems:'center',left:0,right:0},
-    tripTitleLarge: {color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:5,fontFamily:"TSTAR", fontWeight:"800"},
+    tripTitleLarge: {color:"#FFFFFF",fontSize:12,backgroundColor:"transparent",marginBottom:0,fontFamily:"TSTAR", fontWeight:"800"},
     tripTitleSmall:{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center"},
     tripTitleStandaloneContainer:{position:'absolute',top:160,left:0,right:0,height:20,marginTop:-5}
 });
@@ -60,8 +60,8 @@ class TripTitle extends Component {
 
         return (
             <View style={[this.state.containerStyle,this.props.style]}>
+                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?"":this.state.tripTitle}'S</Text>:null}
                 <Text style={styles.tripTitleSmall}>{tripName.toUpperCase()}</Text>
-                {(!this.props.isProfile)?<Text style={styles.tripTitleLarge}>{this.props.tripOwner.toUpperCase()}{this.props.tripData.isHometown?"":this.state.tripTitle}</Text>:null}
             </View>
         );
     }

@@ -45,27 +45,39 @@ class TripSubtitle extends Component {
         let sorting=['neighbourhood','borough','locality','region','country'];
         if(this.props.maxLength)sorting.push('continent');
         let finalSubtitles=[];
+
+        // console.log(subTitle)
         let counter=0;
         //console.log('yoyo',this.props)
         //if(this.props.limitLength){
+        let layerType=this.props.tripData.type||this.props.tripData.layer||this.props.tripData.locus.layer;
+        // console.log(this.props.tripData)
             var charcount=0;
             for(var i=0;i<sorting.length;i++){
                 for(var j=0;j<subTitle.length;j++){
                         //console.log(subTitle[j].type,'i',i,':',)
                     if(subTitle[j].type==sorting[i]){
-                        if(!this.props.maxLength&&charcount<this.props.maxCharCount){
-                            //console.log('pop');
+                        if(this.props.maxCharCount&&charcount<this.props.maxCharCount){
                             finalSubtitles.push(subTitle[j]);
                             charcount+=subTitle[j].name.length;
-                        }else{
-                            if(subTitle[j].type!==this.props.tripData.type)finalSubtitles.push(subTitle[j]);
+                        }else if(finalSubtitles.length<this.props.maxLength){
+                            let isSelf=subTitle[j].type==layerType;
+                            if(this.props.showSelf){
+                                finalSubtitles.push(subTitle[j]);
+                            }else{
+                                if(!isSelf)finalSubtitles.push(subTitle[j]);
+                            }
                         }
                     }
                 }
             }
         //}
 
-        if(this.props.maxLength)finalSubtitles=finalSubtitles.slice(finalSubtitles.length-this.props.maxLength,finalSubtitles.length)
+        // if(this.props.maxLength)finalSubtitles=finalSubtitles.slice(finalSubtitles.length-this.props.maxLength,finalSubtitles.length)
+
+        // console.log('final subtitles',finalSubtitles);
+
+        // console.log("++++++++++")
 
         if(finalSubtitles==[]){
             finalSubtitles=subTitle;
@@ -97,6 +109,8 @@ TripSubtitle.defaultProps = {
     tripData:{},
     limitLength:true,
     maxLength:3,
+    showSelf:false,
+    maxCharCount:NaN,
     goLocation:function(el){}
 };
 

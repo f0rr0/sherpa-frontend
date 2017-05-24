@@ -82,7 +82,7 @@ var styles = StyleSheet.create({
         justifyContent:"center",
         paddingBottom:60,
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:8},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:4},
 
     button:{
         backgroundColor:'#001545',
@@ -116,7 +116,7 @@ var styles = StyleSheet.create({
     headerMaskedView:{height:windowSize.height*.95, width:windowSize.width,alignItems:'center',flex:1},
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
-    headerTripTo:{color:"#FFFFFF",fontSize:14,marginBottom:-8,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
+    headerTripTo:{color:"#FFFFFF",fontSize:12,marginBottom:4,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
     //headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width-30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     headerTripName:{color:"#FFFFFF",fontSize:33, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center",width:windowSize.width-30},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
@@ -140,7 +140,7 @@ class FeedTrip extends Component {
             shouldUpdate:true,
             isCurrentUsersTrip:false,
             //routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
-            routeName:"ALBUM",
+            routeName:"GUIDE",
             itemsPerRow:2,
             trip:props.trip,
             isReady:false,
@@ -282,7 +282,7 @@ class FeedTrip extends Component {
     }
 
     render(){
-        var header=<Header type="fixed" ref="navFixed" settings={{routeName:(this.state.trip.name?this.state.trip.name.toUpperCase():"")+" "+this.state.routeName,opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
+        var header=<Header type="fixed" ref="navFixed" settings={{routeName:(this.state.trip.name?this.state.trip.name.toUpperCase():""),opaque:true,fixedNav:true}} goBack={this.navActionLeft.bind(this)} navActionRight={this.navActionRight.bind(this)}></Header>;
         const completeHeader=
             <View style={styles.listViewContainer}>
 
@@ -330,9 +330,9 @@ class FeedTrip extends Component {
                             hideNav:true,
                             tripData:this.state.trip,
                             momentData:[],
-                            name:"edit album",
+                            name:"edit guide",
                             sceneConfig:"bottom-nodrag",
-                            title:"Add Album Photos"
+                            title:"Add Guide Photos"
                       });
                 }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.state.trip.id}></PopOver>
 
@@ -346,10 +346,9 @@ class FeedTrip extends Component {
     }
 
     deleteTripAlert(){
-        //console.log('delete trips',this.props.trip);
             Alert.alert(
-                'Delete Album',
-                'Are you sure you want to delete this album?',
+                'Delete Guide',
+                'Are you sure you want to delete this guide?',
                 [
                     {text: 'Cancel', onPress: () => {}, style: 'cancel'},
                     {text: 'OK', onPress: () => {
@@ -442,10 +441,9 @@ class FeedTrip extends Component {
                                                      this.props.dispatch(updateUserData({usedEditTrip:true}))
                                                      this.props.dispatch(storeUser())
                                                 }}></ToolTipp>
-
         switch(tripData.contentType){
             case "trip":
-                bottomLeft=<UserImage style={{marginTop:0}} underlined={true} radius={30} userID={this.state.trip.owner.id} imageURL={this.state.trip.owner.serviceProfilePicture} username={this.state.trip.owner.serviceUsername} onPress={() => this.showUserProfile(this.state.trip)}></UserImage>
+                bottomLeft=<UserImage style={{marginTop:0}} underlined={true} radius={30} userID={this.state.trip.owner.id} imageURL={this.state.trip.owner.serviceProfilePicture}  onPress={() => this.showUserProfile(this.state.trip)}></UserImage>
 
                 let userName;
                 if(this.state.isCurrentUsersTrip){
@@ -466,11 +464,11 @@ class FeedTrip extends Component {
                     didWhat="WENT TO"
                 }
 
-                tripTitle=userName+" "+didWhat;
+                tripTitle=userName+"'S"//+didWhat;
                 momentCount=this.state.trip.momentCount||this.state.trip.moments.length
             break;
             case "guide":
-                tripTitle=this.state.isCurrentUsersTrip?"":"EXPLORE"
+                tripTitle=this.state.isCurrentUsersTrip?"":""
                 momentCount=this.state.trip.venueCount;
             break;
         }
@@ -532,10 +530,10 @@ class FeedTrip extends Component {
 
                    <View style={{ justifyContent:'center',alignItems:'center',height:windowSize.height*.86}}>
 
-                       {/*<Text style={styles.headerTripTo}>{tripTitle}</Text>*/}
+                       {<Text style={styles.headerTripTo}>{tripTitle}</Text>}
                             <Text multiline={true} style={styles.headerTripName}>{tripData.name.toUpperCase()}</Text>
 
-                            <TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} limitLength={false} maxLength={2} tripData={this.state.trip}></TripSubtitle>
+                       {/*<TripSubtitle goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} limitLength={false} maxLength={2} tripData={this.state.trip}></TripSubtitle>*/}
                             </View>
 
                         <View style={styles.subTitleContainer}>
@@ -548,7 +546,9 @@ class FeedTrip extends Component {
                                 </TouchableOpacity>*/}
                             </View>
                             <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1,marginTop:2}}>
-                                <Image style={{marginTop:-3}} source={require('../../../../Images/icons/clock.png')}></Image>
+                                    <Image style={{marginTop:-3}} source={require('../../../../Images/icons/images.png')}></Image>
+                                    <Text style={styles.tripDataFootnoteCopy}>{tripData.momentCount}</Text>
+                                <Image style={{marginTop:-3,marginLeft:10}} source={require('../../../../Images/icons/clock.png')}></Image>
                                 <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                                 {/*<Text style={styles.tripDataFootnoteCopy}>{tripData.owner.serviceUsername.toUpperCase()}</Text>*/}
                             </View>

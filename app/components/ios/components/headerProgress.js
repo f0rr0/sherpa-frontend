@@ -64,8 +64,8 @@ export default class HeaderProgress extends React.Component {
             <Animated.View style={{position:'absolute',top:this.state.offsetTop,left:0,flex:1,width:SCREEN_WIDTH}}>
                 <Animated.View style={{backgroundColor:'#8ad78d', width:this.state.progressPercent,height:3}}></Animated.View>
 
-                <InteractiveNotification ref="uploadFailed" notificationMessage="the album upload failed"></InteractiveNotification>
-                <InteractiveNotification ref="uploadSuccess" success={true}  notificationMessage="the album upload was successful"></InteractiveNotification>
+                <InteractiveNotification ref="uploadFailed" notificationMessage="the guide upload failed"></InteractiveNotification>
+                <InteractiveNotification ref="uploadSuccess" success={true}  notificationMessage="the guide upload was successful"></InteractiveNotification>
             </Animated.View>
         )
     }

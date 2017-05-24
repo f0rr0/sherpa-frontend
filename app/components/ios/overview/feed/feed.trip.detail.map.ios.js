@@ -76,6 +76,7 @@ class TripDetailMap extends Component{
     }
 
     onLoadFromRegion(region){
+        if(this.props.mapType=='default')return;
         const feedMap = {
             region: this._loadRegionMap.bind(this),
             global: this._loadGlobalMap.bind(this),

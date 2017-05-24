@@ -109,7 +109,7 @@ class PopOver extends Component {
 
         var deleteTripButton=this.props.showDeleteTrip?
             <TouchableHighlight onPress={this.props.onDeleteTrip.bind(this)} underlayColor="#ececec" style={styles.button}>
-                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>DELETE ALBUM</Text>
+                <Text style={[styles.buttonCopy,{color:"#ff0000"}]}>DELETE GUIDE</Text>
             </TouchableHighlight>:null;
 
         var deleteMomentButton=this.props.showDeleteMoment?

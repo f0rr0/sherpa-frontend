@@ -1,35 +1,24 @@
 'use strict';
 
-import config from '../../../../data/config';
-import countries from './../../../../data/countries'
-import moment from 'moment';
 import SherpaGiftedListview from '../../components/SherpaGiftedListview'
 import {getFeed} from '../../../../actions/feed.actions';
 import {updateUserData,storeUser} from '../../../../actions/user.actions';
-import { connect } from 'react-redux';
-import StickyHeader from '../../components/stickyHeader';
 import NotificationRow from '../../components/notificationRow';
-import TripTitle from "../../components/tripTitle"
-import PopOver from '../../components/popOver';
+import FollowButton from '../../components/followButton';
 import Header from '../../components/header';
-import UserImage from '../../components/userImage';
-import TripRow from '../../components/tripRow'
-import Hyperlink from 'react-native-hyperlink';
+import NotificationsIOS from 'react-native-notifications';
+
 import Dimensions from 'Dimensions';
 var windowSize=Dimensions.get('window');
-import MarkerMap from '../../components/MarkerMap'
 
 
 import {
     StyleSheet,
     View,
     Text,
-    Image,
-    TouchableHighlight,
-    TouchableOpacity,
-    Linking
+    Image
 } from 'react-native';
-import React, { Component } from 'react';
+import React from 'react';
 
 
 
@@ -38,8 +27,8 @@ var styles = StyleSheet.create({
         flex:1,
         paddingBottom:60,
     },
-    emptyCopy:{color:"#bcbec4",width:250,textAlign:"center", fontFamily:"Avenir LT Std",lineHeight:18,fontSize:14},
-    loaderContainer:{zIndex:1,justifyContent:'center',height:windowSize.height-260,width:windowSize.width,alignItems:'center'},
+    emptyCopy:{color:"#282B33",width:300,textAlign:"center", fontWeight:"800", fontFamily:"Akkurat",lineHeight:16,letterSpacing:0.2,fontSize:12},
+    loaderContainer:{zIndex:1,justifyContent:'center',height:windowSize.height-160,width:windowSize.width,alignItems:'center'},
 
 });
 
@@ -59,41 +48,34 @@ class FeedNotifications extends React.Component {
 
     _onFetch(page=1,callback=this.itemsLoadedCallback){
         this.itemsLoadedCallback=callback;
-        this.props.dispatch(updateUserData({notificationCount:0}))
-        this.props.dispatch(storeUser())
+        this.props.dispatch(updateUserData({notificationCount:0}));
+        this.props.dispatch(storeUser());
 
         getFeed(this.props.user.sherpaID,page,'notifications').then((response)=>{
-            //console.log(response.data.notifications.length,'::',page)
-            //console.log(response.data.notifications.length==0,'::',page==1)
             if(response.data.notifications.length==0&&page==1){
                 this.setState({empty:true})
                 callback([],{allLoaded:true});
             }else{
                 callback(response.data.notifications);
             }
-            //callback([]);
         }).catch((err)=>{
-            //console.log('err',err)
-            //callback([],{allLoaded:true})
         });
     }
 
     markAllAsViewed(){
-        //console.log('mark as viewed');
+        // PushNotificationIOS.setApplicationIconBadgeNumber(0);
+        NotificationsIOS.setBadgesCount(0);
+
+
         getFeed(this.props.user.sherpaID,1,'reset-notifications').then((response)=>{
-            //console.log('notifications resetted',response);
         }).catch((err)=>{
-            //console.log('notificaitons reset err',err);
         })
     }
 
     _renderEmpty(){
         if(this.state.empty){
-            //console.log('render empty waiting');
             return this._renderEmptyWaiting()
         }
-
-        //console.log('render empty')
         return (
             <View style={{flex:1,justifyContent:'center',backgroundColor:"white",height:windowSize.height-100,width:windowSize.width,position:'absolute',top:0,left:0,alignItems:'center'}}>
                 <Image style={{width: 25, height: 25}} source={require('./../../../../Images/loader@2x.gif')} />
@@ -101,10 +83,14 @@ class FeedNotifications extends React.Component {
         )
     }
 
+
     _renderEmptyWaiting(){
        return(
            <View style={styles.loaderContainer}>
+               <Image style={{marginBottom:23}} source={require('./../../../../Images/activity-big.png')} />
+               <Text style={{fontFamily:"TSTAR-bold",letterSpacing:1.6, fontSize:24,fontWeight:"700",marginBottom:5}}>STAY UPDATED</Text>
                <Text style={styles.emptyCopy}>Subscribe to people and places for personalized travel content.</Text>
+               <FollowButton negative={true} textStyle={{color:'black',marginLeft:0,marginRight:0,letterSpacing:1.11}} style={{marginLeft:0,marginRight:0,marginTop:25,borderColor:'rgba(0,0,0,.15)'}} onPress={()=>{this.props.updateTabTo("feed")}} text="Start Exploring"></FollowButton>
            </View>
        )
     }

@@ -52,7 +52,7 @@ class Header extends Component {
         let title={name:this.state.routeName};
 
         let country = countries.filter(function(country) {
-            return country["alpha-2"] === title.name;
+            return country["alpha-2"] === title.name
         })[0];
 
         if(!country)country={name:title.name};
@@ -62,6 +62,7 @@ class Header extends Component {
         title=countryOrState.substring(0,30);
         if(this.state.routeName.length>30)title+="...";
         title=title.trim().toUpperCase();
+        title+=this.props.settings.routeDescription||"";
 
         var backButton=this.state.settings.hideBack?null:
             <TouchableOpacity style={[styles.navigationBack]} onPress={() => {this.props.goBack();}}>

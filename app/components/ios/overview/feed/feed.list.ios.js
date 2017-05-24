@@ -144,6 +144,7 @@ class FeedList extends React.Component{
     }
 
     showTripLocationOrGuide(data){
+        console.log('show location',data)
         this.props.navigator.push({
             id: "location",
             data:data.properties,
@@ -152,6 +153,7 @@ class FeedList extends React.Component{
     }
 
     showTripDetail(trip) {
+
         this.props.navigator.push({
             id: "trip",
             data:trip
@@ -480,7 +482,7 @@ class FeedList extends React.Component{
 
                      // console.log(isDown);
 
-                     if(isDown&&currentOffset>70){
+                     if(!isDown&&currentOffset>70){
                           this.setState({isFixed:true})
                      }else{
                           this.setState({isFixed:false})

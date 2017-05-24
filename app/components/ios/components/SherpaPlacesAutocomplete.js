@@ -444,7 +444,7 @@ const SherpaPlacesAutocomplete = React.createClass({
             };
 
             var mapzenSearch = this.props.baseUrl+'/geosearch/autocomplete?layers=borough,locality,county,macrocounty,neighbourhood,region,macroregion,country&text=' +encodeURIComponent(text);
-            //console.log('search',mapzenSearch)
+            // console.log('search',mapzenSearch)
             request.open('GET', mapzenSearch);
             request.send();
     },

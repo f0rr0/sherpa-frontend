@@ -126,8 +126,8 @@ class FeedLocation extends Component {
 
 
 
+        console.log('requ locatio',req,'searchtype',searchType)
         getFeed(req,page,searchType).then((response)=>{
-            //console.log('feed response',response)
             let locationName=response.rawData.location[response.rawData.location.layer];
             if(locationName)this.setState({locationName:locationName.toUpperCase()})
 
@@ -270,7 +270,7 @@ class FeedLocation extends Component {
                     }}
                 />
 
-                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase() +" "+this.props.navigation.routeName} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
+                <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase()} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
                 <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
             </View>
         )
@@ -422,10 +422,10 @@ class FeedLocation extends Component {
                         <View>
                             <View style={styles.tripDataFootnoteRightContainer}>
                                 <Image source={require('./../../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                                <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount}</Text>
+                                <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||this.state.rawData.location.venueCount}</Text>
                             </View>
                             <View style={styles.tripDataFootnoteLeftContainer}>
-                                <Image source={require('./../../../../Images/icons/guide-icon.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
+                                <Image source={require('./../../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
                                 <Text style={styles.tripDataFootnoteCopy}>{locationLayer.toUpperCase()}</Text>
                                 {/* <UserStat description={this.state.rawData.location.relatedData.visitorCount+" Explorers"} textStyle={{marginLeft:6,fontSize:9,backgroundColor:"transparent",color:"white"}} containerStyle={{flexDirection:'row'}} imageStyle={{tintColor:"white",marginTop:2}} style={[{paddingHorizontal:5,marginRight:5}]} icon={require('./../../../../Images/icons/user-small.png')}></UserStat>*/}
                             </View>

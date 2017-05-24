@@ -203,7 +203,7 @@ class EditTripName extends React.Component {
                            placeholderTextColor="#cdcdcd"
                            onChangeText={(text) =>{this.setState({text:text.toUpperCase(),remainingCharacters:this.state.maxLength-text.length})}}
                                       value={this.state.text.toUpperCase()}
-                           placeholder={'YOUR ALBUM'}
+                           placeholder={'YOUR GUIDE'}
 
                 >
                 </TextInput>
@@ -212,7 +212,7 @@ class EditTripName extends React.Component {
                 <Animated.View style={{position:'absolute',bottom:this.state.positionBottom,left:7,flex:1}}>
                     <SimpleButton style={{width:SCREEN_WIDTH-28,marginLeft:7}} onPress={()=>{this.navActionRight()}} text="save and publish"></SimpleButton>
                 </Animated.View>
-                <SimpleError ref="tripnameError" errorMessage="Please add an album name"></SimpleError>
+                <SimpleError ref="tripnameError" errorMessage="Please add a guide name"></SimpleError>
 
             </View>
         )
