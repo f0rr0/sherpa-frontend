@@ -39,7 +39,7 @@ var styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:5,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:4},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
     foursquareTitle:{marginTop:5,marginBottom:13,fontSize:10,color:"#999999"},
 
     listItem:{
@@ -380,7 +380,7 @@ class TripDetail extends React.Component{
 
                 </ScrollView>
                     <Header settings={{navColor:'white',routeName:this.state.routeName,topShadow:true,hideNav:false}} ref="navStatic" goBack={this.props.navigator.pop}  navActionRight={this.navActionRight.bind(this)}></Header>
-                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{this.onEditMoment(momentData)}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={this.state.isCurrentUsersTrip} showDeleteMoment={this.state.isCurrentUsersTrip}></PopOver>
+                <PopOver reportFoursquare={!this.state.isCurrentUsersTrip} reportMoment={!this.state.isCurrentUsersTrip} reportWiki={!this.state.isCurrentUsersTrip} enableNavigator={this.props.enableNavigator} ref="popover" shareURL={config.auth[config.environment].shareBaseURL+"trips/"+momentData.trip+"/moments/"+momentData.id} onEditMoment={()=>{this.onEditMoment(momentData)}} onDeleteMoment={this.onDeleteMoment.bind(this)} showShare={true} reportPhoto={true} momentID={momentData.id} showEditMoment={this.state.isCurrentUsersTrip} showDeleteMoment={this.state.isCurrentUsersTrip}></PopOver>
             </View>
 
         )

@@ -102,7 +102,7 @@ class OnboardingScreen extends Component {
                 <View style={styles.mainComponent}>
                     {this.props.mainComponent}
                 </View>
-                <View style={styles.bottomArea}>
+                <View style={[styles.bottomArea,this.props.bottomAreaStyle]}>
                     {this.props.continueButton}
                 </View>
             </View>

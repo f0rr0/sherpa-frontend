@@ -1,8 +1,6 @@
 'use strict';
 
-import {updateUserData,signupUser,updateUserDBState,storeUser} from '../../../actions/user.actions';
-import {getFeed} from '../../../actions/feed.actions';
-import { connect } from 'react-redux';
+import {updateUserData,signupUser,signupUserV2,updateUserDBState,storeUser} from '../../../actions/user.actions';
 import Dimensions from 'Dimensions';
 import SimpleButton from '../components/simpleButton';
 import SimpleInput from '../components/simpleInput';
@@ -103,20 +101,20 @@ class Login extends Component {
 
     onSubmit = () => {
 
-        var validateInvite = this.isRequest?true:this.validate(this.state.inviteCode,'invite');
+        // var validateInvite = this.isRequest?true:this.validate(this.state.inviteCode,'invite');
         var validateEmail  = this.validate(this.state.email,'email');
 
 
-        if(validateInvite&&validateEmail){
+        if(validateEmail){
             this.connectWithService.bind(this)(this.isRequest);
             this.refs.emailError.hide();
             this.refs.inviteError.hide();
             return;
         }
 
-        if(!validateInvite){
-            this.refs.inviteError.show();
-        }
+        // if(!validateInvite){
+        //     this.refs.inviteError.show();
+        // }
 
         if(!validateEmail){
             this.refs.emailError.show();
@@ -150,7 +148,7 @@ class Login extends Component {
     connectWithService(isRequest){
         this.props.dispatch(updateUserDBState("waiting"));
         this.props.dispatch(updateUserData({email:this.state.email,inviteCode:this.state.inviteCode,intent:isRequest?"request-invite":"login"}));
-        this.props.dispatch(signupUser());
+        this.props.dispatch(signupUserV2());
     }
 
     moveUp(){
@@ -226,7 +224,7 @@ class Login extends Component {
         //     usedEditTrip:false
         // }));
         this.props.dispatch(updateUserDBState("waiting"));
-        this.props.dispatch(signupUser());
+        this.props.dispatch(signupUserV2());
     }
 
     _renderLoginDetailPage(){
@@ -373,15 +371,18 @@ class Login extends Component {
                     </View>
 
                     <Animated.View style={[styles.login,{marginBottom:this.state.inputBottomMargin,flex:1}]}>
-                        <View style={{width:windowSize.width-30}}>
-                            <SimpleButton onPress={()=>{this.requestInvite()}} text="Request an invite"></SimpleButton>
-                            <SimpleButton onPress={()=>{this.signupWithInvite()}} text="Sign up with Invite code"></SimpleButton>
+                        <View style={{width:windowSize.width-30,marginBottom:30}}>
+                            {/*<SimpleButton onPress={()=>{this.requestInvite()}} text="Request an invite"></SimpleButton>
+                            <SimpleButton onPress={()=>{this.signupWithInvite()}} text="Sign up with Invite code"></SimpleButton>*/}
+                            <SimpleInput key="b" ref="emailInput" keyboardType='email-address' onStart={this.moveUp.bind(this)} onChange={(text)=>{this.validate(text,'email')}} placeholder="Enter your email" style={{color:this.state.showErrorEmail?Colors.error:Colors.darkPlaceholder,marginTop:13}}></SimpleInput>
+                            <SimpleButton onPress={()=>{this.isRequest=false;this.onSubmit()}} icon="instagram" text="connect with instagram"></SimpleButton>
+
                         </View>
-                        <View style={{flexDirection:"row"}}>
+                        {/*<View style={{flexDirection:"row"}}>
                             <TouchableOpacity activeOpacity={1} style={{borderTopWidth:1,borderRightWidth:0,borderColor:'rgba(255,255,255,.2)',width:windowSize.width,marginTop:15}} onPress={()=>{this.isRequest=false;this.alreadyInvited.bind(this)()}}>
-                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Already invited? Login via Instagram.".toUpperCase()}</Text>
+                                <Text style={{color:'white',fontFamily:"TSTAR-bold",marginVertical:21,fontWeight:"800",fontSize:10,letterSpacing:.6,textAlign:"center",borderBottomWidth:.5,borderBottomColor:'rgba(255,255,255,.4)'}}>{"Already have an account? Login via Instagram.".toUpperCase()}</Text>
                             </TouchableOpacity>
-                        </View>
+                        </View>*/}
                     </Animated.View>
 
                 </View>

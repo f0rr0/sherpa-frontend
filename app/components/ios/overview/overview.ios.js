@@ -5,30 +5,19 @@
 /* @flow */
 'use strict';
 'use babel';
-import Feed from './feed/feed.ios';
-import {udpateFeedState,getFeed} from '../../../actions/feed.actions';
-import {updateNotificationCount,storeUser} from '../../../actions/user.actions';
-import {updateTab} from '../../../actions/app.actions';
+import Feed from "./feed/feed.ios";
+import {udpateFeedState} from "../../../actions/feed.actions";
+import {updateNotificationCount} from "../../../actions/user.actions";
+import {updateTab} from "../../../actions/app.actions";
 
-import TabNavigator from 'react-native-tab-navigator';
-import NotificationsIOS from 'react-native-notifications';
-import React from 'react';
+import TabNavigator from "react-native-tab-navigator";
+import NotificationsIOS from "react-native-notifications";
+import React from "react";
+import HeaderProgress from "../components/headerProgress";
+import {Alert, Animated, Image, NetInfo, StatusBar, StyleSheet, Text, View} from "react-native";
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
-import HeaderProgress from '../components/headerProgress'
-import {
-    Animated,
-    StyleSheet,
-    View,
-    StatusBar,
-    Image,
-    PushNotificationIOS,
-    NetInfo,
-    Alert,
-Text
-} from 'react-native';
 
 
-const EXPLORE="explore";
 const FEED="feed";
 const PROFILE="own-profile";
 const SUITCASE="suitcase";
@@ -89,6 +78,7 @@ class Overview extends React.Component {
             this.handleFirstConnectivityChange
         );
         this.props.dispatch(updateNotificationCount());
+        // console.log('update notification count');
 
         if(this.props.user.sherpaID==-1){
         }else{
@@ -142,10 +132,12 @@ class Overview extends React.Component {
 
     onNotificationReceivedBackground(){
         this.props.dispatch(updateNotificationCount());
+        // console.log('notification received foreground');
     }
 
     onNotificationReceivedForeground(){
         this.props.dispatch(updateNotificationCount());
+        // console.log('notification received background');
     }
 
 
@@ -157,8 +149,15 @@ class Overview extends React.Component {
         }).start()
     }
 
+    componentWillUnmount() {
+        // Don't forget to remove the event listeners to prevent memory leaks!
+        NotificationsIOS.removeEventListener('notificationReceivedForeground', this.onNotificationReceivedForeground);
+        NotificationsIOS.removeEventListener('notificationReceivedBackground', this.onNotificationReceivedBackground);
+        NotificationsIOS.removeEventListener('notificationOpened', this._onNotificationOpened);
+    }
+
     render() {
-        let notificationBadge=this.props.user.notificationCount==0?null:<View style={{width:80}}><View style={{position:'absolute',flexDirection:'row',left:13,top:-5,backgroundColor:'transparent',alignItems:'center',justifyContent:'center',height:13,borderRadius:13,minWidth:13}}><Text style={{color:'white',paddingLeft:5,paddingRight:5,position:'relative',fontWeight:"600",backgroundColor:'transparent',fontSize:8}}>{this.props.user.notificationCount}</Text></View></View>
+        let notificationBadge=this.props.user.notificationCount==0?null:<View style={{width:80}}><View style={{position:'absolute',flexDirection:'row',left:13,top:-5,backgroundColor:'red',alignItems:'center',justifyContent:'center',height:15,borderRadius:15,minWidth:15}}><Text style={{color:'white',paddingLeft:5,paddingRight:5,position:'relative',fontWeight:"600",backgroundColor:'transparent',fontSize:8}}>{this.props.user.notificationCount}</Text></View></View>
         var tabBar =    <TabNavigator titleStyle={{backgroundColor:'white'}} tabBarStyle={[styles.tabBarHeight,{transform:[{translateY:this.state.bottomOffset}],backgroundColor:'white',borderTopWidth:1,borderTopColor:'#EFF1F2'}]}  sceneStyle={{paddingBottom:0}}>
                             <TabNavigator.Item
                                 tabStyle={{borderRightWidth:1,borderRightColor:'#EFF1F2'}}

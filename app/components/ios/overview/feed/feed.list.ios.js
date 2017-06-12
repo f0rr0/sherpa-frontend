@@ -1,35 +1,29 @@
-import { connect } from 'react-redux';
-import FeedTrip from './feed.trip.ios'
-import {loadFeed,getFeed} from '../../../../actions/feed.actions';
-import {updateUserData,storeUser} from '../../../../actions/user.actions';
-import TripRow from '../../components/tripRow'
-import Dimensions from 'Dimensions';
-var windowSize=Dimensions.get('window');
-import StickyHeader from '../../components/stickyHeader';
-import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-import FeaturedProfile from '../../components/featuredProfile'
-import {SherpaPlacesAutocomplete} from '../../components/SherpaPlacesAutocomplete'
-import config from '../../../../data/config';
-import dismissKeyboard from 'dismissKeyboard'
-import ToolTipp from '../../components/toolTipp'
-
-const {sherpa}=config.auth[config.environment];
+import {getFeed} from "../../../../actions/feed.actions";
+import {storeUser, updateUserData} from "../../../../actions/user.actions";
+import TripRow from "../../components/tripRow";
+import Dimensions from "Dimensions";
+import SherpaGiftedListview from "../../components/SherpaGiftedListview";
+import FeaturedProfile from "../../components/featuredProfile";
+import {SherpaPlacesAutocomplete} from "../../components/SherpaPlacesAutocomplete";
+import config from "../../../../data/config";
+import dismissKeyboard from "dismissKeyboard";
+import ToolTipp from "../../components/toolTipp";
 import {
+    Animated,
+    AppState,
+    Image,
+    PixelRatio,
+    ScrollView,
     StyleSheet,
     Text,
-    View,
-    TouchableHighlight,
-    AppState,
-    Alert,
-    Image,
     TouchableOpacity,
-    TouchableWithoutFeedback,
-    Animated,
-    PixelRatio,
-    ScrollView
-} from 'react-native';
+    View
+} from "react-native";
 
-import React, { Component } from 'react';
+import React from "react";
+var windowSize=Dimensions.get('window');
+
+const {sherpa}=config.auth[config.environment];
 
 var styles=StyleSheet.create({
     logo:{
@@ -113,9 +107,9 @@ class FeedList extends React.Component{
     }
 
     componentDidUpdate(prevProps,prevState){
-        if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
-           this.refs.listview._refresh();
-        }
+        // if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+        //    this.refs.listview._refresh();
+        // }
 
         if(prevState.isFixed!==this.state.isFixed){
                 this.setState({hideFixed:false})
@@ -143,12 +137,13 @@ class FeedList extends React.Component{
         this.refs.listview.refs.listview.scrollTo({y:0,animated:true})
     }
 
-    showTripLocationOrGuide(data){
-        console.log('show location',data)
+    showTripLocationOrGuide(data,fromSearch=false){
+        // console.log('show location',data)
         this.props.navigator.push({
             id: "location",
             data:data.properties,
-            version:"v2"
+            version:"v2",
+            fromSearch:fromSearch
         });
     }
 
@@ -293,7 +288,6 @@ class FeedList extends React.Component{
         return(
             <Animated.View accessible={this.state.isFixed}  pointerEvents={this.state.mapLarge?'none':'auto'} style={{
                         position:'absolute',
-                        backgroundColor:'white',
                         shadowColor:'black',
                         shadowRadius:4,
                         shadowOpacity:.1,

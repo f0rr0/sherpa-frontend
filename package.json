@@ -19,6 +19,7 @@
     "react-native-deprecated-custom-components": "^0.1.0",
     "react-native-device-info": "^0.10.2",
     "react-native-dismiss-keyboard": "^1.0.0",
+    "react-native-enhanced-listview": "^0.10.1",
     "react-native-exif": "^0.1.0",
     "react-native-fabric": "^0.4.1",
     "react-native-fabric-crashlytics": "^0.1.8",

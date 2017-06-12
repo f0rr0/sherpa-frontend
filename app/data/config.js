@@ -62,12 +62,12 @@ module.exports = {
                 shareBaseURL:"http://share.trysherpa.com/",
                 foursquare:{
                     client_id:"FXV0BDXP5FOLFJKKPXYD1QPPHQF1RFKOADFMIYH2W54P5AEO",
-                    client_secret:"SPB1E1WKWXKWEDRW3IP3IUQWB0LOBWFKOZI1JXGNFNRYC4SX",
+                    client_secret:"75e64206e64a445e81802aa80adc12c9",
                     version:"20130815"
                 },
                 instagram: {
                     endpoint:"https://api.instagram.com/",
-                    client_id:"610a4a6a16bc40ec95f749e95c48087a",
+                    client_id:"5f9d9647675f4b54b7b3686d4b0e3cac",
                     client_secret:"0518505aae83497bbcbb1c795c2a48dd",
                     redirect_uri:"https://api.trysherpa.com/api/v1/oauth",
                     code_uri:"oauth/authorize",

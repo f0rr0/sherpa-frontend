@@ -4,10 +4,7 @@ var React = require('react');
 
 var {
     ListView,
-    Platform,
-    TouchableHighlight,
     View,
-    Text,
     RefreshControl,
     } = require('react-native');
 const SCREEN_WIDTH = require('Dimensions').get('window').width;
@@ -28,9 +25,8 @@ function MergeRecursive(obj1, obj2) {
     return obj1;
 }
 
-import SGListView from 'react-native-sglistview'
-
 var GiftedSpinner = require('react-native-gifted-spinner');
+var EnhancedListView = require('react-native-enhanced-listview')
 
 var SherpaGiftedListview = React.createClass({
 
@@ -195,6 +191,7 @@ var SherpaGiftedListview = React.createClass({
     },
 
     componentDidMount() {
+        this.notVisible = {}
         if(this.props.initialLoad){
             this.props.onFetch(this._getPage(), this._postRefresh, {firstLoad: true});
         }else{
@@ -303,6 +300,25 @@ var SherpaGiftedListview = React.createClass({
         )
     },
 
+
+    enhance(visibleRows, changedRows) {
+        if (this.props.onChangeVisibleRows) {
+            this.props.onChangeVisibleRows
+        }
+
+        Object.keys(changedRows['s1']).map(i => {
+            if (changedRows['s1'][i] === false) { this.notVisible[i] = null }
+            else { delete this.notVisible[i] }
+        })
+    },
+
+    enhancedRowRender(rowData, sectionID, rowID, highlightRow) {
+        if (this.notVisible[rowID] !== undefined) { return null }
+
+       return this.props.rowView(rowData,sectionID,rowID,highlightRow)
+    },
+
+
     renderRefreshControl() {
         if (this.props.renderRefreshControl) {
             return this.props.renderRefreshControl({ onRefresh: this._onRefresh });
@@ -328,12 +344,14 @@ var SherpaGiftedListview = React.createClass({
                 keyboardDismissMode="on-drag"
                 keyboardShouldPersistTaps='never'
                 dataSource={this.state.dataSource}
-                renderRow={this.props.rowView}
+                // renderRow={this.props.rowView}
                 renderSectionHeader={this.props.sectionHeaderView}
                 renderHeader={this.headerView}
                 renderFooter={this._renderPaginationView}
                 renderSeparator={this.renderSeparator}
                 automaticallyAdjustContentInsets={false}
+                onChangeVisibleRows={this.enhance}
+                renderRow={this.enhancedRowRender}
                 scrollEnabled={this.props.scrollEnabled}
                 canCancelContentTouches={true}
                 contentContainerStyle={this.props.customStyles.contentContainerStyle}

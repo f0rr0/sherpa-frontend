@@ -170,7 +170,7 @@ class Feed extends Component {
             break;
             case "location":
                 showNav=true;
-                sceneContent = <FeedLocation enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.data} isCountry={route.isCountry} navigation={{navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false}} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
+                sceneContent = <FeedLocation fromSearch={route.fromSearch} enableNavigator={this.enableNavigator.bind(this)} version={route.version} ref={route.id} navigator={navigator} location={route.data} isCountry={route.isCountry} navigation={{navColor:'white',routeName:"GUIDE",fixedHeader:true,hideNav:false}} trip={route.data} feed={this.props.feed} user={this.props.user} dispatch={this.props.dispatch}/>;
             break;
             case "trip":
                 showNav=true;

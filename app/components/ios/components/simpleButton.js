@@ -29,6 +29,7 @@ export default class SimpleButton extends React.Component {
             switch(this.props.icon){
                 case "instagram":
                     image=require('./../../../Images/icon-insta.png');
+                    customStyle.height=17;
                 break;
                 case "is-suitcased-button":
                     image=require('./../../../Images/icon-suitcased-button.png');

@@ -1,65 +1,29 @@
 'use strict';
 
-import FeedLocation from "./feed.location.ios";
-import FeedProfile from "./feed.profile.ios";
 import countries from "./../../../../data/countries";
-//import Mapbox from "react-native-mapbox-gl";
-import moment from 'moment';
-import {deleteTrip} from '../../../../actions/trip.edit.actions';
-import {udpateFeedState} from '../../../../actions/feed.actions';
-import {updateUserData,storeUser} from '../../../../actions/user.actions';
-import {getQueryString,encodeQueryData} from '../../../../utils/query.utils';
-import config from '../../../../data/config';
-import store from 'react-native-simple-store';
-import StickyHeader from '../../components/stickyHeader';
-import PopOver from '../../components/popOver';
-import TripSubtitle from '../../components/tripSubtitle'
-import Dimensions from 'Dimensions';
+import moment from "moment";
+import {deleteTrip} from "../../../../actions/trip.edit.actions";
+import {getFeed, udpateFeedState} from "../../../../actions/feed.actions";
+import {storeUser, updateUserData} from "../../../../actions/user.actions";
+import config from "../../../../data/config";
+import StickyHeader from "../../components/stickyHeader";
+import PopOver from "../../components/popOver";
+import Dimensions from "Dimensions";
+import UserImage from "../../components/userImage";
+import ToolTipp from "../../components/toolTipp";
+import MomentRow from "../../components/momentRow";
+import SimpleButton from "../../components/simpleButton";
+import Header from "../../components/header";
+import MarkerMap from "../../components/MarkerMap";
+import {BlurView} from "react-native-blur";
+import SherpaGiftedListview from "../../components/SherpaGiftedListview";
+import {Alert, Animated, Image, ListView, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import React, {Component} from "react";
+import ActivityView from "react-native-activity-view";
 var windowSize=Dimensions.get('window');
-const {sherpa}=config.auth[config.environment];
-import UserImage from '../../components/userImage'
-import ToolTipp from '../../components/toolTipp'
-import MomentRow from '../../components/momentRow'
-import SimpleButton from '../../components/simpleButton'
-import Header from '../../components/header'
-import MapView from 'react-native-maps';
-import supercluster from 'supercluster'
-import {getClusters} from '../../components/get-clusters';
-import TripDetail from '../../components/tripDetail'
-import { Fonts, Colors } from '../../../../Themes/'
-import MarkerMap from '../../components/MarkerMap'
-import {BlurView} from 'react-native-blur';
-import {getFeed} from '../../../../actions/feed.actions';
-import SherpaGiftedListview from '../../components/SherpaGiftedListview'
-
-import {
-    StyleSheet,
-    View,
-    Text,
-    ListView,
-    Image,
-    TouchableHighlight,
-    Alert,
-    PanResponder,
-    Animated,
-    ScrollView,
-    TouchableOpacity,
-    DeviceEventEmitter
-
-} from 'react-native';
-import React, { Component } from 'react';
-import AddPaging from 'react-native-paged-scroll-view/index'
-
 const CARD_PREVIEW_WIDTH = 10
 const CARD_MARGIN = 3;
 const CARD_WIDTH = Dimensions.get('window').width - (CARD_MARGIN + CARD_PREVIEW_WIDTH) * 2;
-import ImageProgress from 'react-native-image-progress';
-import * as Progress from 'react-native-progress';
-
-var {
-    Gyroscope,
-    Magnetometer
-    } = require('NativeModules');
 
 var styles = StyleSheet.create({
     map: {
@@ -82,7 +46,7 @@ var styles = StyleSheet.create({
         justifyContent:"center",
         paddingBottom:60,
     },
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800",marginLeft:4},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
 
     button:{
         backgroundColor:'#001545',
@@ -117,13 +81,10 @@ var styles = StyleSheet.create({
     headerDarkBG:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,backgroundColor:'black' ,opacity:.4},
     headerImage:{position:"absolute",top:0,left:0,flex:1,height:windowSize.height*.95,width:windowSize.width,opacity:1 },
     headerTripTo:{color:"#FFFFFF",fontSize:12,marginBottom:4,letterSpacing:.5,marginTop:15,backgroundColor:"transparent",fontFamily:"TSTAR", fontWeight:"800"},
-    //headerTripName:{color:"#FFFFFF",fontSize:33,marginTop:3,height:45,paddingTop:7,width:windowSize.width-30,fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1.5,backgroundColor:"transparent"},
     headerTripName:{color:"#FFFFFF",fontSize:33, fontFamily:"TSTAR", fontWeight:"500",letterSpacing:1,backgroundColor:"transparent",textAlign:"center",width:windowSize.width-30},
     subTitleContainer:{alignItems:'center',justifyContent:'space-between',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:30,marginTop:-15},
     tripDataFootnoteIcon:{height:10,marginTop:5,marginLeft:-3}
 });
-
-const DEFAULT_PADDING = { top: 60, right: 60, bottom: 100, left: 60 };
 
 class FeedTrip extends Component {
     constructor(props){
@@ -139,9 +100,9 @@ class FeedTrip extends Component {
             moments:[],
             shouldUpdate:true,
             isCurrentUsersTrip:false,
-            //routeName:props.trip.owner.serviceUsername.toUpperCase()+"'S TRIP",
             routeName:"GUIDE",
             itemsPerRow:2,
+            allLoaded:false,
             trip:props.trip,
             isReady:false,
             containerWidth:windowSize.width-30,
@@ -152,19 +113,49 @@ class FeedTrip extends Component {
             didHideDetailView:true,
             didShowDetailView:false,
             scroll: new Animated.Value(0),
-            scrollY:new Animated.Value(0)
+            scrollY:new Animated.Value(0),
+            shareURL:config.auth[config.environment].shareBaseURL+"trips/"+props.trip.id
         };
 
 
     }
 
     _renderFooterView(){
-        if(!this.state.trip.nameGid)return null;
-        return null;
-        return <View style={{marginBottom:20}}>
-            {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
-            this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+(this.state.trip.locus[this.state.trip.nameGid.split(":")[1]]||this.state.trip.location)}></SimpleButton>:null}
-        </View>
+        let editButton= this.state.isCurrentUsersTrip?<TouchableOpacity onPress={()=>{
+            this.props.navigator.push({
+                intent:"EDIT_TRIP",
+                id: "editTripGrid",
+                hideNav:true,
+                tripData:this.state.trip,
+                momentData:[],
+                name:"edit guide",
+                sceneConfig:"bottom-nodrag",
+                title:"Add Guide Photos"
+            });
+        }} activeOpacity={1} style={{height:70,borderTopWidth:1,borderTopColor:"#E5E5E5",alignItems:"center",justifyContent:"center",width:windowSize.width-30}}>
+            <View style={{flexDirection:"row"}}>
+                <Image source={require('../../../../Images/edit.png')} />
+                <Text style={{marginLeft:10,fontSize:10,letterSpacing:1.11,fontFamily:"TSTAR-bold"}}>EDIT GUIDE</Text>
+            </View>
+        </TouchableOpacity>:null;
+
+        let footerButtons=
+            this.state.allLoaded?<View style={{marginTop:50}}>
+                <TouchableOpacity activeOpacity={1} onPress={this.shareTrip.bind(this)} style={{height:70,borderTopWidth:1,borderTopColor:"#E5E5E5",alignItems:"center",justifyContent:"center",width:windowSize.width-30}}>
+                    <View style={{flexDirection:"row"}}>
+                        <Image source={require('../../../../Images/share.png')} />
+                        <Text style={{marginLeft:10,fontSize:10,letterSpacing:1.11,fontFamily:"TSTAR-bold"}}>SHARE GUIDE</Text>
+                    </View>
+                </TouchableOpacity>
+                {editButton}
+            </View>:null;
+        return footerButtons;
+        // if(!this.state.trip.nameGid)return footerButtons;
+        // return <View style={{marginBottom:20}}>
+        //     {this.state.trip.locus?<SimpleButton style={{width:windowSize.width-30}} onPress={()=>{
+        //     this.showTripLocation(this.state.trip.nameGid)}} text={"Explore "+(this.state.trip.locus[this.state.trip.nameGid.split(":")[1]]||this.state.trip.location)}></SimpleButton>:null}
+        //     {footerButtons}
+        // </View>
     }
 
     navActionRight(){
@@ -212,47 +203,20 @@ class FeedTrip extends Component {
         getFeed(this.props.trip.id,page,'trip').then((result)=>{
             let trip=result;
             let moments=trip.data.moments;
-            //console.log(trip.data.moments)
-            //console.log(moments)
-
-            //if(moments.length==0){
-            //    this.props.navigator.pop();
-            //}else{
-
-
-            //if(page==1){
-            //    //console.log('get additional stuff',response);
-            //    let locationGID=response.rawData.location[response.rawData.location.layer+"_gid"];
-            //    this.setState({isReady:true,rawData:response.rawData,moments:organizedMoments,originalMoments:response.moments,headerMoment:organizedMoments[0][0]});
-            //
-            //    checkFollowingLocation(locationGID).then((res)=>{
-            //        this.setState({isFollowing:res});
-            //    });
-            //
-            //    callback(organizedMoments,settings);
-            //}else{
-            //    callback(organizedMoments,settings);
-            //}
-
-                const organizedMoments=this.organizeMomentRows(moments,2,true);
-                //this.organizedMoments=organizedMoments;
-                //this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data,dataSource: this.ds.cloneWithRows(organizedMoments)})
+            const organizedMoments=this.organizeMomentRows(moments,2,true);
 
             if(page==1){
-                //console.log(result.data,'is ready')
-                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data}
-                    //,dataSource: this.ds.cloneWithRows(organizedMoments)}
-                )
+                this.setState({isCurrentUsersTrip:result.data.owner.id===this.props.user.profileID,isReady:true,trip:result.data});
                 callback(organizedMoments,{allLoaded:moments.length==0});
+                if(moments.length==0)this.setState({allLoaded:true})
 
             }else{
                 callback(organizedMoments,{allLoaded:moments.length==0});
+                if(moments.length==0)this.setState({allLoaded:true})
             }
 
 
-            //}
         }).catch((error)=>{
-            //console.log('feed error',error)
             this.props.navigator.pop();
         })
     }
@@ -334,15 +298,13 @@ class FeedTrip extends Component {
                             sceneConfig:"bottom-nodrag",
                             title:"Add Guide Photos"
                       });
-                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={config.auth[config.environment].shareBaseURL+"trips/"+this.state.trip.id}></PopOver>
+                }} showDeleteTrip={this.state.isCurrentUsersTrip} onDeleteTrip={this.deleteTripAlert.bind(this)} shareURL={this.state.shareURL}></PopOver>
 
             </View>
         return completeHeader;
     }
 
     refreshCurrentScene(){
-        //console.log('refresh');
-        //this.onfetch();
     }
 
     deleteTripAlert(){
@@ -373,11 +335,6 @@ class FeedTrip extends Component {
                 data:trip
             });
         }
-
-        // this.props.navigator.push({
-        //     id: "profile",
-        //     data:trip
-        // });
     }
 
     showTripLocation(data){
@@ -389,9 +346,11 @@ class FeedTrip extends Component {
         };
 
 
-        this.state.trip.layer=locus[1];
-        this.state.trip.source=locus[0];
-        this.state.trip.sourceId=locus[2];
+        if(this.state.trip){
+            this.state.trip.layer=locus[1];
+            this.state.trip.source=locus[0];
+            this.state.trip.sourceId=locus[2];
+        }
 
 
 
@@ -399,6 +358,12 @@ class FeedTrip extends Component {
             id: "location",
             data:{name:this.state.trip.name,...locationData},
             version:"v2"
+        });
+    }
+
+    shareTrip(){
+        ActivityView.show({
+            url: this.state.shareURL
         });
     }
 
@@ -449,7 +414,7 @@ class FeedTrip extends Component {
                 if(this.state.isCurrentUsersTrip){
                     userName="YOUR"
                 }else{
-                    userName=this.state.trip.owner.serviceUsername.toUpperCase()
+                    userName=this.state.trip.owner.serviceUsername.toUpperCase()+"'S"
                 }
 
                 let didWhat
@@ -464,7 +429,7 @@ class FeedTrip extends Component {
                     didWhat="WENT TO"
                 }
 
-                tripTitle=userName+"'S"//+didWhat;
+                tripTitle=userName//+didWhat;
                 momentCount=this.state.trip.momentCount||this.state.trip.moments.length
             break;
             case "guide":
@@ -546,9 +511,9 @@ class FeedTrip extends Component {
                                 </TouchableOpacity>*/}
                             </View>
                             <View style={{flexDirection:"row",alignItems:"center",justifyContent:"flex-end",width:30,flex:1,marginTop:2}}>
-                                    <Image style={{marginTop:-3}} source={require('../../../../Images/icons/images.png')}></Image>
+                                    <Image style={{marginTop:-3,marginRight:4}} source={require('../../../../Images/icons/images.png')}></Image>
                                     <Text style={styles.tripDataFootnoteCopy}>{tripData.momentCount}</Text>
-                                <Image style={{marginTop:-3,marginLeft:10}} source={require('../../../../Images/icons/clock.png')}></Image>
+                                <Image style={{marginTop:-3,marginLeft:8,marginRight:4}} source={require('../../../../Images/icons/clock.png')}></Image>
                                 <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>
                                 {/*<Text style={styles.tripDataFootnoteCopy}>{tripData.owner.serviceUsername.toUpperCase()}</Text>*/}
                             </View>

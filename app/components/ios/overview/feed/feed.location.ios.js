@@ -47,13 +47,20 @@ class FeedLocation extends Component {
             originalMoments:[],
             headerPreviewLoadedOpacity:new Animated.Value(0),
             headerLoadedOpacity:new Animated.Value(0),
-            scrollY:new Animated.Value(0)
+            scrollY:new Animated.Value(0),
+            shareURL:config.auth[config.environment].shareBaseURL+"locations/"+props.trip.source+"/"+props.trip.layer+"/"+props.trip.sourceId
         }
 
         this.currentRows=[];
 
 
-        //console.log('location props',props)
+        // console.log('location props',props.trip)
+    }
+
+    shasharereTrip(){
+        ActivityView.show({
+            url: this.state.shareURL
+        });
     }
 
     componentDidMount(){
@@ -126,7 +133,7 @@ class FeedLocation extends Component {
 
 
 
-        console.log('requ locatio',req,'searchtype',searchType)
+        // console.log('requ locatio',req,'searchtype',searchType)
         getFeed(req,page,searchType).then((response)=>{
             let locationName=response.rawData.location[response.rawData.location.layer];
             if(locationName)this.setState({locationName:locationName.toUpperCase()})
@@ -271,7 +278,7 @@ class FeedLocation extends Component {
                 />
 
                 <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" ref="navFixed" routeName={this.state.locationName||tripData.name.toUpperCase()} goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
-                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={config.auth[config.environment].shareBaseURL+"locations/"+this.props.trip.source+"/"+this.props.trip.layer+"/"+this.props.trip.sourceId}></PopOver>
+                <PopOver enableNavigator={this.props.enableNavigator} ref="popover" shareCopy="SHARE" shareURL={this.state.shareURL}></PopOver>
             </View>
         )
     }
@@ -302,6 +309,23 @@ class FeedLocation extends Component {
             this.setState({isFollowing:true})
         }
     }
+
+    showTripLocation(data,rawData){
+        let locus=data.split(":");
+        var locationData={
+            layer:locus[1],
+            source:locus[0],
+            sourceId:locus[2]
+        };
+
+
+        this.props.navigator.push({
+            id: "location",
+            data:{name:rawData.name||"location",...locationData},
+            version:"v2"
+        });
+    }
+
 
 
     _renderHeader(){
@@ -404,7 +428,7 @@ class FeedLocation extends Component {
                     <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View style={{alignItems:'center'}}>
                             <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.locationName||tripData.name.toUpperCase()}</Text>
-                            <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus)}} tripData={{locus:this.props.trip.locus||this.state.rawData.location}}></TripSubtitle>
+                            <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus,data)}} tripData={{locus:this.props.trip.locus||this.state.rawData.location}}></TripSubtitle>
                             {/*<Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>*/}
 
                         </View>
@@ -420,15 +444,14 @@ class FeedLocation extends Component {
                     <View style={{justifyContent:'center',alignItems:"center",flexDirection:"row",width:windowSize.width-30}}>
                         {this.renderFollowButton()}
                         <View>
-                            <View style={styles.tripDataFootnoteRightContainer}>
+                            {/*<View style={styles.tripDataFootnoteRightContainer}>
                                 <Image source={require('./../../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                                 <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount||this.state.rawData.location.venueCount}</Text>
                             </View>
                             <View style={styles.tripDataFootnoteLeftContainer}>
-                                <Image source={require('./../../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:7}]} ></Image>
+                                <Image source={require('./../../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{alignItems:'center',justifyContent:'center'}]} ></Image>
                                 <Text style={styles.tripDataFootnoteCopy}>{locationLayer.toUpperCase()}</Text>
-                                {/* <UserStat description={this.state.rawData.location.relatedData.visitorCount+" Explorers"} textStyle={{marginLeft:6,fontSize:9,backgroundColor:"transparent",color:"white"}} containerStyle={{flexDirection:'row'}} imageStyle={{tintColor:"white",marginTop:2}} style={[{paddingHorizontal:5,marginRight:5}]} icon={require('./../../../../Images/icons/user-small.png')}></UserStat>*/}
-                            </View>
+                            </View>*/}
                         </View>
                     </View>
                     </View>
@@ -449,7 +472,7 @@ class FeedLocation extends Component {
                                                     extrapolate: 'clamp',
                                                 })}]
                 }}>
-                    <Header ref="navStatic" navActionRight={this.navActionRight.bind(this)} goBack={this.props.navigator.pop} settings={this.props.navigation}></Header>
+                    <Header ref="navStatic" navActionRight={this.navActionRight.bind(this)} goBack={this.props.navigator.pop} routeName={locationLayer.toUpperCase()} settings={this.props.navigation}></Header>
                 </Animated.View>
 
             </View>

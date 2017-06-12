@@ -213,10 +213,10 @@ class OnboardingSteps extends Component {
                     darken={true}
                     key="onboarding-start"
                     backgroundImage={this.props.user.hometownImage=='use-fallback'?require('../../../Images/hometown-fallback.png'):{uri:this.props.user.hometownImage}}
-                        continueButton={<SimpleButton style={{width:windowSize.width-30,marginBottom:15}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
+                        continueButton={<SimpleButton style={{width:windowSize.width-60,marginBottom:30}} onPress={()=>{this.props.user.notificationToken==""?this.refs.onboardingSlider.scrollBy(1):this._onRegister.bind(this)()}} text="ok let's go"></SimpleButton>}
                         mainComponent={
                         <View>
-                            <View style={{ padding:40, marginTop:80,position:'absolute', top:180,width:windowSize.width}}>
+                            <View style={{ padding:0, marginTop:80,position:'absolute', top:230,width:windowSize.width-60,left:30}}>
                                  <ChooseHometown user={this.props.user} rescrapeOnChange={true} dispatch={this.props.dispatch} placeholder='Search' styles={{
                                      description: {
                                          fontFamily: Fonts.type.bodyCopy,
@@ -258,7 +258,7 @@ class OnboardingSteps extends Component {
                                      }
                                  }}/>
                              </View>
-                             <View style={{position:"absolute",top:130,flex:1,width:windowSize.width-30,left:15}}>
+                             <View style={{position:"absolute",top:180,flex:1,width:windowSize.width-30,left:15}}>
                                 <Text style={styles.textStyleNormal}>{this.props.user.hometownImage=="use-fallback"?"Where's your homebase?".toUpperCase():"Is this your\nhome base?".toUpperCase()}</Text>
                                 <Text style={[styles.textStyleNormal,{fontWeight:"900",fontSize:10,marginTop:2,letterSpacing:.8,opacity:.8}]}>EDIT HOMETOWN BELOW</Text>
                              </View>
@@ -269,13 +269,13 @@ class OnboardingSteps extends Component {
 
                 <OnboardingScreen
                         darken={true}
-                        topAreaStyle={{top:220}}
+                        topAreaStyle={{top:180}}
                         key="onboarding-hometown"
                         headline={"Share where\nyou've been"}
                         description="create your profile via instagram?"
                         backgroundImage={this.props.user.mostLikedImage=='use-fallback'?require('../../../Images/mostliked-fallback.png'):{uri:this.props.user.mostLikedImage}}
                         continueButton={
-                            <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
+                            <View style={{flex:1,flexDirection:"row",alignItems:"flex-end",marginBottom:30}}>
 
 
                             <SimpleButton style={[styles.buttonHalf,{marginRight:5,backgroundColor:'#2E2F31'}]} onPress={()=>{
@@ -302,8 +302,8 @@ class OnboardingSteps extends Component {
                         backgroundImage={require('./../../../Images/onboarding-notification_empty.png')}
                         key="onboarding-permissions"
                         continueButton={
-                            <View style={{flex:1,flexDirection:"row",alignItems:"center"}}>
-                                <View style={{left:0,right:0,top:-250,position:'absolute',alignItems:'center'}}>
+                            <View style={{flex:1,flexDirection:"row",alignItems:"flex-end",marginBottom:30}}>
+                                <View style={{left:0,right:0,top:-323,position:'absolute',alignItems:'center'}}>
                                     <Text style={{fontSize:33,letterSpacing:1,color:'white',fontFamily:"TSTAR",fontWeight:"800",textAlign:'center',width:300}}>SHERPA IS BETTER WITH NOTIFICATIONS</Text>
                                     <Text style={{fontSize:12,letterSpacing:1,color:'white',fontFamily:"TSTAR",fontWeight:"600",textAlign:'center',width:300}}>WE PROMISE NOT TO BLOW UP YOUR PHONE</Text>
                                 </View>

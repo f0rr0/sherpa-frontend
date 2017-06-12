@@ -295,7 +295,7 @@ const SherpaPlacesAutocomplete = React.createClass({
             let predefinedPlace = this._getPredefinedPlace(rowData);
 
             // sending predefinedPlace as details for predefined places
-            this.props.onPress(predefinedPlace, predefinedPlace);
+            this.props.onPress(predefinedPlace, true);
     },
     _onPressProfile(rowData) {
         this._onBlur();

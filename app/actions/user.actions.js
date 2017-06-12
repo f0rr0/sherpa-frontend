@@ -380,14 +380,18 @@ export function checkOptedIn(){
 
 
 export function updateNotificationCount(){
+    // console.log('update notificaiton count')
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
             if (user) {
+                // console.log('get notification feed')
                 getFeed(user.sherpaID,1,'notifications').then((response)=>{
+                    // console.log('repsonse',response)
                     NotificationsIOS.setBadgesCount(response.data.counts.unviewedCount);
                     dispatch(updateUserData({notificationCount:response.data.counts.unviewedCount}))
                     dispatch(storeUser())
                 }).catch((err)=>{
+                    // console.log('error',err)
                 });
             }
         });
@@ -675,12 +679,12 @@ export function loadUser() {
     return function (dispatch, getState) {
         return store.get('user').then((user) => {
             if(user&&!config.resetUser) {
-                if(user.invited){
+                // if(user.invited){
                     dispatch(updateUserDBState("available-existing"));
                     dispatch(updateUserData(user));
-                }else{
-                    dispatch(updateUserDBState("empty"));
-                }
+                // }else{
+                    // dispatch(updateUserDBState("empty"));
+                // }
             }else{
                 store.delete('user').then(()=>{
                     dispatch(updateUserDBState("empty"));
@@ -894,6 +898,226 @@ export function signupUser(){
                             dispatch(updateUserDBState("login-denied"));
                             dispatch(updateUserData({isExistingLogin:false}))
                             dispatch(storeUser());
+                    })
+                }else if(sherpaResponse.invitation=="requested"){
+                    dispatch(updateUserDBState("not-whitelisted"));
+                    dispatch(storeUser());
+                }else{
+                    dispatch(updateUserSignupState("sherpa_token_complete"));
+                    dispatch(updateUserDBState("available-new"));
+                    dispatch(storeUser());
+                }
+
+
+
+            }).catch(err=>console.log(err));
+        }
+    };
+}
+
+
+export function signupUserV2(){
+    return function (dispatch,getState) {
+        const { userReducer } = getState();
+
+        instagramAuthRequest();
+        dispatch(updateUserSignupState("start"));
+
+        function instagramAuthRequest(){
+            const {endpoint, code_uri, response_type, client_id, redirect_uri} = instagram;
+            const queryData = encodeQueryData({response_type, client_id, redirect_uri});
+
+            dispatch(updateUserSignupState("service_code_request"));
+            SafariView.isAvailable()
+                .then(()=>{
+                    SafariView.show({
+                        url: endpoint+code_uri + "/?" +queryData
+                    });
+
+                    SafariView.addEventListener(
+                        "onDismiss",
+                        updateState
+                    );
+
+                    SafariView.addEventListener(
+                        "onCode",
+                        instagramAuthCallback
+                    );
+                })
+                .catch(error => {
+                    instagramSimpleAuthWithWebview();
+                });
+
+        }
+
+        function updateState(){
+            dispatch(updateUserDBState("empty"))
+        }
+
+        function instagramAuthCallback(event) {
+            SafariView.removeEventListener("onDismiss",updateState);
+            dispatch(updateUserSignupState("service_code_complete"));
+
+            const {endpoint, token_uri, grant_type, client_secret, client_id, redirect_uri} = instagram;
+            SafariView.removeEventListener('onCode', instagramAuthCallback);
+
+            let code = event.code;
+            const queryData = encodeQueryData({client_id, client_secret, grant_type, redirect_uri, code});
+            //console.log({client_id, client_secret, grant_type, redirect_uri, code})
+            dispatch(updateUserSignupState("service_token_request"));
+
+            //console.log('hit instagram',endpoint)
+            fetch(endpoint+token_uri, {
+                method: 'post',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body:queryData
+            }).then((rawServiceResponse)=>{
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=>{
+                //console.log('raw sherpa response',rawSherpaResponse)
+                var info=JSON.parse(rawSherpaResponse);
+                //console.log('response',info)
+                signupWithSherpa(info.access_token,info.user);
+            }).catch(error => {
+                dispatch(updateUserDBState("empty"));
+            });
+        }
+
+        function instagramSimpleAuthWithWebview(){
+            simpleAuthClient.configure({
+                instagram: {
+                    client_id: '610a4a6a16bc40ec95f749e95c48087a',
+                    redirect_uri: 'sherpa://oauthcallback-instagram'
+                }
+            }).then(() => {
+                simpleAuthClient.authorize('instagram').then((info) => {
+                    signupWithSherpa(info.token,info.data);
+                }).catch((error) => {
+                    let errorCode = error.code;
+                    let errorDescription = error.description;
+                    dispatch(updateUserDBState("empty"));
+                });
+            });
+        }
+
+        function signupWithSherpa(instagramToken,userData){
+            dispatch(updateUserSignupState("service_token_complete"));
+            let deviceData={
+                deviceUniqueId:     DeviceInfo.getUniqueID(),
+                deviceManufacturer: DeviceInfo.getManufacturer(),
+                deviceModel:        DeviceInfo.getModel(),
+                deviceName:         DeviceInfo.getSystemName(),
+                deviceVersion:      DeviceInfo.getSystemVersion(),
+                bundleId:           DeviceInfo.getBundleId(),
+                buildNumber:        DeviceInfo.getBuildNumber(),
+                appVersion:         DeviceInfo.getVersion(),
+                appVersionReadable: DeviceInfo.getReadableVersion()
+            };
+
+            //console.log(userReducer);
+
+
+            let queryObject={
+                email:userReducer.email,
+                // intent:userReducer.intent,
+                service:userReducer.service,
+                token:instagramToken,
+                serviceData:userData,
+                deviceData:deviceData
+            }
+
+            // console.log(queryObject)
+
+            if(userReducer.inviteCode.length>0)queryObject.inviteCode=userReducer.inviteCode;
+            const queryData = queryObject;
+
+            dispatch(updateUserData({
+                serviceToken:instagramToken
+            }));
+
+
+            dispatch(updateUserSignupState("sherpa_token_request"));
+            const {endpoint,version,login_uri} = sherpa;
+            // console.log(endpoint+version+login_uri,'login uri')
+            //  console.log(queryData)
+            fetch(endpoint+"v2"+login_uri,{
+                method:'post',
+                // headers: {
+                //     'Content-Type': 'application/x-www-form-urlencoded'
+                // },
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body:JSON.stringify(queryData)
+            }).then((rawServiceResponse)=>{
+                 // console.log(rawServiceResponse)
+                return rawServiceResponse.text();
+            }).then((rawSherpaResponse)=>{
+                let sherpaResponse=JSON.parse(rawSherpaResponse);
+                // console.log('login',sherpaResponse)
+                const {
+                    email,
+                    id,
+                    fullName,
+                    profilePicture,
+                    profile,
+                    username,
+                    hometown,
+                    contactSettings,
+                    initialGeoCount,
+                    hometownLatitude,
+                    hometownLongitude,
+                    hometownImage,
+                    hometownImageLowRes,
+                    mostLikedImage,
+                    mostLikedImageLowRes,
+                    invited
+                } = sherpaResponse.user;
+
+                // console.log('sherpa response',sherpaResponse)
+
+                dispatch(updateUserData({
+                    sherpaID:id,
+                    serviceID:profile,
+                    profileID:profile,
+                    sherpaToken:sherpaResponse.token,
+                    jobID:sherpaResponse.jobId,
+                    email,
+                    fullName,
+                    initialGeoCount:0,
+                    bio:userData.bio || "",
+                    website:userData.website || "",
+                    invite:sherpaResponse.invitation,
+                    invited,
+                    profilePicture:userData.profile_picture,
+                    username,
+                    hometown:hometown||"",
+                    hometownLatitude:hometownLatitude||0,
+                    hometownLongitude:hometownLongitude || 0,
+                    hometownImage:hometownImage || "use-fallback",
+                    hometownImageLowRes:hometownImageLowRes ||  "use-fallback",
+                    mostLikedImage: mostLikedImage ||  "use-fallback",
+                    mostLikedImageLowRes:mostLikedImageLowRes || "use-fallback",
+                    serviceObject:userData,
+                    whiteListed:sherpaResponse.whitelisted,
+                    allowScrape: sherpaResponse.allowScrape,
+                    userContactSettings: contactSettings,
+                    allContactSettings: sherpaResponse.allContactSettings
+                }));
+
+
+
+                dispatch(storeUser());
+                if(
+                    //!sherpaResponse.whitelisted&&
+                sherpaResponse.invitation=="expired"|| sherpaResponse.invitation=="invalid" || sherpaResponse.invitation=="not-invited"
+                ) {
+                    store.get('user').then((user) => {
+                        dispatch(updateUserDBState("login-denied"));
+                        dispatch(updateUserData({isExistingLogin:false}))
+                        dispatch(storeUser());
                     })
                 }else if(sherpaResponse.invitation=="requested"){
                     dispatch(updateUserDBState("not-whitelisted"));

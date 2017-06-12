@@ -1,10 +1,10 @@
 import {
     Animated,
-    View,
     TouchableHighlight,
     Text,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Alert
 } from 'react-native';
 
 import Communications from 'react-native-communications';
@@ -162,14 +162,84 @@ class PopOver extends Component {
                 <Text style={styles.buttonCopy}>SETTINGS</Text>
             </TouchableHighlight>:null;
 
+        var reportWiki=this.props.reportWiki?
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={() => {
+                this._setAnimation(false,false)
+                Alert.alert(
+                    'Thank You',
+                    "We'll take a look at this right away",
+                    [
+                        {text: 'OK', onPress: () => {
+                            console.log('call endpoint')
+                        }}
+                    ]
+                )
+            }}>
+                <Text style={[styles.buttonCopy]}>WIKIPEDIA INACURATE</Text>
+            </TouchableHighlight>:null;
+
+        var reportFoursquare=this.props.reportFoursquare?
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={() => {
+                this._setAnimation(false,false)
+                Alert.alert(
+                    'Thank You',
+                    "We'll take a look at this right away",
+                    [
+                        {text: 'OK', onPress: () => {
+                            console.log('call endpoint')
+                        }}
+                    ]
+                )
+            }}>
+                <Text style={[styles.buttonCopy]}>FOURSQUARE INACCURATE</Text>
+            </TouchableHighlight>:null;
+
+        var reportMoment=this.props.reportMoment?
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={() => {
+                this._setAnimation(false,false)
+                Alert.alert(
+                    'Thank You',
+                    "We'll take a look at this right away",
+                    [
+                        {text: 'OK', onPress: () => {
+                            console.log('call endpoint')
+                        }}
+                    ]
+                )
+            }}>
+                <Text style={[styles.buttonCopy]}>LOCATION INACCURATE</Text>
+            </TouchableHighlight>:null;
+
+        var reportUser=this.props.reportUser?
+            <TouchableHighlight style={[styles.button,styles.buttonRed]} onPress={() => {
+                this._setAnimation(false,false)
+                Alert.alert(
+                    'Thank You',
+                    "We'll take a look at this right away",
+                    [
+                        {text: 'OK', onPress: () => {
+                            console.log('call endpoint')
+                        }}
+                    ]
+                )
+            }}>
+                <Text style={[styles.buttonCopy]}>REPORT USER</Text>
+            </TouchableHighlight>:null;
+
+
+
 
         return (
             <Animated.View style={{position:'absolute',top:0,left:0,bottom:0,right:0}} pointerEvents={this.state.enabled?"auto":"none"} >
             <TouchableOpacity onPress={()=>{this._setAnimation(false)}} activeOpacity={1} style={{position:'absolute',top:0,left:0,bottom:0,right:0}}>
                 <Animated.View style={[{position:'absolute',bottom:0,left:0,top:0,right:0,backgroundColor:"rgba(0,0,0,.5)",opacity:this.state.overlayOpacity}]}></Animated.View>
                 <Animated.View style={[styles.container,{transform:[{ translateY:this.state.bottomOffset}]}]}>
-                    {editTripButton}
                     {shareButton}
+                    {reportWiki}
+                    {reportFoursquare}
+                    {reportMoment}
+                    {reportUser}
+                    {editTripButton}
                     {reportPhotoButton}
                     {profileSettingsButton}
                     {settingsButton}
@@ -192,7 +262,11 @@ PopOver.defaultProps = {
     showReset:false,
     shareURL:"http://trysherpa.com/",
     shareCopy:"SHARE",
-    reportPhoto:false
+    reportPhoto:false,
+    reportUser:false,
+    reportMoment:false,
+    reportFoursquare:false,
+    reportWiki:false
 };
 
 export default PopOver;

@@ -40,7 +40,7 @@ var styles = StyleSheet.create({
         paddingBottom:10,
     },
     subTitleContainer:{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center',flexDirection:'row',position:'absolute',top:windowSize.height*.8,left:15,right:15,height:20,marginTop:-5},
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10, marginTop:2,fontFamily:"TSTAR",letterSpacing:1,backgroundColor:"transparent", fontWeight:"800"},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
 
     listView:{
         alignItems:'center',

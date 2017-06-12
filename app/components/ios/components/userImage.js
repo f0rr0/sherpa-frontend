@@ -17,7 +17,7 @@ import React, {Component} from 'react';
 const {sherpa}=config.auth[config.environment];
 
 let styles=StyleSheet.create({
-    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:10,letterSpacing:1, fontFamily:"TSTAR", fontWeight:"700",backgroundColor:"transparent"},
+    tripDataFootnoteCopy:{color:"#FFFFFF",fontSize:12, fontFamily:"TSTAR", fontWeight:"500",backgroundColor:"transparent"},
 })
 
 class UserImage extends Component {

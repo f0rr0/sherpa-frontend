@@ -81,7 +81,7 @@ class NotificationRow extends Component {
         if(this.props.data.payload.v1.layout=='image') {
             notification =
                 <TouchableOpacity onPress={()=>{this.setView(this.props.data.payload.v1.primaryView)}} activeOpacity={1}
-                                  style={{backgroundColor:'transparent',flex:1,alignItems:'center',justifyContent:'center'}}>
+                                  style={{backgroundColor:'transparent',flex:1,alignItems:'center',marginTop:-2,justifyContent:'center'}}>
                     <Image source={{uri:this.props.data.primaryImage}} style={{...StyleSheet.absoluteFillObject}}>
                     </Image>
                     <View style={{...StyleSheet.absoluteFillObject, backgroundColor:'rgba(0,0,0,.5)'}}></View>

@@ -19,7 +19,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 case "location":
                     feedRequestURI=endpoint+version+"/search";
                     searchBody=feedTarget;
-                break;
+                break;c
                 case "profile":
                     feedRequestURI=endpoint+version+"/profile/"+feedTarget+"/trips?page="+page;
                 break;
@@ -70,9 +70,9 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                         return '{}';
                     break;
                     case 401:
-                        store.delete('user').then(()=>{
-                            dispatch(updateUserDBState("empty"));
-                        })
+                        // store.delete('user').then(()=>{
+                        //     dispatch(updateUserDBState("empty"));
+                        // })
                     break;
                 }
             })
@@ -132,9 +132,9 @@ export function deleteMoment(momentID,instant){
                                 return '{}';
                             break;
                             case 401:
-                                store.delete('user').then(()=>{
-                                    reduxStore.dispatch(updateUserDBState("empty"));
-                                })
+                                // store.delete('user').then(()=>{
+                                //     reduxStore.dispatch(updateUserDBState("empty"));
+                                // })
                             break;
                         }
                     })
@@ -299,9 +299,9 @@ export function getFeed(query,page=1,type='') {
                                 reject({errorCode:rawSherpaResponse.status});
                             break;
                             case 401:
-                                store.delete('user').then(()=>{
-                                    reduxStore.dispatch(updateUserDBState("empty"));
-                                });
+                                // store.delete('user').then(()=>{
+                                //     reduxStore.dispatch(updateUserDBState("empty"));
+                                // });
                             break;
                         }
                     })

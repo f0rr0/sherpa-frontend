@@ -158,7 +158,7 @@ class FeedProfile extends React.Component {
     renderUserStats(){
 
         if(!this.state.profile)return;
-
+        if(!this.state.profile.serviceObject||!this.state.profile.serviceObject.counts)return
         const counts=this.state.profile.serviceObject.counts;
 
         //console.log('counts',counts)
@@ -248,7 +248,7 @@ class FeedProfile extends React.Component {
                     }}
                 />
                 <StickyHeader ref="stickyHeader" navigation={<Header type="fixed" routeName={this.props.trip.owner?this.props.trip.owner.serviceUsername:this.state.trip.owner.serviceUsername} ref="navFixed" goBack={this.props.navigator.pop} navActionRight={this.navActionRight.bind(this)} settings={this.props.navigation}></Header>}></StickyHeader>
-                {this.state.owner?<PopOver enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.state.owner.id}></PopOver>:null}
+                {this.state.owner?<PopOver reportUser={true} enableNavigator={this.props.enableNavigator} ref="popover" showShare={true} shareURL={config.auth[config.environment].shareBaseURL+"profiles/"+this.state.owner.id}></PopOver>:null}
 
             </View>
         )

@@ -110,7 +110,7 @@ class Root extends Component {
     }
 
     componentDidUpdate(prevProps,prevState){
-        if((prevState.currentAppState=='background'||prevState.currentAppState=='background')&&this.state.currentAppState=='active'){
+        if(prevState.currentAppState=='background'&&this.state.currentAppState=='active'){
             //if(this.state.currentView==='not-whitelisted')this.navigator.replace({id:"login"});
             this.feedStuff();
             checkToken().then((res)=>{

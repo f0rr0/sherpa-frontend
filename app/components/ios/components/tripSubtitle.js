@@ -50,7 +50,8 @@ class TripSubtitle extends Component {
         let counter=0;
         //console.log('yoyo',this.props)
         //if(this.props.limitLength){
-        let layerType=this.props.tripData.type||this.props.tripData.layer||this.props.tripData.locus.layer;
+        let locusLayer=this.props.tripData.locus?this.props.tripData.locus.layer:null;
+        let layerType=this.props.tripData.type||this.props.tripData.layer||locusLayer;
         // console.log(this.props.tripData)
             var charcount=0;
             for(var i=0;i<sorting.length;i++){
@@ -90,7 +91,7 @@ class TripSubtitle extends Component {
         return(
             <View style={{flexDirection:'row'}}>
                 {finalSubtitles.map((el,index)=>{
-                    const divider=index<finalSubtitles.length-1?<Text style={[styles.subtitle,this.props.style,{marginHorizontal:2}]}>/</Text>:null;
+                    const divider=index<finalSubtitles.length-1?<Text style={[styles.subtitle,this.props.style,{marginHorizontal:2,marginTop:2}]}>/</Text>:null;
                     return(
                         <View key={"subtitle-"+index} style={{flexDirection:'row'}}>
                             <TouchableOpacity onPress={()=>{this.props.goLocation(el)}} style={[{borderBottomWidth:.5,height:16,borderBottomColor:'rgba(255,255,255,.4)'},this.props.textStyle]}>

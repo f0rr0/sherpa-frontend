@@ -56,6 +56,8 @@ class FeedNotifications extends React.Component {
                 this.setState({empty:true})
                 callback([],{allLoaded:true});
             }else{
+                this.setState({empty:false})
+
                 callback(response.data.notifications);
             }
         }).catch((err)=>{
