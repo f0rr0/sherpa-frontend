@@ -59,16 +59,16 @@ module.exports = {
                 }
             },
             live:{
-                shareBaseURL:"http://share.trysherpa.com/",
+                shareBaseURL:"https://share.sherpa.guide/",
                 foursquare:{
                     client_id:"FXV0BDXP5FOLFJKKPXYD1QPPHQF1RFKOADFMIYH2W54P5AEO",
-                    client_secret:"75e64206e64a445e81802aa80adc12c9",
+                    client_secret:"SPB1E1WKWXKWEDRW3IP3IUQWB0LOBWFKOZI1JXGNFNRYC4SX",
                     version:"20130815"
                 },
                 instagram: {
                     endpoint:"https://api.instagram.com/",
                     client_id:"5f9d9647675f4b54b7b3686d4b0e3cac",
-                    client_secret:"0518505aae83497bbcbb1c795c2a48dd",
+                    client_secret:"75e64206e64a445e81802aa80adc12c9",
                     redirect_uri:"https://api.trysherpa.com/api/v1/oauth",
                     code_uri:"oauth/authorize",
                     token_uri:"oauth/access_token",
