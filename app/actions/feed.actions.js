@@ -19,7 +19,7 @@ export function loadFeed(feedTarget,sherpaToken,page=1,type='user',data={}) {
                 case "location":
                     feedRequestURI=endpoint+version+"/search";
                     searchBody=feedTarget;
-                break;c
+                break;
                 case "profile":
                     feedRequestURI=endpoint+version+"/profile/"+feedTarget+"/trips?page="+page;
                 break;
