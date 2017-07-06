@@ -146,261 +146,249 @@ export function deleteMoment(momentID,instant){
         })
 }
 
-export function getFeed(query,page=1,type='') {
-        return new Promise((fulfill,reject)=>{
-            store.get('user').then((user) => {
+export function getFeed(query, page=1, type='') {
+    return store.get('user').then(user => {
 
-                let searchBody = undefined;
-                const {endpoint,version,feed_uri,user_uri} = sherpa;
-                let feedRequestURI;
-                switch (type) {
-                    case "location":
-                        feedRequestURI = endpoint + version + "/search";
-                        searchBody = query;
-                    break;
-                    case "map-search":
-                        feedRequestURI = endpoint + version + "/search";
-                        searchBody = query
-                    break;
-                    case "map-search-v2":
-                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&page="+query.page+"&bbox="+JSON.stringify(query.bbox);
-                    break;
-                    case "map-search-profile":
-                        feedRequestURI = endpoint + "v1" + "/profile/" + query.profileID + "/map";
-                    break;
-                    case "map-search-trip":
-                        feedRequestURI = endpoint + "v1" + "/trip/" + query.tripID + "/map";
-                    break;
-                    case "notifications":
-                        feedRequestURI = endpoint + version + "/user/" + query +"/notifications?page=" + page;
-                    break;
-                    case 'reset-notifications':
-                        feedRequestURI = endpoint + version + "/user/" + query +"/notifications/view"
-                    break;
-                    case "map-search-classic":
-                        feedRequestURI = endpoint + version + "/search/bbox";
-                        searchBody = query
-                    break;
-                    case "profile":
-                        feedRequestURI = endpoint + "v2" + "/profile/" + query + "/trips?page=" + page;
-                    break;
-                    case "featured-profiles":
-                        feedRequestURI = endpoint + version + "/profiles/featured";
-                    break;
-                    case "suitcase-list":
-                        feedRequestURI = endpoint + version + "/user/" + query + "/suitcases?page=" + page;
-                    break;
-                    case "single-suitcase-feed":
-                        feedRequestURI = endpoint + version + "/suitcase/" + query;
-                    break;
-                    case "search-user":
-                        feedRequestURI = endpoint + version + "/search/profile/autocomplete";
-                    break;
-                    case "search-places":
-                        feedRequestURI = endpoint + version + "/search";
-                        searchBody = query;
-                    break;
-                    case "search-places-v2":
-                        feedRequestURI = endpoint + "v2" + "/search?layer="+query.layer+"&source="+query.source+"&source_id="+query.sourceId+"&location&page="+page;
-                    break;
-                    case "search-places-guides":
-                        feedRequestURI = endpoint + "v1" + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
-                    break;
-                    case "search-people":
-                        feedRequestURI = endpoint + version + "/search/users?text=" + query;
-                    break;
-                    case "guide":
-                        feedRequestURI = endpoint + version + "/guides/search?layer="+query.layer+"&source="+query.source+"&sourceId="+query.sourceId+"&location&page="+page;
-                    break;
-                    case "user":
-                        feedRequestURI = endpoint + version + user_uri + "/" + query;
-                    break;
-                    case "moment":
-                        feedRequestURI=endpoint+version+"/moment/"+query;
-                    break;
-                    case "trip":
-                        feedRequestURI=endpoint+version+"/trip/"+query+"?momentPage="+page+"&momentLimit=24";
-                    break;
-                    case "feed-v2":
-                        feedRequestURI = endpoint + "v2" + feed_uri + "?page=" + page;
-                    break;
-                    case "feed":
-                    default:
-                        feedRequestURI = endpoint + version + user_uri + "/" + query + feed_uri + "?page=" + page;
-                    break;
+      let searchBody;
+      const {endpoint, version, feed_uri, user_uri} = sherpa;
+      let feedRequestURI;
+      switch (type) {
+        case "location":
+          feedRequestURI = endpoint + version + "/search";
+          searchBody = query;
+          break;
+        case "map-search":
+          feedRequestURI = endpoint + version + "/search";
+          searchBody = query
+          break;
+        case "map-search-v2":
+          feedRequestURI = endpoint + "v2" + "/search?layer=" + query.layer + "&source=" + query.source + "&sourceId=" + query.sourceId + "&page=" + query.page + "&bbox=" + JSON.stringify(query.bbox);
+          break;
+        case "map-search-profile":
+          feedRequestURI = endpoint + "v1" + "/profile/" + query.profileID + "/map";
+          break;
+        case "map-search-trip":
+          feedRequestURI = endpoint + "v1" + "/trip/" + query.tripID + "/map";
+          break;
+        case "notifications":
+          feedRequestURI = endpoint + version + "/user/" + query + "/notifications?page=" + page;
+          break;
+        case 'reset-notifications':
+          feedRequestURI = endpoint + version + "/user/" + query + "/notifications/view"
+          break;
+        case "map-search-classic":
+          feedRequestURI = endpoint + version + "/search/bbox";
+          searchBody = query
+          break;
+        case "profile":
+          feedRequestURI = endpoint + "v2" + "/profile/" + query + "/trips?page=" + page;
+          break;
+        case "featured-profiles":
+          feedRequestURI = endpoint + version + "/profiles/featured";
+          break;
+        case "suitcase-list":
+          feedRequestURI = endpoint + version + "/user/" + query + "/suitcases?page=" + page;
+          break;
+        case "single-suitcase-feed":
+          feedRequestURI = endpoint + version + "/suitcase/" + query;
+          break;
+        case "search-user":
+          feedRequestURI = endpoint + version + "/search/profile/autocomplete";
+          break;
+        case "search-places":
+          feedRequestURI = endpoint + version + "/search";
+          searchBody = query;
+          break;
+        case "search-places-v2":
+          feedRequestURI = endpoint + "v2" + "/search?layer=" + query.layer + "&source=" + query.source + "&source_id=" + query.sourceId + "&location&page=" + page;
+          break;
+        case "search-places-guides":
+          feedRequestURI = endpoint + "v2" + "/guides/search?layer=" + query.layer + "&source=" + query.source + "&sourceId=" + query.sourceId + "&location&page=" + page;
+          if (query.categoryId) feedRequestURI = `${feedRequestURI}&categoryId=${query.categoryId}`;
+          break;
+        case "search-people":
+          feedRequestURI = endpoint + version + "/search/users?text=" + query;
+          break;
+        case "guide":
+          feedRequestURI = endpoint + "v2" + "/guides/search?layer=" + query.layer + "&source=" + query.source + "&sourceId=" + query.sourceId + "&location&page=" + page;
+          if (query.categoryId) feedRequestURI = `${feedRequestURI}&categoryId=${query.categoryId}`;
+          break;
+        case "user":
+          feedRequestURI = endpoint + version + user_uri + "/" + query;
+          break;
+        case "moment":
+          feedRequestURI = endpoint + version + "/moment/" + query;
+          break;
+        case "trip":
+          feedRequestURI = endpoint + version + "/trip/" + query + "?momentPage=" + page + "&momentLimit=24";
+          break;
+        case "feed-v2":
+          feedRequestURI = endpoint + "v2" + feed_uri + "?page=" + page;
+          break;
+        case "feed":
+        default:
+          feedRequestURI = endpoint + version + user_uri + "/" + query + feed_uri + "?page=" + page;
+          break;
+      }
+
+      const sherpaHeaders = new Headers();
+      const finalToken = user ? user.sherpaToken : sherpaToken;
+      let reqBody;
+
+      sherpaHeaders.append("token", finalToken);
+
+      switch (type) {
+        case 'map-search':
+        case 'map-search-classic':
+          sherpaHeaders.append("Content-Type", "application/json");
+          reqBody = {
+            method: 'post',
+            headers: sherpaHeaders,
+            body: JSON.stringify(searchBody)
+          }
+          break;
+        case "map-search-profile":
+        case "map-search-trip":
+          sherpaHeaders.append("Content-Type", "application/json");
+          reqBody = {
+            method: 'post',
+            headers: sherpaHeaders,
+            body: JSON.stringify(query.bbox)
+          }
+          break;
+        case 'location':
+        case 'search-places':
+          reqBody = {
+            method: 'post',
+            headers: sherpaHeaders,
+            body: JSON.stringify(searchBody)
+          }
+
+          break;
+        case 'reset-notifications':
+          reqBody = {
+            method: 'post',
+            headers: sherpaHeaders,
+          }
+          break;
+        default:
+          reqBody = {
+            method: 'get',
+            headers: sherpaHeaders
+          }
+
+      }
+
+      // console.log(feedRequestURI)
+      // console.log(reqBody)
+
+
+      // console.log('feed request uri',feedRequestURI)
+      return fetch(feedRequestURI, reqBody);
+    }).then((rawSherpaResponse)=> {
+        switch (rawSherpaResponse.status) {
+            case 200:
+            case 400:
+                return rawSherpaResponse.text();
+            break;
+            case 500:
+                return Promise.reject({errorCode:rawSherpaResponse.status});
+            break;
+            case 401:
+                // store.delete('user').then(()=>{
+                //     reduxStore.dispatch(updateUserDBState("empty"));
+                // });
+            break;
+        }
+    }).then((rawSherpaResponseFinal)=> {
+        //console.log('final response',rawSherpaResponseFinal)
+        if (!rawSherpaResponseFinal)return;
+        let parsedResponse=JSON.parse(rawSherpaResponseFinal);
+        let trips = parsedResponse.trips || parsedResponse;
+        //console.log(parsedResponse,'prased response')
+        let cleanTrips=[];
+        for (let index in trips) {
+            let currentTrip=trips[index];
+            if(currentTrip&&currentTrip.moments){
+                let moments=currentTrip.moments;
+                let name=currentTrip.name || "";
+                let coverIndex=0;
+                //console.log(currentTrip)
+                if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
+                if(moments.length>0){
+                    currentTrip.moments=[];
+                    if(currentTrip.coverMoment){
+                        //console.log('cover moment',currentTrip.coverMoment)
+                        moments.unshift(currentTrip.coverMoment)
+                        //console.log('moments',moments);
+                    }
+
+                    currentTrip.moments=moments;
+
+                    cleanTrips.push(currentTrip);
+                }
+            }else{
+                cleanTrips.push(currentTrip);
+            }
+        }
+
+
+
+       //console.log('feed',type,'::',parsedResponse)
+        switch(type){
+            case "trip":
+            case "featured-profiles":
+            case "moment":
+            case "map-search":
+            case "map-search-classic":
+            case "notifications":
+            case "reset-notifications":
+            case "user":
+                return {data: parsedResponse, page, type};
+            break;
+            case "location":
+            case "profile":
+                //parsedResponse.profile.serviceToken
+                return {data: cleanTrips, profile: parsedResponse.profile, page, type, followers: parsedResponse.followers, following: parsedResponse.following};
+            break;
+            case "feed-v2":
+                return {trips:parsedResponse.content, page, type};
+            break;
+            case "suitcase-list":
+            case "single-suitcase-feed":
+            case "feed":
+                return {trips: cleanTrips, page, type};
+            break;
+            case "search":
+            case "search-places":
+            case "search-places-v2":
+            case "search-people":
+            case "location-search":
+            case "map-search-v2":
+            case "map-search-trip":
+            case "map-search-profile":
+            case "guide":
+                let cleanMoments=[];
+                let moments;
+                if (type === "search-places-v2" || type === "map-search-trip" || type === "map-search-profile") {
+                    moments = parsedResponse.moments
+                } else if (type === 'guide') {
+                    moments = parsedResponse.content;
+                } else {
+                    moments = parsedResponse;
+                }
+                if (moments.length > 0){
+                    for (let i=0; i<moments.length; i++) {
+                        if (moments[i].type === 'image' || moments[i].contentType === 'guide') cleanMoments.push(moments[i]);
+                    }
                 }
 
-                //console.log(feedRequestURI,'feed requ uri')
 
+                return {rawData:parsedResponse,moments:cleanMoments, page, type};
+            break;
 
-                let sherpaHeaders = new Headers();
-                let finalToken=user?user.sherpaToken:sherpaToken;
-                let reqBody;
-
-
-                sherpaHeaders.append("token", finalToken);
-
-                switch(type){
-                    case 'map-search':
-                    case 'map-search-classic':
-                        sherpaHeaders.append("Content-Type", "application/json");
-                        reqBody={
-                            method: 'post',
-                            headers: sherpaHeaders,
-                            body: JSON.stringify(searchBody)
-                        }
-                    break;
-                    case "map-search-profile":
-                    case "map-search-trip":
-                        sherpaHeaders.append("Content-Type", "application/json");
-                        reqBody={
-                            method: 'post',
-                            headers: sherpaHeaders,
-                            body: JSON.stringify(query.bbox)
-                        }
-                    break;
-                    case 'location':
-                    case 'search-places':
-                        reqBody={
-                            method: 'post',
-                            headers: sherpaHeaders,
-                            body: JSON.stringify(searchBody)
-                        }
-
-                    break;
-                    case 'reset-notifications':
-                        reqBody={
-                            method: 'post',
-                            headers: sherpaHeaders,
-                        }
-                    break;
-                    default:
-                        reqBody={
-                            method: 'get',
-                            headers: sherpaHeaders
-                        }
-
-                }
-
-                // console.log(feedRequestURI)
-                // console.log(reqBody)
-
-
-                // console.log('feed request uri',feedRequestURI)
-                fetch(feedRequestURI, reqBody)
-                    .then((rawSherpaResponse)=> {
-                        switch (rawSherpaResponse.status) {
-                            case 200:
-                            case 400:
-                                return rawSherpaResponse.text()
-                            break;
-                            case 500:
-                                //console.log('reject reject reject',rawSherpaResponse.text())
-                                reject({errorCode:rawSherpaResponse.status});
-                            break;
-                            case 401:
-                                // store.delete('user').then(()=>{
-                                //     reduxStore.dispatch(updateUserDBState("empty"));
-                                // });
-                            break;
-                        }
-                    })
-                    .then((rawSherpaResponseFinal)=> {
-                        //console.log('final response',rawSherpaResponseFinal)
-                        if (!rawSherpaResponseFinal)return;
-                        let parsedResponse=JSON.parse(rawSherpaResponseFinal);
-                        let trips = parsedResponse.trips || parsedResponse;
-                        //console.log(parsedResponse,'prased response')
-                        let cleanTrips=[];
-                        for(let index in trips){
-                            let currentTrip=trips[index];
-                            if(currentTrip&&currentTrip.moments){
-                                let moments=currentTrip.moments;
-                                let name=currentTrip.name || "";
-                                let coverIndex=0;
-                                //console.log(currentTrip)
-                                if(name.indexOf("Trip to ")>-1)currentTrip.name= name.split("Trip to ")[1];
-                                if(moments.length>0){
-                                    currentTrip.moments=[];
-                                    if(currentTrip.coverMoment){
-                                        //console.log('cover moment',currentTrip.coverMoment)
-                                        moments.unshift(currentTrip.coverMoment)
-                                        //console.log('moments',moments);
-                                    }
-
-                                    currentTrip.moments=moments;
-
-                                    cleanTrips.push(currentTrip);
-                                }
-                            }else{
-                                cleanTrips.push(currentTrip);
-                            }
-                        }
-
-
-
-                       //console.log('feed',type,'::',parsedResponse)
-                        switch(type){
-                            case "trip":
-                                //console.log(parsedResponse);
-                                fulfill({data:parsedResponse, page, type});
-                            break;
-                            case "featured-profiles":
-                            case "moment":
-                            case "map-search":
-                            case "map-search-classic":
-                                //console.log('search resp',parsedResponse)
-                            case "notifications":
-                            case "reset-notifications":
-                            case "user":
-                                fulfill({data:parsedResponse, page, type});
-                            break;
-                            case "location":
-                            case "profile":
-                                //parsedResponse.profile.serviceToken
-                                fulfill({data:cleanTrips,profile:parsedResponse.profile, page, type,followers:parsedResponse.followers,following:parsedResponse.following});
-                            break;
-                            case "feed-v2":
-                                fulfill({trips:parsedResponse.content, page, type});
-                            break;
-                            case "suitcase-list":
-                            case "single-suitcase-feed":
-                            case "feed":
-                                fulfill({trips:cleanTrips, page, type});
-                            break;
-                            case "search":
-                            case "search-places":
-                            case "search-places-v2":
-                            case "search-people":
-                            case "location-search":
-                            case "map-search-v2":
-                            case "map-search-trip":
-                            case "map-search-profile":
-                            case "guide":
-                                let cleanMoments=[];
-                                let moments;
-                                if(type=="search-places-v2"||type=="map-search-trip"||type=="map-search-profile"){
-                                    moments=parsedResponse.moments
-                                }else if(type=='guide'){
-                                    moments=parsedResponse.content;
-                                }else{
-                                    moments=parsedResponse;
-                                }
-                                    //console.log(type,' ++ moments response',moments,'parsed response',parsedResponse)
-                                if(moments.length>0){
-                                    for(let i=0;i<moments.length;i++){
-                                        if(moments[i].type==='image'||moments[i].contentType=='guide')cleanMoments.push(moments[i]);
-                                    }
-                                }
-
-
-                                fulfill({rawData:parsedResponse,moments:cleanMoments, page, type});
-                            break;
-
-                        }
-                    }).catch((err)=>console.log('err',err))
-            })
-    });
+        }
+    }).catch((err)=>console.log('err',err));
 }
 
 

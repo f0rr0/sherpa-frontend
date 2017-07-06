@@ -49,7 +49,7 @@ class FeedLocation extends Component {
             headerLoadedOpacity:new Animated.Value(0),
             scrollY:new Animated.Value(0),
             shareURL:config.auth[config.environment].shareBaseURL+"locations/"+props.trip.source+"/"+props.trip.layer+"/"+props.trip.sourceId
-        }
+        };
 
         this.currentRows=[];
 
@@ -64,9 +64,7 @@ class FeedLocation extends Component {
     }
 
     componentDidMount(){
-        //console.log('trip location nav');
         InteractionManager.runAfterInteractions(() => {
-            // ...long-running synchronous task...
             this.setState({inTransition:false})
         });
     }
@@ -111,66 +109,55 @@ class FeedLocation extends Component {
         });
     }
 
-    _onFetch(page=1,callback){
+    _onFetch(page=1, callback){
         let req;
         let searchType;
-        let data=this.props.trip;
-        if(this.props.version=='v2'){
-            req={
-                layer:data.layer,
-                source:data.source,
-                sourceId:data.sourceId||data.source_id
-            }
-            searchType=data.type&&data.type=='guide'?'guide':'guide';
-            this.setState({trip:{locus:req}})
-            //console.log(req,'search type')
-        }else{
-            //console.log('search places v1')
-            req={type:data.type,page}
+        let data = this.props.trip;
+
+        if (this.props.version === 'v2') {
+            req = {
+                layer: data.layer,
+                source: data.source,
+                sourceId: data.sourceId || data.source_id,
+                categoryId: data.categoryId,
+            };
+            searchType = 'guide';
+            this.setState({trip: {locus: req}})
+        } else {
+            req = {type: data.type, page};
             req[data.type]=this.props.trip[data.type];
             searchType='search-places';
         }
 
+        getFeed(req, page, searchType).then((response)=>{
+            let locationName = response.rawData.location[response.rawData.location.layer];
+            // TODO: Don't set state on action response
+            if (locationName) this.setState({locationName: locationName.toUpperCase()});
 
-
-        // console.log('requ locatio',req,'searchtype',searchType)
-        getFeed(req,page,searchType).then((response)=>{
-            let locationName=response.rawData.location[response.rawData.location.layer];
-            if(locationName)this.setState({locationName:locationName.toUpperCase()})
-
-            if(page==1&&response.moments.length==0){
-                Alert.alert(
-                    'Location is Empty',
-                    'We dont have any moments for this location',
-                    [
-                        {text: 'OK'}
-                    ]
-                )
+            if (page===1 && response.moments.length === 0){
+                Alert.alert('Location is Empty', 'We dont have any moments for this location', [{text: 'OK'}]);
                 this.props.navigator.pop();
-            }else{
+            } else {
+                const itemsPerRow = 2;
+                const organizedMoments = [];
+                const data = response.moments;
+                let globalIndex=0;
+                for(var i=0;i<data.length;i++){
+                    let endIndex;
+                    if((Math.random()>.5||globalIndex==0)){
+                        endIndex = i + 1
+                    } else {
+                        if(data[i] && data[itemsPerRow+i-1] && data[i].contentType!=='guide'&&data[itemsPerRow+i-1].contentType!=='guide'){
+                          endIndex=itemsPerRow+i;
 
-                const itemsPerRow=2;
-                let organizedMoments=[];
-                let data=response.moments;
-                    let globalIndex=0;
-                    for(var i=0;i<data.length;i++){
-
-                            let endIndex;
-                           if((Math.random()>.5||globalIndex==0)){
-                               endIndex=1+i
-                           }else{
-                               if(data[i]&&data[itemsPerRow+i-1]&&data[i].contentType!=='guide'&&data[itemsPerRow+i-1].contentType!=='guide'){
-                                endIndex=itemsPerRow+i;
-
-                               }else{
-
-                               endIndex=1+i
-                               }
-                           }
-                            organizedMoments.push(data.slice(i, endIndex));
-                            i = endIndex-1;
-                        globalIndex++;
+                        } else {
+                          endIndex=1+i
+                        }
                     }
+                        organizedMoments.push(data.slice(i, endIndex));
+                        i = endIndex-1;
+                        globalIndex++;
+                }
 
 
 
@@ -186,11 +173,8 @@ class FeedLocation extends Component {
                     checkFollowingLocation(locationGID).then((res)=>{
                         this.setState({isFollowing:res});
                     });
-
-                    callback(organizedMoments,settings);
-                }else{
-                    callback(organizedMoments,settings);
                 }
+                callback(organizedMoments,settings);
 
 
             }
@@ -310,18 +294,18 @@ class FeedLocation extends Component {
         }
     }
 
-    showTripLocation(data,rawData){
+    showTripLocation(data, rawData){
         let locus=data.split(":");
         var locationData={
-            layer:locus[1],
-            source:locus[0],
-            sourceId:locus[2]
+            layer: locus[1],
+            source: locus[0],
+            sourceId: locus[2]
         };
 
 
         this.props.navigator.push({
             id: "location",
-            data:{name:rawData.name||"location",...locationData},
+            data: {...locationData, name: rawData.name || "location"},
             version:"v2"
         });
     }
@@ -481,38 +465,52 @@ class FeedLocation extends Component {
 
 
     showTripLocationOrGuide(data){
-        //console.log('data properties',data.properties)
         this.props.navigator.push({
             id: "location",
-            data:data.properties,
-            version:"v2"
+            data: data.properties,
+            version: "v2"
         });
     }
 
 
     _renderRow(rowData,sectionID,rowID){
-        var index=0;
-        var items = rowData.map((item) => {
+        let index = 0;
+        const items = rowData.map(item => {
             //console.log(item);
-            if (item === null || (item.type!=='image'&&item.contentType!=='guide')) {
+            if (item === null || (item.type!=='image' && item.contentType !== 'guide')) {
                 return null;
             }
-            this.currentRows.push("row-"+rowID+"-"+sectionID)
+
+            this.currentRows.push(`row-${rowID}-${sectionID}`);
 
             index++;
-            //
-            let rowElement=null;
 
+            let rowElement;
 
             switch(item.contentType){
                 case "moment":
-                    rowElement=
-                            <MomentRow key={"momentRow"+rowID+"_"+index} rowIndex={rowID}  itemRowIndex={index} itemsPerRow={rowData.length} containerWidth={this.state.containerWidth} tripData={item} trip={this.props.trip} user={this.props.user} dispatch={this.props.dispatch} navigator={this.props.navigator}></MomentRow>
+                    rowElement = (<MomentRow
+                      key={`momentRow${rowID}_${index}`}
+                      rowIndex={rowID}
+                      itemRowIndex={index}
+                      itemsPerRow={rowData.length}
+                      containerWidth={this.state.containerWidth}
+                      tripData={item}
+                      trip={this.props.trip}
+                      user={this.props.user}
+                      dispatch={this.props.dispatch}
+                      navigator={this.props.navigator} />);
                     break;
                 case "guide":
-                    rowElement=<TripRow fullBleed={true} key={"tripRow"+rowID+"_"+index} tripData={item} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...item, type:item.contentType,layer:item.layer,source:item.source,sourceId:item.sourceId||item.sourceId}})}}></TripRow>
+                    rowElement = (<TripRow
+                      fullBleed={true}
+                      key={`tripRow${rowID}_${index}`}
+                      tripData={item}
+                      showTripDetail={() => {this.showTripLocationOrGuide({properties: {...item, type: item.contentType, layer: item.layer, source: item.source, sourceId: item.sourceId||item.sourceId, categoryId: item.categoryId || null}})}} />);
                     break;
-
+                default:
+                    rowElement = null;
+                    break;
             }
             return rowElement
 
@@ -521,7 +519,7 @@ class FeedLocation extends Component {
 
         //console.log('row data [0]',rowData[0])
         return (
-            <View key={sectionID="-"+rowID} style={[styles.row,{width:rowData[0].contentType=='guide'?windowSize.width:windowSize.width-30}]}>
+            <View key={sectionID="-"+rowID} style={[styles.row,{width: rowData[0].contentType=== 'guide' ? windowSize.width:windowSize.width-30}]}>
                 {items}
             </View>
         );

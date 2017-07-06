@@ -141,7 +141,7 @@ class TripRow extends Component {
 
                 tripTitle=  <View style={{alignItems:'center'}}>
                                 <Text style={styles.tripTitleLarge}>{tripData.isHometown?"":""}</Text>
-                                <Text  style={[styles.tripTitleSmall,{marginBottom:-8}]}>{tripData.name.toUpperCase()}</Text>
+                                <Text  style={[styles.tripTitleSmall,{marginBottom:-8}]}>{tripData.pluralName ? tripData.pluralName.toUpperCase() : tripData.name.toUpperCase()}</Text>
                     <TripSubtitle textStyle={{borderBottomWidth:0}} limitLength={false} maxLength={2} tripData={tripData}></TripSubtitle>
                             </View>
              break;

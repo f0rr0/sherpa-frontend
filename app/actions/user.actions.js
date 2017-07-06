@@ -775,7 +775,7 @@ export function signupUser(){
         function instagramSimpleAuthWithWebview(){
             simpleAuthClient.configure({
                 instagram: {
-                    client_id: '610a4a6a16bc40ec95f749e95c48087a',
+                    client_id: '5f9d9647675f4b54b7b3686d4b0e3cac',
                     redirect_uri: 'sherpa://oauthcallback-instagram'
                 }
             }).then(() => {
@@ -811,7 +811,7 @@ export function signupUser(){
                 intent:userReducer.intent,
                 service:userReducer.service,
                 token:instagramToken,
-                serviceData:JSON.stringify(userData),
+                serviceData: JSON.stringify(userData),
                 deviceData:JSON.stringify(deviceData)
             }
 

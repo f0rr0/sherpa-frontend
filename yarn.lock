@@ -3130,6 +3130,10 @@ react-native-dismiss-keyboard@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/react-native-dismiss-keyboard/-/react-native-dismiss-keyboard-1.0.0.tgz#32886242b3f2317e121f3aeb9b0a585e2b879b49"
 
+react-native-enhanced-listview@^0.10.1:
+  version "0.10.1"
+  resolved "https://registry.yarnpkg.com/react-native-enhanced-listview/-/react-native-enhanced-listview-0.10.1.tgz#8db310258edc28d4ca1eb16992fb57faa47fea58"
+
 react-native-exif@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/react-native-exif/-/react-native-exif-0.1.0.tgz#c023fec1efe95c89a0a70391556fb292aa7b032e"
@@ -3213,6 +3217,10 @@ react-native-progress@^3.2.0:
 react-native-safari-view@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.0.0.tgz#3aeb40693b0765df16b9beaf8654b60c7ff1d7ed"
+
+react-native-sglistview@^0.4.3:
+  version "0.4.3"
+  resolved "https://registry.yarnpkg.com/react-native-sglistview/-/react-native-sglistview-0.4.3.tgz#0f955126103ec102c830f688689c2e69ef7336ec"
 
 react-native-simple-auth@^2.1.0:
   version "2.1.0"
