@@ -319,14 +319,21 @@ class FeedLocation extends Component {
                 </View>
             </View>
         );
-        //console.log(this.state)
-        var tripData=this.props.trip;
-        var moments=this.state.moments;
-        if(moments.length==0)return null
-        var country=this.getTripLocation(tripData);
-        let windowHeight=windowSize.height;
+
+        const tripData = this.props.trip;
+        const moments = this.state.moments;
+        if (moments.length === 0) return null;
+        const  country=this.getTripLocation(tripData);
+        const windowHeight=windowSize.height;
         let bottomLeft=null;
-        let wikipediaInfo=this.state.rawData.location.wikipediaLocation?<WikipediaInfoBox style={{marginTop:-150,width:windowSize.width-30,left:15,borderRadius:3,overflow:'hidden'}} data={this.state.rawData.location.wikipediaLocation._source}></WikipediaInfoBox>:null;
+        let wikipediaInfo = this.state.rawData.location.wikipediaData
+          ? <WikipediaInfoBox
+              style={{marginTop: -150, width: windowSize.width - 30, left: 15, borderRadius: 3, overflow:'hidden'}}
+              data={this.state.rawData.location.wikipediaData}
+            />
+          : null;
+        const tripTitle = this.state.locationName || tripData.pluralName ? tripData.pluralName.toUpperCase() : tripData.name.toUpperCase();
+
 
         let locationLayer;
         switch(tripData.layer){
@@ -411,7 +418,7 @@ class FeedLocation extends Component {
 
                     <View style={{alignItems:'center',justifyContent:'center',position:'absolute',top:250,left:0,right:0,height:20}}>
                         <View style={{alignItems:'center'}}>
-                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{this.state.locationName||tripData.name.toUpperCase()}</Text>
+                            <Text style={{color:"#FFFFFF",fontSize:35, fontFamily:"TSTAR", textAlign:'center',fontWeight:"500", letterSpacing:1,backgroundColor:"transparent"}}>{tripTitle}</Text>
                             <TripSubtitle maxLength={2} goLocation={(data)=>{this.showTripLocation.bind(this)(data.locus,data)}} tripData={{locus:this.props.trip.locus||this.state.rawData.location}}></TripSubtitle>
                             {/*<Text style={styles.subtitle}>{locationLayer.toUpperCase()}</Text>*/}
 

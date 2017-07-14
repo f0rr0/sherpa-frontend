@@ -117,24 +117,25 @@ class TripRow extends Component {
                         locationLayer="";
                 }
 
-
-                let guideString=tripData.isHometown?"LOCAL":" GUIDE"
-                bottomLeftContent=
-                    <View style={{flex:1,flexDirection:'row'}}>
-                        <Image  source={require('./../../../Images/trending.png')}></Image>
-                        <Text  style={[styles.tripDataFootnoteCopy,{marginLeft:5}]}>{locationLayer.toUpperCase() +""+guideString} </Text>
-                    </View>
-
+                const guideIcon = tripData.categoryId
+                  ? <Image
+                    style={[styles.tripDataFootnoteIcon,{marginBottom:5}]}
+                    source={{uri: `${tripData.iconPrefix}64${tripData.iconSuffix}`, width: 18, height: 18}}
+                  />
+                  : <Image
+                    source={require('./../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:5}]}
+                  />;
+                let guideString=tripData.isHometown?"LOCAL":" GUIDE";
+                let title = tripData.categoryId ? `GUIDE` : `TRENDING ${locationLayer.toUpperCase()}`;
                 bottomLeftContent=
                     <View style={{flex:1,flexDirection:'row',left:-6,alignItems:'center'}}>
-                        <Image source={require('./../../../Images/trending.png')} style={[styles.tripDataFootnoteIcon,{marginBottom:5}]} ></Image>
-                        <Text style={styles.tripDataFootnoteCopy}>TRENDING {locationLayer.toUpperCase()}</Text>
+                        {guideIcon}
+                        <Text style={styles.tripDataFootnoteCopy}>{title}</Text>
                     </View>
-
                 bottomRightContent= <
                     View style={[styles.tripDataFootnoteContainer,{right:16}]}>
                     <Image source={require('./../../../Images/icons/images.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
-                    <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount}</Text>
+                    <Text style={styles.tripDataFootnoteCopy}>{tripData.venueCount || tripData.total_count}</Text>
                     {/*<Image source={require('./../../../Images/icons/clock.png')} style={styles.tripDataFootnoteIcon} resizeMode="contain"></Image>
                         <Text style={styles.tripDataFootnoteCopy}>{timeAgo.toUpperCase()}</Text>*/}
                     </View>

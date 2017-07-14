@@ -499,10 +499,10 @@ class FeedList extends React.Component{
         //console.log(tripData)
         switch(tripData.contentType){
             case "trip":
-                rowElement=<TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)}></TripRow>
+                rowElement = <TripRow tripData={tripData} showTripDetail={this.showTripDetail.bind(this)} />;
             break;
             case "guide":
-                rowElement=<TripRow tripData={tripData} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...tripData, type:tripData.contentType,layer:tripData.layer,source:tripData.source,sourceId:tripData.sourceId}})}}></TripRow>
+                rowElement = <TripRow tripData={tripData} showTripDetail={()=>{this.showTripLocationOrGuide({properties:{...tripData, type:tripData.contentType,layer:tripData.layer,source:tripData.source,sourceId:tripData.sourceId}})}}/>;
             break;
         }
         return (
