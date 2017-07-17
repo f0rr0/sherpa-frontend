@@ -3113,9 +3113,9 @@ react-native-communications@^2.2.1:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/react-native-communications/-/react-native-communications-2.2.1.tgz#7883b56b20a002eeb790c113f8616ea8692ca795"
 
-react-native-deprecated-custom-components@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-deprecated-custom-components/-/react-native-deprecated-custom-components-0.1.0.tgz#f716d431ef2dc4f91b7a686af091ee3656538086"
+"react-native-deprecated-custom-components@git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-custom-components.git#v0.1.0-sherpa":
+  version "0.1.0-sherpa"
+  resolved "git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-custom-components.git#ad6ece39f578ab65e71dcf532e255a41401f8c39"
   dependencies:
     fbjs "~0.8.9"
     immutable "~3.7.6"
@@ -3174,9 +3174,9 @@ react-native-google-analytics-bridge@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/react-native-google-analytics-bridge/-/react-native-google-analytics-bridge-5.0.1.tgz#b4b4eb00e1316d1aaa9f02304912355f8a5797e2"
 
-react-native-google-places-autocomplete@^1.2.12:
-  version "1.2.12"
-  resolved "https://registry.yarnpkg.com/react-native-google-places-autocomplete/-/react-native-google-places-autocomplete-1.2.12.tgz#714c731be35bfca190239d98cbc7e0d518b38d98"
+"react-native-google-places-autocomplete@git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-google-places-autocomplete.git#v1.2.12-sherpa":
+  version "1.2.12-sherpa"
+  resolved "git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-google-places-autocomplete.git#3cb1108d37e4be13d747ee70614b749da526e0d5"
   dependencies:
     lodash.debounce "^4.0.8"
     qs "^5.2.0"
@@ -3214,9 +3214,9 @@ react-native-progress@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/react-native-progress/-/react-native-progress-3.2.0.tgz#86d756be5537c09936ac3d3c4e23710da590743c"
 
-react-native-safari-view@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/react-native-safari-view/-/react-native-safari-view-2.0.0.tgz#3aeb40693b0765df16b9beaf8654b60c7ff1d7ed"
+"react-native-safari-view@git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-safari-view.git#v2.0.0-sherpa":
+  version "2.0.0-sherpa"
+  resolved "git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-rn-safari-view.git#44b77a45a756bfd07c6dc341eaa71d669fbae83b"
 
 react-native-sglistview@^0.4.3:
   version "0.4.3"
@@ -3913,9 +3913,9 @@ strip-bom@^2.0.0:
   dependencies:
     is-utf8 "^0.2.0"
 
-supercluster@^2.3.0:
+"supercluster@git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-supercluster.git#v2.3.0-sherpa":
   version "2.3.0"
-  resolved "https://registry.yarnpkg.com/supercluster/-/supercluster-2.3.0.tgz#87ab56081bbea9a1d724df5351ee9e8c3af2f48b"
+  resolved "git+https://0c9862c692239e60b6a2dc1ca6b32187feecd600:x-oauth-basic@github.com/TravelSherpa/sherpa-supercluster.git#2fa348563c74b0aa026fb868f15535fb4996cdfe"
   dependencies:
     kdbush "^1.0.1"
 
